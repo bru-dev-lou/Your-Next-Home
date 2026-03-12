@@ -1,9 +1,7 @@
 CREATE TABLE IF NOT EXISTS property_list (
     id INTEGER PRIMARY KEY,
     type TEXT NOT NULL,
-    street TEXT NOT NULL,
     city TEXT NOT NULL,
-    post_code TEXT NOT NULL,
     price INTEGER NOT NULL,
     no_bedrooms INTEGER NOT NULL,
     no_bathrooms INTEGER NOT NULL,
