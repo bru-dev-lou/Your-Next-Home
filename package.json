@@ -1,0 +1,28 @@
+{
+  "name": "your-next-home",
+  "version": "1.0.0",
+  "description": "A full-stack property rental web application where users can create and browse listings.",
+  "main": "script.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "nodemon server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/bru-dev-lou/Your-Next-Home.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "module",
+  "bugs": {
+    "url": "https://github.com/bru-dev-lou/Your-Next-Home/issues"
+  },
+  "homepage": "https://github.com/bru-dev-lou/Your-Next-Home#readme",
+  "dependencies": {
+    "express": "^5.2.1"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.14"
+  }
+}
