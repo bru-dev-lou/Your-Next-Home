@@ -2,7 +2,7 @@ import express from "express";
 import Database from "better-sqlite3";
 
 const router = express.Router();
-const db = new Database("./Database/database.db");
+const db = new Database("./database/database.db");
 
 router.get("/:id", (req, res) => {
   const id = req.params.id;
