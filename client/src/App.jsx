@@ -1,3 +1,12 @@
-import { useState, useEffect } from "react";
-import { BrowserRouter, Routes, Route, Link } from "react-router-dom"; 
+import Home from "./pages/Home";
 
+function App () {
+    return (
+    <div>
+        <h1> LOOK HERE </h1>
+        <Home /> 
+    </div>
+    )
+}
+
+export default App;
