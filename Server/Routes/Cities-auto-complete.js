@@ -14,7 +14,7 @@ const { city } = req.query;
     try { 
         const results = db
         .prepare('SELECT DISTINCT city FROM property_list WHERE city LIKE ? LIMIT 5')
-        .all(`%${city}%`);
+        .all(`${city}%`);
         
         
         res.json({ cities: results });
