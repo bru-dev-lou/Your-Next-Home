@@ -8,14 +8,14 @@ router.get("/", (req,res) => {
     const defaultCity = "";
     // Keep defaultCity for later when featured properties are implemented. 
 
-    const defaultMinPrice = 0;
+    const defaultMinBeds = 1;
     const defaultMaxPrice = 1000000000;
 
     const city = req.query.city || defaultCity;
-    const minPrice = Number(req.query.minPrice) || defaultMinPrice; 
+    const minBeds = Number(req.query.minBeds) || defaultMinBeds;
     const maxPrice = Number(req.query.maxPrice) || defaultMaxPrice;
 
-    const data = db.prepare("SELECT * FROM property_list WHERE city LIKE ? AND price >= ? AND price <= ?").all(`%${city}%`, minPrice, maxPrice);
+    const data = db.prepare("SELECT * FROM property_list WHERE city LIKE ? AND no_bedrooms >= ? AND price <= ?").all(`%${city}%`, minBeds, maxPrice);
 
     res.status(200).json(data);
     
