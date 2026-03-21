@@ -1,7 +1,6 @@
 import express from 'express';
-import propRouter from './routes/properties.js';
 import searchRouter from './routes/search.js';
-import citiesRouter from './routes/Cities-auto-complete.js';
+import citiesRouter from './routes/CitiesAutoComplete.js';
 
 const app = express(); 
 const port = 3000;
@@ -12,7 +11,6 @@ app.get("/", (req, res) => {
     res.send("Server is working!"); 
 })
 
-app.use("/properties", propRouter);
 app.use("/search", searchRouter);   
 app.use("/api", citiesRouter);
 

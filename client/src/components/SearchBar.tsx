@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 function SearchBar(): JSX.Element {
     const [query, setQuery] = useState('');
     const [cities, setCities] = useState<{ city: string }[]>([]);
-    const [minPrice, setMinPrice] = useState(0);
+    const [minBeds, setMinBeds] = useState(0);
     const [maxPrice, setMaxPrice] = useState(1000000);
     const navigate = useNavigate();
 
@@ -31,7 +31,7 @@ function SearchBar(): JSX.Element {
     }, [query]);
 
     const buttonSearch = () => {
-        navigate(`/search?city=${query}&minPrice=${minPrice}&maxPrice=${maxPrice}`);
+        navigate(`/search?city=${query}&minBeds=${minBeds}&maxPrice=${maxPrice}`);
     }
 
     return (
@@ -43,18 +43,19 @@ function SearchBar(): JSX.Element {
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
             />
+            <select onChange={(e) => setMinBeds(Number(e.target.value))}>
+                <option value="0">Any</option>
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+                <option value="5">5+</option>
+            </select>
             <input
                 type="text"
                 min="0"
                 max="1000000"
-                placeholder = "Minimum Price"
-                onChange={(e) => setMinPrice(Number(e.target.value))}
-            />
-            <input
-                type="text"
-                min="0"
-                max="1000000"
-                placeholder = "Maximum Price"
+                placeholder = "Max Price ($)"
                 onChange={(e) => setMaxPrice(Number(e.target.value))}
             />
             <button onClick={buttonSearch}> Search </button>
