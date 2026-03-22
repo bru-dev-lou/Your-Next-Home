@@ -20,7 +20,7 @@
   },
   "homepage": "https://github.com/bru-dev-lou/Your-Next-Home#readme",
   "dependencies": {
-    "better-sqlite3": "^12.6.2",
+    "better-sqlite3": "^12.8.0",
     "express": "^5.2.1"
   },
   "devDependencies": {
