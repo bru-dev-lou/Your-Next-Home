@@ -1,6 +1,7 @@
 import express from 'express';
 import searchRouter from './routes/search.js';
-import citiesRouter from './routes/autoComplete.js';
+import citiesRouter from './routes/auto-complete.js';
+import inquiriesRouter from './routes/contact-inquiries.js';
 
 const app = express(); 
 const port = 3000;
@@ -13,6 +14,7 @@ app.get("/", (req, res) => {
 
 app.use("/search", searchRouter);   
 app.use("/api", citiesRouter);
+app.use("/contact", inquiriesRouter);
 
 app.listen(port, () => {
     console.log(`Server is running on port ${port}`);

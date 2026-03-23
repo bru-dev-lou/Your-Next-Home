@@ -4,7 +4,7 @@ import Results from "./pages/results"
 import Home from "./pages/home"
 import Contact from "./pages/contact"
 
-import Nav from "./components/navBar"
+import Nav from "./components/nav-bar"
 
 
 function App() {
