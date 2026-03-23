@@ -1,6 +1,6 @@
 import express from 'express';
 import searchRouter from './routes/search.js';
-import citiesRouter from './routes/CitiesAutoComplete.js';
+import citiesRouter from './routes/autoComplete.js';
 
 const app = express(); 
 const port = 3000;

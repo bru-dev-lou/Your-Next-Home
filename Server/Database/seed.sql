@@ -10,3 +10,7 @@ VALUES
 ('Detached', 'Manchester', 1750, 4, 3, 140, 1, 0, 'Large detached house ideal for families', 2),
 ('Detached', 'Liverpool', 1650, 4, 2, 132, 1, 0, 'Spacious property in suburban area', 3),
 ('Bungalow', 'Manchester', 1150, 2, 1, 80, 1, 0, 'Bright bungalow with garden space', 1);
+
+INSERT INTO inquiries (name, email, property_id, message_topic, message)
+VALUES
+('Example User', 'exampleuser@gmail.com', 'PROP0000', 'Listing Issue', 'I am having trouble listing my property. The button does not seem to work. Please assist.');

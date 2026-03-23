@@ -1,8 +1,7 @@
 import express from "express";
-import Database from "better-sqlite3";
+import db from "../database/database.js";
 
 const router = express.Router();
-const db = new Database("./database/database.db");
 
 router.get("/", (req,res) => {
     const defaultCity = "";
