@@ -1,6 +1,11 @@
+import Inquiries from "../components/submit-inquiries";
+
 function Contact () {
     return (
-        <h1> Yo </h1>
+        <div>
+            <h2>Get in touch with us!</h2>
+            <Inquiries />
+        </div> 
     )
 }
 
