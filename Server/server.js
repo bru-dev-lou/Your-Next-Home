@@ -1,6 +1,6 @@
 import express from 'express';
 import cors from "cors";
-import searchRouter from './routes/search.js';
+import propertySearchRouter from './routes/property-search.js';
 import citiesRouter from './routes/auto-complete.js';
 import inquiriesRouter from './routes/contact-inquiries.js';
 
@@ -14,7 +14,7 @@ app.get("/", (req, res) => {
     res.send("Server is working!"); 
 })
 
-app.use("/search", searchRouter);   
+app.use("/search", propertySearchRouter);   
 app.use("/api", citiesRouter);
 app.use("/contact", inquiriesRouter);
 

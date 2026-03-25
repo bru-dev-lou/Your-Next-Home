@@ -1,7 +1,7 @@
 import { useState, type JSX, useEffect } from 'react'; 
 import { useNavigate } from 'react-router-dom';
 
-function SearchBar(): JSX.Element {
+function HomePageSearchBar(): JSX.Element {
     const [query, setQuery] = useState('');
     const [cities, setCities] = useState<{ city: string }[]>([]);
     const [minBeds, setMinBeds] = useState(0);
@@ -30,12 +30,14 @@ function SearchBar(): JSX.Element {
 
     }, [query]);
 
-    const buttonSearch = () => {
+    const buttonSearch = (e:any) => {
+        e.preventDefault();
         navigate(`/search?city=${query}&minBeds=${minBeds}&maxPrice=${maxPrice}`);
-    }
+    };
 
     return (
         <div>
+            <form onSubmit={buttonSearch}>
             <input
                 name="city"
                 type="text"
@@ -58,7 +60,8 @@ function SearchBar(): JSX.Element {
                 placeholder = "Max Price ($)"
                 onChange={(e) => setMaxPrice(Number(e.target.value))}
             />
-            <button onClick={buttonSearch}> Search </button>
+            <button type="submit"> Search </button>
+            </form>
             <ul>
                 {cities.map((city, index) => (
                     <li key={index}>{city.city}</li>
@@ -68,4 +71,4 @@ function SearchBar(): JSX.Element {
     );
 }
 
-export default SearchBar;
+export default HomePageSearchBar;

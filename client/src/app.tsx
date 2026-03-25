@@ -1,8 +1,8 @@
 import { BrowserRouter, Routes, Route,} from "react-router-dom"
 
-import Results from "./pages/results"
-import Home from "./pages/home"
-import Contact from "./pages/contact"
+import PropertySearch from "./pages/property-search"
+import Home from "./pages/home-page"
+import Contact from "./pages/contact-page"
 
 import Nav from "./components/nav-bar"
 
@@ -15,7 +15,7 @@ function App() {
         <Nav />
           <Routes>
             <Route path="/" element={<Home />} />
-            <Route path="/search" element={<Results />} /> 
+            <Route path="/search" element={<PropertySearch />} /> 
             <Route path="/contact" element={<Contact />} />
           </Routes>
       </div>
@@ -23,4 +23,4 @@ function App() {
   )
 }
 
-export default App
+export default App;
