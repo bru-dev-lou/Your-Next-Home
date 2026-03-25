@@ -8,7 +8,9 @@ function Inquiries () {
     const [ messageTopic, setMessageTopic ] = useState("");
     const [ message, setMessage ] = useState("");
    
-const submitInquiry = async () => {
+const submitInquiry = async (e:React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
     const data = {
         name,
         email,
@@ -37,57 +39,47 @@ const submitInquiry = async () => {
    
     return (
         <div>
-            <form action="/api/contact" method="POST">
-                <label>
-                    Name
+            <form onSubmit={submitInquiry}>
+                <label> Name </label>
                     <input
                         type="text"
-                        placeholder="John Doe"
+                        placeholder="John Doe"  
                         value={name}
                         onChange= {(e) => setName(e.target.value)}
                     />
-                </label>
                 <br />
-                <label>
-                    Email
+                <label>Email</label>
                     <input
                         type="email"
                         placeholder="example@gmail.com"
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
                     />
-                </label>
                 <br />
-                <label>
-                    Property ID (if any)
-                    <input
-                        type="text"
-                        placeholder="Leave blank if not applicable"
-                        value={propID}
-                        onChange={(e) => setPropID(e.target.value)}
-                    />
-                </label>
-                <br />
-                <label>
-                    Inquiry Topic
+                <label>Inquiry Topic</label>
                     <input
                         type="text"
                         placeholder="What's your inquiry about?"
                         value={messageTopic}
                         onChange={(e) => setMessageTopic(e.target.value)}
                     />
-                </label>
                 <br />
-                <label>
-                    Message
+                <label>Message</label>
                     <textarea
                         placeholder="Tells us more about your inquiry!"
                         value={message}
                         onChange={(e) => setMessage(e.target.value)}
                     />
-                </label>
                 <br />
-                <button type="button" onClick={submitInquiry}>Submit Inquiry</button>
+                <label>Property ID</label>
+                    <input
+                        type="text"
+                        placeholder="Leave blank if not applicable"
+                        value={propID}
+                        onChange={(e) => setPropID(e.target.value)}
+                    />
+                <br />
+                <button type="submit">Submit Inquiry</button>
             </form>
         </div>
     );

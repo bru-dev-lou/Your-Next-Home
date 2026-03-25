@@ -30,12 +30,14 @@ function SearchBar(): JSX.Element {
 
     }, [query]);
 
-    const buttonSearch = () => {
+    const buttonSearch = (e:any) => {
+        e.preventDefault();
         navigate(`/search?city=${query}&minBeds=${minBeds}&maxPrice=${maxPrice}`);
-    }
+    };
 
     return (
         <div>
+            <form onSubmit={buttonSearch}>
             <input
                 name="city"
                 type="text"
@@ -58,7 +60,8 @@ function SearchBar(): JSX.Element {
                 placeholder = "Max Price ($)"
                 onChange={(e) => setMaxPrice(Number(e.target.value))}
             />
-            <button onClick={buttonSearch}> Search </button>
+            <button type="submit"> Search </button>
+            </form>
             <ul>
                 {cities.map((city, index) => (
                     <li key={index}>{city.city}</li>
