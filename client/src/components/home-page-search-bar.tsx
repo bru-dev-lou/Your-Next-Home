@@ -1,7 +1,7 @@
 import { useState, type JSX, useEffect } from 'react'; 
 import { useNavigate } from 'react-router-dom';
 
-function SearchBar(): JSX.Element {
+function HomePageSearchBar(): JSX.Element {
     const [query, setQuery] = useState('');
     const [cities, setCities] = useState<{ city: string }[]>([]);
     const [minBeds, setMinBeds] = useState(0);
@@ -71,4 +71,4 @@ function SearchBar(): JSX.Element {
     );
 }
 
-export default SearchBar;
+export default HomePageSearchBar;
