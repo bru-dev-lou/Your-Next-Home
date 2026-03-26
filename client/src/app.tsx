@@ -1,6 +1,6 @@
 import { BrowserRouter, Routes, Route,} from "react-router-dom"
 
-import PropertySearch from "./pages/property-search"
+import PropertySearch from "./pages/property-search-page"
 import Home from "./pages/home-page"
 import Contact from "./pages/contact-page"
 
