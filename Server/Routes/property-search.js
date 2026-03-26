@@ -17,13 +17,12 @@ router.get("/", (req,res) => {
     const minBeds = Number(req.query.minBeds) || defaultMinBeds;    
     const minBaths = Number(req.query.minBaths) || defaultMinBaths;
     const size = req.query.size;
-    const garden = req.query.garden;   
-    const balcony = req.query.balcony; 
+    const furniture = req.query.furniture;
     const summary = req.query.summary;
     const dateListed = req.query.dateListed;
 
-    const data = db.prepare("SELECT * FROM property_list WHERE city LIKE ? AND price <= ? AND no_bedrooms >= ? AND no_bathrooms >= ?")
-    .all(`%${city}%`, maxPrice, minBeds, minBaths);
+    const data = db.prepare("SELECT * FROM property_list WHERE city LIKE ? AND price <= ?")
+    .all(`%${city}%`, maxPrice,);
 
 
     res.status(200).json(data);

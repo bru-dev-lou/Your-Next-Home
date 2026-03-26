@@ -1,7 +1,7 @@
 import express from 'express';
 import cors from "cors";
 import propertySearchRouter from './routes/property-search.js';
-import citiesRouter from './routes/auto-complete.js';
+import autoCompleteRouter from './routes/auto-complete.js';
 import inquiriesRouter from './routes/contact-inquiries.js';
 
 const app = express(); 
@@ -15,7 +15,7 @@ app.get("/", (req, res) => {
 })
 
 app.use("/search", propertySearchRouter);   
-app.use("/api", citiesRouter);
+app.use("/api", autoCompleteRouter);
 app.use("/contact", inquiriesRouter);
 
 app.listen(port, () => {

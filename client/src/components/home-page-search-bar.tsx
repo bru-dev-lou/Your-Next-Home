@@ -4,7 +4,6 @@ import { useNavigate } from 'react-router-dom';
 function HomePageSearchBar(): JSX.Element {
     const [query, setQuery] = useState('');
     const [cities, setCities] = useState<{ city: string }[]>([]);
-    const [minBeds, setMinBeds] = useState(0);
     const [maxPrice, setMaxPrice] = useState(1000000);
     const navigate = useNavigate();
 
@@ -32,34 +31,42 @@ function HomePageSearchBar(): JSX.Element {
 
     const buttonSearch = (e:any) => {
         e.preventDefault();
-        navigate(`/search?city=${query}&minBeds=${minBeds}&maxPrice=${maxPrice}`);
+        navigate(`/search?city=${query}&maxPrice=${maxPrice}`);
     };
 
     return (
         <div>
             <form onSubmit={buttonSearch}>
-            <input
-                name="city"
-                type="text"
-                placeholder="Location"
-                value={query}
-                onChange={(e) => setQuery(e.target.value)}
-            />
-            <select onChange={(e) => setMinBeds(Number(e.target.value))}>
-                <option value="0">Any</option>
-                <option value="1">1</option>
-                <option value="2">2</option>
-                <option value="3">3</option>
-                <option value="4">4</option>
-                <option value="5">5+</option>
+            <label htmlFor = "citySelectHomePage">Location</label>
+                <input
+                    id = "citySelectHomePage"
+                    name="city"
+                    type="text"
+                    placeholder = "London"
+                    value={query}
+                    onChange={(e) => setQuery(e.target.value)}
+                />
+            <label htmlFor= "maxPriceHomePage"> Max Price </label>
+            <select 
+                onChange = {(e) => setMaxPrice(Number(e.target.value))}>
+                        <option value = {maxPrice}> No Max </option>
+                        <option value = "500"> $500 PCM </option>
+                        <option value = "600"> $600 PCM </option>
+                        <option value = "700"> $700 PCM </option>
+                        <option value = "800"> $800 PCM </option>
+                        <option value = "900"> $900 PCM </option>
+                        <option value = "1000"> $1000 PCM </option>
+                        <option value = "1100"> $1100 PCM </option>
+                        <option value = "1200"> $1200 PCM </option>
+                        <option value = "1300"> $1300 PCM </option>
+                        <option value = "1400"> $1400 PCM </option>
+                        <option value = "1500"> $1500 PCM </option>
+                        <option value = "1600"> $1600 PCM </option>
+                        <option value = "1700"> $1700 PCM </option>
+                        <option value = "1800"> $1800 PCM </option>
+                        <option value = "1900"> $1900 PCM </option>
+                        <option value = "2000"> $2000 PCM </option>
             </select>
-            <input
-                type="text"
-                min="0"
-                max="1000000"
-                placeholder = "Max Price ($)"
-                onChange={(e) => setMaxPrice(Number(e.target.value))}
-            />
             <button type="submit"> Search </button>
             </form>
             <ul>
@@ -72,3 +79,5 @@ function HomePageSearchBar(): JSX.Element {
 }
 
 export default HomePageSearchBar;
+
+/// Add CSS italics to input 
