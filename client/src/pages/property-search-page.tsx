@@ -6,26 +6,37 @@ import PropertyPageSearchBar from "../components/property-search-page-search-bar
 function Results () {
   const [params] = useSearchParams();
   
-  const city = params.get("city");
+  const city = params.get("city"); 
+  const type = params.get("type")
   const maxPrice = params.get("maxPrice");
+  const minBeds = params.get("minBeds");
+  const minBaths = params.get("minBaths");
+  const furniture = params.get("furniture");
+
+
+
 
   useEffect(() => {
-    const fetchResults = async () => {
-      const res = await fetch(`/api/search?city=${city}&maxPrice=${maxPrice}`);
+    const fetchHomeResults = async () => {
+      const res = await fetch(`api/search?city=${city}&type=${type}&maxPrice=${maxPrice}&minBeds=${minBeds}&minBaths=${minBaths}&furniture=${furniture}`);
       const data = await res.json()
         console.log(data);
     };
-
-    fetchResults();
-  }, [city, maxPrice]);
+    fetchHomeResults();
+  }, [city, type, maxPrice, minBeds, minBaths, furniture]);
 
 
   return (
     <div>
       <PropertyPageSearchBar />
-      <h2>Search Results</h2>
-      <p>Here are the results for your search.</p>
-        <p>City: {city}</p>
+      <h3>Properties for rent in {city}:</h3>
+        <div>
+          <h4>{city}</h4>
+          <p>${maxPrice}</p>
+          <p>MinBedrooms: {minBeds}</p>
+          <p>Hello?{furniture}</p>
+          <p>tYPE: {type}</p>
+        </div>
     </div>
   );
 }
