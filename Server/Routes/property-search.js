@@ -18,14 +18,15 @@ router.get("/", (req,res) => {
     const minBaths = Number(req.query.minBaths) || defaultMinBaths;
     const furniture = req.query.furniture || defaultFurniture;
 
+    console.log({ city, type, maxPrice, minBeds, minBaths, furniture });
 
         const data = db.prepare(
             "SELECT * FROM property_list WHERE city LIKE ? AND type LIKE ? AND price <= ? AND no_bedrooms >= ? AND no_bathrooms >= ? AND furniture LIKE ?")
             .all(`%${city}%`, `%${type}%`, maxPrice, minBeds, minBaths, `%${furniture}%`); 
             
             return res.status(200).json(data);
+            
 });
-
 
 export default router;  
 
