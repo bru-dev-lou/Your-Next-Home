@@ -4,31 +4,29 @@ import db from "../database/database.js";
 const router = express.Router();
 
 router.get("/", (req,res) => {
-    const defaultCity = "";
-    // Keep defaultCity for later when featured properties are implemented. 
-
+    const defaultCity = '';
+    const defaultType = '';
+    const defaultFurniture = '';
     const defaultMinBeds = 1;
     const defaultMinBaths = 1;
     const defaultMaxPrice = 1000000000;
     
-    const type = req.query.type;
+    const type = req.query.type || defaultType;
     const city = req.query.city || defaultCity;
     const maxPrice = Number(req.query.maxPrice) || defaultMaxPrice;
     const minBeds = Number(req.query.minBeds) || defaultMinBeds;    
     const minBaths = Number(req.query.minBaths) || defaultMinBaths;
-    const size = req.query.size;
-    const furniture = req.query.furniture;
-    const summary = req.query.summary;
-    const dateListed = req.query.dateListed;
+    const furniture = req.query.furniture || defaultFurniture;
 
-    const data = db.prepare("SELECT * FROM property_list WHERE city LIKE ? AND price <= ?")
-    .all(`%${city}%`, maxPrice,);
+    console.log({ city, type, maxPrice, minBeds, minBaths, furniture });
 
-
-    res.status(200).json(data);
-    
+        const data = db.prepare(
+            "SELECT * FROM property_list WHERE city LIKE ? AND type LIKE ? AND price <= ? AND no_bedrooms >= ? AND no_bathrooms >= ? AND furniture LIKE ?")
+            .all(`%${city}%`, `%${type}%`, maxPrice, minBeds, minBaths, `%${furniture}%`); 
+            
+            return res.status(200).json(data);
+            
 });
-
 
 export default router;  
 

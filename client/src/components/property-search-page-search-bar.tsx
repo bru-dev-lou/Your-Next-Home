@@ -8,11 +8,12 @@ function PropertyPageSearchBar () {
     const [minBeds, setMinBeds] = useState(0);
     const [minBaths, setMinBaths] = useState(0);
     const [furniture, setFurniture] = useState('');
+    
     const navigate = useNavigate(); 
 
 const buttonSearch = (e: any) => {
     e.preventDefault();
-    navigate(`/search?city=${city}&type=${type}maxPrice=${maxPrice}&minBeds=${minBeds}&minBaths=${minBaths}&furnished=${furniture}`)
+    navigate(`/search?city=${city}&type=${type}&maxPrice=${maxPrice}&minBeds=${minBeds}&minBaths=${minBaths}&furniture=${furniture}`)
 };
 
 return (
@@ -20,7 +21,7 @@ return (
         <form onSubmit={buttonSearch} method="get">
             <label htmlFor = "citySelect">Enter a location</label>
                  <input 
-                        id = "cityselect"
+                        id = "citySelect"
                         name = "city"
                         type = "text"
                         placeholder = "Enter your preferred location" 
@@ -43,7 +44,7 @@ return (
                     onChange = {(e) => setMaxPrice(Number(e.target.value))}
                     id = "maxPrice"
                     >
-                        <option value = {maxPrice}> No max </option>
+                        <option value = {10000}> No max </option>
                         <option value = "500"> $500 PCM </option>
                         <option value = "600"> $600 PCM </option>
                         <option value = "700"> $700 PCM </option>
@@ -51,7 +52,7 @@ return (
                         <option value = "900"> $900 PCM </option>
                         <option value = "1000"> $1,000 PCM </option>
                         <option value = "1100"> $1,100 PCM </option>
-                        <option value = "1200"> $,1200 PCM </option>
+                        <option value = "1200"> $1,200 PCM </option>
                         <option value = "1300"> $1,300 PCM </option>
                         <option value = "1400"> $1,400 PCM </option>
                         <option value = "1500"> $1,500 PCM </option>
@@ -67,7 +68,7 @@ return (
                     onChange={(e) => setMinBeds(Number(e.target.value))}
                     id ="minBedrooms" 
                     >
-                        <option value= {minBeds}>No min</option>
+                        <option value= {0}>No min</option>
                         <option value='1'>1</option>
                         <option value='2'>2</option>
                         <option value='3'>3</option>
@@ -79,7 +80,7 @@ return (
                     onChange={(e) => setMinBaths(Number(e.target.value))}
                     id = "minBathrooms"
                     >
-                        <option value= {minBaths}>No min</option>
+                        <option value= {0}>No min</option>
                         <option value='1'>1</option>
                         <option value='2'>2</option>
                         <option value='3'>3</option>
@@ -91,7 +92,7 @@ return (
                 onChange={(e) => setFurniture(e.target.value)}
                 id = "Furniture"
                 >
-                        <option value = {furniture}> Any</option>
+                        <option value = {""}> Any</option>
                         <option value = 'Furnished'> Furnished</option>
                         <option value = 'Semi-furnished'> Semi-Furnished</option>
                         <option value = 'Unfurnished'> Unfurnished</option>        

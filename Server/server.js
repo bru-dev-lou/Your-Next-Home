@@ -14,7 +14,7 @@ app.get("/", (req, res) => {
     res.send("Server is working!"); 
 })
 
-app.use("/search", propertySearchRouter);   
+app.use("/api/search", propertySearchRouter);   
 app.use("/api", autoCompleteRouter);
 app.use("/contact", inquiriesRouter);
 
