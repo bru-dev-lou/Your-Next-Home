@@ -20,3 +20,11 @@ CREATE TABLE IF NOT EXISTS inquiries (
     message_topic TEXT NOT NULL,
     message TEXT NOT NULL
 );
+
+CREATE TABLE IF NOT EXISTS property_photos (
+    id INTEGER PRIMARY KEY, 
+    property_id INTEGER NOT NULL,
+    photo_path TEXT NOT NULL,
+    is_main BOOLEAN DEFAULT 0,
+    FOREIGN KEY (property_id) REFERENCES property_list(id) ON DELETE CASCADE
+    );
