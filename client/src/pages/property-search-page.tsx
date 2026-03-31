@@ -14,16 +14,17 @@ type Property = {
   furniture: string;
   summary : string;
   date_listed :  string;
+  photo_path : string;
 }
 
 function Results () {
   const [params] = useSearchParams();
   
-  const city = params.get("city"); 
+  const city = params.get("city") || ""; 
   const type = params.get("type") || ""
-  const maxPrice = params.get("maxPrice");
-  const minBeds = params.get("minBeds");
-  const minBaths = params.get("minBaths");
+  const maxPrice = params.get("maxPrice") || "";
+  const minBeds = params.get("minBeds") || "";
+  const minBaths = params.get("minBaths") || "";
   const furniture = params.get("furniture") || "";
 
 
@@ -50,11 +51,13 @@ const [ results, setResults] = useState<Property[]>([])
         </div>
           {results.map(result => (
             <div id = "propertyCard" key = {result.id}> 
-            <li id = "propertyCity">{result.city}</li>
-            <li id = "propertyType"> {result.type}</li>
-            <li id = "propertyPrice">  ${result.price}</li>
-            <li id = "propertySummary"> {result.summary}</li>
-            <li id = "propertyDateListed"> {result.date_listed} </li>
+            <img id = "propertyMainPhoto" src = {result.photo_path} />
+            <p id = "propertyCity">{result.city}</p>
+            <p id = "propertyPrice">  £{result.price}</p>
+            <p id = "propertySummary"> {result.summary}</p>
+            <p id = "propertyDateListed"> {result.date_listed} </p>
+            <p> PROP{result.id}</p>
+
             </div>
           ))}
     </div>
