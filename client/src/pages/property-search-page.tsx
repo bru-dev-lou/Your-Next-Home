@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useSearchParams } from "react-router-dom";
+import { useSearchParams, useNavigate } from "react-router-dom";
 
 import PropertyPageSearchBar from "../components/property-search-page-search-bar"; 
 
@@ -27,21 +27,24 @@ function Results () {
   const minBaths = params.get("minBaths") || "";
   const furniture = params.get("furniture") || "";
 
+  const navigate = useNavigate(); 
 
-const [ results, setResults] = useState<Property[]>([])
- 
+  const [ results, setResults] = useState<Property[]>([])
+
   useEffect(() => {
-    const fetchHomeResults = async () => {
+    const fetchResults = async () => {
       const res = await fetch(`/api/search?city=${city}&type=${type}&maxPrice=${maxPrice}&minBeds=${minBeds}&minBaths=${minBaths}&furniture=${furniture}`);
       const data = await res.json()
         console.log(data);
         setResults(data); 
         };
-    fetchHomeResults();
+    fetchResults();
   }, [city, type, maxPrice, minBeds, minBaths, furniture]);
 
 
-
+  const propertyDetail = (id : any) => {
+    navigate(`/property/${id}`)
+  };
 
   return (
     <div>
@@ -51,13 +54,12 @@ const [ results, setResults] = useState<Property[]>([])
         </div>
           {results.map(result => (
             <div id = "propertyCard" key = {result.id}> 
-            <img id = "propertyMainPhoto" src = {result.photo_path} />
+            <img onClick={ () => propertyDetail(result.id)} id = "propertyMainPhoto" src = {result.photo_path} />
             <p id = "propertyCity">{result.city}</p>
             <p id = "propertyPrice">  £{result.price}</p>
             <p id = "propertySummary"> {result.summary}</p>
             <p id = "propertyDateListed"> {result.date_listed} </p>
-            <p> PROP{result.id}</p>
-
+            <p> PROP{result.id}</p> 
             </div>
           ))}
     </div>

@@ -3,6 +3,7 @@ import cors from "cors";
 import propertySearchRouter from './routes/property-search.js';
 import autoCompleteRouter from './routes/auto-complete.js';
 import inquiriesRouter from './routes/contact-inquiries.js';
+import detailedPropertyRouter from './routes/property_detailed.js'
 
 const app = express(); 
 const port = 3000;
@@ -17,6 +18,7 @@ app.get("/", (req, res) => {
 app.use("/api/search", propertySearchRouter);   
 app.use("/api", autoCompleteRouter);
 app.use("/contact", inquiriesRouter);
+app.use("/api/property", detailedPropertyRouter);
 
 app.listen(port, () => {
     console.log(`Server is running on port ${port}`);
