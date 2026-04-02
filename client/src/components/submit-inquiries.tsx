@@ -8,34 +8,34 @@ function Inquiries () {
     const [ messageTopic, setMessageTopic ] = useState("");
     const [ message, setMessage ] = useState("");
    
-const submitInquiry = async (e:React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
+    const submitInquiry = async (e:React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
 
-    const data = {
-        name,
-        email,
-        propID,
-        messageTopic,
-        message
-    };
+        const data = {
+            name,
+            email,
+            propID,
+            messageTopic,
+            message
+        };
 
-    try {
-        const res = await fetch("/api/contact", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify(data)
-        });
+        try {
+            const res = await fetch("/api/contact", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(data)
+            });
 
-        const result = await res.json();
-        console.log(result);
-    } 
+            const result = await res.json();
+            console.log(result);
+        } 
     
-    catch (error) {
-        console.error("Error submitting inquiry:", error);
+        catch (error) {
+            console.error("Error submitting inquiry:", error);
+        }
     }
-}
    
     return (
         <div>
