@@ -17,7 +17,7 @@ app.get("/", (req, res) => {
 
 app.use("/api/search", propertySearchRouter);   
 app.use("/api", autoCompleteRouter);
-app.use("/contact", inquiriesRouter);
+app.use("/api/contact", inquiriesRouter);
 app.use("/api/property", detailedPropertyRouter);
 
 app.listen(port, () => {

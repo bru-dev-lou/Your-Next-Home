@@ -8,6 +8,7 @@ type PropertyDetail = {
     summary: string;
     date_listed: string;
     photos: string[]; 
+    detail: string;
 }
 
 function Property () {
@@ -34,7 +35,7 @@ return (
                 ))}
                 <p>{property.city}</p>
                 <p>£{property.price}</p>
-                <p>{property.summary}</p>
+                <p>{property.detail}</p>
                 <p>{property.date_listed}</p>
             </div>
         )}
