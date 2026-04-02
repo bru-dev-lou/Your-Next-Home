@@ -33,7 +33,7 @@ CREATE TABLE IF NOT EXISTS property_photos (
 CREATE TABLE IF NOT EXISTS property_owners (
     id INTEGER PRIMARY KEY, 
     name TEXT NOT NULL,
-    address TEXT UNIQUE,
+    address TEXT NOT NULL UNIQUE,
     phone_number INTEGER UNIQUE NOT NULL,
     email TEXT UNIQUE NOT NULL, 
     password_hash TEXT NOT NULL,
