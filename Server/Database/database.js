@@ -19,7 +19,7 @@ if (propertyCount.count === 0) {
     db.exec(seed);
 }  
 
-const inquiryCount = db.prepare('SELECT COUNT (*) as count FROM inquiries').get();
+const inquiryCount = db.prepare('SELECT COUNT(*) as count FROM inquiries').get();
 
 if (inquiryCount.count === 0)  {
     db.exec(seed);

@@ -1,4 +1,6 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+
 
 function AccountCreation () {
     const [ name, setName ] = useState("");
@@ -6,21 +8,27 @@ function AccountCreation () {
     const [ number, setNumber ] = useState("");
     const [ email, setEmail ] = useState("");
     const [ password, setPassword ] = useState("");
+    const [ confirmPass, setConfirmPass ] = useState("");
+    const [ accountCreated, setAccountCreated ] = useState(false); 
+    const [ errorMessage, setErrorMessage ] = useState("");
+    const navigate = useNavigate(); 
 
     const createAccount = async (e:React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
+        setErrorMessage("");
 
         const data = {
             name, 
             address,
             number, 
             email, 
-            password
+            password,
+            confirmPass
         };
 
         try {
             const res = await fetch("/api/register", {
-                method: "POST" ,
+                method: "POST",
                 headers: {
                     "Content-Type": "application/json"
                 },
@@ -28,16 +36,20 @@ function AccountCreation () {
             });
             
             const result = await res.json(); 
-            console.log(result); 
+            console.log(result);
+
+            if (res.ok) {
+                setAccountCreated(true);
+            }
+            else {
+                setErrorMessage(result.error);
+            }
         }
 
         catch(error) {
-            console.error("Error creating account", error);
+            console.error(error);
         }
     }
-/* NEED TO CREATE A CONFIRM PASSWORD CONST FOR THIS TO WORK
- NEXT NEED TO USE BCRYPT TO HASS PASSWORDS - DO NOT ENTER PASSWORDS IN DB
- ALSO NEED REGEX FOR PASSWORDS TO SET REQUIREMENTS */
 
 return (
     <div>
@@ -85,10 +97,20 @@ return (
             <label> Confirm Password: </label>
                 <input
                     type= "password"
-                    value= {password}
-                    onChange= {(e) => setPassword(e.target.value)}
+                    placeholder = "Type your password again"
+                    value= {confirmPass}
+                    onChange= {(e) => setConfirmPass(e.target.value)}
                 />
+            <br></br>
+            {!accountCreated && <button type= "submit"> Create Account </button> }
         </form>
+            { accountCreated &&
+                <div>
+                    <h3>Thank you, your account has been created!</h3>
+                    <button onClick={ () => navigate("/signIn")}> Sign In </button>
+                </div> 
+            }
+            { errorMessage && <p> { errorMessage } </p> }
     </div>
 )
 }

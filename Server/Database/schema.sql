@@ -1,3 +1,13 @@
+CREATE TABLE IF NOT EXISTS property_owners (
+    id INTEGER PRIMARY KEY, 
+    name TEXT NOT NULL,
+    address TEXT NOT NULL UNIQUE,
+    phone_number INTEGER UNIQUE NOT NULL,
+    email TEXT UNIQUE NOT NULL, 
+    password_hash TEXT NOT NULL,
+    created TEXT NOT NULL DEFAULT (datetime('now'))
+);
+
 CREATE TABLE IF NOT EXISTS property_list (
     id INTEGER PRIMARY KEY,
     type TEXT NOT NULL,
@@ -10,7 +20,8 @@ CREATE TABLE IF NOT EXISTS property_list (
     summary TEXT NOT NULL DEFAULT 'Seems like a description is missing for this property. Please contact the owner for more details.If you are the owner, please update the property description.',
     owner_id INTEGER NOT NULL,
     date_listed TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    detail TEXT NOT NULL
+    detail TEXT NOT NULL,
+    FOREIGN KEY (owner_id) REFERENCES property_owners(id) ON DELETE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS inquiries (
@@ -30,13 +41,3 @@ CREATE TABLE IF NOT EXISTS property_photos (
     FOREIGN KEY (property_id) REFERENCES property_list(id) ON DELETE CASCADE
 );
 
-CREATE TABLE IF NOT EXISTS property_owners (
-    id INTEGER PRIMARY KEY, 
-    name TEXT NOT NULL,
-    address TEXT NOT NULL UNIQUE,
-    phone_number INTEGER UNIQUE NOT NULL,
-    email TEXT UNIQUE NOT NULL, 
-    password_hash TEXT NOT NULL,
-    created TEXT NOT NULL DEFAULT (datetime('now')),
-    FOREIGN KEY (id) REFERENCES property_list(owner_id) ON DELETE CASCADE
-);
