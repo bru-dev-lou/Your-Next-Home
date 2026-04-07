@@ -5,6 +5,7 @@ import autoCompleteRouter from './routes/auto-complete.js';
 import inquiriesRouter from './routes/contact-inquiries.js';
 import detailedPropertyRouter from './routes/property_detailed.js';
 import accountCreationRouter from './routes/register_account.js';
+import signInRouter from './routes/sign_in.js';
 
 const app = express(); 
 const port = 3000;
@@ -21,6 +22,7 @@ app.use("/api", autoCompleteRouter);
 app.use("/api/contact", inquiriesRouter);
 app.use("/api/property", detailedPropertyRouter);
 app.use ("/api/register", accountCreationRouter);
+app.use("/api/signIn", signInRouter);
 
 app.listen(port, () => {
     console.log(`Server is running on port ${port}`);
