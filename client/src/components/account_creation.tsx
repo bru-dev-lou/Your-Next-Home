@@ -3,12 +3,15 @@ import { useNavigate } from 'react-router-dom';
 
 
 function AccountCreation () {
+    const [username, setUsername ] = useState("");
     const [ name, setName ] = useState("");
     const [ address, setAddress ] = useState("");
     const [ number, setNumber ] = useState("");
     const [ email, setEmail ] = useState("");
     const [ password, setPassword ] = useState("");
     const [ confirmPass, setConfirmPass ] = useState("");
+    const [ showPassword, setShowPassword ] = useState(false);
+    const [ showConfirmPassword, setConfirmShowPassword ] = useState(false);
     const [ accountCreated, setAccountCreated ] = useState(false); 
     const [ errorMessage, setErrorMessage ] = useState("");
     const navigate = useNavigate(); 
@@ -18,6 +21,7 @@ function AccountCreation () {
         setErrorMessage("");
 
         const data = {
+            username, 
             name, 
             address,
             number, 
@@ -54,10 +58,18 @@ function AccountCreation () {
 return (
     <div>
         <form onSubmit={createAccount}>
-            <label> Name: </label>
+            <label> Username: </label>
+                <input 
+                    type="text"
+                    placeholder="Choose a username."
+                    value={username}
+                    onChange={(e) => setUsername(e.target.value)}
+                />
+            <br></br>
+            <label> Company Name: </label>
                 <input
                     type="text"
-                    placeholder="Enter your name."
+                    placeholder="This will be shown on your property listings."
                     value={name}
                     onChange= {(e) => setName(e.target.value)}
                 />
@@ -88,25 +100,38 @@ return (
             <br></br>
             <label> Password: </label>
                 <input
-                    type= "password"
+                    type= {showPassword ? "text" : "password"}
                     placeholder= "Choose a password"
                     value= {password}
                     onChange= {(e) => setPassword(e.target.value)}
+                    autoComplete= "new-password"
                 />
+                <button 
+                    type="button"
+                    onClick= {() => setShowPassword(!showPassword)}>
+                    {showPassword ? "Hide" : "Show"}
+                </button>
             <br></br>
             <label> Confirm Password: </label>
                 <input
-                    type= "password"
+                    type= {showConfirmPassword ? "text" : "password"}
                     placeholder = "Type your password again"
                     value= {confirmPass}
                     onChange= {(e) => setConfirmPass(e.target.value)}
+                    autoComplete="new-password"
                 />
+                <button 
+                    type="button"
+                    onClick= {() => setConfirmShowPassword(!showConfirmPassword)}>
+                    {showConfirmPassword ? "Hide" : "Show"}
+                </button>
             <br></br>
-            {!accountCreated && <button type= "submit"> Create Account </button> }
+            {!accountCreated && <button type="submit"> Create Account </button> }
         </form>
             { accountCreated &&
                 <div>
                     <h3>Thank you, your account has been created!</h3>
+                    <h4>Note down your username and password for future reference.</h4>
                     <button onClick={ () => navigate("/signIn")}> Sign In </button>
                 </div> 
             }

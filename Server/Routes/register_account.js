@@ -5,6 +5,7 @@ import db from "../database/database.js"
 const router = express.Router();
 
 router.post("/", async (req, res) => {
+    const username = req.body.username.trim();
     const name = req.body.name;
     const address = req.body.address.trim();
     const number = req.body.number.trim().toLowerCase();
@@ -15,9 +16,17 @@ router.post("/", async (req, res) => {
     const passwordHash = await bcrypt.hash(password, 10);
 
 
-    if (!name || !address || !number || !email || !password) {
+    if (!username || !name || !address || !number || !email || !password) {
         return res.status(400).json( {error: "All fields required!"} );
     }
+
+    const usernameCheck = db.prepare(`SELECT username FROM property_owners WHERE username = ?`).get(username);
+    if (usernameCheck) {
+        return res.status(400).json({ error: 
+            "This username is already in use!"
+        });
+    }
+
 
     const addressCheck = db.prepare(`SELECT address FROM property_owners WHERE address = ?`).get(address);
     if (addressCheck) {
@@ -50,9 +59,8 @@ router.post("/", async (req, res) => {
     }
 
 
-
-    db.prepare(`INSERT INTO property_owners (name, address, phone_number, email, password_hash) VALUES (?, ?, ?, ?, ?)`)
-    .run(name, address, number, email, passwordHash);
+    db.prepare(`INSERT INTO property_owners (username, name, address, phone_number, email, password_hash) VALUES (?, ?, ?, ?, ?, ?)`)
+    .run(username, name, address, number, email, passwordHash);
 
     res.status(200).json({ message: "Accounnt created" });
 

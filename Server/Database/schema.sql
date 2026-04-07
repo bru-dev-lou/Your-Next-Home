@@ -1,5 +1,6 @@
 CREATE TABLE IF NOT EXISTS property_owners (
     id INTEGER PRIMARY KEY, 
+    username TEXT NOT NULL UNIQUE,
     name TEXT NOT NULL,
     address TEXT NOT NULL UNIQUE,
     phone_number INTEGER UNIQUE NOT NULL,
