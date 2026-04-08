@@ -1,4 +1,4 @@
-import express, { Router } from "express";
+import express from "express";
 import db from "../database/database.js";
 import bcrypt from "bcrypt"; 
 
@@ -29,7 +29,7 @@ router.post("/", async (req, res) => {
         return res.status(401).json({ error: "Invalid credentials, please try again." });
     }
     
-    res.status(200).json({ username: user.username, id: user.id });
+    res.status(200).json({ name: user.name, username: user.username, id: user.id });
 }
 )
 

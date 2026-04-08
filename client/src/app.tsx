@@ -1,12 +1,12 @@
 import { BrowserRouter, Routes, Route,} from "react-router-dom";
 
-import Nav from "./components/nav-bar";
-import Home from "./pages/home-page";
-import PropertySearch from "./pages/property-search-page";
+import Nav from "./components/nav_bar";
+import Home from "./pages/home_page";
+import PropertySearch from "./pages/property_search_page";
 import DetailedProperty from "./pages/detailed_property_page";
-import Contact from "./pages/contact-page";
+import Contact from "./pages/contact_page";
 import Registration from "./pages/registration_page";
-import SignIn from "./components/sign_in_component"; 
+import SignInPage from "./pages/sign_in_page"; 
 
 
 
@@ -23,7 +23,7 @@ function App() {
             <Route path="/contact" element={<Contact />} />
             <Route path="/property/:id" element={<DetailedProperty />} /> 
             <Route path="/register" element={<Registration />} />
-            <Route path="/signIn" element={<SignIn />} />
+            <Route path="/signIn" element={<SignInPage />} />
           </Routes>
       </div>
     </BrowserRouter>
