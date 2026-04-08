@@ -4,8 +4,7 @@ function Registration () {
 
     return (
         <div>
-        <h1>Are you ready to find your next home?</h1>
-        <h2> Join us and get started today!</h2>
+        <h2> Make an account with us, it's easy!</h2>
         <AccountCreation />
         </div>
     )

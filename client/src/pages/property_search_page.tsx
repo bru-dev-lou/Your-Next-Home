@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useSearchParams, useNavigate } from "react-router-dom";
 
-import PropertyPageSearchBar from "../components/property-search-page-search-bar"; 
+import PropertyPageSearchBar from "../components/property_search_page_search_bar"; 
 
 type Property = { 
   id : number; 

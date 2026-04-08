@@ -1,4 +1,4 @@
-import HomePageSearchBar from "../components/home-page-search-bar"
+import HomePageSearchBar from "../components/home_page_search_bar"
 
 function Home() {
 

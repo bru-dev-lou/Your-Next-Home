@@ -30,7 +30,7 @@ function SignIn () {
             console.log(result);
 
             if (res.ok) {
-                navigate(`/myprofile/${result.username}/${result.id}`);
+                navigate(`/dashboard/${result.username}/${result.id}`);
             }   
             else {
                 setErrorMessage(result.error);
