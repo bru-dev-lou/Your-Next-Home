@@ -7,6 +7,7 @@ import inquiriesRouter from './routes/contact_inquiries.js';
 import signInRouter from './routes/sign_in.js';
 import accountCreationRouter from './routes/register_account.js';
 import dashboardRouter from './routes/dashboard.js';
+import dashboardPropertyEditRouter from './routes/dashboard_property_edit.js';
 
 
 const app = express(); 
@@ -26,6 +27,7 @@ app.use("/api/contact", inquiriesRouter);
 app.use("/api/signIn", signInRouter);
 app.use("/api/register", accountCreationRouter);
 app.use("/api/dashboard/", dashboardRouter);
+app.use("/api/dashboard/property/edit/", dashboardPropertyEditRouter);
 
 app.listen(port, () => {
     console.log(`Server is running on port ${port}`);
