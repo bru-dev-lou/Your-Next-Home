@@ -4,8 +4,7 @@ import db from "../database/database.js";
 const router = express.Router();
 
 router.get("/:username/:id", (req, res) => {
-    const username = req.params.username;
-    const id = req.params.id;
+    const { username, id } = req.params;
 
     const user = db.prepare(`SELECT id, username, name FROM property_owners WHERE id = ? AND username = ?`).get(id, username);
 
