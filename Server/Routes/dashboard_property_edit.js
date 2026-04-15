@@ -16,20 +16,20 @@ router.route("/:username/:propID")
             return res.status(404).json({ error: "User not found." });
         }
 
-        const SQLShow = db.prepare(`SELECT property_list.*, property_photos.photo_path
-        FROM property_list
-        LEFT JOIN property_photos
-        ON property_photos.property_id = property_list.id
-        WHERE owner_id = ? AND property_list.id = ?
-        `)
-        .all(user.id, propID);     
-    
+        const SQLShow = db.prepare(`SELECT * FROM property_list WHERE owner_id = ? AND id = ?`).get(user.id, propID);
+        
         if (SQLShow.length === 0) {
             return res.status(404).json({ error: "Property not found." });
         }
-        else {
-            res.status(200).json({ property: SQLShow });
+
+        const SQLPhotos = db.prepare(`SELECT * FROM property_photos WHERE property_id = ?`).all(propID);
+        
+        if (SQLPhotos.length === 0) {
+            return res.status(404).json({ error: "No photos found for this property." });
         }
+
+        res.status(200).json({ property: SQLShow, photos: SQLPhotos });
+        
     }
 
     catch (error) {
