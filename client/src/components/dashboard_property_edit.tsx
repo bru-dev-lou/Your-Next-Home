@@ -4,16 +4,16 @@ import { useParams } from "react-router-dom";
 function DashboardPropertyEdit() {
     const { username, propID } = useParams();
 
-    type proeprty = {
-        type: string;
-        city: string;
-        price: number;
-        no_bedrooms: number;
-        no_bathrooms: number;
-        size: number;
-        furniture: string;
-        summary: string;
-        detail: string
+    type property = {
+        type?: string;
+        city?: string;
+        price?: number;
+        no_bedrooms?: number;
+        no_bathrooms?: number;
+        size?: number;
+        furniture?: string;
+        summary?: string;
+        detail?: string
     };
 
     type photo = {
@@ -27,13 +27,17 @@ function DashboardPropertyEdit() {
     }
 
     type info ={
-        property: proeprty;
+        property: property;
         photos: photo[];
         user: user;
     }
 
     const [ data, setData ] = useState<info | null>(null);
-    const [ propertyPhotos, setPropertyPhotos ] = useState<photo[]>([]);
+    const [ propertyDetails, setPropertyDetails ] = useState<property | null>(null);
+    const [ propertyPhotos, setPropertyPhotos ] = useState<photo[]>([]);``
+    const [ propertyUpdated, setPropertyUpdated ] = useState(false);
+    const [ errorMessage, setErrorMessage ] = useState("");
+    const [ successMessage, setSuccessMessage ] = useState("");
 
 
     useEffect(() => {
@@ -42,17 +46,18 @@ function DashboardPropertyEdit() {
             const result = await res.json();
             console.log(result);
             setData(result);
+            setPropertyDetails(result.property);
             setPropertyPhotos(result.photos);
         }
         fetchData();
     }, [username, propID]);
 
-    if (!data) {
+    if (!data || !propertyDetails) {
         return <div>Loading...</div>;
     }
 
 
-    async function handleDelete(photoID: number, photo_path: string, e: React.MouseEvent<HTMLButtonElement>) {
+    async function photoDelete(photoID: number, photo_path: string, e: React.MouseEvent<HTMLButtonElement>) {
         e.preventDefault();
        try {
             const res = await fetch(`/api/dashboard/property/edit/${username}/${propID}`, {
@@ -66,76 +71,149 @@ function DashboardPropertyEdit() {
             const updatedPhotos = await res.json();
             console.log(updatedPhotos);
             setPropertyPhotos(propertyPhotos.filter(photo => photo.id !== photoID));
-
-        } catch (error) {
+        }
+        
+        catch (error) {
             console.error("Error deleting property:", error);
+        }
+    }
+
+    async function propertyDetailsUpdate(e: React.MouseEvent<HTMLButtonElement>) {
+        e.preventDefault();
+        try {
+            const res = await fetch(`/api/dashboard/property/edit/${username}/${propID}`, {
+                method: "PATCH",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(propertyDetails)
+            });
+
+            const newDetails = await res.json();
+            console.log(newDetails);
+
+            if (res.ok) {
+                setPropertyUpdated(true);
+                setSuccessMessage(newDetails.message);
+                setErrorMessage("");
+            } else {
+                setErrorMessage(newDetails.error);
+                setSuccessMessage("");
+            }
+        } 
+            
+        catch (error) {
+            console.error("Error updating property:", error);
         }
     }
 
 
     return (
         <div>
-            <h3> Property Information </h3>
-            <h5> Update your property details below.</h5>
-            <label> 
-                Type:
-                <input type="text" placeholder={data.property.type} />
-            </label>
-            <br />
-            <label>
-                City:
-                <input type="text" placeholder={data.property.city} />
-            </label>
-            <br />
-            <label>
-                Price:
-                <input type="number" placeholder={`£${data.property.price.toString()}`} />
-            </label>
-            <br />
-            <label>
-                Bedrooms:
-                <input type="number" placeholder={data.property.no_bedrooms.toString()} />
-            </label>
-            <br />
-            <label>
-                Bathrooms:
-                <input type="number" placeholder={data.property.no_bathrooms.toString()} />
-            </label>
-            <br />
-            <label>
-                Size:
-                <input type="number" placeholder={`${data.property.size.toString()}m²`} />
-            </label>
-            <br />
-            <label>
-                Furniture:
-                <input type="text" placeholder={data.property.furniture} />
-            </label>
-            <br />
-            <label>
-                Summary (max 50 words):
-                <textarea placeholder={data.property.summary} />
-            </label>
-            <br />
-            <label>
-                Detailed Description (max 250 words):
-                <textarea placeholder={data.property.detail} />
-            </label>
-            <h3> Property Photos </h3>
-            <h5> Update your property photos below. </h5>
-            {propertyPhotos.length > 0 ? (
-                <ul style={{ listStyle: "none", padding: 0, margin: 0 }}>
-                    {propertyPhotos.map((photo) => (
-                        <li key={photo.id}>
-                            <img src={photo.photo_path} alt="Property" style={{ width: "200px", height: "150px" }} />
-                            <button onClick={(e) => handleDelete(photo.id, photo.photo_path, e)}> x </button>
-                        </li>
-                    ))}
-                </ul>
-            ) : (
-                <p>No photos available.</p>
-            )}
-
+            <div>
+                <h3> Property Information </h3>
+                <h5> Update your property details below.</h5>
+                <label> 
+                    Type:
+                    <select onChange={(e) => setPropertyDetails({...propertyDetails, type: e.target.value})} value={propertyDetails.type}>
+                        <option value={propertyDetails.type}>
+                            {propertyDetails.type}
+                        </option>
+                        {propertyDetails.type === 'Apartment' ? null : <option onChange={(e) => setPropertyDetails({...propertyDetails, type: e.target.value})} value='Apartment'>Apartment</option>}
+                        {propertyDetails.type === 'Terraced' ? null : <option onChange={(e) => setPropertyDetails({...propertyDetails, type: e.target.value})} value='Terraced'>Terraced</option>}
+                        {propertyDetails.type === 'Semi-Detached' ? null : <option onChange={(e) => setPropertyDetails({...propertyDetails, type: e.target.value})} value='Semi-Detached'>Semi-Detached</option>}
+                        {propertyDetails.type === 'Detached' ? null : <option onChange={(e) => setPropertyDetails({...propertyDetails, type: e.target.value})} value='Detached'>Detached</option>}
+                        {propertyDetails.type === 'Bungalow' ? null : <option onChange={(e) => setPropertyDetails({...propertyDetails, type: e.target.value})} value='Bungalow'>Bungalow</option>}
+                    </select>  
+                </label>
+                <br />
+                <label>
+                    City:
+                    <input type="text" onChange={(e) => setPropertyDetails({...propertyDetails, city: e.target.value})} value={propertyDetails.city} />
+                </label>
+                <br />
+                <label>
+                    Price (£):
+                    <input type="number" onChange={(e) => setPropertyDetails({...propertyDetails, price: parseFloat(e.target.value)})} value={propertyDetails.price} />
+                </label>
+                <br />
+                <label>
+                    Bedrooms:
+                    <input type="number" onChange={(e) => setPropertyDetails({...propertyDetails, no_bedrooms: parseInt(e.target.value)})} value={propertyDetails.no_bedrooms} />
+                </label>
+                <br />
+                <label>
+                    Bathrooms:
+                    <input type="number" onChange={(e) => setPropertyDetails({...propertyDetails, no_bathrooms: parseInt(e.target.value)})} value={propertyDetails.no_bathrooms} />
+                </label>
+                <br />
+                <label>
+                    Size (m²):
+                    <input type="number" onChange={(e) => setPropertyDetails({...propertyDetails, size: parseInt(e.target.value)})} value={propertyDetails.size} />
+                </label>
+                <br />
+                <label>
+                    Furniture:
+                    <select onChange={(e) => setPropertyDetails({...propertyDetails, furniture: e.target.value})} value={propertyDetails.furniture}>
+                        <option value={propertyDetails.furniture}>{propertyDetails.furniture}</option>
+                        {propertyDetails.furniture === 'Furnished' ? null : <option onChange={(e) => setPropertyDetails({...propertyDetails, furniture: e.target.value})} value = 'Furnished'> Furnished</option>}
+                        {propertyDetails.furniture === 'Semi-furnished' ? null : <option onChange={(e) => setPropertyDetails({...propertyDetails, furniture: e.target.value})} value = 'Semi-furnished'> Semi-Furnished</option>}
+                        {propertyDetails.furniture === 'Unfurnished' ? null : <option onChange={(e) => setPropertyDetails({...propertyDetails, furniture: e.target.value})} value = 'Unfurnished'> Unfurnished</option>}        
+                    </select>
+                </label>
+                <br />
+                <label>
+                    Summary (max 50 words):
+                    <textarea
+                        onChange={(e) => {
+                            const words = e.target.value.split(/\s+/).filter(Boolean);
+                            if (words.length <= 50) {
+                                setPropertyDetails({ ...propertyDetails, summary: e.target.value });
+                            }
+                         }}
+                    value={propertyDetails.summary}
+                    />
+                <>
+                    {propertyDetails.summary ? propertyDetails.summary.split(/\s+/).filter(Boolean).length : 0} / 50 words
+                </>
+                </label>
+                <br />
+                <label>
+                    Detailed Description (max 250 words):
+                    <textarea
+                        onChange={(e) => {
+                            const words = e.target.value.split(/\s+/).filter(Boolean);
+                            if (words.length <= 250) {
+                                setPropertyDetails({ ...propertyDetails, detail: e.target.value });
+                            }
+                        }}
+                    value={propertyDetails.detail}
+                    />
+                <>
+                    {propertyDetails.detail ? propertyDetails.detail.split(/\s+/).filter(Boolean).length : 0} / 250 words
+                </>
+                </label>
+                <br />
+                <button onClick={propertyDetailsUpdate}> Update Property Details </button>
+                {propertyUpdated && <p style={{ color: "green" }}>{successMessage}</p>}
+                {errorMessage && <p style={{ color: "red" }}>{errorMessage}</p> }
+            </div>
+            <div>
+                <h3> Property Photos </h3>
+                <h5> Update your property photos below. </h5>
+                {propertyPhotos.length > 0 ? (
+                    <ul style={{ listStyle: "none", padding: 0, margin: 0 }}>
+                        {propertyPhotos.map((photo) => (
+                            <li key={photo.id}>
+                                <img src={photo.photo_path} alt="Property" style={{ width: "200px", height: "150px" }} />
+                                <button onClick={(e) => photoDelete(photo.id, photo.photo_path, e)}> x </button>
+                            </li>
+                        ))}
+                    </ul>
+                ) : (
+                    <p>No photos available.</p>
+                )}
+            </div>
         </div>
     );
 }

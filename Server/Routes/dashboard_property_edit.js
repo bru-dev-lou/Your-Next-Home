@@ -40,7 +40,7 @@ router.route("/:username/:propID")
 
 .patch ((req, res) => {
     const {propID, username} = req.params;
-    const {type, city, price, bedrooms, bathrooms, size, furniture, summary, details} = req.body;
+    const {type, city, price, no_bedrooms, no_bathrooms, size, furniture, summary, detail} = req.body;
     
     try {
         const user = db.prepare(`SELECT id FROM property_owners WHERE username = ?`).get(username);
@@ -49,10 +49,18 @@ router.route("/:username/:propID")
         return res.status(404).json({ error: "User not found." });
         }
 
-        const SQLEdit = db.prepare(`UPDATE property_list 
-            SET type = ?, city = ?, price = ?, no_bedrooms = ?, no_bathrooms = ?, size = ?, furniture = ?, summary = ?, details = ? WHERE id = ? AND owner_id = ?`)
-            .run(type, city, price, bedrooms, bathrooms, size, furniture, summary, details, propID, user.id);
+        if (summary.split(/\s+/).filter(Boolean).length > 50) {
+            return res.status(400).json({ error: "Summary cannot exceed 50 words." });
+        }
 
+        if (detail.split(/\s+/).filter(Boolean).length > 250) {
+            return res.status(400).json({ error: "Detailed description cannot exceed 250 words." });
+        }
+
+        const SQLEdit = db.prepare(`UPDATE property_list 
+            SET type = ?, city = ?, price = ?, no_bedrooms = ?, no_bathrooms = ?, size = ?, furniture = ?, summary = ?, detail = ? WHERE id = ? AND owner_id = ?`)
+            .run(type, city, price, no_bedrooms, no_bathrooms, size, furniture, summary, detail, propID, user.id);
+        
         if (SQLEdit.changes > 0) {
             return res.status(200).json({ message: "Property updated successfully!" });
         }

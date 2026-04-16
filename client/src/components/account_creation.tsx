@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 
 
 function AccountCreation () {
-    const [username, setUsername ] = useState("");
+    const [ username, setUsername ] = useState("");
     const [ name, setName ] = useState("");
     const [ address, setAddress ] = useState("");
     const [ number, setNumber ] = useState("");
