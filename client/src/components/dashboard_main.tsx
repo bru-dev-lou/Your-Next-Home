@@ -1,11 +1,7 @@
 import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 
-function DashboardMain() {
-    const { username, id } = useParams();    
-    const navigate = useNavigate();
-
-    type properties ={
+type properties ={
         id: number;
         type: string;
         city: string;
@@ -15,20 +11,25 @@ function DashboardMain() {
         summary: string;
         date_listed: string;
         photo_path: string;
-    };
-    type user = {
+};
+    
+type user = {
         id: number;
         username: string;
         name: string;
         properties: properties[];
-    };
-    type dashboardData = {
+};
+
+type dashboardData = {
         user: user;
         properties: properties[];
     };
 
+function DashboardMain() {
     const [ data, setData ] = useState<dashboardData | null>(null);
-
+    const [ deleteIDConfirmed, setDeleteIDConfirmed ] = useState(""); 
+    const { username, id } = useParams();    
+    const navigate = useNavigate();
 
     useEffect(() => {
         async function fetchData() {
@@ -40,6 +41,23 @@ function DashboardMain() {
         fetchData();
     } , [username, id]);
 
+    async function propertyDelete (propID: string) {
+        const res = await fetch(`/api/dashboard/${username}/${id}`, {
+            method: "DELETE",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({ propID })
+        });
+
+        const result = await res.json();
+        console.log(result);
+
+        const refreshRes = await fetch(`/api/dashboard/${username}/${id}`);
+        const refreshResult = await refreshRes.json();
+        setData(refreshResult);
+    }
+
     if (!data) {
         return <div>Loading...</div>;
     };
@@ -49,10 +67,10 @@ function DashboardMain() {
                     <h2> Welcome back {data.user.name}! </h2>
                     <h3> My Properties </h3>
                     {data.properties.length > 0 ? (
-                        <ul>
+                        <ul style={{ listStyle: "none", padding: 0, margin: 0 }}>
                             {data.properties.map((property: any) => (
                                 <li key={property.id}>
-                                    <img src={property.photo_path} alt="Property Main Image" />
+                                    <img src={property.photo_path} alt="Property Main Image" style={{ width: "800px", height: "550px" }}/>
                                     <h3>Summary</h3>
                                     <h4>{property.summary}</h4>
                                     <h3> Price </h3>
@@ -64,6 +82,16 @@ function DashboardMain() {
                                     <h3> Size </h3>
                                     <h4>{property.size} m²</h4>
                                     <button onClick = {() => navigate(`/dashboard/property/edit/${data.user.username}/${property.id}`)}> Edit Property </button>
+                                    <button onClick = {() => setDeleteIDConfirmed(property.id)}> Delete Property </button>
+                                   {deleteIDConfirmed === property.id ? (
+                                        <div>
+                                            <p> Are you sure you want to delete this property? </p>
+                                            <button onClick={() => propertyDelete(property.id)}> Confirm </button>
+                                            <button onClick={() => {
+                                            setDeleteIDConfirmed("");
+                                            }}> Cancel </button>
+                                        </div>
+                                        ) : null} 
                                 </li>
                             ))}
                         </ul>
