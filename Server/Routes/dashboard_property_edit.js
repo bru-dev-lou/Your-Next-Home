@@ -1,3 +1,4 @@
+import cloudinary from '../config/cloudinaryConfig.js';
 import express from 'express';
 import db from "../database/database.js";
 import upload from "../config/multerConfig.js";
@@ -100,7 +101,7 @@ router.route("/:username/:propID")
 
 })
 
-.post (upload.array('photos', 10), (req, res) => {
+.post (upload.array('photos', 10), async (req, res) => {
     const {propID, username} = req.params;
 
     try {
@@ -117,10 +118,23 @@ router.route("/:username/:propID")
         const SQLAddPhoto = db.prepare(`INSERT INTO property_photos (property_id, photo_path) VALUES (?, ?)`);
 
         for (const file of req.files) {
-            SQLAddPhoto.run(propID, file.path);
+            const result = await new Promise((resolve, reject) => {
+                cloudinary.uploader.upload_stream({ folder: 'new_property_photos' }, (error, result) => {
+                    if (error) reject(error);
+                    else resolve(result);
+                }).end(file.buffer);
+            });   
+            SQLAddPhoto.run(propID, result.secure_url);
         }
 
-        return res.status(201).json({ message: "Photos added successfully!" });
+        if (req.files.length > 0) {
+            const SQLPhotosUpdated = db.prepare(`SELECT * FROM property_photos WHERE property_id = ?`).all(propID);
+            return res.status(201).json({ message: "Photos added successfully!", newPhotos: SQLPhotosUpdated });
+        }
+
+        else {
+            return res.status(400).json({ error: "Failed to add photos." });
+        }
     }
 
     catch (error) {

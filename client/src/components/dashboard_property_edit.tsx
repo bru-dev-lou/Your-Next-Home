@@ -38,6 +38,8 @@ function DashboardPropertyEdit() {
     const [ propertyUpdated, setPropertyUpdated ] = useState(false);
     const [ errorMessage, setErrorMessage ] = useState("");
     const [ successMessage, setSuccessMessage ] = useState("");
+    const [ photoUploadSucessMessage, setPhotoUploadSuccessMessage ] = useState("");
+    const [ photoUploadErrorMessage, setPhotoUploadErrorMessage ] = useState("");
 
 
     useEffect(() => {
@@ -55,7 +57,6 @@ function DashboardPropertyEdit() {
     if (!data || !propertyDetails) {
         return <div>Loading...</div>;
     }
-
 
     async function photoDelete(photoID: number, photo_path: string, e: React.MouseEvent<HTMLButtonElement>) {
         e.preventDefault();
@@ -75,6 +76,42 @@ function DashboardPropertyEdit() {
         
         catch (error) {
             console.error("Error deleting property:", error);
+        }
+    }
+
+    async function photoUpload(e: React.ChangeEvent<HTMLInputElement>) {
+        e.preventDefault();
+        const file = e.target.files?.[0];
+        if (!file) {
+            setPhotoUploadErrorMessage("No photo selected.");
+            setPhotoUploadSuccessMessage("");
+            return;
+        }
+        const formData = new FormData();
+        formData.append("photos", file);
+
+        try {
+            const res = await fetch(`/api/dashboard/property/edit/${username}/${propID}`, {
+                method: "POST",
+                body: formData
+            });
+
+            const result = await res.json();
+            console.log(result);
+            if (res.ok) {
+                setPropertyPhotos(result.newPhotos);
+                setPhotoUploadSuccessMessage(result.message);
+                setPhotoUploadErrorMessage("");
+            }
+            else {
+                setPhotoUploadErrorMessage(result.error);
+                setPhotoUploadSuccessMessage("");
+            }
+        }
+        catch (error) {
+            console.error("Error uploading photo:", error);
+            setPhotoUploadErrorMessage("An error occurred while uploading the photo.");
+            setPhotoUploadSuccessMessage("");
         }
     }
 
@@ -213,6 +250,16 @@ function DashboardPropertyEdit() {
                 ) : (
                     <p>No photos available.</p>
                 )}
+                {propertyPhotos.length < 10 ? ( 
+                    <div>
+                        <input type="file" accept="image/*" onChange={photoUpload} />
+                        <p>Upload up to {10 - propertyPhotos.length} more photos.</p>
+                    </div>
+                ) : (
+                    <p>You have reached the maximum number of photos.</p>
+                )}
+                {photoUploadSucessMessage && <p style={{ color: "green" }}>{photoUploadSucessMessage}</p>}
+                {photoUploadErrorMessage && <p style={{ color: "red" }}>{photoUploadErrorMessage}</p>}
             </div>
         </div>
     );

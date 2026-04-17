@@ -29,4 +29,23 @@ router.get("/:username/:id", (req, res) => {
     res.status(200).json({ user, properties });
 });
 
+router.delete("/:username/:id", (req, res) => {
+    const { username, id } = req.params;    
+    const propID = req.body.propID;
+    
+    const user = db.prepare(`SELECT id FROM property_owners WHERE id = ? AND username = ?`).get(id, username);
+
+    if (!user) {
+        return res.status(404).json({ error: "User not found." });
+    }
+
+    const deleteProperty = db.prepare(`DELETE FROM property_list WHERE id = ? AND owner_id = ?`);
+    const result = deleteProperty.run(propID, user.id);
+
+    if (result.changes === 0) {
+        return res.status(404).json({ error: "Property not found or you do not have permission to delete this property." });
+    }
+    res.status(200).json({ message: "Property deleted successfully." });
+});
+
 export default router;
