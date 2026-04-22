@@ -83,9 +83,9 @@ function DashboardPropertyEdit() {
         e.preventDefault();
         const file = e.target.files?.[0];
         if (!file) {
-            setPhotoUploadErrorMessage("No photo selected.");
+            setPhotoUploadErrorMessage("No photos selected.");
             setPhotoUploadSuccessMessage("");
-            return;
+            return; 
         }
         const formData = new FormData();
         formData.append("photos", file);
@@ -98,6 +98,7 @@ function DashboardPropertyEdit() {
 
             const result = await res.json();
             console.log(result);
+            
             if (res.ok) {
                 setPropertyPhotos(result.newPhotos);
                 setPhotoUploadSuccessMessage(result.message);

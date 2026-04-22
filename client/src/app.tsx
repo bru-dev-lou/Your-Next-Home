@@ -9,6 +9,7 @@ import Registration from "./pages/registration_page";
 import SignInPage from "./pages/sign_in_page"; 
 import DashboardPage from "./pages/dashboard_page";
 import DashboardPropertyEdit from "./components/dashboard_property_edit"; 
+import DashboardPropertyAdd from "./components/dashboard_property_add"
 
 
 
@@ -26,7 +27,8 @@ function App() {
             <Route path="/register" element={<Registration />} />
             <Route path="/signIn" element={<SignInPage />} />
             <Route path="/dashboard/:username/:id" element={<DashboardPage />} />
-            <Route path="dashboard/property/edit/:username/:propID" element={<DashboardPropertyEdit />} />
+            <Route path="/dashboard/property/edit/:username/:propID" element={<DashboardPropertyEdit />} />
+            <Route path="/dashboard/property/add/:username/:id" element={<DashboardPropertyAdd />} />
           </Routes>
       </div>
     </BrowserRouter>
