@@ -1,13 +1,15 @@
 import {useState} from "react";
-import {useParams, useNavigate} from "react-router-dom";
+import {useParams, useNavigate, Link} from "react-router-dom";
 
 type Photos = {
-    urls: string;
+    url: string;
     file: File;
 };
 
 function DashboardPropertyAdd () {
-    const { username, userID } = useParams();
+    const { username, ownerID } = useParams();
+    const navigate = useNavigate();
+
     const [ type, setType ] = useState("");
     const [ city, setCity ] = useState("");
     const [ price, setPrice ] = useState(0);
@@ -17,15 +19,15 @@ function DashboardPropertyAdd () {
     const [ furniture, setFurniture ] = useState(""); 
     const [ summary, setSummary ] = useState("");
     const [ detail, setDetail ] = useState(""); 
+
     const [ dataErrorMessage, setDataErrorMessage ] = useState("");
     const [ dataSuccessMessage, setDataSuccessMessage ] = useState("");
-    const [ photoSucessMessage, setPhotoSuccessMessage ] = useState("");
-    const [ photoErrorMessage, setPhotoErrorMessage ] = useState("");
     const [ tempURLs, setTempURLs ] = useState<Photos[]>([]);
-    const navigate = useNavigate(); 
+    const [ uploading, setUploading ] = useState(false);
+  
 
     async function addPropertyData (e: React.MouseEvent<HTMLButtonElement>) {
-        e.preventDefault;
+        e.preventDefault();
         const propertyData = new FormData();
         
         for(const tempURL of tempURLs) {
@@ -40,12 +42,13 @@ function DashboardPropertyAdd () {
         propertyData.append("size", size.toString());
         propertyData.append("furniture", furniture);
         propertyData.append("summary", summary);
-        propertyData.append("ownerID", userID as string);
+        propertyData.append("ownerID", ownerID as string);
         propertyData.append("detail", detail);
 
-
         try {
-            const res = await fetch(`/api/dashboard/property/add/${username}/${userID}`, {
+            setUploading(true);
+
+            const res = await fetch(`/api/dashboard/property/add/${username}/${ownerID}`, {
             method: "POST",
             body: propertyData,
             });
@@ -54,31 +57,42 @@ function DashboardPropertyAdd () {
             console.log(result); 
 
             if (res.ok) {
-                setDataSuccessMessage("Your property has been created!");
+                setDataSuccessMessage(result.message);
                 setDataErrorMessage("");
+            }
+
+            else {
+                setDataErrorMessage(result.error);
+                setDataSuccessMessage("");
             }
         }
 
         catch (error) {
             console.error("Error creating property:", error);
-            setDataErrorMessage("An error occurred while creating this property. Please try again.");
+            setDataErrorMessage(`${error}`);
             setDataSuccessMessage("");
+        }
+
+        finally {
+            setUploading(false);
         }
     }
 
-    async function displayNewPhotos(e: React.ChangeEvent<HTMLInputElement>) {
+    async function displayPhotos(e: React.ChangeEvent<HTMLInputElement>) {
         e.preventDefault(); 
         const files = e.target.files;
         if (!files) {
-            setPhotoErrorMessage("No photos selected, try again.");
-            setPhotoSuccessMessage("");
             return;
         }
 
         for (const file of files) {
             const previewURL = URL.createObjectURL(file);
-            setTempURLs(prev => [...prev, {urls: previewURL, file: file}])
+            setTempURLs(prev => [...prev, {url: previewURL, file: file}])
         }
+    }
+
+    function deletePhotos(index: number) {
+        setTempURLs(tempURLs.filter((_, i) => i !== index));    
     }
 
     return (
@@ -176,15 +190,36 @@ function DashboardPropertyAdd () {
             <>
                 {detail ? detail.split(/\s+/).filter(Boolean).length : 0} / 250 words
             </>
-            {dataErrorMessage && <p style={{color: "red"}}>{dataErrorMessage}</p>}
-            {dataSuccessMessage && <p style={{color: "green"}}>{dataSuccessMessage}</p>}
 
-            <h4>Step 2: Upload up to 10 photos.</h4>
-
-            /// Add input file with display photos function THEN map over tempURLs and display photos shown AND THEN create the submit button. 
-            
+            <h4>Step 2: Upload 5 to 10 photos.</h4>
+                <ul style={{listStyle:"none"}}>
+                    {tempURLs.map((tempURL, index) => (
+                        <li key={tempURL.url}>
+                            <img src={tempURL.url} alt="Photo preview" style={{ width: "200px", height: "200px"}}/>
+                            <button onClick={() => deletePhotos(index)}>x</button>
+                        </li>
+                    ))}            
+                </ul> 
+            {tempURLs.length < 10 ? (
+                <div>
+                    <input type="file" multiple accept="image/*" onChange={displayPhotos} />
+                    <p>You can upload {10 - tempURLs.length} more photos.</p>
+                </div>
+            ) : (
+                <p> You have reached the maximum number of photos.</p>
+            )} 
+            {dataErrorMessage && !uploading && <p style={{color: "red"}}>{dataErrorMessage}</p>}
+            {!uploading && !dataSuccessMessage && (
+                <button onClick={addPropertyData}>Create your property!</button>
+            )}
+            {uploading && <p>Please wait while we add your property!</p>}
+            {dataSuccessMessage && (
+                <div>
+                    <p style={{color: "green"}}>{dataSuccessMessage}</p>
+                    <button onClick={() => navigate(`/dashboard/${username}/${ownerID}`)}>My Properties</button>
+                </div>
+            )}
         </div>
-        
     );
 }
 

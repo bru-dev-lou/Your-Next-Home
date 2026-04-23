@@ -21,6 +21,7 @@ router.route("/:username/:id")
         ON property_photos.property_id = property_list.id 
         AND property_photos.is_main = 1
         WHERE owner_id = ?
+        ORDER BY date_listed DESC;
         `)
         .all(id);
 

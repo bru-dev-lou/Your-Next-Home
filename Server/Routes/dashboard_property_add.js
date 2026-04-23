@@ -11,29 +11,33 @@ router.route("/:username/:id")
     const { type, city, price, bedrooms, bathrooms, size, furniture, summary, detail } = req.body;
     const ownerID = req.params.id;  
 
+    if (!city || city === "") {
+        return res.status(400).json({error: "Please state where your property is located."})
+    }    
+    
     if (!type) {
-        return res.status(400).json({ error: "Please choose a property type!"})
+        return res.status(400).json({ error: "Please choose a property type."})
     }
 
-    if (!city) {
-        return res.status(400).json({error: "Please state where your property is located!"})
+    if (!price || price == 0) {
+        return res.status(400).json({error: "Please state the property's rental rate."})
     }
 
-    if (!price) {
-        return res.status(400).json({error: "Please state the property's rental rate!"})
+    if (!bedrooms || bedrooms == 0) { 
+        return res.status(400).json({error: "Please choose how many bedrooms your property has."})
     }
 
-    if (!bedrooms) { 
-        return res.status(400).json({error: "Please choose how many bedrooms your property has!"})
+    if (!bathrooms || bathrooms == 0) { 
+        return res.status(400).json({error: "Please choose how many bathrooms your property has."})
     }
 
-    if (!bathrooms) { 
-        return res.status(400).json({error: "Please choose how many bathrooms your property has!"})
+    if (!size || size == 0) {
+        return res.status(400).json({error: "Please provide the size of your property."})
     }
 
-    if (!size) {
-        return res.status(400).json({error: "Please provide the size of your property!"})
-    }
+    if (!furniture || furniture === "") {
+        return res.status(400).json({error: "Please choose your property's type of furnishing."});
+        }
 
     if (!summary){
         return res.status(400).json({ error: "Please provide a summary for your property!"})
@@ -51,9 +55,11 @@ router.route("/:username/:id")
         return res.status(400).json({ error: "Detailed description cannot exceed 250 words." });
     }
 
-    if (req.files.length <= 0) {
-        return res.status(400).json({ error: "Failed to add photos. Please try again." });
+    if (req.files.length <= 4) {
+        return res.status(400).json({ error: "Please upload at least 5 photos." });
     }
+
+    console.log(ownerID);
 
     try {
         const newPropertyData = db.prepare(`INSERT INTO property_list (type, city, price, no_bedrooms, no_bathrooms, size, furniture, summary, owner_id, detail)
@@ -71,19 +77,22 @@ router.route("/:username/:id")
                     else resolve(result);
                 }).end(file.buffer);
             });   
-            newPropertyPhotos.run(newPropertyPhotos.lastInsertRowid, result.secure_url);
+            newPropertyPhotos.run(newPropertyData.lastInsertRowid, result.secure_url);
         }
 
-        console.log("Property Photos Added:", newPropertyPhotos )
+        db.prepare(`UPDATE property_photos SET is_main = 1 WHERE property_id = ? ORDER BY id ASC LIMIT 1`).run(newPropertyData.lastInsertRowid);
 
+        console.log("Property Photos Added:", newPropertyPhotos )
         res.status(201).json({ message: "Your property has been added to our listings!", lastInsertRowid: newPropertyData.lastInsertRowid });
-    } 
+    }    
 
     catch (errorData) {
         console.error("DB ERROR:", errorData);
-        res.status(500).json({error: "An error has occurred. Please try again later."}); 
+        res.status(500).json({error: "Server Error: The team has been notified."}); 
     }
 
 })
+
+
 
 export default router; 
