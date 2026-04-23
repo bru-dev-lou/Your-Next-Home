@@ -28,7 +28,7 @@ function App() {
             <Route path="/signIn" element={<SignInPage />} />
             <Route path="/dashboard/:username/:id" element={<DashboardPage />} />
             <Route path="/dashboard/property/edit/:username/:propID" element={<DashboardPropertyEdit />} />
-            <Route path="/dashboard/property/add/:username/:id" element={<DashboardPropertyAdd />} />
+            <Route path="/dashboard/property/add/:username/:ownerID" element={<DashboardPropertyAdd />} />
           </Routes>
       </div>
     </BrowserRouter>

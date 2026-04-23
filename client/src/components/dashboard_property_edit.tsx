@@ -253,7 +253,7 @@ function DashboardPropertyEdit() {
                 )}
                 {propertyPhotos.length < 10 ? ( 
                     <div>
-                        <input type="file" accept="image/*" onChange={photoUpload} />
+                        <input type="file" multiple accept="image/*" onChange={photoUpload} />
                         <p>Upload up to {10 - propertyPhotos.length} more photos.</p>
                     </div>
                 ) : (
