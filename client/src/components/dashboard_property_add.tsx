@@ -96,7 +96,7 @@ function DashboardPropertyAdd () {
             }
 
             else {
-                setExcessPhotosMessage("Maximum Upload: 10 photos. Some photos were not added.");
+                setExcessPhotosMessage("");
                 return;
             }
         }
