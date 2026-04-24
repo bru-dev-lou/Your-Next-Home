@@ -9,8 +9,7 @@ import Registration from "./pages/registration_page";
 import SignInPage from "./pages/sign_in_page"; 
 import DashboardPage from "./pages/dashboard_page";
 import DashboardPropertyEdit from "./components/dashboard_property_edit"; 
-import DashboardPropertyAdd from "./components/dashboard_property_add"
-
+import DashboardAddPropertyPage from "./pages/dashboard_new_property";
 
 
 function App() {
@@ -22,13 +21,13 @@ function App() {
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/search" element={<PropertySearch />} /> 
+            <Route path="/property/:id" element={<DetailedProperty />} />             
             <Route path="/contact" element={<Contact />} />
-            <Route path="/property/:id" element={<DetailedProperty />} /> 
-            <Route path="/register" element={<Registration />} />
             <Route path="/signIn" element={<SignInPage />} />
-            <Route path="/dashboard/:username/:id" element={<DashboardPage />} />
+            <Route path="/register" element={<Registration />} />
+            <Route path="/dashboard/:username/:ownerID" element={<DashboardPage />} />
             <Route path="/dashboard/property/edit/:username/:propID" element={<DashboardPropertyEdit />} />
-            <Route path="/dashboard/property/add/:username/:ownerID" element={<DashboardPropertyAdd />} />
+            <Route path="/dashboard/property/add/:username/:ownerID" element={<DashboardAddPropertyPage />} />
           </Routes>
       </div>
     </BrowserRouter>

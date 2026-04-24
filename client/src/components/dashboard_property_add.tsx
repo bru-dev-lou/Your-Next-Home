@@ -1,5 +1,5 @@
 import {useState} from "react";
-import {useParams, useNavigate, Link} from "react-router-dom";
+import {useParams, useNavigate} from "react-router-dom";
 
 type Photos = {
     url: string;
@@ -59,6 +59,9 @@ function DashboardPropertyAdd () {
             if (res.ok) {
                 setDataSuccessMessage(result.message);
                 setDataErrorMessage("");
+                setTimeout(function(){
+                    navigate(`/dashboard/${username}/${ownerID}`)},
+                5000);
             }
 
             else {
@@ -216,7 +219,7 @@ function DashboardPropertyAdd () {
             {dataSuccessMessage && (
                 <div>
                     <p style={{color: "green"}}>{dataSuccessMessage}</p>
-                    <button onClick={() => navigate(`/dashboard/${username}/${ownerID}`)}>My Properties</button>
+                    <p style={{color: "green"}}> You will now be redirected to your properties.</p>
                 </div>
             )}
         </div>

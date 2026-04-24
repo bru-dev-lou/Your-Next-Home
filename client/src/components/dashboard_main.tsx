@@ -28,21 +28,21 @@ type dashboardData = {
 function DashboardMain() {
     const [ data, setData ] = useState<dashboardData | null>(null);
     const [ deleteIDConfirmed, setDeleteIDConfirmed ] = useState(""); 
-    const { username, id } = useParams();    
+    const { username, ownerID } = useParams();    
     const navigate = useNavigate();
 
     useEffect(() => {
         async function fetchData() {
-        const res = await fetch(`/api/dashboard/${username}/${id}`);
+        const res = await fetch(`/api/dashboard/${username}/${ownerID}`);
         const result = await res.json();
         console.log(result);
         setData(result);
         }
         fetchData();
-    } , [username, id]);
+    } , [username, ownerID]);
 
     async function propertyDelete (propID: string) {
-        const res = await fetch(`/api/dashboard/${username}/${id}`, {
+        const res = await fetch(`/api/dashboard/${username}/${ownerID}`, {
             method: "DELETE",
             headers: {
                 "Content-Type": "application/json"
@@ -53,7 +53,7 @@ function DashboardMain() {
         const result = await res.json();
         console.log(result);
 
-        const refreshRes = await fetch(`/api/dashboard/${username}/${id}`);
+        const refreshRes = await fetch(`/api/dashboard/${username}/${ownerID}`);
         const refreshResult = await refreshRes.json();
         setData(refreshResult);
     }
@@ -66,7 +66,7 @@ function DashboardMain() {
                 <div>
                     <h2> Welcome back {data.user.name}! </h2>
                     <h3> My Properties </h3>
-                    <button onClick= {() => navigate(`/dashboard/property/add/${username}/${id}`)}>+ Add a new property</button>
+                    <button onClick= {() => navigate(`/dashboard/property/add/${username}/${ownerID}`)}>+ Add a new property</button>
                     <br />
                     <br />
                     {data.properties.length > 0 ? (
