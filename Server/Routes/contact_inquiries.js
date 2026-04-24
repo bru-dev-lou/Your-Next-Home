@@ -9,9 +9,6 @@ router.post("/", (req, res) => {
     if (!name || !email || !messageTopic || !message) {
         return res.status(400).json( {error: "All fields are required" } );
     }
-
-    console.log("Inquiry Received:");
-
     
     try {
             let result;

@@ -83,9 +83,9 @@ function DashboardPropertyEdit() {
         e.preventDefault();
         const file = e.target.files?.[0];
         if (!file) {
-            setPhotoUploadErrorMessage("No photo selected.");
+            setPhotoUploadErrorMessage("No photos selected.");
             setPhotoUploadSuccessMessage("");
-            return;
+            return; 
         }
         const formData = new FormData();
         formData.append("photos", file);
@@ -98,6 +98,7 @@ function DashboardPropertyEdit() {
 
             const result = await res.json();
             console.log(result);
+            
             if (res.ok) {
                 setPropertyPhotos(result.newPhotos);
                 setPhotoUploadSuccessMessage(result.message);
@@ -252,7 +253,7 @@ function DashboardPropertyEdit() {
                 )}
                 {propertyPhotos.length < 10 ? ( 
                     <div>
-                        <input type="file" accept="image/*" onChange={photoUpload} />
+                        <input type="file" multiple accept="image/*" onChange={photoUpload} />
                         <p>Upload up to {10 - propertyPhotos.length} more photos.</p>
                     </div>
                 ) : (

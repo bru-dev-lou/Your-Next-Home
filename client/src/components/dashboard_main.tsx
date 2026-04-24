@@ -28,21 +28,21 @@ type dashboardData = {
 function DashboardMain() {
     const [ data, setData ] = useState<dashboardData | null>(null);
     const [ deleteIDConfirmed, setDeleteIDConfirmed ] = useState(""); 
-    const { username, id } = useParams();    
+    const { username, ownerID } = useParams();    
     const navigate = useNavigate();
 
     useEffect(() => {
         async function fetchData() {
-        const res = await fetch(`/api/dashboard/${username}/${id}`);
+        const res = await fetch(`/api/dashboard/${username}/${ownerID}`);
         const result = await res.json();
         console.log(result);
         setData(result);
         }
         fetchData();
-    } , [username, id]);
+    } , [username, ownerID]);
 
     async function propertyDelete (propID: string) {
-        const res = await fetch(`/api/dashboard/${username}/${id}`, {
+        const res = await fetch(`/api/dashboard/${username}/${ownerID}`, {
             method: "DELETE",
             headers: {
                 "Content-Type": "application/json"
@@ -53,7 +53,7 @@ function DashboardMain() {
         const result = await res.json();
         console.log(result);
 
-        const refreshRes = await fetch(`/api/dashboard/${username}/${id}`);
+        const refreshRes = await fetch(`/api/dashboard/${username}/${ownerID}`);
         const refreshResult = await refreshRes.json();
         setData(refreshResult);
     }
@@ -66,21 +66,20 @@ function DashboardMain() {
                 <div>
                     <h2> Welcome back {data.user.name}! </h2>
                     <h3> My Properties </h3>
+                    <button onClick= {() => navigate(`/dashboard/property/add/${username}/${ownerID}`)}>+ Add a new property</button>
+                    <br />
+                    <br />
                     {data.properties.length > 0 ? (
                         <ul style={{ listStyle: "none", padding: 0, margin: 0 }}>
                             {data.properties.map((property: any) => (
                                 <li key={property.id}>
                                     <img src={property.photo_path} alt="Property Main Image" style={{ width: "800px", height: "550px" }}/>
-                                    <h3>Summary</h3>
-                                    <h4>{property.summary}</h4>
-                                    <h3> Price </h3>
-                                    <h4>${property.price} per month</h4>
-                                    <h3> Bedrooms </h3>
-                                    <h4>{property.no_bedrooms} </h4>
-                                    <h3> Bathrooms </h3>
-                                    <h4>{property.no_bathrooms} </h4>
-                                    <h3> Size </h3>
-                                    <h4>{property.size} m²</h4>
+                                    <p><strong>Summary</strong></p>
+                                    <p>{property.summary}</p>
+                                    <p> <strong>Price:</strong> £{property.price} per month </p>
+                                    <p> <strong>Bedrooms:</strong> {property.no_bedrooms} </p>
+                                    <p> <strong>Bathrooms:</strong> {property.no_bathrooms} </p>
+                                    <p> <strong>Size:</strong> {property.size} m²</p>
                                     <button onClick = {() => navigate(`/dashboard/property/edit/${data.user.username}/${property.id}`)}> Edit Property </button>
                                     <button onClick = {() => setDeleteIDConfirmed(property.id)}> Delete Property </button>
                                    {deleteIDConfirmed === property.id ? (

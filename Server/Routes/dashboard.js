@@ -3,7 +3,9 @@ import db from "../database/database.js";
 
 const router = express.Router();
 
-router.get("/:username/:id", (req, res) => {
+router.route("/:username/:id")
+
+.get((req, res) => {
     const { username, id } = req.params;
 
     const user = db.prepare(`SELECT id, username, name FROM property_owners WHERE id = ? AND username = ?`).get(id, username);
@@ -19,6 +21,7 @@ router.get("/:username/:id", (req, res) => {
         ON property_photos.property_id = property_list.id 
         AND property_photos.is_main = 1
         WHERE owner_id = ?
+        ORDER BY date_listed DESC;
         `)
         .all(id);
 
@@ -27,9 +30,9 @@ router.get("/:username/:id", (req, res) => {
     }
 
     res.status(200).json({ user, properties });
-});
+})
 
-router.delete("/:username/:id", (req, res) => {
+.delete((req, res) => {
     const { username, id } = req.params;    
     const propID = req.body.propID;
     

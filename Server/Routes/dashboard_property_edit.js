@@ -112,7 +112,7 @@ router.route("/:username/:propID")
         }
 
         if (!req.files || req.files.length === 0) {
-            return res.status(400).json({ error: "No photos uploaded." });
+            return res.status(400).json({ error: "No photos have been selected." });
         }
 
         const SQLAddPhoto = db.prepare(`INSERT INTO property_photos (property_id, photo_path) VALUES (?, ?)`);
@@ -139,7 +139,7 @@ router.route("/:username/:propID")
 
     catch (error) {
         console.error("Error adding photo:", error);
-        return res.status(500).json({ error: "An error occurred while adding the photo." });
+        return res.status(500).json({ error: "An error occurred while adding your photos." });
     }
 
 })

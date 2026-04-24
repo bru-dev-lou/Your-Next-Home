@@ -8,7 +8,7 @@ function Inquiries () {
     const [ messageTopic, setMessageTopic ] = useState("");
     const [ message, setMessage ] = useState("");
    
-    const submitInquiry = async (e:React.FormEvent<HTMLFormElement>) => {
+    const submitInquiry = async (e:React.SubmitEvent<HTMLFormElement>) => {
         e.preventDefault();
 
         const data = {
