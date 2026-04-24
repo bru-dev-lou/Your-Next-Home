@@ -24,6 +24,7 @@ function DashboardPropertyAdd () {
     const [ dataSuccessMessage, setDataSuccessMessage ] = useState("");
     const [ tempURLs, setTempURLs ] = useState<Photos[]>([]);
     const [ uploading, setUploading ] = useState(false);
+    const [ excessPhotosMessage, setExcessPhotosMessage ] = useState(""); 
   
 
     async function addPropertyData (e: React.MouseEvent<HTMLButtonElement>) {
@@ -88,14 +89,22 @@ function DashboardPropertyAdd () {
             return;
         }
 
-        for (const file of files) {
+        for (const [ index, file ]  of Array.from(files).entries()) {
             const previewURL = URL.createObjectURL(file);
-            setTempURLs(prev => [...prev, {url: previewURL, file: file}])
+            if (tempURLs.length + index < 10) {
+                setTempURLs(prev => [...prev, {url: previewURL, file: file}])
+            }
+
+            else {
+                setExcessPhotosMessage("Maximum Upload: 10 photos. Some photos were not added.");
+                return;
+            }
         }
     }
 
     function deletePhotos(index: number) {
         setTempURLs(tempURLs.filter((_, i) => i !== index));    
+            setExcessPhotosMessage("");
     }
 
     return (
@@ -211,6 +220,7 @@ function DashboardPropertyAdd () {
             ) : (
                 <p> You have reached the maximum number of photos.</p>
             )} 
+            {excessPhotosMessage && <p>{excessPhotosMessage}</p>}
             {dataErrorMessage && !uploading && <p style={{color: "red"}}>{dataErrorMessage}</p>}
             {!uploading && !dataSuccessMessage && (
                 <button onClick={addPropertyData}>Create your property!</button>
