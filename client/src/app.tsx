@@ -8,7 +8,7 @@ import Contact from "./pages/contact_page";
 import Registration from "./pages/registration_page";
 import SignInPage from "./pages/sign_in_page"; 
 import DashboardPage from "./pages/dashboard_page";
-import DashboardPropertyEdit from "./components/dashboard_property_edit"; 
+import DashboardEditPropertyPage from "./pages/dashboard_edit_property"; 
 import DashboardAddPropertyPage from "./pages/dashboard_new_property";
 
 
@@ -26,11 +26,11 @@ function App() {
             <Route path="/signIn" element={<SignInPage />} />
             <Route path="/register" element={<Registration />} />
             <Route path="/dashboard/:username/:ownerID" element={<DashboardPage />} />
-            <Route path="/dashboard/property/edit/:username/:propID" element={<DashboardPropertyEdit />} />
+            <Route path="/dashboard/property/edit/:username/:ownerID/:propID" element={<DashboardEditPropertyPage />} />
             <Route path="/dashboard/property/add/:username/:ownerID" element={<DashboardAddPropertyPage />} />
           </Routes>
       </div>
-    </BrowserRouter>
+    </BrowserRouter>    
   )
 }
 

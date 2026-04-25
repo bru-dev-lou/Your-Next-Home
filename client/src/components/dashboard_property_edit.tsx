@@ -1,50 +1,55 @@
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
+
+type property = {
+    type?: string;
+    city?: string;
+    price?: number;
+    no_bedrooms?: number;
+    no_bathrooms?: number;
+    size?: number;
+    furniture?: string;
+    summary?: string;
+    detail?: string
+};
+
+type photo = {
+    id: number;
+    propID: number;
+    photo_path: string;
+}
+
+type user = {
+    username: string;
+}
+
+type info ={
+    property: property;
+    photos: photo[];
+    user: user;
+}
 
 function DashboardPropertyEdit() {
-    const { username, propID } = useParams();
-
-    type property = {
-        type?: string;
-        city?: string;
-        price?: number;
-        no_bedrooms?: number;
-        no_bathrooms?: number;
-        size?: number;
-        furniture?: string;
-        summary?: string;
-        detail?: string
-    };
-
-    type photo = {
-        id: number;
-        propID: number;
-        photo_path: string;
-    }
-
-    type user = {
-        username: string;
-    }
-
-    type info ={
-        property: property;
-        photos: photo[];
-        user: user;
-    }
+    const { username, ownerID, propID } = useParams();
+    const navigate = useNavigate(); 
 
     const [ data, setData ] = useState<info | null>(null);
     const [ propertyDetails, setPropertyDetails ] = useState<property | null>(null);
-    const [ propertyPhotos, setPropertyPhotos ] = useState<photo[]>([]);``
+    const [ propertyPhotos, setPropertyPhotos ] = useState<photo[]>([]);
     const [ propertyUpdated, setPropertyUpdated ] = useState(false);
     const [ errorMessage, setErrorMessage ] = useState("");
     const [ successMessage, setSuccessMessage ] = useState("");
+    const [ photoUploading, setPhotoUploading] = useState(false); 
     const [ photoUploadSucessMessage, setPhotoUploadSuccessMessage ] = useState("");
     const [ photoUploadErrorMessage, setPhotoUploadErrorMessage ] = useState("");
+    const [ excessPhotosMessage, setExcessPhotosMessage ] = useState("");
+
+
 
 
     useEffect(() => {
         async function fetchData() {
-            const res = await fetch(`/api/dashboard/property/edit/${username}/${propID}`);
+            const res = await fetch(`/api/dashboard/property/edit/${username}/${ownerID}/${propID}`);
             const result = await res.json();
             console.log(result);
             setData(result);
@@ -52,8 +57,9 @@ function DashboardPropertyEdit() {
             setPropertyPhotos(result.photos);
         }
         fetchData();
-    }, [username, propID]);
+    }, [username, ownerID, propID]);
 
+    
     if (!data || !propertyDetails) {
         return <div>Loading...</div>;
     }
@@ -61,7 +67,7 @@ function DashboardPropertyEdit() {
     async function photoDelete(photoID: number, photo_path: string, e: React.MouseEvent<HTMLButtonElement>) {
         e.preventDefault();
        try {
-            const res = await fetch(`/api/dashboard/property/edit/${username}/${propID}`, {
+            const res = await fetch(`/api/dashboard/property/edit/${username}/${ownerID}/${propID}`, {
                 method: "DELETE",
                 headers: {
                     "Content-Type": "application/json"
@@ -72,6 +78,9 @@ function DashboardPropertyEdit() {
             const updatedPhotos = await res.json();
             console.log(updatedPhotos);
             setPropertyPhotos(propertyPhotos.filter(photo => photo.id !== photoID));
+            setExcessPhotosMessage("");
+            setPhotoUploadSuccessMessage("");
+            setPhotoUploadErrorMessage("");
         }
         
         catch (error) {
@@ -81,17 +90,31 @@ function DashboardPropertyEdit() {
 
     async function photoUpload(e: React.ChangeEvent<HTMLInputElement>) {
         e.preventDefault();
-        const file = e.target.files?.[0];
-        if (!file) {
+        const files = e.target.files;
+        const formData = new FormData();
+
+        if (!files) {
             setPhotoUploadErrorMessage("No photos selected.");
             setPhotoUploadSuccessMessage("");
             return; 
         }
-        const formData = new FormData();
-        formData.append("photos", file);
+
+        for (const [index,  file] of Array.from(files).entries()) {
+            if (propertyPhotos.length + index < 10 ) {
+            formData.append("photos", file);
+            setPhotoUploadSuccessMessage("");
+            setExcessPhotosMessage("");
+            }
+            else {
+                setExcessPhotosMessage("You may only upload 10 photos!");
+                return;
+            }
+        }
 
         try {
-            const res = await fetch(`/api/dashboard/property/edit/${username}/${propID}`, {
+            setPhotoUploading(true);
+
+            const res = await fetch(`/api/dashboard/property/edit/${username}/${ownerID}/${propID}`, {
                 method: "POST",
                 body: formData
             });
@@ -114,12 +137,16 @@ function DashboardPropertyEdit() {
             setPhotoUploadErrorMessage("An error occurred while uploading the photo.");
             setPhotoUploadSuccessMessage("");
         }
+
+        finally {
+            setPhotoUploading(false)
+        }
     }
 
     async function propertyDetailsUpdate(e: React.MouseEvent<HTMLButtonElement>) {
         e.preventDefault();
         try {
-            const res = await fetch(`/api/dashboard/property/edit/${username}/${propID}`, {
+            const res = await fetch(`/api/dashboard/property/edit/${username}/${ownerID}/${propID}`, {
                 method: "PATCH",
                 headers: {
                     "Content-Type": "application/json"
@@ -233,7 +260,12 @@ function DashboardPropertyEdit() {
                 </label>
                 <br />
                 <button onClick={propertyDetailsUpdate}> Update Property Details </button>
-                {propertyUpdated && <p style={{ color: "green" }}>{successMessage}</p>}
+                {propertyUpdated && !errorMessage &&
+                    <div>
+                        <p style={{ color: "green" }}>{successMessage}</p>
+                        <button onClick={() => {navigate(`/property/${propID}`)}}>Check your property out!</button>
+                    </div>
+                }
                 {errorMessage && <p style={{ color: "red" }}>{errorMessage}</p> }
             </div>
             <div>
@@ -249,7 +281,7 @@ function DashboardPropertyEdit() {
                         ))}
                     </ul>
                 ) : (
-                    <p>No photos available.</p>
+                    <p>No photos selected.</p>
                 )}
                 {propertyPhotos.length < 10 ? ( 
                     <div>
@@ -259,6 +291,8 @@ function DashboardPropertyEdit() {
                 ) : (
                     <p>You have reached the maximum number of photos.</p>
                 )}
+                {photoUploading && <p>Please wait while we upload your photos!</p>}
+                {excessPhotosMessage && <p>{excessPhotosMessage}</p>}
                 {photoUploadSucessMessage && <p style={{ color: "green" }}>{photoUploadSucessMessage}</p>}
                 {photoUploadErrorMessage && <p style={{ color: "red" }}>{photoUploadErrorMessage}</p>}
             </div>

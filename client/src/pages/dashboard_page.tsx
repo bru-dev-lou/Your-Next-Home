@@ -12,6 +12,7 @@ return (
             <DashboardMain /> 
         </div>
     </div>    
-)}
+    )   
+}
 
 export default DashboardPage;

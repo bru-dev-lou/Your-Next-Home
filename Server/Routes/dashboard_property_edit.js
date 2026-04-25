@@ -5,7 +5,7 @@ import upload from "../config/multerConfig.js";
 
 const router = express.Router();
 
-router.route("/:username/:propID")
+router.route("/:username/:onwerID/:propID")
 
 .get((req, res) => {
     const {propID, username} = req.params;
@@ -29,7 +29,7 @@ router.route("/:username/:propID")
             return res.status(404).json({ error: "No photos found for this property." });
         }
 
-        res.status(200).json({ property: SQLShow, photos: SQLPhotos });
+        res.status(200).json({ property: SQLShow, photos: SQLPhotos, ownerID: user.id });
         
     }
 
@@ -90,8 +90,10 @@ router.route("/:username/:propID")
         const SQLDeletePhotos = db.prepare(`DELETE FROM property_photos WHERE id = ? AND property_id = ? AND photo_path = ?`).run(photoID, propID, photo_path);
 
         if (SQLDeletePhotos.changes > 0) {
+            db.prepare(`UPDATE property_photos SET is_main = 1 WHERE property_id = ? ORDER BY id ASC LIMIT 1`).run(propID);
             return res.status(200).json({ message: "Photo deleted successfully!" });
         }
+
     }
     
     catch (error) {
@@ -116,7 +118,7 @@ router.route("/:username/:propID")
         }
 
         const SQLAddPhoto = db.prepare(`INSERT INTO property_photos (property_id, photo_path) VALUES (?, ?)`);
-
+        
         for (const file of req.files) {
             const result = await new Promise((resolve, reject) => {
                 cloudinary.uploader.upload_stream({ folder: 'new_property_photos' }, (error, result) => {
@@ -126,6 +128,8 @@ router.route("/:username/:propID")
             });   
             SQLAddPhoto.run(propID, result.secure_url);
         }
+
+        db.prepare(`UPDATE property_photos SET is_main = 1 WHERE property_id = ? ORDER BY id ASC LIMIT 1`).run(propID);
 
         if (req.files.length > 0) {
             const SQLPhotosUpdated = db.prepare(`SELECT * FROM property_photos WHERE property_id = ?`).all(propID);
