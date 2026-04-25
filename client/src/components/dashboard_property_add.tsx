@@ -92,11 +92,12 @@ function DashboardPropertyAdd () {
         for (const [ index, file ]  of Array.from(files).entries()) {
             const previewURL = URL.createObjectURL(file);
             if (tempURLs.length + index < 10) {
+                setExcessPhotosMessage("");
                 setTempURLs(prev => [...prev, {url: previewURL, file: file}])
             }
 
             else {
-                setExcessPhotosMessage("");
+                setExcessPhotosMessage("Maximum of 10 photos reached. Some photos were not added.");
                 return;
             }
         }

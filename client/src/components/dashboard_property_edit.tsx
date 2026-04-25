@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 
 type property = {
     type?: string;
@@ -30,11 +30,12 @@ type info ={
 }
 
 function DashboardPropertyEdit() {
-    const { username, propID } = useParams();
+    const { username, ownerID, propID } = useParams();
+    const navigate = useNavigate(); 
 
     const [ data, setData ] = useState<info | null>(null);
     const [ propertyDetails, setPropertyDetails ] = useState<property | null>(null);
-    const [ propertyPhotos, setPropertyPhotos ] = useState<photo[]>([]);``
+    const [ propertyPhotos, setPropertyPhotos ] = useState<photo[]>([]);
     const [ propertyUpdated, setPropertyUpdated ] = useState(false);
     const [ errorMessage, setErrorMessage ] = useState("");
     const [ successMessage, setSuccessMessage ] = useState("");
@@ -45,9 +46,10 @@ function DashboardPropertyEdit() {
 
 
 
+
     useEffect(() => {
         async function fetchData() {
-            const res = await fetch(`/api/dashboard/property/edit/${username}/${propID}`);
+            const res = await fetch(`/api/dashboard/property/edit/${username}/${ownerID}/${propID}`);
             const result = await res.json();
             console.log(result);
             setData(result);
@@ -55,8 +57,9 @@ function DashboardPropertyEdit() {
             setPropertyPhotos(result.photos);
         }
         fetchData();
-    }, [username, propID]);
+    }, [username, ownerID, propID]);
 
+    
     if (!data || !propertyDetails) {
         return <div>Loading...</div>;
     }
@@ -64,7 +67,7 @@ function DashboardPropertyEdit() {
     async function photoDelete(photoID: number, photo_path: string, e: React.MouseEvent<HTMLButtonElement>) {
         e.preventDefault();
        try {
-            const res = await fetch(`/api/dashboard/property/edit/${username}/${propID}`, {
+            const res = await fetch(`/api/dashboard/property/edit/${username}/${ownerID}/${propID}`, {
                 method: "DELETE",
                 headers: {
                     "Content-Type": "application/json"
@@ -111,7 +114,7 @@ function DashboardPropertyEdit() {
         try {
             setPhotoUploading(true);
 
-            const res = await fetch(`/api/dashboard/property/edit/${username}/${propID}`, {
+            const res = await fetch(`/api/dashboard/property/edit/${username}/${ownerID}/${propID}`, {
                 method: "POST",
                 body: formData
             });
@@ -143,7 +146,7 @@ function DashboardPropertyEdit() {
     async function propertyDetailsUpdate(e: React.MouseEvent<HTMLButtonElement>) {
         e.preventDefault();
         try {
-            const res = await fetch(`/api/dashboard/property/edit/${username}/${propID}`, {
+            const res = await fetch(`/api/dashboard/property/edit/${username}/${ownerID}/${propID}`, {
                 method: "PATCH",
                 headers: {
                     "Content-Type": "application/json"
@@ -257,7 +260,12 @@ function DashboardPropertyEdit() {
                 </label>
                 <br />
                 <button onClick={propertyDetailsUpdate}> Update Property Details </button>
-                {propertyUpdated && <p style={{ color: "green" }}>{successMessage}</p>}
+                {propertyUpdated && !errorMessage &&
+                    <div>
+                        <p style={{ color: "green" }}>{successMessage}</p>
+                        <button onClick={() => {navigate(`/property/${propID}`)}}>Check your property out!</button>
+                    </div>
+                }
                 {errorMessage && <p style={{ color: "red" }}>{errorMessage}</p> }
             </div>
             <div>

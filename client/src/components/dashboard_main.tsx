@@ -80,7 +80,7 @@ function DashboardMain() {
                                     <p> <strong>Bedrooms:</strong> {property.no_bedrooms} </p>
                                     <p> <strong>Bathrooms:</strong> {property.no_bathrooms} </p>
                                     <p> <strong>Size:</strong> {property.size} m²</p>
-                                    <button onClick = {() => navigate(`/dashboard/property/edit/${data.user.username}/${property.id}`)}> Edit Property </button>
+                                    <button onClick = {() => navigate(`/dashboard/property/edit/${data.user.username}/${ownerID}/${property.id}`)}> Edit Property </button>
                                     <button onClick = {() => setDeleteIDConfirmed(property.id)}> Delete Property </button>
                                    {deleteIDConfirmed === property.id ? (
                                         <div>
