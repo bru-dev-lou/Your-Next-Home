@@ -2,10 +2,10 @@
   "name": "your-next-home",
   "version": "1.0.0",
   "description": "A full-stack property rental web application where users can create and browse listings.",
-  "main": "script.js",
+  "main": "server.ts",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "nodemon server.js"
+    "dev": "nodemon --exec node --loader ts-node/esm server.ts"
   },
   "repository": {
     "type": "git",
@@ -21,7 +21,7 @@
   "homepage": "https://github.com/bru-dev-lou/Your-Next-Home#readme",
   "dependencies": {
     "bcrypt": "^6.0.0",
-    "better-sqlite3": "^12.8.0",
+    "better-sqlite3": "^12.9.0",
     "cloudinary": "^2.9.0",
     "cors": "^2.8.6",
     "dotenv": "^17.4.2",
@@ -29,6 +29,14 @@
     "multer": "^2.1.1"
   },
   "devDependencies": {
-    "nodemon": "^3.1.14"
+    "@types/bcrypt": "^6.0.0",
+    "@types/better-sqlite3": "^7.6.13",
+    "@types/cors": "^2.8.19",
+    "@types/express": "^5.0.6",
+    "@types/multer": "^2.1.0",
+    "@types/node": "^25.6.0",
+    "nodemon": "^3.1.14",
+    "ts-node": "^10.9.2",
+    "typescript": "^6.0.3"
   }
 }

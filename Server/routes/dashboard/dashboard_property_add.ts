@@ -1,15 +1,21 @@
 import express from "express";
-import db from "../database/database.js";
-import cloudinary from "../config/cloudinaryConfig.js";
-import upload from "../config/multerConfig.js"
+import db from "../../database/database.js";
+
+import cloudinary from "../../config/cloudinaryConfig.ts";
+import upload from "../../config/multerConfig.ts";
+
+type CloudinaryResult = {
+    secure_url: string;
+};
 
 const router = express.Router(); 
 
-router.route("/:username/:id")
+router.route("/:username/:ownerID")
 
 .post (upload.array('photos', 10), async (req, res) => {
     const { type, city, price, bedrooms, bathrooms, size, furniture, summary, detail } = req.body;
-    const ownerID = req.params.id;  
+    const ownerID = req.params;
+    const files = req.files as Express.Multer.File[];
 
     if (!city || city === "") {
         return res.status(400).json({error: "Please state where your property is located."})
@@ -55,7 +61,7 @@ router.route("/:username/:id")
         return res.status(400).json({ error: "Detailed description cannot exceed 250 words." });
     }
 
-    if (req.files.length <= 4) {
+    if (files.length <= 4) {
         return res.status(400).json({ error: "Please upload at least 5 photos." });
     }
 
@@ -70,10 +76,10 @@ router.route("/:username/:id")
 
         const newPropertyPhotos = db.prepare(`INSERT INTO property_photos (property_id, photo_path) VALUES (?, ?)`);
 
-        for (const file of req.files) {
-            const result = await new Promise((resolve, reject) => {
+        for (const file of files) {
+            const result = await new Promise<CloudinaryResult>((resolve, reject) => {
                 cloudinary.uploader.upload_stream({ folder: 'new_property_photos' }, (error, result) => {
-                    if (error) reject(error);
+                    if (error || !result) reject(error);
                     else resolve(result);
                 }).end(file.buffer);
             });   

@@ -1,6 +1,6 @@
 import express from "express";
 import bcrypt from "bcrypt";
-import db from "../database/database.js"
+import db from "../../database/database.js"
 
 const router = express.Router();
 
@@ -8,7 +8,7 @@ router.post("/", async (req, res) => {
     const username = req.body.username.trim();
     const name = req.body.name;
     const address = req.body.address.trim();
-    const number = req.body.number.trim().toLowerCase();
+    const number = req.body.number.trim();
     const email = req.body.email.trim().toLowerCase();
     const password = req.body.password;
     const confirmPass = req.body.confirmPass;
