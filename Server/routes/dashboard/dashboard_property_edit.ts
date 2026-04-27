@@ -1,25 +1,50 @@
-import cloudinary from '../config/cloudinaryConfig.js';
 import express from 'express';
-import db from "../database/database.js";
-import upload from "../config/multerConfig.js";
+import db from "../../database/database.js";
+
+import cloudinary from '../../config/cloudinaryConfig.js';
+import upload from "../../config/multerConfig.js";
+
+type UserData = {
+    id: number;
+};
+
+type PropertyData = {
+    id: number;
+    type: string;
+    city: string;
+    price: number;
+    no_bedrooms: number;
+    no_bathrooms: number;
+    size: number;
+    furniture: string;
+    summary: string;
+    owner_id: number;
+    date_listed: string;
+    detail: string;
+};
+
+type CloudinaryResult = {
+    secure_url: string;
+};
 
 const router = express.Router();
 
-router.route("/:username/:onwerID/:propID")
+router.route("/:username/:ownerID/:propID")
 
 .get((req, res) => {
-    const {propID, username} = req.params;
-
+    const {propID, ownerID, username} = req.params;
+    
+    console.log("GET hit", username, ownerID, propID);
     try {
-        const user = db.prepare(`SELECT id FROM property_owners WHERE username = ?`).get(username);
+        const user = db.prepare(`SELECT id FROM property_owners WHERE username = ?`).get(username) as UserData;
 
         if (!user) {
             return res.status(404).json({ error: "User not found." });
         }
 
-        const SQLShow = db.prepare(`SELECT * FROM property_list WHERE owner_id = ? AND id = ?`).get(user.id, propID);
+        const SQLShow = db.prepare(`SELECT * FROM property_list WHERE owner_id = ? AND id = ?`).get(user.id, propID) as PropertyData;
         
-        if (SQLShow.length === 0) {
+        if (!SQLShow) {
             return res.status(404).json({ error: "Property not found." });
         }
 
@@ -44,7 +69,7 @@ router.route("/:username/:onwerID/:propID")
     const {type, city, price, no_bedrooms, no_bathrooms, size, furniture, summary, detail} = req.body;
     
     try {
-        const user = db.prepare(`SELECT id FROM property_owners WHERE username = ?`).get(username);
+        const user = db.prepare(`SELECT id FROM property_owners WHERE username = ?`).get(username) as UserData;
         
         if (!user) {
         return res.status(404).json({ error: "User not found." });
@@ -105,6 +130,7 @@ router.route("/:username/:onwerID/:propID")
 
 .post (upload.array('photos', 10), async (req, res) => {
     const {propID, username} = req.params;
+    const files = req.files as Express.Multer.File[]; 
 
     try {
         const user = db.prepare(`SELECT id from property_owners WHERE username = ?`).get(username);
@@ -119,10 +145,10 @@ router.route("/:username/:onwerID/:propID")
 
         const SQLAddPhoto = db.prepare(`INSERT INTO property_photos (property_id, photo_path) VALUES (?, ?)`);
         
-        for (const file of req.files) {
-            const result = await new Promise((resolve, reject) => {
+        for (const file of files) {
+            const result = await new Promise<CloudinaryResult>((resolve, reject) => {
                 cloudinary.uploader.upload_stream({ folder: 'new_property_photos' }, (error, result) => {
-                    if (error) reject(error);
+                    if (error || !result) reject(error);
                     else resolve(result);
                 }).end(file.buffer);
             });   
@@ -131,7 +157,7 @@ router.route("/:username/:onwerID/:propID")
 
         db.prepare(`UPDATE property_photos SET is_main = 1 WHERE property_id = ? ORDER BY id ASC LIMIT 1`).run(propID);
 
-        if (req.files.length > 0) {
+        if (files.length > 0) {
             const SQLPhotosUpdated = db.prepare(`SELECT * FROM property_photos WHERE property_id = ?`).all(propID);
             return res.status(201).json({ message: "Photos added successfully!", newPhotos: SQLPhotosUpdated });
         }

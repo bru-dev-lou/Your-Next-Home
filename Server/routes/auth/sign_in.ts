@@ -1,6 +1,13 @@
-import express from "express";
-import db from "../database/database.js";
 import bcrypt from "bcrypt"; 
+import express from "express";
+import db from "../../database/database.js";
+
+type UserData = {
+    id: number; 
+    name: string; 
+    username: string;
+    password_hash: string; 
+};
 
 const router = express.Router(); 
 const fakeHash = "$2b$10$invalidsaltinvalidsaltinv.u5u5u5u5u5u5u5u5u5u5u5u5u";
@@ -16,7 +23,7 @@ router.post("/", async (req, res) => {
         return res.status(400).json({ error: `Please provide your ${missing.join(" and ")}.`});
     }
 
-    const user = db.prepare(`SELECT * FROM property_owners WHERE username = ?`).get(username);
+    const user = db.prepare(`SELECT * FROM property_owners WHERE username = ?`).get(username) as UserData;
 
     if (!user) {
         await bcrypt.compare(password, fakeHash);

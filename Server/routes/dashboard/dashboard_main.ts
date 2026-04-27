@@ -1,5 +1,9 @@
 import express from "express";
-import db from "../database/database.js";
+import db from "../../database/database.js";
+
+type UserData = {
+    id: number;
+};
 
 const router = express.Router();
 
@@ -36,7 +40,7 @@ router.route("/:username/:id")
     const { username, id } = req.params;    
     const propID = req.body.propID;
     
-    const user = db.prepare(`SELECT id FROM property_owners WHERE id = ? AND username = ?`).get(id, username);
+    const user = db.prepare(`SELECT id FROM property_owners WHERE id = ? AND username = ?`).get(id, username) as UserData;
 
     if (!user) {
         return res.status(404).json({ error: "User not found." });
