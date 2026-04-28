@@ -55,7 +55,7 @@ function DashboardPropertyEdit() {
             setData(result);
             setPropertyDetails(result.property);
             setPropertyPhotos(result.photos);
-        }
+        }   
         fetchData();
     }, [username, ownerID, propID]);
 
