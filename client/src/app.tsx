@@ -10,6 +10,7 @@ import SignInPage from "./pages/sign_in_page";
 import DashboardPage from "./pages/dashboard_page";
 import DashboardEditPropertyPage from "./pages/dashboard_edit_property"; 
 import DashboardAddPropertyPage from "./pages/dashboard_new_property";
+import DashboardProfileEdit from "./components/dashboard_profile_edit";
 
 
 function App() {
@@ -28,6 +29,7 @@ function App() {
             <Route path="/dashboard/:username/:ownerID" element={<DashboardPage />} />
             <Route path="/dashboard/property/edit/:username/:ownerID/:propID" element={<DashboardEditPropertyPage />} />
             <Route path="/dashboard/property/add/:username/:ownerID" element={<DashboardAddPropertyPage />} />
+            <Route path="/dashboard/profile/edit/:username/:ownerID" element={<DashboardProfileEdit />} />
           </Routes>
       </div>
     </BrowserRouter>    
