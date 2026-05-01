@@ -26,9 +26,9 @@ app.get("/", (req, res) => {
 app.use("/api", autoCompleteRouter);
 app.use("/api/search", propertySearchResultsRouter);   
 app.use("/api/property", detailedPropertyResultsRouter);
-app.use("/api/contact", inquirySubmissionRouter);
+app.use("/api/inquiries", inquirySubmissionRouter);
 app.use("/api/signIn", signInRouter);
-app.use("/api/register", signUpRouter);
+app.use("/api/signUp", signUpRouter);
 app.use("/api/dashboard/", dashboardMainRouter);
 app.use("/api/dashboard/property/edit/", dashboardPropertyEditRouter);
 app.use("/api/dashboard/property/add/", dashboardPropertyAddRouter);

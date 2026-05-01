@@ -20,7 +20,7 @@ function Inquiries () {
         };
 
         try {
-            const res = await fetch("/api/contact", {
+            const res = await fetch("/api/inquiries", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"

@@ -13,7 +13,7 @@ import SignUpPage from "./pages/auth/sign_up_page";
 import DashboardMainPage from "./pages/dashboard/dashboard_main_page";
 import DashboardEditPropertyPage from "./pages/dashboard/dashboard_edit_property_page"; 
 import DashboardNewPropertyPage from "./pages/dashboard/dashboard_new_property_page";
-import DashboardProfileEdit from "./components/dashboard/dashboard_profile_edit_comp";
+import DashboardProfileEditPage from "./pages/dashboard/dashboard_profile_edit_page";
 
 
 function App() {
@@ -25,14 +25,14 @@ function App() {
           <Routes>
             <Route path="/" element={<HomePage />} />
             <Route path="/search" element={<PropertySearchPage />} /> 
-            <Route path="/property/:id" element={<DetailedPropertyPage />} />             
-            <Route path="/contact" element={<Inquiries />} />
+            <Route path="/property/:propID" element={<DetailedPropertyPage />} />             
+            <Route path="/inquiries" element={<Inquiries />} />
             <Route path="/signIn" element={<SignInPage />} />
-            <Route path="/register" element={<SignUpPage />} />
+            <Route path="/signUp" element={<SignUpPage />} />
             <Route path="/dashboard/:username/:ownerID" element={<DashboardMainPage />} />
             <Route path="/dashboard/property/edit/:username/:ownerID/:propID" element={<DashboardEditPropertyPage />} />
             <Route path="/dashboard/property/add/:username/:ownerID" element={<DashboardNewPropertyPage />} />
-            <Route path="/dashboard/profile/edit/:username/:ownerID" element={<DashboardProfileEdit />} />
+            <Route path="/dashboard/profile/edit/:username/:ownerID" element={<DashboardProfileEditPage />} />
           </Routes>
       </div>
     </BrowserRouter>    

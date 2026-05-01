@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 
 type PropertyDetail = {
-    id: number;
+    propID: number;
     city: string;
     price: number;
     summary: string;
@@ -12,24 +12,24 @@ type PropertyDetail = {
 }
 
 function DetailedPropertyPage () {
-    const {id} = useParams(); 
+    const {propID} = useParams(); 
 
     const [property, setProperty] = useState<PropertyDetail | null>(null);
 
 useEffect (() => {
     const fetchProperty = async () => {
-        const res = await fetch(`/api/property/${id}`);
+        const res = await fetch(`/api/property/${propID}`);
         const data = await res.json(); 
         setProperty(data);
     };
 
     fetchProperty();
-}, [id]); 
+}, [propID]); 
 
 return (
     <div>
         {property && (
-            <div key ={property.id}>
+            <div key ={property.propID}>
                 {property.photos.map((photo, index) => (
                 <img key={index} src={photo} />
                 ))}

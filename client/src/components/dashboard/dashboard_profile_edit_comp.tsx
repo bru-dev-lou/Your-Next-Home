@@ -27,6 +27,8 @@ function DashboardProfileEdit () {
     const [ userPrivateDetails, setUserPrivateDetails ] = useState<UserPrivateData>({password: "", newPassword: "", passwordConfirmation: ""});
     const [ userAccountDeleteDetails, setUserAccountDeleteDetails ] = useState<UserAccountDeleteData>({password: ""});
     
+    // MP = My Profile / AM = Account Management / DA = Delete Account 
+
     const [ errorMessageMP, setErrorMessageMP ] = useState(""); 
     const [ successMessageMP, setSuccessMessageMP ] = useState("");
     const [ errorMessageAM, setErrorMessageAM ] = useState(""); 
@@ -56,6 +58,8 @@ function DashboardProfileEdit () {
         fetchData();
     }, [username, ownerID]);
 
+    // Dead code as this state no longer returns undefined. Keep in case needed for error checks late on. 
+    
     if (!userPublicDetails) {
         return <h3>Failed to retrieve data, please <Link to = "/contact"> contact</Link> our team.</h3>;
     }
