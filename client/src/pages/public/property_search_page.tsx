@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useSearchParams, useNavigate } from "react-router-dom";
 
-import PropertyPageSearchBar from "../components/property_search_page_search_bar"; 
+import PropertySearchPageSearchBar from "../../components/public/property_search_page_searchbar_comp";
 
 type Property = { 
   id : number; 
@@ -17,7 +17,7 @@ type Property = {
   photo_path : string;
 }
 
-function Results () {
+function PropertySearchPage () {
   const [params] = useSearchParams();
   
   const city = params.get("city") || ""; 
@@ -49,7 +49,7 @@ function Results () {
   return (
     <div>
         <div>
-          <PropertyPageSearchBar />
+          <PropertySearchPageSearchBar />
           <h3>Properties for rent in {city}:</h3>
         </div>
           {results.map(result => (
@@ -66,5 +66,5 @@ function Results () {
   );
 }
 
-export default Results;
+export default PropertySearchPage;
 

@@ -11,7 +11,7 @@ type PropertyDetail = {
     detail: string;
 }
 
-function Property () {
+function DetailedPropertyPage () {
     const {id} = useParams(); 
 
     const [property, setProperty] = useState<PropertyDetail | null>(null);
@@ -42,4 +42,4 @@ return (
         </div>
         )};
 
-export default Property;
+export default DetailedPropertyPage;

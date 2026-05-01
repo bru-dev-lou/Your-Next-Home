@@ -1,6 +1,6 @@
-import HomePageSearchBar from "../components/home_page_search_bar"
+import HomePageSearchBar from "../../components/public/homepage_searchbar_comp";
 
-function Home() {
+function HomePage() {
 
   return (
       <div className="Home">
@@ -11,4 +11,4 @@ function Home() {
   )
 }
 
-export default Home;
+export default HomePage;

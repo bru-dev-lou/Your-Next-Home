@@ -1,13 +1,13 @@
 import { useState } from "react"; 
 import { useNavigate } from "react-router-dom"; 
 
-function PropertyPageSearchBar () {
-    const [type, setType] = useState('');
-    const [city, setCity] = useState('');
+function PropertySearchPageSearchBar () {
+    const [type, setType] = useState("");
+    const [city, setCity] = useState("");
     const [maxPrice, setMaxPrice] = useState(10000); 
     const [minBeds, setMinBeds] = useState(0);
     const [minBaths, setMinBaths] = useState(0);
-    const [furniture, setFurniture] = useState('');
+    const [furniture, setFurniture] = useState("");
     
     const navigate = useNavigate(); 
 
@@ -103,4 +103,4 @@ return (
 )
 }
 
-export default PropertyPageSearchBar; 
+export default PropertySearchPageSearchBar; 

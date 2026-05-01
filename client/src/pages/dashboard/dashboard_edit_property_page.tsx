@@ -1,11 +1,11 @@
-import DashboardPropertyEdit from "../components/dashboard_property_edit";
-import DashboardNav from "../components/dashboard_navigation";
+import DashboardPropertyEdit from "../../components/dashboard/dashboard_property_edit_comp";
+import DashboardNavigation from "../../components/dashboard/dashboard_navigation_comp";
 
 function DashboardEditPropertyPage () {
     return (
         <div>
             <div> 
-                <DashboardNav />
+                <DashboardNavigation />
             </div>
             <div>
                 <DashboardPropertyEdit />

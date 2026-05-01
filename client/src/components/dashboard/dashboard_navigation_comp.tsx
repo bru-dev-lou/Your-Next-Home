@@ -1,6 +1,6 @@
 import { useParams, Link } from "react-router-dom";
 
-function DashboardNav () {
+function DashboardNavigation () {
     const { username, ownerID } = useParams(); 
 
     return (
@@ -15,4 +15,4 @@ function DashboardNav () {
     )
 }
 
-export default DashboardNav;
+export default DashboardNavigation;

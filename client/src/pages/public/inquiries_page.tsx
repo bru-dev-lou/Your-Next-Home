@@ -1,6 +1,6 @@
-import Inquiries from "../components/submit_inquiries";
+import Inquiries from "../../components/public/inquiries_comp";
 
-function Contact () {
+function InquiriesPage () {
     return (
         <div>
             <h2>Get in touch with us!</h2>
@@ -9,4 +9,4 @@ function Contact () {
     )
 }
 
-export default Contact;
+export default InquiriesPage;

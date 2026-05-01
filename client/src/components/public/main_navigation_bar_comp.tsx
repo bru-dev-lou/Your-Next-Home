@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom"
 
-function Nav (){
+function MainNavigationBar (){
     return (
         <nav id="navigation">
             <header>
@@ -13,4 +13,4 @@ function Nav (){
     );
 }
 
-export default Nav;
+export default MainNavigationBar;
