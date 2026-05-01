@@ -8,7 +8,7 @@ function SignIn () {
     const [ errorMessage, setErrorMessage ] = useState(""); 
     const navigate = useNavigate(); 
 
-    const signIn = async (e:React.FormEvent<HTMLFormElement>) => {
+    const signIn = async (e:React.SubmitEvent<HTMLFormElement>) => {
         e.preventDefault(); 
         setErrorMessage("");
 

@@ -1,4 +1,4 @@
-import SignIn from "../components/sign_in_component";
+import SignIn from "../../components/auth/sign_in_comp";
 import { Link } from "react-router-dom";
 
 function SignInPage () {

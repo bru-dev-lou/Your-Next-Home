@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 
-function AccountCreation () {
+function SignUp () {
     const [ username, setUsername ] = useState("");
     const [ name, setName ] = useState("");
     const [ address, setAddress ] = useState("");
@@ -16,7 +16,7 @@ function AccountCreation () {
     const [ errorMessage, setErrorMessage ] = useState("");
     const navigate = useNavigate(); 
 
-    const createAccount = async (e:React.FormEvent<HTMLFormElement>) => {
+    const createAccount = async (e:React.SubmitEvent<HTMLFormElement>) => {
         e.preventDefault();
         setErrorMessage("");
 
@@ -140,4 +140,4 @@ return (
 )
 }
 
-export default AccountCreation; 
+export default SignUp; 
