@@ -9,7 +9,7 @@ import inquirySubmissionRouter from "./routes/public/user_inquiry_submission.js"
 import signInRouter from "./routes/auth/sign_in.js";
 import signUpRouter from "./routes/auth/sign_up.js";
 import dashboardMainRouter from "./routes/dashboard/dashboard_main.js";
-import dashboardPropertyEditRouter from "./routes/dashboard/dashboard_property_edit.ts";
+import dashboardPropertyEditRouter from "./routes/dashboard/dashboard_property_edit.js";
 import dashboardPropertyAddRouter from "./routes/dashboard/dashboard_property_add.js";
 import dashboardProfileEditRouter from "./routes/dashboard/dashboard_profile_edit.js";
 

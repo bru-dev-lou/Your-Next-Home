@@ -3,7 +3,8 @@ import db from "../../database/database.js";
 
 const router = express.Router();
 
-router.get("/", (req,res) => {
+
+router.get("/", (req, res) => {
     const defaultCity = '';
     const defaultType = '';
     const defaultFurniture = '';
@@ -42,9 +43,39 @@ router.get("/", (req,res) => {
                 `%${furniture}%`
             ); 
             
-            return res.status(200).json(data);
-            
-});
+            return res.status(200).json(data);       
+})
+
+router.post("/:ownerID", (req, res) => {
+    const ownerID = req.params.ownerID;
+    const propID = req.body.propID;
+
+    if (!ownerID) {
+        return res.status(400).json({error: "This feature is only available to our users. Please log in."})
+    }
+
+    if (!propID) {
+        return res.status(404).json({error: "This feature is currently unavailable"})
+    }
+
+    try {
+        const SQL = "INSERT INTO property_favorites (owner_id, property_id) VALUES (?, ?)";
+        const addFavProperty = db.prepare(SQL).run(ownerID, propID); 
+
+        if(addFavProperty.changes === 0) {
+            return res.status(400).json({error: "Property failed to be added to favorites." })
+        }
+        
+        else {
+            console.log("Property added to favorites.")
+            return res.status(201).json({message: "Property added to favorites."});
+        }
+    }
+
+    catch(error) {
+        console.log("Server error:", error)
+        res.status(500).json({errorMessage: "Server Error: The team has been notified."}); 
+    }
+})
 
 export default router;  
-
