@@ -25,6 +25,22 @@ CREATE TABLE IF NOT EXISTS property_list (
     FOREIGN KEY (owner_id) REFERENCES property_owners(id) ON DELETE CASCADE
 );
 
+CREATE TABLE IF NOT EXISTS property_photos (
+    id INTEGER PRIMARY KEY, 
+    property_id INTEGER NOT NULL,
+    photo_path TEXT NOT NULL,
+    is_main BOOLEAN DEFAULT 0,
+    FOREIGN KEY (property_id) REFERENCES property_list(id) ON DELETE CASCADE
+);
+
+CREATE TABLE IF NOT EXISTS property_favorites (
+    id INTEGER PRIMARY KEY,
+    owner_id INTEGER NOT NULL, 
+    property_id INTEGER NOT NULL,
+    FOREIGN KEY (owner_id) REFERENCES property_owners(id) ON DELETE CASCADE,
+    FOREIGN KEY (property_id) REFERENCES property_list(id) ON DELETE CASCADE
+); 
+
 CREATE TABLE IF NOT EXISTS inquiries (
     id INTEGER PRIMARY KEY,
     name TEXT NOT NULL,
@@ -32,13 +48,5 @@ CREATE TABLE IF NOT EXISTS inquiries (
     property_id TEXT DEFAULT 'PROP0000',
     message_topic TEXT NOT NULL,
     message TEXT NOT NULL
-);
-
-CREATE TABLE IF NOT EXISTS property_photos (
-    id INTEGER PRIMARY KEY, 
-    property_id INTEGER NOT NULL,
-    photo_path TEXT NOT NULL,
-    is_main BOOLEAN DEFAULT 0,
-    FOREIGN KEY (property_id) REFERENCES property_list(id) ON DELETE CASCADE
 );
 

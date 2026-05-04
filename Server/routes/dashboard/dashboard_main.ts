@@ -1,5 +1,5 @@
 import express from "express";
-import db from "../../database/database.js";
+import db from "../../database/database.ts";
 
 type UserData = {
     id: number;
@@ -14,9 +14,9 @@ router.route("/:username/:id")
 
     const user = db.prepare(`SELECT id, username, name FROM property_owners WHERE id = ? AND username = ?`).get(id, username);
 
-    if (!user) {
-        return res.status(404).json({ error: "User not found. Please make an account first!" });
-    }
+        if (!user) {
+            return res.status(404).json({ error: "User not found. Please make an account first!" });
+        }
 
     const properties = db.prepare(`
         SELECT property_list.*, property_photos.photo_path

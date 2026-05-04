@@ -19,8 +19,11 @@ type PropertyInfo = {
 
 const router = express.Router(); 
 
-router.get("/:propID", (req, res) => {
+router.route("/:propID")
+
+.get((req, res) => {
     const propID = req.params.propID; 
+
     const results = db.prepare(`
         SELECT property_list.*, property_photos.photo_path
         FROM property_list 
