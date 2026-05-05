@@ -30,15 +30,17 @@ type info ={
 }
 
 function DashboardPropertyEdit() {
+    const navigate = useNavigate();  
     const { username, ownerID, propID } = useParams();
-    const navigate = useNavigate(); 
-
+ 
     const [ data, setData ] = useState<info | null>(null);
     const [ propertyDetails, setPropertyDetails ] = useState<property | null>(null);
     const [ propertyPhotos, setPropertyPhotos ] = useState<photo[]>([]);
     const [ propertyUpdated, setPropertyUpdated ] = useState(false);
+
     const [ errorMessage, setErrorMessage ] = useState("");
     const [ successMessage, setSuccessMessage ] = useState("");
+    
     const [ photoUploading, setPhotoUploading] = useState(false); 
     const [ photoUploadSucessMessage, setPhotoUploadSuccessMessage ] = useState("");
     const [ photoUploadErrorMessage, setPhotoUploadErrorMessage ] = useState("");

@@ -7,12 +7,12 @@ type UserData = {
 
 const router = express.Router();
 
-router.route("/:username/:id")
+router.route("/:username/:ownerID")
 
 .get((req, res) => {
-    const { username, id } = req.params;
+    const { username, ownerID } = req.params;
 
-    const user = db.prepare(`SELECT id, username, name FROM property_owners WHERE id = ? AND username = ?`).get(id, username);
+    const user = db.prepare(`SELECT username, id, name FROM property_owners WHERE username = ? AND id = ?`).get(username, ownerID);
 
         if (!user) {
             return res.status(404).json({ error: "User not found. Please make an account first!" });
@@ -27,7 +27,7 @@ router.route("/:username/:id")
         WHERE owner_id = ?
         ORDER BY date_listed DESC;
         `)
-        .all(id);
+        .all(ownerID);
 
     if (properties.length === 0) {
         return res.status(404).json({ error: "You don't have any properties listed." });
@@ -37,10 +37,10 @@ router.route("/:username/:id")
 })
 
 .delete((req, res) => {
-    const { username, id } = req.params;    
+    const { username, ownerID } = req.params;    
     const propID = req.body.propID;
     
-    const user = db.prepare(`SELECT id FROM property_owners WHERE id = ? AND username = ?`).get(id, username) as UserData;
+    const user = db.prepare(`SELECT id FROM property_owners WHERE username = ? AND id = ?`).get(username, ownerID) as UserData;
 
     if (!user) {
         return res.status(404).json({ error: "User not found." });

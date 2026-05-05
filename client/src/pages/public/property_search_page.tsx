@@ -30,10 +30,12 @@ function PropertySearchPage () {
   const ownerID = params.get("ownerID"); 
 
   const [ results, setResults] = useState<Property[]>([]);
+  const [ propFavorite, setPropFavorite] = useState<Set<number>>(new Set());
 
   // Error Message → FP = Favorite Property
 
   const [ errorMessageFP, setErrorMessageFP ] = useState("");
+
 
     useEffect(() => {
       const fetchResults = async () => {
@@ -48,6 +50,7 @@ function PropertySearchPage () {
 
 
   async function addToFavorites (propID : number) {
+    const updateSet = new Set(propFavorite); 
 
     try {
       const res = await fetch (`/api/search/${ownerID}`, {
@@ -65,10 +68,12 @@ function PropertySearchPage () {
 
       if (res.ok) {
         setErrorMessageFP("");
+        updateSet.add(propID);
+        setPropFavorite(updateSet); 
       }
 
       else {
-        setErrorMessageFP(result.errorMessage);
+        setErrorMessageFP(result.error);
       }
     }
 
@@ -79,8 +84,36 @@ function PropertySearchPage () {
     }
   } 
 
-  const propertyDetail = (id : number) => {
-    navigate(`/property/${id}`)
+  async function removeFromFavorites (propID : number) {
+      const updateSet = new Set(propFavorite); 
+    try {
+      const res = await fetch (`/api/search/${ownerID}`, {
+        method: "DELETE",
+        headers: {
+          "Content-Type" : "application/json"
+        },
+        body: JSON.stringify({propID})
+      });
+      
+      const result = await res.json(); 
+
+      if (!res.ok) {
+        setErrorMessageFP(result.error)
+      }  
+
+      else {
+        updateSet.delete(propID);
+        setPropFavorite(updateSet);
+      }
+    }
+
+    catch (error) {
+      console.log(error);
+    }
+  }
+
+  const propertyDetailResult = (propID : number) => {
+    navigate(`/property/${propID}`)
   };
 
   return (
@@ -91,8 +124,12 @@ function PropertySearchPage () {
         </div>
           {results.map(result => (
             <div id = "propertyCard" key = {result.id}> 
-            <img onClick={ () => propertyDetail(result.id)} id = "propertyMainPhoto" src = {result.photo_path} />
-            <button onClick={ () => addToFavorites(result.id)}> Add to favorites </button>
+            <img onClick={ () => propertyDetailResult(result.id)} id = "propertyMainPhoto" src = {result.photo_path} />
+            {propFavorite.has(result.id) ?
+              <button onClick={ () => removeFromFavorites(result.id)}> Remove from favorites </button>
+              :
+              <button onClick={ () => addToFavorites(result.id)}> Add to favorites </button>
+            }
             {errorMessageFP && <h4>{errorMessageFP}</h4>}
             <p id = "propertyCity">{result.city}</p>
             <p id = "propertyPrice">  £{result.price}</p>
@@ -106,4 +143,3 @@ function PropertySearchPage () {
 }
 
 export default PropertySearchPage;
-
