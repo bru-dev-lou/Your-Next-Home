@@ -74,7 +74,38 @@ router.post("/:ownerID", (req, res) => {
 
     catch(error) {
         console.log("Server error:", error)
-        res.status(500).json({errorMessage: "Server Error: The team has been notified."}); 
+        res.status(500).json({error: "Server Error: The team has been notified."}); 
+    }
+})
+
+router.delete("/:ownerID", (req, res) => {
+    const ownerID = req.params.ownerID;
+    const propID = req.body.propID;
+
+    if (!ownerID) {
+        return res.status(400).json({error: "This feature is only available to our users. Please log in."})
+    }
+
+    if (!propID) {
+        return res.status(404).json({error: "This feature is currently unavailable"})
+    }
+
+    try {
+        const SQL = "DELETE FROM property_favorites WHERE owner_id = ? AND property_id = ?";
+        const removeFavProperty = db.prepare(SQL).run(ownerID, propID);
+
+        if (removeFavProperty.changes === 0) {
+            return res.status(400).json({error: "Property was not removed from favorites."});
+        }
+
+        else {
+            return res.status(204).send();
+        }
+    }
+
+    catch (error) {
+        console.log("Server Error:", error);
+        res.status(500).json({error: "Server Error: The team has been notified."}); 
     }
 })
 
