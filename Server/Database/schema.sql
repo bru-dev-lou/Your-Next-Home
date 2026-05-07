@@ -37,6 +37,7 @@ CREATE TABLE IF NOT EXISTS property_favorites (
     id INTEGER PRIMARY KEY,
     owner_id INTEGER NOT NULL, 
     property_id INTEGER NOT NULL,
+    date_added TIMESTAMP DEFAULT CURRENT_TIMESTAMP, 
     FOREIGN KEY (owner_id) REFERENCES property_owners(id) ON DELETE CASCADE,
     FOREIGN KEY (property_id) REFERENCES property_list(id) ON DELETE CASCADE
 ); 
