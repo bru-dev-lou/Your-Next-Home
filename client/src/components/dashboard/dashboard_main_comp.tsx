@@ -41,7 +41,7 @@ function DashboardMain() {
         fetchData();
     } , [username, ownerID]);
 
-    async function propertyDelete (propID: string) {
+    async function propertyDelete (propID: number) {
         const res = await fetch(`/api/dashboard/${username}/${ownerID}`, {
             method: "DELETE",
             headers: {

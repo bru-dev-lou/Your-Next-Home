@@ -32,10 +32,6 @@ VALUES
 ('Bungalow', 'York', 1350, 2, 1, 75, 'Furnished', 'A cosy bungalow in York offering two bedrooms and a bright living space. Ideal for relaxed living.', 1, '2026-01-05', 'Bungalows are a rare and distinctive property type in York''s rental market, where the city''s predominantly Victorian and Edwardian terraced housing stock means single-storey homes represent a genuine scarcity. This two-bedroom furnished example at £1,350 pcm offers something that the majority of York''s rental listings cannot: step-free, accessible living with no stairs, making it especially appealing to older tenants, those with mobility considerations, or anyone simply seeking a calmer and more manageable home environment. The furnished specification removes any upfront costs and allows tenants to move in immediately, a practical advantage that broadens the appeal to a wide range of prospective renters. At 75 sq metres the layout is well-proportioned for two bedrooms, and the bright living space creates a welcoming atmosphere. York''s rental market saw rents rise 5.7% in the year to February 2026, and the scarcity of bungalows relative to demand means this type of property consistently attracts strong interest, short void periods, and reliable long-term tenancies.'),
 ('Semi-Detached', 'York', 1500, 3, 2, 100, 'Unfurnished', 'A semi-detached home in York offering three bedrooms and spacious living areas. Conveniently located near amenities.', 2, '2026-01-01', 'Semi-detached homes account for 27% of York''s housing stock and are among the most consistently sought-after property types in the city, particularly among families and professional sharers who value the balance of space, privacy, and affordability they offer. At £1,500 pcm, this three-bedroom, two-bathroom property sits well above York''s three-bedroom average of £1,246, reflecting its generous 100 sq metre footprint and the practical advantages of two bathrooms — a feature that significantly improves daily life for multiple occupants. Unfurnished, it is ideally suited to longer-term tenants who wish to bring their own belongings and settle in comfortably, a profile that typically produces stable, low-turnover tenancies. Convenient access to local amenities is a key draw, and York''s exceptional connectivity — with direct rail links to Leeds, Manchester, and London — makes it an increasingly popular base for professionals commuting across the North. Semi-detached property values in York have shown steady appreciation, and with rents across the city rising 5.7% in the year to February 2026, this well-priced family home represents a strong and reliable rental proposition.');
 
-INSERT INTO inquiries (name, email, property_id, message_topic, message)
-VALUES
-('Example User', 'exampleuser@gmail.com', 'PROP0000', 'Listing Issue', 'I am having trouble listing my property. The button does not seem to work. Please assist.');
-
 INSERT INTO property_photos (property_id, photo_path, is_main)
 VALUES
 (1, 'https://res.cloudinary.com/debi9qosy/image/upload/v1774874076/photo_1_iqv8qi.jpg', 1),
@@ -199,3 +195,14 @@ VALUES
 (25, 'https://res.cloudinary.com/debi9qosy/image/upload/v1774874586/photo_4_pkm23h.jpg', 0),
 (25, 'https://res.cloudinary.com/debi9qosy/image/upload/v1774874587/photo_6_qrpcrm.jpg', 0);
 
+INSERT INTO property_favorites (owner_id, property_id)
+VALUES
+(1, 20),
+(1, 10),
+(1, 15),
+(1, 2),
+(1, 7);
+
+INSERT INTO inquiries (name, email, property_id, message_topic, message)
+VALUES
+('Example User', 'exampleuser@gmail.com', 'PROP0000', 'Listing Issue', 'I am having trouble listing my property. The button does not seem to work. Please assist.');

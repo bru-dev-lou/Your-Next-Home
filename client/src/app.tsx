@@ -14,7 +14,7 @@ import DashboardMainPage from "./pages/dashboard/dashboard_main_page";
 import DashboardEditPropertyPage from "./pages/dashboard/dashboard_edit_property_page"; 
 import DashboardNewPropertyPage from "./pages/dashboard/dashboard_new_property_page";
 import DashboardProfileEditPage from "./pages/dashboard/dashboard_profile_edit_page";
-
+import DashboardFavoritePropertiesPage from "./pages/dashboard/dashboard_favorite_properties_page";
 
 function App() {
 
@@ -33,6 +33,7 @@ function App() {
             <Route path="/dashboard/property/edit/:username/:ownerID/:propID" element={<DashboardEditPropertyPage />} />
             <Route path="/dashboard/property/add/:username/:ownerID" element={<DashboardNewPropertyPage />} />
             <Route path="/dashboard/profile/edit/:username/:ownerID" element={<DashboardProfileEditPage />} />
+            <Route path="/dashboard/property/favorites/:username/:ownerID" element={<DashboardFavoritePropertiesPage />} />
           </Routes>
       </div>
     </BrowserRouter>    
