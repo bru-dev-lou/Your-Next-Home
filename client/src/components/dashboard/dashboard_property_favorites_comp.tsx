@@ -73,7 +73,7 @@ const DashboardFavoriteProperties = () => {
                         }
                         <img src={property.photo_path} onClick = {() => navigate(`/property/${property.id}`)} style={{cursor: "pointer", width: "300px", height: "200px"}} />`
                         <p>{property.summary}</p>
-                        <p>Price: {property.price}</p>
+                        <p>Price: £{property.price} PCM</p>
                         <p>Bedrooms: {property.no_bedrooms}</p>
                         <p>Bathrooms: {property.no_bathrooms}</p>
                         <button onClick= { () => deleteFavProperty(property.id) }> Remove from Favorites </button>
