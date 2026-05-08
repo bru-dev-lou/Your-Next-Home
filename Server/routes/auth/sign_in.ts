@@ -1,6 +1,7 @@
 import bcrypt from "bcrypt"; 
 import express from "express";
 import db from "../../database/database.js";
+import jwt from "jsonwebtoken"; 
 
 type UserData = {
     id: number; 
@@ -36,6 +37,10 @@ router.post("/", async (req, res) => {
         return res.status(401).json({ error: "Invalid credentials, please try again." });
     }
     
+    const token = jwt.sign({id: user.id, username: user.username}, process.env.JWT_secret!, {expiresIn: "7d"});
+
+    res.cookie("token", token,{httpOnly: true, secure: process.env.NODE_ENV === "production", sameSite: "lax", maxAge: 604800000});
+
     res.status(200).json({ name: user.name, username: user.username, id: user.id });
 }
 )

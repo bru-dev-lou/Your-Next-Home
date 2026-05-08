@@ -1,8 +1,11 @@
 import "dotenv/config";
 import cors from "cors";
 import express from "express";
+import cookieParser from "cookie-parser";
 
 import autoCompleteRouter from "./routes/public/auto_complete_function.js";
+import authMiddleware from "./middleware/auth_middleware.js";
+
 import propertySearchResultsRouter from "./routes/public/property_search_results.js";
 import detailedPropertyResultsRouter from "./routes/public/property_detailed_results.js";
 import inquirySubmissionRouter from "./routes/public/user_inquiry_submission.js";
@@ -12,13 +15,22 @@ import dashboardMainRouter from "./routes/dashboard/dashboard_main.js";
 import dashboardPropertyEditRouter from "./routes/dashboard/dashboard_property_edit.js";
 import dashboardPropertyAddRouter from "./routes/dashboard/dashboard_property_add.js";
 import dashboardProfileEditRouter from "./routes/dashboard/dashboard_profile_edit.js";
-import dashboardPropertyFavorites from "./routes/dashboard/dashboard_property_favorites.ts";
+import dashboardPropertyFavorites from "./routes/dashboard/dashboard_property_favorites.js";
 
 const app = express(); 
 const port = 3000;
 
+process.on('unhandledRejection', (reason) => {
+    console.error('Unhandled rejection:', reason);
+});
+
+process.on('uncaughtException', (err) => {
+    console.error('Uncaught exception:', err);
+});
+
 app.use(express.json());
 app.use(cors());
+app.use(cookieParser());
 
 app.get("/", (req, res) => {
     res.send("Server is working!"); 
@@ -30,11 +42,11 @@ app.use("/api/property", detailedPropertyResultsRouter);
 app.use("/api/inquiries", inquirySubmissionRouter);
 app.use("/api/signIn", signInRouter);
 app.use("/api/signUp", signUpRouter);
-app.use("/api/dashboard/", dashboardMainRouter);
-app.use("/api/dashboard/property/edit/", dashboardPropertyEditRouter);
-app.use("/api/dashboard/property/add/", dashboardPropertyAddRouter);
-app.use("/api/dashboard/profile/edit/", dashboardProfileEditRouter);
-app.use("/api/dashboard/property/favorites", dashboardPropertyFavorites);
+app.use("/api/dashboard/", authMiddleware, dashboardMainRouter);
+app.use("/api/dashboard/property/edit/", authMiddleware, dashboardPropertyEditRouter);
+app.use("/api/dashboard/property/add/", authMiddleware, dashboardPropertyAddRouter);
+app.use("/api/dashboard/profile/edit/", authMiddleware, dashboardProfileEditRouter);
+app.use("/api/dashboard/property/favorites", authMiddleware, dashboardPropertyFavorites);
 
 app.listen(port, () => {
     console.log(`Server is running on port ${port}`);

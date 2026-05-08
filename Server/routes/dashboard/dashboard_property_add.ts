@@ -1,8 +1,8 @@
 import express from "express";
 import db from "../../database/database.js";
 
-import cloudinary from "../../config/cloudinaryConfig.ts";
-import upload from "../../config/multerConfig.ts";
+import cloudinary from "../../config/cloudinaryConfig.js";
+import upload from "../../config/multerConfig.js";
 
 type CloudinaryResult = {
     secure_url: string;

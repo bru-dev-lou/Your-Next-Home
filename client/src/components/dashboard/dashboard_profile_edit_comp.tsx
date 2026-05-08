@@ -61,7 +61,7 @@ function DashboardProfileEdit () {
     // Dead code as this state no longer returns undefined. Keep in case needed for error checks late on. 
     
     if (!userPublicDetails) {
-        return <h3>Failed to retrieve data, please <Link to = "/contact"> contact</Link> our team.</h3>;
+        return <h3>Failed to retrieve data, please <Link to = "/inquiries"> contact</Link> our team.</h3>;
     }
 
     async function updateUserPublicDetails (e:React.MouseEvent<HTMLButtonElement>) {
