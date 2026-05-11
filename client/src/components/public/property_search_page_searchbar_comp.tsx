@@ -11,10 +11,10 @@ function PropertySearchPageSearchBar () {
     
     const navigate = useNavigate(); 
 
-const buttonSearch = (e: any) => {
-    e.preventDefault();
-    navigate(`/search?city=${city}&type=${type}&maxPrice=${maxPrice}&minBeds=${minBeds}&minBaths=${minBaths}&furniture=${furniture}`)
-};
+    const buttonSearch = (e: any) => {
+        e.preventDefault();
+        navigate(`/search?city=${city}&type=${type}&maxPrice=${maxPrice}&minBeds=${minBeds}&minBaths=${minBaths}&furniture=${furniture}`)
+    };
 
 return (
     <div>

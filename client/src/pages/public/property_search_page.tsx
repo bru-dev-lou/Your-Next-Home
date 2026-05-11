@@ -29,23 +29,36 @@ function PropertySearchPage () {
   const furniture = params.get("furniture") || "";
   const ownerID = params.get("ownerID"); 
 
-  const [ results, setResults] = useState<Property[]>([]);
-  const [ propFavorite, setPropFavorite] = useState<Set<number>>(new Set());
+  const [propertyResults, setPropertyResults] = useState<Property[]>([]);
+  const [propFavorite, setPropFavorite] = useState<Set<number>>(new Set());
 
-  // Error Message → FP = Favorite Property
+  // Error Message → FP = Favorite Property, PR = Property Results
 
-  const [ errorMessageFP, setErrorMessageFP ] = useState("");
+  const [errorMessageFP, setErrorMessageFP] = useState("");
+  const [errorMessagePR, setErrorMessagePR] = useState("");
 
 
-    useEffect(() => {
-      const fetchResults = async () => {
-        const res = await fetch(`/api/search?city=${city}&type=${type}&maxPrice=${maxPrice}&minBeds=${minBeds}&minBaths=${minBaths}&furniture=${furniture}`);
-        const data = await res.json()
-          console.log(data);
-          setResults(data); 
-          };
-      fetchResults();
-    }, [city, type, maxPrice, minBeds, minBaths, furniture]);
+  useEffect(() => {
+    const fetchPropertyResults = async () => {
+      const res = await fetch(`/api/search?city=${city}&type=${type}&maxPrice=${maxPrice}&minBeds=${minBeds}&minBaths=${minBaths}&furniture=${furniture}`);
+      const data = await res.json();
+      if (!res.ok) {
+        setErrorMessagePR(data.error);
+      }
+      
+      else if (data.length === 0) {
+        setErrorMessagePR(data.message);
+      }
+
+      else {
+        setErrorMessagePR("");
+        setPropertyResults(data); 
+      }
+    };
+    
+    fetchPropertyResults();
+    
+  }, [city, type, maxPrice, minBeds, minBaths, furniture]);
 
 
 
@@ -122,7 +135,7 @@ function PropertySearchPage () {
           <PropertySearchPageSearchBar />
           <h3>Properties for rent in {city}:</h3>
         </div>
-          {results.map(result => (
+          {propertyResults.map(result => (
             <div id = "propertyCard" key = {result.id}> 
             <img onClick={ () => propertyDetailResult(result.id)} id = "propertyMainPhoto" src = {result.photo_path} />
             {propFavorite.has(result.id) ?

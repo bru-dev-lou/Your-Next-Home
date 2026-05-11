@@ -15,7 +15,7 @@ function DetailedPropertyPage () {
     const {propID, ownerID} = useParams();
 
     const [property, setProperty] = useState<PropertyDetail | null>(null);
-    const [ propFavorite, setPropFavorite] = useState<Set<number>>(new Set());
+    const [propFavorite, setPropFavorite] = useState<Set<number>>(new Set());
 
     const [errorMessageFP, setErrorMessageFP] = useState(""); 
 

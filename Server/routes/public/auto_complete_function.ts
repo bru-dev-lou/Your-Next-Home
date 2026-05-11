@@ -4,19 +4,25 @@ import db from "../../database/database.js";
 const router = express.Router();
 
 router.get('/cities', (req, res) => {
-const { city } = req.query;
-    
-    if (!city) 
-        return res.json([]);
-    
+    const {city} = req.query;
+
+    if (!city) { 
+        return res.status(200).json([]);
+    }
+
     try { 
-        const results = db.prepare('SELECT DISTINCT city FROM property_list WHERE city LIKE ? LIMIT 5').all(`${city}%`);
+        const autoCompleteResults = db.prepare('SELECT DISTINCT city FROM property_list WHERE city LIKE ? LIMIT 5').all(`${city}%`);
         
-        res.json({ cities: results });
+        if (autoCompleteResults.length === 0) {
+            return res.status(200).json({cities: []});
+        }
+
+        res.status(200).json({ cities: autoCompleteResults });
     }   
     
     catch (error) {
-        res.status(500).json({ error: 'Internal server error' });
+        console.log(error);
+        res.status(500).json({ error: "Server Error: The team has been notified."});
     }
 });
 
