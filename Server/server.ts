@@ -20,13 +20,6 @@ import dashboardPropertyFavorites from "./routes/dashboard/dashboard_property_fa
 const app = express(); 
 const port = 3000;
 
-process.on('unhandledRejection', (reason) => {
-    console.error('Unhandled rejection:', reason);
-});
-
-process.on('uncaughtException', (err) => {
-    console.error('Uncaught exception:', err);
-});
 
 app.use(express.json());
 app.use(cors());

@@ -1,5 +1,7 @@
 import { BrowserRouter, Routes, Route,} from "react-router-dom";
 
+import { UserProvider } from "./context/user_context";
+
 import MainNavigationBar from "./components/public/main_navigation_bar_comp";
 
 import HomePage from "./pages/public/home_page";
@@ -21,6 +23,7 @@ function App() {
   return (
     <BrowserRouter>
       <div>
+      <UserProvider>
         <MainNavigationBar />
           <Routes>
             <Route path="/" element={<HomePage />} />
@@ -35,6 +38,7 @@ function App() {
             <Route path="/dashboard/profile/edit/:username/:ownerID" element={<DashboardProfileEditPage />} />
             <Route path="/dashboard/property/favorites/:username/:ownerID" element={<DashboardFavoritePropertiesPage />} />
           </Routes>
+        </UserProvider>
       </div>
     </BrowserRouter>    
   )

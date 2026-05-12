@@ -1,12 +1,15 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
+import { useUser } from "../../context/user_context";
 
 function SignIn () {
     const [ username, setUsername ] = useState("");
     const [ password, setPassword ] = useState(""); 
     const [ errorMessage, setErrorMessage ] = useState(""); 
+    
     const navigate = useNavigate(); 
+    const { setUser } = useUser();
 
     const signIn = async (e:React.SubmitEvent<HTMLFormElement>) => {
         e.preventDefault(); 
@@ -30,6 +33,7 @@ function SignIn () {
             console.log(result);
 
             if (res.ok) {
+                setUser({ id: result.id, name: result.name, username: result.username }); 
                 navigate(`/dashboard/${result.username}/${result.id}`);
             }   
             else {
