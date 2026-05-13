@@ -17,6 +17,8 @@ import dashboardPropertyAddRouter from "./routes/dashboard/dashboard_property_ad
 import dashboardProfileEditRouter from "./routes/dashboard/dashboard_profile_edit.js";
 import dashboardPropertyFavorites from "./routes/dashboard/dashboard_property_favorites.js";
 
+import favoritePropertiesRouter from "./routes/protected/favorite_properties.js";
+
 const app = express(); 
 const port = 3000;
 
@@ -35,11 +37,15 @@ app.use("/api/property", detailedPropertyResultsRouter);
 app.use("/api/inquiries", inquirySubmissionRouter);
 app.use("/api/signIn", signInRouter);
 app.use("/api/signUp", signUpRouter);
+
 app.use("/api/dashboard/", authMiddleware, dashboardMainRouter);
 app.use("/api/dashboard/property/edit/", authMiddleware, dashboardPropertyEditRouter);
 app.use("/api/dashboard/property/add/", authMiddleware, dashboardPropertyAddRouter);
 app.use("/api/dashboard/profile/edit/", authMiddleware, dashboardProfileEditRouter);
 app.use("/api/dashboard/property/favorites", authMiddleware, dashboardPropertyFavorites);
+
+app.use("/api/search/favorites", authMiddleware, favoritePropertiesRouter);
+
 
 app.listen(port, () => {
     console.log(`Server is running on port ${port}`);

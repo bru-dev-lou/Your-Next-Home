@@ -32,9 +32,9 @@ function App() {
             <Route path="/inquiries" element={<Inquiries />} />
             <Route path="/signIn" element={<SignInPage />} />
             <Route path="/signUp" element={<SignUpPage />} />
-            <Route path="/dashboard/:username/:ownerID" element={<DashboardMainPage />} />
-            <Route path="/dashboard/property/edit/:username/:ownerID/:propID" element={<DashboardEditPropertyPage />} />
-            <Route path="/dashboard/property/add/:username/:ownerID" element={<DashboardNewPropertyPage />} />
+            <Route path="/dashboard" element={<DashboardMainPage />} />
+            <Route path="/dashboard/property/edit/:propID" element={<DashboardEditPropertyPage />} />
+            <Route path="/dashboard/property/add" element={<DashboardNewPropertyPage />} />
             <Route path="/dashboard/profile/edit/:username/:ownerID" element={<DashboardProfileEditPage />} />
             <Route path="/dashboard/property/favorites/:username/:ownerID" element={<DashboardFavoritePropertiesPage />} />
           </Routes>

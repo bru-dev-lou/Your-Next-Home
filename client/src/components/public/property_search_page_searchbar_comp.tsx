@@ -1,7 +1,6 @@
 import { useState } from "react"; 
 import { useNavigate } from "react-router-dom"; 
 
-import { useUser } from "../../context/user_context";
 
 function PropertySearchPageSearchBar () {
     const [type, setType] = useState("");
@@ -10,13 +9,12 @@ function PropertySearchPageSearchBar () {
     const [minBeds, setMinBeds] = useState(0);
     const [minBaths, setMinBaths] = useState(0);
     const [furniture, setFurniture] = useState("");
-    const { user } = useUser();
 
     const navigate = useNavigate(); 
 
     const buttonSearch = (e: any) => {
         e.preventDefault();
-        navigate(`/search?city=${city}&type=${type}&maxPrice=${maxPrice}&minBeds=${minBeds}&minBaths=${minBaths}&furniture=${furniture}&ownerID=${user ? user.id : ""}`);
+        navigate(`/search?city=${city}&type=${type}&maxPrice=${maxPrice}&minBeds=${minBeds}&minBaths=${minBaths}&furniture=${furniture}`);
     };
 
 return (

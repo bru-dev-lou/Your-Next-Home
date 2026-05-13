@@ -27,7 +27,6 @@ function PropertySearchPage () {
   const minBeds = params.get("minBeds") || "";
   const minBaths = params.get("minBaths") || "";
   const furniture = params.get("furniture") || "";
-  const ownerID = params.get("ownerID"); 
 
   const [propertyResults, setPropertyResults] = useState<Property[]>([]);
   const [propFavorite, setPropFavorite] = useState<Set<number>>(new Set());
@@ -77,7 +76,7 @@ function PropertySearchPage () {
     const updateSet = new Set(propFavorite); 
 
     try {
-      const res = await fetch (`/api/search/${ownerID}`, {
+      const res = await fetch (`/api/search/favorites/`, {
         method: "POST",
         headers: {
           "Content-Type" : "application/json"
@@ -108,7 +107,7 @@ function PropertySearchPage () {
     const updateSet = new Set(propFavorite); 
     
     try {
-      const res = await fetch (`/api/search/${ownerID}`, {
+      const res = await fetch (`/api/search/favorites`, {
         method: "DELETE",
         headers: {
           "Content-Type" : "application/json"

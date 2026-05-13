@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 type properties ={
         id: number;
@@ -14,10 +14,7 @@ type properties ={
 };
     
 type user = {
-        id: number;
-        username: string;
         name: string;
-        properties: properties[];
 };
 
 type dashboardData = {
@@ -26,49 +23,102 @@ type dashboardData = {
     };
 
 function DashboardMain() {
-    const [ data, setData ] = useState<dashboardData | null>(null);
-    const [ deleteIDConfirmed, setDeleteIDConfirmed ] = useState(""); 
-    const { username, ownerID } = useParams();    
     const navigate = useNavigate();
 
+    const [ data, setData ] = useState<dashboardData | null>(null);
+    const [ deleteIDConfirmed, setDeleteIDConfirmed ] = useState<number | null>(); 
+
+    const [ fetchPropertyMessage, setFetchPropertyMessage ] = useState(""); 
+    const [ deletePropertyMessage, setDeletePropertyMessage ] = useState("");
+
+    function messageReset () {
+        setTimeout (function () {
+            setDeletePropertyMessage("");
+        }, 5000);
+    }
+
+    
     useEffect(() => {
-        async function fetchData() {
-        const res = await fetch(`/api/dashboard/${username}/${ownerID}`);
-        const result = await res.json();
-        console.log(result);
-        setData(result);
+        const fetchPropertyData = async () => {
+            try {
+                const res = await fetch(`/api/dashboard`);
+                const result = await res.json();
+
+                if (!res.ok) {
+                    setFetchPropertyMessage(result.error); 
+                }
+
+                else if (result.message) {
+                    setFetchPropertyMessage(result.message); 
+                }
+
+                else {
+                    setFetchPropertyMessage(""); 
+                    setData(result);
+                }
+            }
+            
+            catch (error) {
+                setFetchPropertyMessage("Something went wrong, please try again later.")
+            }
         }
-        fetchData();
-    } , [username, ownerID]);
+        
+        fetchPropertyData();
+
+    } , []);
+
 
     async function propertyDelete (propID: number) {
-        const res = await fetch(`/api/dashboard/${username}/${ownerID}`, {
+        
+        try {
+            const res = await fetch(`/api/dashboard`, {
             method: "DELETE",
             headers: {
                 "Content-Type": "application/json"
             },
             body: JSON.stringify({ propID })
-        });
+            });
 
-        const result = await res.json();
-        console.log(result);
+            const result = await res.json();
 
-        const refreshRes = await fetch(`/api/dashboard/${username}/${ownerID}`);
-        const refreshResult = await refreshRes.json();
-        setData(refreshResult);
+
+            if (!res.ok) {
+                setDeletePropertyMessage(result.error) ;
+            }
+
+            else {
+                const refreshRes = await fetch(`/api/dashboard`);
+                const refreshResult = await refreshRes.json();
+                setData(refreshResult);
+                setDeletePropertyMessage(result.message); 
+                messageReset();
+            }
+        }
+
+        catch(error) {
+            setDeletePropertyMessage("Something went wrong, please try again later.");
+        }
+    }
+    
+    if (!data) {
+        return (
+            <div>
+                {fetchPropertyMessage ? <h3>Error: {fetchPropertyMessage}</h3>
+                : 
+                <h3>Loading...</h3>}
+            </div>
+        );
     }
 
-    if (!data) {
-        return <div>Loading...</div>;
-    };
     if (data)
         return (
                 <div>
                     <h2> Welcome back {data.user.name}! </h2>
                     <h3> My Properties </h3>
-                    <button onClick= {() => navigate(`/dashboard/property/add/${username}/${ownerID}`)}>+ Add a new property</button>
+                    <button onClick= {() => navigate(`/dashboard/property/add`)}>+ Add a new property</button>
                     <br />
                     <br />
+                    {deletePropertyMessage && <h3>{deletePropertyMessage}</h3>}
                     {data.properties.length > 0 ? (
                         <ul style={{ listStyle: "none", padding: 0, margin: 0 }}>
                             {data.properties.map((property: any) => (
@@ -80,14 +130,14 @@ function DashboardMain() {
                                     <p> <strong>Bedrooms:</strong> {property.no_bedrooms} </p>
                                     <p> <strong>Bathrooms:</strong> {property.no_bathrooms} </p>
                                     <p> <strong>Size:</strong> {property.size} m²</p>
-                                    <button onClick = {() => navigate(`/dashboard/property/edit/${data.user.username}/${ownerID}/${property.id}`)}> Edit Property </button>
+                                    <button onClick = {() => navigate(`/dashboard/property/edit/${property.id}`)}> Edit Property </button>
                                     <button onClick = {() => setDeleteIDConfirmed(property.id)}> Delete Property </button>
                                    {deleteIDConfirmed === property.id ? (
                                         <div>
                                             <p> Are you sure you want to delete this property? </p>
                                             <button onClick={() => propertyDelete(property.id)}> Confirm </button>
                                             <button onClick={() => {
-                                            setDeleteIDConfirmed("");
+                                            setDeleteIDConfirmed(null);
                                             }}> Cancel </button>
                                         </div>
                                         ) : null} 
@@ -95,7 +145,7 @@ function DashboardMain() {
                             ))}
                         </ul>
                     ) : (
-                        <p>You don't have any properties listed.</p>
+                        <h3>{fetchPropertyMessage}</h3>
                     )}
                 </div>
         );

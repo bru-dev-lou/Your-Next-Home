@@ -34,7 +34,7 @@ function SignIn () {
 
             if (res.ok) {
                 setUser({ id: result.id, name: result.name, username: result.username }); 
-                navigate(`/dashboard/${result.username}/${result.id}`);
+                navigate(`/dashboard`);
             }   
             else {
                 setErrorMessage(result.error);
