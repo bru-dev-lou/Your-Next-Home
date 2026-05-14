@@ -38,10 +38,10 @@ app.use("/api/inquiries", inquirySubmissionRouter);
 app.use("/api/signIn", signInRouter);
 app.use("/api/signUp", signUpRouter);
 
-app.use("/api/dashboard/", authMiddleware, dashboardMainRouter);
-app.use("/api/dashboard/property/edit/", authMiddleware, dashboardPropertyEditRouter);
-app.use("/api/dashboard/property/add/", authMiddleware, dashboardPropertyAddRouter);
-app.use("/api/dashboard/profile/edit/", authMiddleware, dashboardProfileEditRouter);
+app.use("/api/dashboard", authMiddleware, dashboardMainRouter);
+app.use("/api/dashboard/property/edit", authMiddleware, dashboardPropertyEditRouter);
+app.use("/api/dashboard/property/add", authMiddleware, dashboardPropertyAddRouter);
+app.use("/api/dashboard/profile/edit", authMiddleware, dashboardProfileEditRouter);
 app.use("/api/dashboard/property/favorites", authMiddleware, dashboardPropertyFavorites);
 
 app.use("/api/search/favorites", authMiddleware, favoritePropertiesRouter);

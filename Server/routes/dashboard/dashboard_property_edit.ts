@@ -4,9 +4,6 @@ import db from "../../database/database.js";
 import cloudinary from '../../config/cloudinaryConfig.js';
 import upload from "../../config/multerConfig.js";
 
-type UserData = {
-    id: number;
-};
 
 type PropertyData = {
     id: number;
@@ -29,52 +26,40 @@ type CloudinaryResult = {
 
 const router = express.Router();
 
-router.route("/:username/:ownerID/:propID")
+router.route("/:propID")
 
 .get((req, res) => {
-    const {propID, ownerID, username} = req.params;
-    
-    console.log("GET hit", username, ownerID, propID);
+    const propID = req.params.propID;
+    const ownerID = req.user?.id;
+
     try {
-        const user = db.prepare(`SELECT id FROM property_owners WHERE username = ?`).get(username) as UserData;
-
-        if (!user) {
-            return res.status(404).json({ error: "User not found." });
-        }
-
-        const SQLShow = db.prepare(`SELECT * FROM property_list WHERE owner_id = ? AND id = ?`).get(user.id, propID) as PropertyData;
+        const SQLShow = db.prepare(`SELECT * FROM property_list WHERE owner_id = ? AND id = ?`).get(ownerID, propID) as PropertyData;
         
         if (!SQLShow) {
-            return res.status(404).json({ error: "Property not found." });
+            return res.status(404).json({ errorProp: "Property not found." });
         }
 
         const SQLPhotos = db.prepare(`SELECT * FROM property_photos WHERE property_id = ?`).all(propID);
         
         if (SQLPhotos.length === 0) {
-            return res.status(404).json({ error: "No photos found for this property." });
+            return res.status(404).json({ errorPhotos: "No photos found for this property." });
         }
 
-        res.status(200).json({ property: SQLShow, photos: SQLPhotos, ownerID: user.id });
-        
+        res.status(200).json({ property: SQLShow, photos: SQLPhotos});
     }
 
     catch (error) {
-        console.error("Error fetching property:", error);
-        return res.status(500).json({ error: "An error occurred while fetching the property." });
+        console.error("Error retrieving property: ", error);
+        return res.status(500).json({ error: "Server Error: The team has been notified." });
     }
 })
 
 .patch ((req, res) => {
-    const {propID, username} = req.params;
+    const propID = req.params.propID;
+    const ownerID = req.user?.id;
     const {type, city, price, no_bedrooms, no_bathrooms, size, furniture, summary, detail} = req.body;
     
     try {
-        const user = db.prepare(`SELECT id FROM property_owners WHERE username = ?`).get(username) as UserData;
-        
-        if (!user) {
-        return res.status(404).json({ error: "User not found." });
-        }
-
         if (summary.split(/\s+/).filter(Boolean).length > 50) {
             return res.status(400).json({ error: "Summary cannot exceed 50 words." });
         }
@@ -83,62 +68,28 @@ router.route("/:username/:ownerID/:propID")
             return res.status(400).json({ error: "Detailed description cannot exceed 250 words." });
         }
 
-        const SQLEdit = db.prepare(`UPDATE property_list 
-            SET type = ?, city = ?, price = ?, no_bedrooms = ?, no_bathrooms = ?, size = ?, furniture = ?, summary = ?, detail = ? WHERE id = ? AND owner_id = ?`)
-            .run(type, city, price, no_bedrooms, no_bathrooms, size, furniture, summary, detail, propID, user.id);
+        const SQLEdit = db.prepare(`UPDATE property_list SET type = ?, city = ?, price = ?, no_bedrooms = ?, no_bathrooms = ?, size = ?, furniture = ?, summary = ?, detail = ? WHERE id = ? AND owner_id = ?`)
+        .run(type, city, price, no_bedrooms, no_bathrooms, size, furniture, summary, detail, propID, ownerID);
         
         if (SQLEdit.changes > 0) {
             return res.status(200).json({ message: "Property updated successfully!" });
         }
         else {
-            return res.status(404).json({ error: "Please make sure you update at least one field before clicking save." });
+            return res.status(400).json({ error: "Please make sure you update at least one field before clicking save." });
         }
     }
     
     catch (error) {
-        console.error("Error updating property:", error);
-        return res.status(500).json({ error: "An error occurred while updating the property." });
+        console.error("Error updating property details: ", error);
+        return res.status(500).json({ error: "Server Error: The team has been notified." });
     }
-})
-
-.delete((req, res) => {
-    const {propID, username} = req.params;
-    const {photoID, photo_path} = req.body;
-    
-    try {
-        const user = db.prepare(`SELECT id from property_owners WHERE username = ?`).get(username); 
-
-        if (!user) {
-            return res.status(404).json({ error: "User not found." });
-        }
-
-        const SQLDeletePhotos = db.prepare(`DELETE FROM property_photos WHERE id = ? AND property_id = ? AND photo_path = ?`).run(photoID, propID, photo_path);
-
-        if (SQLDeletePhotos.changes > 0) {
-            db.prepare(`UPDATE property_photos SET is_main = 1 WHERE property_id = ? ORDER BY id ASC LIMIT 1`).run(propID);
-            return res.status(200).json({ message: "Photo deleted successfully!" });
-        }
-
-    }
-    
-    catch (error) {
-        console.error("Error deleting property:", error);
-        return res.status(500).json({ error: "An error occurred while deleting the property." });
-        }
-
 })
 
 .post (upload.array('photos', 10), async (req, res) => {
-    const {propID, username} = req.params;
+    const propID  = req.params.propID;
     const files = req.files as Express.Multer.File[]; 
 
     try {
-        const user = db.prepare(`SELECT id from property_owners WHERE username = ?`).get(username);
-
-        if (!user) {
-            return res.status(404).json({ error: "User not found." });
-        }
-
         if (!req.files || req.files.length === 0) {
             return res.status(400).json({ error: "No photos have been selected." });
         }
@@ -169,10 +120,35 @@ router.route("/:username/:ownerID/:propID")
 
     catch (error) {
         console.error("Error adding photo:", error);
-        return res.status(500).json({ error: "An error occurred while adding your photos." });
+        return res.status(500).json({ error: "Server Error: The team has been notified." });
     }
 
 })
+
+.delete((req, res) => {
+    const propID = req.params.propID;
+    const {photoID, photo_path} = req.body;
+    
+    try {
+        const SQLDeletePhotos = db.prepare(`DELETE FROM property_photos WHERE id = ? AND property_id = ? AND photo_path = ?`).run(photoID, propID, photo_path);
+
+        if (SQLDeletePhotos.changes > 0) {
+            db.prepare(`UPDATE property_photos SET is_main = 1 WHERE property_id = ? ORDER BY id ASC LIMIT 1`).run(propID);
+            return res.status(204).send();
+        }
+
+        else {
+            return res.status(400).json({error:  "Failed to delete photo. Please try again."});
+        }
+    }
+    
+    catch (error) {
+        console.error("Error deleting property photos: ", error);
+        return res.status(500).json({ error: "Server Error: The team has been notified." });
+        }
+
+})
+
 
 
 export default router;
