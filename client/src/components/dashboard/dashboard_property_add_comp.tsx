@@ -1,5 +1,5 @@
 import {useState} from "react";
-import {useParams, useNavigate} from "react-router-dom";
+import {useNavigate} from "react-router-dom";
 
 type Photos = {
     url: string;
@@ -7,7 +7,6 @@ type Photos = {
 };
 
 function DashboardPropertyAdd () {
-    const { username, ownerID } = useParams();
     const navigate = useNavigate();
 
     const [ type, setType ] = useState("");
@@ -43,25 +42,23 @@ function DashboardPropertyAdd () {
         propertyData.append("size", size.toString());
         propertyData.append("furniture", furniture);
         propertyData.append("summary", summary);
-        propertyData.append("ownerID", ownerID as string);
         propertyData.append("detail", detail);
 
         try {
             setUploading(true);
 
-            const res = await fetch(`/api/dashboard/property/add/${username}/${ownerID}`, {
+            const res = await fetch(`/api/dashboard/property/add`, {
             method: "POST",
             body: propertyData,
             });
             
             const result = await res.json();
-            console.log(result); 
 
             if (res.ok) {
                 setDataSuccessMessage(result.message);
                 setDataErrorMessage("");
                 setTimeout(function(){
-                    navigate(`/dashboard/${username}/${ownerID}`)},
+                    navigate(`/dashboard`)},
                 5000);
             }
 

@@ -21,26 +21,28 @@ type photo = {
 
 function DashboardPropertyEdit() {
     const navigate = useNavigate();  
-
     const { propID } = useParams();
  
+// Original Property Details vs  Property Details prevents unneccessary API calls when fields have not been updated. 
+
+    const [ originalPropertyDetails, setOriginalPropertyDetails ] = useState<property | null>(null); 
     const [ propertyDetails, setPropertyDetails ] = useState<property | null>(null);
     const [ propertyPhotos, setPropertyPhotos ] = useState<photo[]>([]);
-    const [ propertyUpdated, setPropertyUpdated ] = useState(false);
 
 // Error Messages → PD = Photo Display, PE = Property Edit, PF = Photo Fetch, PU = Photo Upload
 
     const [ errorMessagePD, setErrorMessagePD ] = useState("");
-    const [ feedbackMessagePE, setFeedbackMessagePE ] = useState("");
     const [ errorMessagePF, setErrorMessagePF ] = useState("");
 
 //  Error / Success message states required for styling purposes.
 
+    const [ errorMessagePE, setErrorMessagePE ] = useState("");
+    const [ successMessagePE, setSuccessMessagePE ] = useState("");
+    const [ propertyUpdated, setPropertyUpdated ] = useState(false);
+
     const [ errorMessagePU, setErrorMessagePU ] = useState(""); 
     const [ successMessagePU, setSuccessMessagePU ] = useState("");
     const [ photoUploading, setPhotoUploading] = useState(false); 
-
-
 
 
 
@@ -55,10 +57,13 @@ function DashboardPropertyEdit() {
                 }
 
                 else if (result.errorPhotos) {
-                    setErrorMessagePD(result.errorPhotos); 
+                    setErrorMessagePD(result.errorPhotos);
+                    setOriginalPropertyDetails(result.property);
+                    setPropertyDetails(result.property); 
                 }
 
                 else {
+                    setOriginalPropertyDetails(result.property);
                     setPropertyDetails(result.property);
                     setPropertyPhotos(result.photos);           
                     setErrorMessagePF("");
@@ -75,6 +80,14 @@ function DashboardPropertyEdit() {
 
     async function propertyDetailsUpdate(e: React.MouseEvent<HTMLButtonElement>) {
         e.preventDefault();
+
+        setPropertyUpdated(false);
+
+        if (JSON.stringify(propertyDetails) === JSON.stringify(originalPropertyDetails)) {
+            setErrorMessagePE("Please update at least one field.");
+            return;
+        } 
+
         try {
             const res = await fetch(`/api/dashboard/property/edit/${propID}`, {
                 method: "PATCH",
@@ -88,16 +101,19 @@ function DashboardPropertyEdit() {
 
             if (res.ok) {
                 setPropertyUpdated(true);
-                setFeedbackMessagePE(result.message);
+                setOriginalPropertyDetails(propertyDetails); 
+                setSuccessMessagePE(result.message);
+                setErrorMessagePE("");
             } 
             
             else {
-                setFeedbackMessagePE(result.error);
+                setErrorMessagePE(result.error);
+                setSuccessMessagePE("");
             }
         } 
             
         catch (error) {
-            setFeedbackMessagePE("Something went wrong while updating your property. Please check your internet and try again.");
+            setErrorMessagePE("Something went wrong while updating your property. Please check your internet and try again.");
         }
     }
 
@@ -108,7 +124,6 @@ function DashboardPropertyEdit() {
         const formData = new FormData();
 
         if (!files) {
-            setErrorMessagePU("No photos selected.");
             return; 
         }
 
@@ -126,6 +141,8 @@ function DashboardPropertyEdit() {
         
         try {
             setPhotoUploading(true);
+            setSuccessMessagePU("");
+            setErrorMessagePU("");
 
             const res = await fetch(`/api/dashboard/property/edit/${propID}`, {
                 method: "POST",
@@ -136,11 +153,13 @@ function DashboardPropertyEdit() {
             
             if (res.ok) {
                 setPropertyPhotos(result.newPhotos);
-                setSuccessMessagePU(result.message);            
+                setSuccessMessagePU(result.message);  
+                setErrorMessagePU("");          
             }
 
             else {
                 setErrorMessagePU(result.error);
+                setSuccessMessagePU("");
             }
         }
 
@@ -173,7 +192,8 @@ function DashboardPropertyEdit() {
 
             else {
                 setPropertyPhotos(propertyPhotos.filter(photo => photo.id !== photoID));
-                setErrorMessagePU(""); 
+                setSuccessMessagePU(""); 
+                setErrorMessagePU("");
             }
         }
         
@@ -181,8 +201,6 @@ function DashboardPropertyEdit() {
             setErrorMessagePU("Something went wrong while deleting your photos, please check your internet and try again.")
         }
     }
-
-
 
     if (!propertyDetails) {
         return (
@@ -249,7 +267,7 @@ function DashboardPropertyEdit() {
                 </label>
                 <br />
                 <label>
-                    Summary (max 50 words):
+                    Summary:
                     <textarea
                         onChange={(e) => {
                             const words = e.target.value.split(/\s+/).filter(Boolean);
@@ -265,7 +283,7 @@ function DashboardPropertyEdit() {
                 </label>
                 <br />
                 <label>
-                    Detailed Description (max 250 words):
+                    Detailed Description:
                     <textarea
                         onChange={(e) => {
                             const words = e.target.value.split(/\s+/).filter(Boolean);
@@ -280,19 +298,18 @@ function DashboardPropertyEdit() {
                 </>
                 </label>
                 <br />
-                <button onClick={propertyDetailsUpdate}> Update Property Details </button>
-                {propertyUpdated && feedbackMessagePE &&
+                <button onClick={propertyDetailsUpdate}> Update Property </button>
+                {propertyUpdated && successMessagePE ?
                     <div>
-                        <p style={{ color: "green" }}>{feedbackMessagePE}</p>
+                        <p style={{ color: "green" }}>{successMessagePE}</p>
                         <button onClick={() => {navigate(`/property/${propID}`)}}>Check your property out!</button>
                     </div>
-                }
-                {feedbackMessagePE && <p style={{ color: "red" }}>{feedbackMessagePE}</p> }
+                :
+                errorMessagePE && <p style={{ color: "red" }}>{errorMessagePE}</p>}
             </div>
             <div>
                 <h3> Property Photos </h3>
                 <h5> Update your property photos below. </h5>
-                {errorMessagePD && <p style={{ color: "red" }}>{errorMessagePD}</p>}
                 {propertyPhotos.length > 0 ? (
                     <ul style={{ listStyle: "none", padding: 0, margin: 0 }}>
                         {propertyPhotos.map((photo) => (
@@ -303,12 +320,12 @@ function DashboardPropertyEdit() {
                         ))}
                     </ul>
                 ) : (
-                    <p>No photos selected.</p>
+                    <p style={{ color: "red" }}>{errorMessagePD}</p>
                 )}
                 {propertyPhotos.length < 10 ? ( 
                     <div>
                         <input type="file" multiple accept="image/*" onChange={photoUpload} />
-                        <p>Upload up to {10 - propertyPhotos.length} more photos.</p>
+                        <p>Upload up to {10 - propertyPhotos.length} more {propertyPhotos.length === 9 ? "photo" : "photos"}.</p>
                     </div>
                 ) : (
                     <p>You have reached the maximum number of photos.</p>

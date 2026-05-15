@@ -42,7 +42,7 @@ router.route("/:propID")
         const SQLPhotos = db.prepare(`SELECT * FROM property_photos WHERE property_id = ?`).all(propID);
         
         if (SQLPhotos.length === 0) {
-            return res.status(404).json({ errorPhotos: "No photos found for this property." });
+            return res.status(200).json({ property: SQLShow, photos: SQLPhotos, errorPhotos: "No photos found for this property." });
         }
 
         res.status(200).json({ property: SQLShow, photos: SQLPhotos});
@@ -60,6 +60,24 @@ router.route("/:propID")
     const {type, city, price, no_bedrooms, no_bathrooms, size, furniture, summary, detail} = req.body;
     
     try {
+        const fieldCheck = [
+            { field: city, error: "Please state where your property is located." },
+            { field: type, error: "Please choose a property type." },
+            { field: price, error: "Please state the property's monthly rental rate." },
+            { field: no_bedrooms, error: "Please state how many bedrooms your property has." },
+            { field: no_bathrooms, error: "Please state how many bathrooms your property has." },
+            { field: size, error: "Please state the size of your property in m²." },
+            { field: furniture, error: "Please choose your property's type of furnishing." },
+            { field: summary, error: "Please provide a summary of your property." },
+            { field: detail, error: "Please provide a detailed description of your property." } 
+        ];
+        
+        for (const {field, error} of fieldCheck) {
+            if (!field) {
+                return res.status(400).json({error});
+            }
+        }
+        
         if (summary.split(/\s+/).filter(Boolean).length > 50) {
             return res.status(400).json({ error: "Summary cannot exceed 50 words." });
         }
@@ -68,15 +86,11 @@ router.route("/:propID")
             return res.status(400).json({ error: "Detailed description cannot exceed 250 words." });
         }
 
-        const SQLEdit = db.prepare(`UPDATE property_list SET type = ?, city = ?, price = ?, no_bedrooms = ?, no_bathrooms = ?, size = ?, furniture = ?, summary = ?, detail = ? WHERE id = ? AND owner_id = ?`)
+        db.prepare(`UPDATE property_list SET type = ?, city = ?, price = ?, no_bedrooms = ?, no_bathrooms = ?, size = ?, furniture = ?, summary = ?, detail = ? WHERE id = ? AND owner_id = ?`)
         .run(type, city, price, no_bedrooms, no_bathrooms, size, furniture, summary, detail, propID, ownerID);
         
-        if (SQLEdit.changes > 0) {
-            return res.status(200).json({ message: "Property updated successfully!" });
-        }
-        else {
-            return res.status(400).json({ error: "Please make sure you update at least one field before clicking save." });
-        }
+        return res.status(200).json({ message: "Property updated successfully!" });
+
     }
     
     catch (error) {
