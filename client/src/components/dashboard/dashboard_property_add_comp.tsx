@@ -21,13 +21,16 @@ function DashboardPropertyAdd () {
 
     const [ dataErrorMessage, setDataErrorMessage ] = useState("");
     const [ dataSuccessMessage, setDataSuccessMessage ] = useState("");
+    const [ excessPhotosMessage, setExcessPhotosMessage ] = useState(""); 
+
     const [ tempURLs, setTempURLs ] = useState<Photos[]>([]);
     const [ uploading, setUploading ] = useState(false);
-    const [ excessPhotosMessage, setExcessPhotosMessage ] = useState(""); 
+
   
 
     async function addPropertyData (e: React.MouseEvent<HTMLButtonElement>) {
         e.preventDefault();
+        
         const propertyData = new FormData();
         
         for(const tempURL of tempURLs) {
@@ -53,7 +56,7 @@ function DashboardPropertyAdd () {
             });
             
             const result = await res.json();
-
+            
             if (res.ok) {
                 setDataSuccessMessage(result.message);
                 setDataErrorMessage("");
@@ -69,9 +72,7 @@ function DashboardPropertyAdd () {
         }
 
         catch (error) {
-            console.error("Error creating property:", error);
-            setDataErrorMessage(`${error}`);
-            setDataSuccessMessage("");
+            setDataErrorMessage("Something went wrong while creating your property. Please check your internet and try again."); 
         }
 
         finally {
@@ -86,13 +87,18 @@ function DashboardPropertyAdd () {
             return;
         }
 
+        if (tempURLs.length + files.length >= 5) {
+            setDataErrorMessage("");
+        }
+
         for (const [ index, file ]  of Array.from(files).entries()) {
             const previewURL = URL.createObjectURL(file);
+
             if (tempURLs.length + index < 10) {
                 setExcessPhotosMessage("");
                 setTempURLs(prev => [...prev, {url: previewURL, file: file}])
-            }
-
+            }   
+            
             else {
                 setExcessPhotosMessage("Maximum of 10 photos reached. Some photos were not added.");
                 return;
@@ -103,6 +109,7 @@ function DashboardPropertyAdd () {
     function deletePhotos(index: number) {
         setTempURLs(tempURLs.filter((_, i) => i !== index));    
             setExcessPhotosMessage("");
+            setDataErrorMessage("");
     }
 
     return (
@@ -129,7 +136,7 @@ function DashboardPropertyAdd () {
             <br />
             <label>
                 Price (£):
-            {price === 0 ?
+            {price == 0 ?
                 <input type="number" onChange={(e) => setPrice(Number(e.target.value))} value=""/>
                 :
                 <input type="number" onChange={(e) => setPrice(Number(e.target.value))} value={price}/>
@@ -138,7 +145,7 @@ function DashboardPropertyAdd () {
             <br />
             <label>
                 Bedrooms:
-            {bedrooms === 0 ? 
+            {bedrooms == 0 ? 
                 <input type= "number" onChange={(e) => setBedrooms(Number(e.target.value))} value=""/>
                 : 
                 <input type= "number" onChange={(e) => setBedrooms(Number(e.target.value))} value={bedrooms}/>
@@ -147,7 +154,7 @@ function DashboardPropertyAdd () {
             <br />
             <label>
                 Bathrooms:
-            {bathrooms === 0 ? 
+            {bathrooms == 0 ? 
                 <input type= "number" onChange={(e) => setBathrooms(Number(e.target.value))} value=""/>
                 : 
                 <input type= "number" onChange={(e) => setBathrooms(Number(e.target.value))} value={bathrooms}/>
@@ -155,8 +162,8 @@ function DashboardPropertyAdd () {
             </label>
             <br />
             <label>
-                Size (m²):
-            {size === 0 ? 
+                Size:
+            {size == 0 ? 
                 <input type= "number" onChange={(e) => setSize(Number(e.target.value))} value=""/>
                 : 
                 <input type= "number" onChange={(e) => setSize(Number(e.target.value))} value={size}/>
@@ -226,8 +233,8 @@ function DashboardPropertyAdd () {
             {uploading && <p>Please wait while we add your property!</p>}
             {dataSuccessMessage && (
                 <div>
-                    <p style={{color: "green"}}>{dataSuccessMessage}</p>
-                    <p style={{color: "green"}}> You will now be redirected to your properties.</p>
+                    <h3 style={{color: "green"}}>{dataSuccessMessage}</h3>
+                    <h3 style={{color: "green"}}> You will now be redirected to your properties.</h3>
                 </div>
             )}
         </div>

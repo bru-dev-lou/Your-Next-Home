@@ -31,7 +31,7 @@ router.route("/")
         ];
 
         for (const {field, error} of fieldCheck) {
-            if (!field || field == "0") {
+            if (!field) {
                 return res.status(400).json ({error}); 
             }
         }
@@ -71,6 +71,7 @@ router.route("/")
     }    
 
     catch (error) {
+        console.error("Error while adding new property: ", error);
         res.status(500).json({error: "Server Error: The team has been notified."}); 
     }
 

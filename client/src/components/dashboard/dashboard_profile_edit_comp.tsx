@@ -49,7 +49,7 @@ function DashboardProfileEdit () {
 
     useEffect(() => {
         async function fetchData () {
-            const res = await fetch (`/api/dashboard/profile/edit/${username}/${ownerID}`);
+            const res = await fetch (`/api/dashboard/profile/edit/`);
             const result = await res.json();
 
             setUserPublicDetails(result.userData); 
@@ -68,7 +68,7 @@ function DashboardProfileEdit () {
         e.preventDefault();
 
         try {
-            const res = await fetch(`/api/dashboard/profile/edit/${username}/${ownerID}`, {
+            const res = await fetch(`/api/dashboard/profile/edit/`, {
                 method: "PATCH",
                 headers: {
                     "Content-Type" : "application/json"
@@ -100,7 +100,7 @@ function DashboardProfileEdit () {
         e.preventDefault(); 
         
         try {
-            const res = await fetch(`/api/dashboard/profile/edit/${username}/${ownerID}/password_change`, {
+            const res = await fetch(`/api/dashboard/profile/edit/password_change`, {
                 method: "PATCH",
                 headers: {
                     "Content-Type" : "application/json"
@@ -130,7 +130,7 @@ function DashboardProfileEdit () {
     async function deleteAccount (e:React.MouseEvent<HTMLButtonElement>) {
         e.preventDefault();
 
-        const res = await fetch (`/api/dashboard/profile/edit/${username}/${ownerID}`, {
+        const res = await fetch (`/api/dashboard/profile/edit/`, {
             method: "DELETE",
             headers: {
                 "Content-Type": "application/json"

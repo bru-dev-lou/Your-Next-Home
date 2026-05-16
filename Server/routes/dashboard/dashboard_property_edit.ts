@@ -49,7 +49,7 @@ router.route("/:propID")
     }
 
     catch (error) {
-        console.error("Error retrieving property: ", error);
+        console.error("Error while retrieving property: ", error);
         return res.status(500).json({ error: "Server Error: The team has been notified." });
     }
 })
@@ -94,7 +94,7 @@ router.route("/:propID")
     }
     
     catch (error) {
-        console.error("Error updating property details: ", error);
+        console.error("Error while updating property details: ", error);
         return res.status(500).json({ error: "Server Error: The team has been notified." });
     }
 })
@@ -133,7 +133,7 @@ router.route("/:propID")
     }
 
     catch (error) {
-        console.error("Error adding photo:", error);
+        console.error("Error while adding photos:", error);
         return res.status(500).json({ error: "Server Error: The team has been notified." });
     }
 
@@ -157,7 +157,7 @@ router.route("/:propID")
     }
     
     catch (error) {
-        console.error("Error deleting property photos: ", error);
+        console.error("Error while deleting property photos: ", error);
         return res.status(500).json({ error: "Server Error: The team has been notified." });
         }
 
