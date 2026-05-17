@@ -82,6 +82,7 @@ function DashboardPropertyAdd () {
 
     async function displayPhotos(e: React.ChangeEvent<HTMLInputElement>) {
         e.preventDefault(); 
+        
         const files = e.target.files;
         if (!files) {
             return;

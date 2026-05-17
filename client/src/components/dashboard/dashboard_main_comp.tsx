@@ -59,7 +59,7 @@ function DashboardMain() {
             }
             
             catch (error) {
-                setFetchPropertyMessage("Something went wrong, please try again later.")
+                setFetchPropertyMessage("Something went wrong while fetching your properties. Please check your internet and refresh the page.")
             }
         }
         
@@ -103,7 +103,7 @@ function DashboardMain() {
     if (!data) {
         return (
             <div>
-                {fetchPropertyMessage ? <h3>Error: {fetchPropertyMessage}</h3>
+                {fetchPropertyMessage ? <h3>{fetchPropertyMessage}</h3>
                 : 
                 <h3>Loading...</h3>}
             </div>

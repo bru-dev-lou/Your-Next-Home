@@ -34,11 +34,11 @@ router.route("/")
 .patch(async (req, res) => {
     const ownerID = req.user?.id;
 
-    const name = req.body.name;
-    const address = req.body.address?.trim();
-    const number = req.body.number;
-    const email = req.body.email?.trim().toLowerCase();
-    const password = req.body.password?.trim();
+    const name = req.body.userPublicDetails.name;
+    const address = req.body.userPublicDetails.address?.trim();
+    const number = req.body.userPublicDetails.number;
+    const email = req.body.userPublicDetails.email?.trim().toLowerCase();
+    const password = req.body.userPublicDetails.password?.trim();
 
 
     try {
@@ -66,6 +66,7 @@ router.route("/")
                 return res.status(400).json ({error}); 
             }
         }
+
         const SQLPublic = "UPDATE property_owners SET name = ?, address = ?, phone_number = ?, email = ? WHERE id = ?";
         
         db.prepare(SQLPublic).run(name, address, number, email, ownerID); 
@@ -81,7 +82,7 @@ router.route("/")
 
 .delete(async (req, res) => {
     const ownerID = req.user?.id;
-    const password = req.body.password?.trim();
+    const password = req.body.userAccountDeleteDetails.password?.trim();
 
     try {
         const user = db.prepare(`SELECT password_hash FROM property_owners WHERE id = ?`).get(ownerID) as Data;
@@ -112,16 +113,16 @@ router.route("/password_change")
 
 .patch(async (req, res) => {
     const ownerID  = req.user?.id;
-    const password = req.body.password?.trim();
-    const newPassword = req.body.newPassword?.trim();
-    const passwordConfirmation = req.body.passwordConfirmation?.trim();
+    const password = req.body.userPrivateDetails.password?.trim();
+    const newPassword = req.body.userPrivateDetails.newPassword?.trim();
+    const passwordConfirmation = req.body.userPrivateDetails.passwordConfirmation?.trim();
     const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[?!@#$%^&*]).{8,}$/;
 
     try {
         const user = db.prepare(`SELECT password_hash FROM property_owners WHERE id = ?`).get(ownerID) as Data; 
 
         if (!password) {
-            return res.status(400).json({error: "Please provide your password to confirm these changes."})
+            return res.status(400).json({error: "Please start by providing your password."})
         }
         
         const match = await bcrypt.compare(password, user.password_hash);
@@ -134,16 +135,14 @@ router.route("/password_change")
             return res.status(400).json({error: "Please choose a new password."});
         }
 
-        if (newPassword) {
-            if (!passwordRegex.test(newPassword)) {
+        if (!passwordRegex.test(newPassword)) {
                 return res.status(400).json({ error: "Password must be 8+ characters with an uppercase, a lowercase, a number and a special character [?!@#$%^&*]."});
             }
 
-            if (newPassword !== passwordConfirmation) {
+        if (newPassword !== passwordConfirmation) {
                 return res.status(400).json({error: "Passwords do not match."})
             }
-        }
-
+        
         if (newPassword === password) {
             return res.status(400).json({error: "New password cannot be the same as old password."});
         }
