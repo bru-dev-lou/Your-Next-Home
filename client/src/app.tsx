@@ -36,7 +36,7 @@ function App() {
             <Route path="/dashboard/property/edit/:propID" element={<DashboardEditPropertyPage />} />
             <Route path="/dashboard/property/add" element={<DashboardNewPropertyPage />} />
             <Route path="/dashboard/profile/edit" element={<DashboardProfileEditPage />} />
-            <Route path="/dashboard/property/favorites/:username/:ownerID" element={<DashboardFavoritePropertiesPage />} />
+            <Route path="/dashboard/property/favorites" element={<DashboardFavoritePropertiesPage />} />
           </Routes>
         </UserProvider>
       </div>

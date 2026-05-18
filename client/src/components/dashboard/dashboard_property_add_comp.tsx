@@ -97,6 +97,7 @@ function DashboardPropertyAdd () {
 
             if (tempURLs.length + index < 10) {
                 setExcessPhotosMessage("");
+                setDataErrorMessage("");
                 setTempURLs(prev => [...prev, {url: previewURL, file: file}])
             }   
             

@@ -22,6 +22,7 @@ type UserAccountDeleteData = {
 function DashboardProfileEdit () {
     const navigate = useNavigate();
 
+    const [ originalUserPublicDetails, setOriginalUserPublicDetails] = useState<UserPublicData>({name: "", address: "", phone_number: "", email: "", password: ""}); 
     const [ userPublicDetails, setUserPublicDetails ] = useState<UserPublicData>({name: "", address: "", phone_number: "", email: "", password: ""}); 
     const [ userPrivateDetails, setUserPrivateDetails ] = useState<UserPrivateData>({password: "", newPassword: "", passwordConfirmation: ""});
     const [ userAccountDeleteDetails, setUserAccountDeleteDetails ] = useState<UserAccountDeleteData>({password: ""});
@@ -60,7 +61,8 @@ function DashboardProfileEdit () {
                 }
 
                 else {
-                    setUserPublicDetails({...result.userData, phone_number: String(result.userData.phone_number)});
+                    setUserPublicDetails({...result.userData, phone_number: String(result.userData.phone_number,), password: ""});
+                    setOriginalUserPublicDetails({...result.userData, phone_number: String(result.userData.phone_number,), password: ""})
                 }
             }
 
@@ -91,6 +93,15 @@ function DashboardProfileEdit () {
         e.preventDefault();
 
         try {
+            const {password: p1, ...detailsToCompare} = userPublicDetails;
+            const {password: p2, ...originalDetails} = originalUserPublicDetails;
+
+            if (JSON.stringify(detailsToCompare) === JSON.stringify(originalDetails)) {
+            setErrorMessageMP("Please update at least one field.");
+            setSuccessMessageMP("");
+            return;
+            }
+
             const res = await fetch(`/api/dashboard/profile/edit`, {
                 method: "PATCH",
                 headers: {
@@ -104,13 +115,14 @@ function DashboardProfileEdit () {
             if (res.ok) {
                 setErrorMessageMP("");
                 setSuccessMessageMP(result.message);
-                setUserPublicDetails({...userPublicDetails, password: ""})
+                setOriginalUserPublicDetails({...userPublicDetails, password: ""});
+                setUserPublicDetails({...userPublicDetails, password: ""});
             }
 
             else {
                 setSuccessMessageMP("");
                 setErrorMessageMP(result.error);
-                setUserPublicDetails({...userPublicDetails, password: ""})            
+                setUserPublicDetails({...userPublicDetails, password: ""});            
             }
         }
 
@@ -236,7 +248,7 @@ function DashboardProfileEdit () {
                             </input>
                         </label>
                         <br />
-                        {!changeRequest ? 
+                        {!changeRequest ?
                             <button onClick={() => setChangeRequest(true)}>Save Changes</button>
                             :
                             <label>

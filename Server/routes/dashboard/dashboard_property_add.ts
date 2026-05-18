@@ -31,7 +31,7 @@ router.route("/")
         ];
 
         for (const {field, error} of fieldCheck) {
-            if (!field) {
+            if (!field || field == 0) {
                 return res.status(400).json ({error}); 
             }
         }
@@ -45,7 +45,7 @@ router.route("/")
         }
 
         if (files.length <= 4) {
-            return res.status(400).json({ error: "Please upload at least 5 photos." });
+            return res.status(400).json({ error: `Please upload at least ${5 - files.length} more ${files.length == 4 ? "photo" : "photos"} .` });
         }
 
         const newPropertyData = db.prepare(`INSERT INTO property_list (type, city, price, no_bedrooms, no_bathrooms, size, furniture, summary, owner_id, detail)

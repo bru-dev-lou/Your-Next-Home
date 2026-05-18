@@ -219,7 +219,11 @@ function DashboardPropertyEdit() {
                 <h5> Update your property details below.</h5>
                 <label> 
                     Type:
-                    <select onChange={(e) => setPropertyDetails({...propertyDetails, type: e.target.value})} value={propertyDetails.type}>
+                    <select onChange={(e) => [
+                        setPropertyDetails({...propertyDetails, type: e.target.value}),
+                        setErrorMessagePE(""),
+                        setSuccessMessagePE("")]} 
+                        value={propertyDetails.type}>
                         <option value={propertyDetails.type}>
                             {propertyDetails.type}
                         </option>
@@ -233,32 +237,56 @@ function DashboardPropertyEdit() {
                 <br />
                 <label>
                     City:
-                    <input type="text" onChange={(e) => setPropertyDetails({...propertyDetails, city: e.target.value})} value={propertyDetails.city} />
+                    <input type="text" onChange={(e) => [
+                        setPropertyDetails({...propertyDetails, city: e.target.value}),
+                        setErrorMessagePE(""),
+                        setSuccessMessagePE("")]} 
+                        value={propertyDetails.city} />
                 </label>
                 <br />
                 <label>
                     Price (£):
-                    <input type="number" onChange={(e) => setPropertyDetails({...propertyDetails, price: parseFloat(e.target.value)})} value={propertyDetails.price} />
+                    <input type="number" onChange={(e) => [
+                        setPropertyDetails({...propertyDetails, price: e.target.value === "" ? undefined : parseFloat(e.target.value)}),
+                        setErrorMessagePE(""),
+                        setSuccessMessagePE("")]} 
+                        value={propertyDetails.price ?? ""} />
                 </label>
                 <br />
                 <label>
                     Bedrooms:
-                    <input type="number" onChange={(e) => setPropertyDetails({...propertyDetails, no_bedrooms: parseInt(e.target.value)})} value={propertyDetails.no_bedrooms} />
+                    <input type="number" onChange={(e) => [
+                        setPropertyDetails({...propertyDetails, no_bedrooms: e.target.value === "" ? undefined : parseInt(e.target.value)}),
+                        setErrorMessagePE(""),
+                        setSuccessMessagePE("")]} 
+                        value={propertyDetails.no_bedrooms ?? ""} />
                 </label>
                 <br />
                 <label>
                     Bathrooms:
-                    <input type="number" onChange={(e) => setPropertyDetails({...propertyDetails, no_bathrooms: parseInt(e.target.value)})} value={propertyDetails.no_bathrooms} />
+                    <input type="number" onChange={(e) => [ 
+                        setPropertyDetails({...propertyDetails, no_bathrooms: e.target.value === "" ? undefined : parseInt(e.target.value)}),
+                        setErrorMessagePE(""),
+                        setSuccessMessagePE("")]}
+                        value={propertyDetails.no_bathrooms ?? ""} />
                 </label>
                 <br />
                 <label>
                     Size (m²):
-                    <input type="number" onChange={(e) => setPropertyDetails({...propertyDetails, size: parseInt(e.target.value)})} value={propertyDetails.size} />
+                    <input type="number" onChange={(e) => [ 
+                        setPropertyDetails({...propertyDetails, size: e.target.value === "" ? undefined : parseInt(e.target.value)}),
+                        setErrorMessagePE(""),
+                        setSuccessMessagePE("")]} 
+                        value={propertyDetails.size ?? ""} />
                 </label>
                 <br />
                 <label>
                     Furniture:
-                    <select onChange={(e) => setPropertyDetails({...propertyDetails, furniture: e.target.value})} value={propertyDetails.furniture}>
+                    <select onChange={(e) => [
+                        setPropertyDetails({...propertyDetails, furniture: e.target.value}),
+                        setErrorMessagePE(""),
+                        setSuccessMessagePE("")]}
+                        value={propertyDetails.furniture}>
                         <option value={propertyDetails.furniture}>{propertyDetails.furniture}</option>
                         {propertyDetails.furniture === 'Furnished' ? null : <option onChange={(e) => setPropertyDetails({...propertyDetails, furniture: e.target.value})} value = 'Furnished'> Furnished</option>}
                         {propertyDetails.furniture === 'Semi-furnished' ? null : <option onChange={(e) => setPropertyDetails({...propertyDetails, furniture: e.target.value})} value = 'Semi-furnished'> Semi-Furnished</option>}
@@ -272,10 +300,12 @@ function DashboardPropertyEdit() {
                         onChange={(e) => {
                             const words = e.target.value.split(/\s+/).filter(Boolean);
                             if (words.length <= 50) {
+                                setErrorMessagePE("");
+                                setSuccessMessagePE("");
                                 setPropertyDetails({ ...propertyDetails, summary: e.target.value });
                             }
                          }}
-                    value={propertyDetails.summary}
+                        value={propertyDetails.summary}
                     />
                 <>
                     {propertyDetails.summary ? propertyDetails.summary.split(/\s+/).filter(Boolean).length : 0} / 50 words
@@ -288,10 +318,12 @@ function DashboardPropertyEdit() {
                         onChange={(e) => {
                             const words = e.target.value.split(/\s+/).filter(Boolean);
                             if (words.length <= 250) {
+                                setErrorMessagePE("");
+                                setSuccessMessagePE("");
                                 setPropertyDetails({ ...propertyDetails, detail: e.target.value });
                             }
                         }}
-                    value={propertyDetails.detail}
+                        value={propertyDetails.detail}
                     />
                 <>
                     {propertyDetails.detail ? propertyDetails.detail.split(/\s+/).filter(Boolean).length : 0} / 250 words

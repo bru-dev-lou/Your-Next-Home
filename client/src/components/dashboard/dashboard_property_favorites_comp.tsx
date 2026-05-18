@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 type properties = {
     id: number;
@@ -16,29 +16,38 @@ type properties = {
 };
 
 const DashboardFavoriteProperties = () => {
-    const {username, ownerID} = useParams(); 
     const navigate = useNavigate();
 
     const [favoriteProps, setFavoriteProps] = useState<properties[]>([]); 
-    const [noPropertiesMessage, setNoPropertiesMessage] = useState("");
+    const [removeIDConfirmation, setRemoveIDConfirmation] = useState<number | null>(); 
+
+    //  Error Messages →  FP = Favorite Properties
+
+    const [errorMessageFP, setErrorMessageFP] = useState("");
 
     useEffect(() => {
         async function fetchFavProperties() {
-            const res = await fetch(`/api/dashboard/property/favorites/${username}/${ownerID}`);
-            const result = await res.json(); 
-            if (!res.ok) {
-                setNoPropertiesMessage(result.error);
+            try {
+                const res = await fetch(`/api/dashboard/property/favorites`);
+                const result = await res.json(); 
+                if (!res.ok) {
+                    setErrorMessageFP(result.error);
+                }
+                else {
+                    setFavoriteProps(result);
+                }
             }
-            else {
-                setFavoriteProps(result);
+            
+            catch (error) {
+                setErrorMessageFP("Something went wrong while fetching properties. Please check your internet and refresh the page.")
             }
         }
         fetchFavProperties();
-    }, [username, ownerID]);
+    }, []);
 
 
     async function deleteFavProperty(propID : number) {
-        await fetch (`/api/dashboard/property/favorites/${username}/${ownerID}/${propID}`, {
+        await fetch (`/api/dashboard/property/favorites/${propID}`, {
             method: "DELETE",
             headers: {
                 "Content-Type" : "application/json"
@@ -46,17 +55,17 @@ const DashboardFavoriteProperties = () => {
             body: JSON.stringify({propID})
         });
 
-        const refreshRes = await fetch (`/api/dashboard/property/favorites/${username}/${ownerID}`);
+        const refreshRes = await fetch (`/api/dashboard/property/favorites`);
         const refreshResult = await refreshRes.json(); 
         setFavoriteProps(refreshResult); 
     }
 
-     if (favoriteProps.length === 0) {
+    if (favoriteProps.length === 0) {
         return (
-            <div>
-                <h3>{noPropertiesMessage}</h3>
+           <div>
+                <h3>{errorMessageFP}</h3>
             </div>
-        );
+        )
     }
 
     return (
@@ -65,7 +74,6 @@ const DashboardFavoriteProperties = () => {
             {favoriteProps.map((property) => {
                 return (
                     <div key = {property.id}>
-
                         {property.type === "Detached" || property.type === "Semi-Detached" || property.type === "Terraced" ?
                             <h4>{property.type} property in {property.city}</h4>
                         : 
@@ -76,7 +84,15 @@ const DashboardFavoriteProperties = () => {
                         <p>Price: £{property.price} PCM</p>
                         <p>Bedrooms: {property.no_bedrooms}</p>
                         <p>Bathrooms: {property.no_bathrooms}</p>
-                        <button onClick= { () => deleteFavProperty(property.id) }> Remove from Favorites </button>
+                        <button onClick= {() => setRemoveIDConfirmation(property.id)}>Remove from Favorites</button>
+                        {removeIDConfirmation === property.id ? (
+                            <div>
+                                <p> Are you sure? </p>
+                                <button onClick={() => deleteFavProperty(property.id)}> Confirm </button>
+                                <button onClick={() => {setRemoveIDConfirmation(null);}}> Cancel </button>
+                            </div>                        
+                            ) : null 
+                        }
                     </div>                        
                 )
             })}

@@ -134,7 +134,7 @@ function DashboardMain() {
                                     <button onClick = {() => setDeleteIDConfirmed(property.id)}> Delete Property </button>
                                    {deleteIDConfirmed === property.id ? (
                                         <div>
-                                            <p> Are you sure you want to delete this property? </p>
+                                            <p> Are you sure ? </p>
                                             <button onClick={() => propertyDelete(property.id)}> Confirm </button>
                                             <button onClick={() => {
                                             setDeleteIDConfirmed(null);

@@ -21,7 +21,7 @@ router.get('/cities', (req, res) => {
     }   
     
     catch (error) {
-        console.log(error);
+        console.log("Error fetching cities for auto complete feature: ", error);
         res.status(500).json({ error: "Server Error: The team has been notified."});
     }
 });

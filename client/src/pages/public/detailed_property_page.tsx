@@ -12,7 +12,7 @@ type PropertyDetail = {
 }
 
 function DetailedPropertyPage () {
-    const {propID, ownerID} = useParams();
+    const {propID} = useParams();
 
     const [property, setProperty] = useState<PropertyDetail | null>(null);
     const [propFavorite, setPropFavorite] = useState<Set<number>>(new Set());
@@ -21,15 +21,22 @@ function DetailedPropertyPage () {
 
     useEffect (() => {
         const fetchProperty = async () => {
-            const res = await fetch(`/api/property/${propID}`);
-            const data = await res.json(); 
-            setProperty(data);
+            try {
+                const res = await fetch(`/api/property/${propID}`);
+                const result = await res.json(); 
+                setProperty(result);
+            }
+//  PICK UP HERE → error handling , check backend route as well  
+
+catch{}
         };
 
         fetchProperty();
     }, [propID]); 
 
-    async function addToFavorites (propID : number) {
+// This comnes from a new route after putting favorites feature in a protexted folder  ↓↓↓↓
+
+async function addToFavorites (propID : number) {
         const updateSet = new Set(propFavorite);
 
         try {

@@ -3,16 +3,10 @@ import db from "../../database/database.js";
 
 const router =  express.Router(); 
 
-router.get("/:username/:ownerID", (req, res) => {
-    const { username, ownerID } = req.params;
+router.get("/", (req, res) => {
+    const ownerID = req.user?.id;
 
     try {
-        const user = db.prepare("SELECT id, username FROM property_owners WHERE username = ? AND id = ?").get(username, ownerID);
-
-        if (!user) {
-            return res.status(404).json({ error: "User not found. Please make an account first!" });
-        }
-
         const SQL = `SELECT property_favorites.*, property_list.*, property_photos.photo_path
             FROM property_favorites
             INNER JOIN property_list
@@ -26,7 +20,7 @@ router.get("/:username/:ownerID", (req, res) => {
         const showFavProperties = db.prepare(SQL).all(ownerID);
         
         if (showFavProperties.length === 0) {
-            return res.status(400).json({error: "No favorite properties found."})
+            return res.status(404).json({error: "No favorite properties found."})
         }
 
         else {
@@ -35,31 +29,25 @@ router.get("/:username/:ownerID", (req, res) => {
     }
 
     catch(error) {
-        console.log(error); 
-        res.status(500).json(error);
+        console.log("Error while retrieving favorite properties: ", error); 
+        res.status(500).json({ error: "Server Error: The team has been notified." });
     }
 })
 
-router.delete("/:username/:ownerID/:propID", (req, res) => {
-    const {username, ownerID} = req.params;
+router.delete("/:propID", (req, res) => {
+    const ownerID = req.user?.id;
     const propID = req.body.propID;
 
     try {
-        const user = db.prepare("SELECT username, id from property_owners WHERE username = ? AND id = ? ").get(username, ownerID); 
-
-        if (!user) {
-            return res.status(404).json({ error: "User not found. Please make an account first!" });
-        }
-
         if (!propID) {
-            return res.status(404).json({error: "No properties found."})
+            return res.status(404).json({error: "This property has already been removed."})
         }
 
         const SQL = "DELETE from property_favorites WHERE owner_id = ? AND property_id = ?";
         const removeFavProperty = db.prepare(SQL).run(ownerID, propID);
 
         if(removeFavProperty.changes === 0) {
-            return res.status(400).json({error: "An error occurred, the property was not removed."}); 
+            return res.status(400).json({error: "This property has already been removed."}); 
         }
 
         else {
@@ -68,8 +56,8 @@ router.delete("/:username/:ownerID/:propID", (req, res) => {
     }
 
     catch (error) {
-        console.log("Server Error: ", error); 
-        return res.status(500).json(error);
+        console.log("Error while deleting property: ", error); 
+        return res.status(500).json({error: "Server Error: The team has been notified."});
     }
 })
 

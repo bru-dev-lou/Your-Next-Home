@@ -52,7 +52,7 @@ router.get("/", (req, res) => {
     }
     
     catch(error) {
-        console.log(error);
+        console.log("Error retrieving properties: ", error);
         res.status(500).json({error: "Server Error: The team has been notified."});
     }
 })
