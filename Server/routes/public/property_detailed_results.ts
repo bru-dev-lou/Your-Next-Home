@@ -29,6 +29,10 @@ router.get("/:propID", (req, res) => {
             LEFT JOIN property_photos
             ON property_photos.property_id = property_list.id
             WHERE property_list.id = ?`).all(propID) as PropertyInfo[];
+        
+        if (propertyDetails.length === 0) {
+            return res.status(404).json({error: `Property with ID ${propID} does not exist.`})
+        }
 
         const {photo_path, ...propertyData} = propertyDetails[0];
 
@@ -40,6 +44,7 @@ router.get("/:propID", (req, res) => {
         
         res.status(200).json(data);
     }
+    
     catch(error) {
         res.status(500).json({error: "Server Error: The team has been notified."});
         console.log(`Error retrieving data for property ${propID}: `, error); 

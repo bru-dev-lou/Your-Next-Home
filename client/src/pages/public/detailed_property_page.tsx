@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 
 type PropertyDetail = {
-    propID: number;
+    id: number;
     city: string;
     price: number;
     summary: string;
@@ -14,59 +14,89 @@ type PropertyDetail = {
 function DetailedPropertyPage () {
     const {propID} = useParams();
 
-    const [property, setProperty] = useState<PropertyDetail | null>(null);
-    const [propFavorite, setPropFavorite] = useState<Set<number>>(new Set());
+    const [ property, setProperty ] = useState<PropertyDetail | null>(null);
+    const [ propFavorite, setPropFavorite ] = useState<Set<number>>(new Set());
 
-    const [errorMessageFP, setErrorMessageFP] = useState(""); 
+    const [ errorMessageFP,  setErrorMessageFP] = useState(""); 
+    const [ errorMessageFavorites, setErrorMessageFavorites ] = useState("");
 
     useEffect (() => {
         const fetchProperty = async () => {
             try {
                 const res = await fetch(`/api/property/${propID}`);
                 const result = await res.json(); 
-                setProperty(result);
+
+                if (!res.ok) {
+                    setErrorMessageFP(result.error)
+                }
+
+                else {
+                    setProperty(result);
+                }
             }
-//  PICK UP HERE → error handling , check backend route as well  
 
-catch{}
-        };
-
+            catch(error) {
+                setErrorMessageFP("Something went wrong while fetching this property. Please check your internet and refresh the page.")
+            }
+        }
+        
         fetchProperty();
+
     }, [propID]); 
 
-// This comnes from a new route after putting favorites feature in a protexted folder  ↓↓↓↓
+    useEffect (() => {
+        const fetchFavorites = async () => {
+            const updateSet = new Set(propFavorite);
+            
+            try {
+                const res = await fetch ("/api/search/favorites");
+                const results = await res.json(); 
+                
+                if (res.ok) {
+                    for (const result of results) {
+                        updateSet.add(result.property_id);
+                    }
+                    setPropFavorite(updateSet);
+                }
 
-async function addToFavorites (propID : number) {
+                else {
+                    return;
+                }
+            }
+
+            catch(error) {
+            }
+        }
+        fetchFavorites();
+    }, []);
+
+    async function addToFavorites (propID : number) {
         const updateSet = new Set(propFavorite);
 
-        try {
-            const res = await fetch (`/api/search/${propID}/${ownerID}`, {
+        try {            
+            const res = await fetch (`/api/search/favorites`, {
                 method: "POST",
                 headers: {
                     "Content-Type" : "application/json"
-                }
+                },
+                body: JSON.stringify({propID})
             });
 
             const result = await res.json(); 
-            console.log(result); 
-
-            // need to add button style change when res.ok
 
             if (res.ok) {
-                setErrorMessageFP("");
+                setErrorMessageFavorites("");
                 updateSet.add(propID);
                 setPropFavorite(updateSet); 
             }
 
             else {
-                setErrorMessageFP(result.error);
+                setErrorMessageFavorites(result.error);
             }
         }
 
-        // Will return error until ownerID param is added properly via users signing in and receiving a token
-
         catch (error) {
-            console.log(error);
+            setErrorMessageFavorites("Something went wrong while adding this property to your favorite's list. Please check your internet and try again.")
         }
     }         
 
@@ -74,46 +104,52 @@ async function addToFavorites (propID : number) {
         const updateSet = new Set(propFavorite); 
     
         try {
-            const res = await fetch (`/api/search/${propID}/${ownerID}`, {
+            const res = await fetch (`/api/search/favorites`, {
                 method: "DELETE",
                 headers: {
                     "Content-Type" : "application/json"
             },
                 body: JSON.stringify({propID})
             });
-      
-            const result = await res.json(); 
 
             if (!res.ok) {
-                setErrorMessageFP(result.error)
+                const result = await res.json(); 
+                setErrorMessageFavorites(result.error)
             }  
 
             else {
-            updateSet.delete(propID);
-            setPropFavorite(updateSet);
+                setErrorMessageFavorites("");
+                updateSet.delete(propID);
+                setPropFavorite(updateSet);
             }
         }
 
         catch (error) {
-            console.log(error);
+            setErrorMessageFavorites("Something went wrong while removing this property from your favorite's list. Please check your internet and try again.")
         }
     }
 
-
+    if (errorMessageFP) {
+        return (
+            <div>
+                <h3>{errorMessageFP}</h3>
+            </div>
+        )
+    }
 
     return (
         <div>
             {property && (
-                <div key ={property.propID}>
+                <div key ={property.id}>
                     {property.photos.map((photo, index) => (
                     <img key={index} src={photo} />
                     ))}
-                    {propFavorite.has(property.propID) ?
-                        <button onClick={ () => removeFromFavorites(property.propID)}> Remove from favorites </button>
+                    {propFavorite.has(property.id) ?
+                        <button onClick={ () => removeFromFavorites(property.id)}> Remove from favorites </button>
                     :
-                        <button onClick={ () => addToFavorites(property.propID)}> Add to favorites </button>
+                        <button onClick={ () => addToFavorites(property.id)}> Add to favorites </button>
                     }                       
-                    {errorMessageFP && <h4>{errorMessageFP}</h4>}
+                    {errorMessageFavorites && <h4>{errorMessageFavorites}</h4>}
                     <p>{property.city}</p>
                     <p>£{property.price}</p>
                     <p>{property.detail}</p>

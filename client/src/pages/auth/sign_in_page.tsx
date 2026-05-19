@@ -7,7 +7,7 @@ function SignInPage () {
         <div>
         <h2>Sign in and get started!</h2>
         <SignIn />
-        <h5>Don't have an account? <Link to="/register">Register</Link> now, it's free!</h5>
+        <h5>Don't have an account? <Link to="/signUp">Register</Link> now, it's free!</h5>
         </div>
     )
 }

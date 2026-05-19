@@ -17,7 +17,7 @@ import dashboardPropertyAddRouter from "./routes/dashboard/dashboard_property_ad
 import dashboardProfileEditRouter from "./routes/dashboard/dashboard_profile_edit.js";
 import dashboardPropertyFavorites from "./routes/dashboard/dashboard_property_favorites.js";
 
-import favoritePropertiesRouter from "./routes/protected/favorite_properties.js";
+import favoritePropertiesFeatureRouter from "./routes/protected/favorite_properties_feature.js";
 
 const app = express(); 
 const port = 3000;
@@ -44,7 +44,7 @@ app.use("/api/dashboard/property/add", authMiddleware, dashboardPropertyAddRoute
 app.use("/api/dashboard/profile/edit", authMiddleware, dashboardProfileEditRouter);
 app.use("/api/dashboard/property/favorites", authMiddleware, dashboardPropertyFavorites);
 
-app.use("/api/search/favorites", authMiddleware, favoritePropertiesRouter);
+app.use("/api/search/favorites", authMiddleware, favoritePropertiesFeatureRouter);
 
 
 app.listen(port, () => {

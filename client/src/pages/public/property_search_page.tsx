@@ -40,6 +40,7 @@ function PropertySearchPage () {
 
   useEffect(() => {
     const fetchPropertyResults = async () => {
+      
       try{
         const res = await fetch(`/api/search?city=${city}&type=${type}&maxPrice=${maxPrice}&minBeds=${minBeds}&minBaths=${minBaths}&furniture=${furniture}`);
         const data = await res.json();
@@ -70,7 +71,31 @@ function PropertySearchPage () {
     
   }, [city, type, maxPrice, minBeds, minBaths, furniture]);
 
+  useEffect (() => {
+    const fetchFavorites = async () => {
+      const updateSet = new Set(propFavorite);
+    
+      try {
+        const res = await fetch ("/api/search/favorites");
+        const results = await res.json(); 
+        if (res.ok) {
+          for (const result of results) {
+            updateSet.add(result.property_id);
+          }
+          setPropFavorite(updateSet);
+        }
 
+        else {
+          return;
+        }
+      }
+      
+      // Silent crash coded to avoid bad UI / UX. 
+
+      catch(error) {}
+    }
+      fetchFavorites();
+  }, []);
 
   async function addToFavorites (propID : number) {
     const updateSet = new Set(propFavorite); 
@@ -85,7 +110,6 @@ function PropertySearchPage () {
       });
 
       const result = await res.json(); 
-      console.log(result); 
 
       if (res.ok) {
         setErrorMessageFP("");

@@ -1,23 +1,20 @@
 import { useState } from "react";
 
+type inquiryData = {
+    name: string;
+    email: string;
+    propID?: number;
+    messageTopic: string;
+    message: string;
+}
 
 function Inquiries () {
-    const [ name, setName ] = useState("");
-    const [ email, setEmail ] = useState("");
-    const [ propID, setPropID ] = useState("");
-    const [ messageTopic, setMessageTopic ] = useState("");
-    const [ message, setMessage ] = useState("");
-   
+    const [ data, setData ] = useState<inquiryData>({name: "", email: "", propID: undefined, messageTopic: "", message: ""}); 
+    const [ errorMessage, setErrorMessage ] = useState(""); 
+    const [ successMessage, setSuccessMessage ] = useState(""); 
+
     const submitInquiry = async (e:React.SubmitEvent<HTMLFormElement>) => {
         e.preventDefault();
-
-        const data = {
-            name,
-            email,
-            propID,
-            messageTopic,
-            message
-        };
 
         try {
             const res = await fetch("/api/inquiries", {
@@ -27,60 +24,98 @@ function Inquiries () {
                 },
                 body: JSON.stringify(data)
             });
-
+            
             const result = await res.json();
-            console.log(result);
+
+            if (!res.ok){
+                setErrorMessage(result.error);
+                setSuccessMessage("");
+            }
+            
+            else {
+                setSuccessMessage(result.message);
+                setErrorMessage(""); 
+            }
         } 
     
         catch (error) {
-            console.error("Error submitting inquiry:", error);
+            setErrorMessage("Something went wrong while submiting your inquiry. Please check your internet and try again.")
         }
     }
    
     return (
         <div>
             <form onSubmit={submitInquiry}>
-                <label> Name </label>
+                <label> Name: </label>
                     <input
                         type="text"
-                        placeholder="John Doe"  
-                        value={name}
-                        onChange= {(e) => setName(e.target.value)}
+                        value={data.name}
+                        onChange= {(e) => [
+                            setData({...data, name: e.target.value}),
+                            setErrorMessage(""),
+                            setSuccessMessage("")
+                        ]}   
                     />
                 <br />
-                <label>Email</label>
+                <label> Email: </label>
                     <input
                         type="email"
-                        placeholder="example@gmail.com"
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
+                        value={data.email}
+                        onChange={(e) => [
+                            setData({...data, email: e.target.value}),
+                            setErrorMessage(""),
+                            setSuccessMessage("")
+                        ]}   
                     />
                 <br />
-                <label>Inquiry Topic</label>
+                <label> Topic: </label>
                     <input
                         type="text"
-                        placeholder="What's your inquiry about?"
-                        value={messageTopic}
-                        onChange={(e) => setMessageTopic(e.target.value)}
+                        value={data.messageTopic}
+                        onChange={(e) => [
+                            setData({...data, messageTopic: e.target.value}),
+                            setErrorMessage(""),
+                            setSuccessMessage("")
+                        ]}
                     />
                 <br />
-                <label>Message</label>
+                <label> Message: </label>
                     <textarea
-                        placeholder="Tells us more about your inquiry!"
-                        value={message}
-                        onChange={(e) => setMessage(e.target.value)}
+                        value={data.message}
+                        onChange={(e) => [
+                            setData({...data, message: e.target.value}),
+                            setErrorMessage(""),
+                            setSuccessMessage("")
+                        ]}
                     />
                 <br />
-                <label>Property ID</label>
-                    <input
-                        type="text"
-                        placeholder="Leave blank if not applicable"
-                        value={propID}
-                        onChange={(e) => setPropID(e.target.value)}
-                    />
+                <label> Property ID: </label>
+                    {data.propID == 0 ?
+                        <input
+                            type="number"
+                            value={""}
+                            onChange={(e) => [
+                                setData({...data, propID: Number(e.target.value)}),
+                                setErrorMessage(""),
+                                setSuccessMessage("")
+                            ]}
+                        />
+                        :
+                            <input
+                                type="number" 
+                                value={data.propID}
+                                onChange={(e) => [
+                                    setData({...data, propID: Number(e.target.value)}),
+                                    setErrorMessage(""),
+                                    setSuccessMessage("")
+                                ]}
+                            />
+                        }
                 <br />
                 <button type="submit">Submit Inquiry</button>
             </form>
+            {errorMessage && <h3>{errorMessage}</h3>}
+            {successMessage && <h3>{successMessage}</h3>}
         </div>
     );
 }

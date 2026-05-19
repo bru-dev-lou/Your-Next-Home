@@ -6,30 +6,38 @@ const router = express.Router();
 router.post("/", (req, res) => {
     const { name, email, propID, messageTopic, message } = req.body;
     
-    if (!name || !email || !messageTopic || !message) {
-        return res.status(400).json( {error: "All fields are required" } );
+    const fieldCheck = [
+        {field: name, error: "Please include your name."},
+        {field: email, error: "Please include your email so we can get back to you."},
+        {field: messageTopic, error: "Please include a message topic."},
+        {field: message, error: "Please include a description."}
+    ]
+
+    for (const{field, error} of fieldCheck) {
+        if(!field) {
+            return res.status(400).json({error});
+        }
     }
     
     try {
-            let result;
-            
-            if (!propID || propID.trim() === "") {
-                result = db.prepare(`INSERT INTO inquiries (name, email, message_topic, message) VALUES (?, ?, ?, ?)`)
-                .run(name, email, messageTopic, message);
-            }
-            
-            else { 
-                result = db.prepare(`INSERT INTO inquiries (name, email, property_id, message_topic, message) VALUES (?, ?, ?, ?, ?)`)
-                .run(name, email, propID, messageTopic, message);
-            }
-            
-            console.log("DB result:", result);
-            res.status(201).json({ message: "Inquiry submitted successfully" });
+        const inquiryFull = "INSERT INTO inquiries (name, email, property_id, message_topic, message) VALUES (?, ?, ?, ?, ?)";
+        const inquiryPartial = "INSERT INTO inquiries (name, email, message_topic, message) VALUES (?, ?, ?, ?)";
 
-} catch (err) {
-    console.error("DB ERROR:", err);
-    res.status(500).json({ error: "Database error" });
-}
+        if (!propID || propID === "") {
+            db.prepare(inquiryPartial).run(name, email, messageTopic, message);
+            res.status(201).json({ message: "Inquiry submitted successfully" });
+        }
+
+        else {
+            db.prepare(inquiryFull).run(name, email, propID, messageTopic, message);
+            res.status(201).json({ message: "Inquiry submitted successfully" });
+        }
+    }
+
+    catch (error) {
+        console.log("Error submiting inquiry: ", error);
+        res.status(500).json({error: "Server Error: The team has been notified."});
+    }
 })
 
 export default router;
