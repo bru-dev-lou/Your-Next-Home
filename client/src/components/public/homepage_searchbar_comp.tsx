@@ -15,11 +15,11 @@ function HomePageSearchBar(): JSX.Element {
         const fetchCity = async () => {
             try {
                 const res = await fetch(`/api/cities?city=${autoCompleteQuery}`);
-                const data = await res.json();
+                const result = await res.json();
 
                 if (!res.ok) {
                     setCities([]);
-                    setErrorMessageAC(data.error) 
+                    setErrorMessageAC(result.error) 
                 }
 
                 else if(autoCompleteQuery.length === 0) {
@@ -28,13 +28,13 @@ function HomePageSearchBar(): JSX.Element {
                 }
 
                 else {
-                    setCities(data.cities);
+                    setCities(result.cities);
                     setErrorMessageAC("");
                 }
             }
 
             catch(error) {
-                setErrorMessageAC("Something went wrong, please try again later.")
+                setErrorMessageAC("AutoComplete feature currently unavailable.")
             }
         }
             

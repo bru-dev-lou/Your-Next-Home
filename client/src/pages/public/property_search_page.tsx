@@ -63,7 +63,7 @@ function PropertySearchPage () {
       }
 
       catch (error){
-        setErrorMessagePR("Something went wrong, please try again later.")
+        setErrorMessagePR("Failed to fetch requested properties. Please check your internet and refresh the page.")
       }
     }
     
@@ -123,7 +123,7 @@ function PropertySearchPage () {
     }
 
     catch (error) {
-      setErrorMessageFP("Something went wrong, please try again later.");
+      setErrorMessageFP("Failed to add to favorites. Please check your internet and try again.");
     }
   }
 
@@ -152,7 +152,7 @@ function PropertySearchPage () {
     }
 
     catch (error) {
-      setErrorMessageFP("Something went wrong, please try again later.");    
+      setErrorMessageFP("Failed to remove from favorites. Please check your internet and try again.");    
     }
   }
 

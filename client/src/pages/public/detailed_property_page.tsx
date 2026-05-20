@@ -36,7 +36,7 @@ function DetailedPropertyPage () {
             }
 
             catch(error) {
-                setErrorMessageFP("Something went wrong while fetching this property. Please check your internet and refresh the page.")
+                setErrorMessageFP("Failed to fetch this property. Please check your internet and refresh the page.")
             }
         }
         
@@ -96,7 +96,7 @@ function DetailedPropertyPage () {
         }
 
         catch (error) {
-            setErrorMessageFavorites("Something went wrong while adding this property to your favorite's list. Please check your internet and try again.")
+            setErrorMessageFavorites("Failed to add to favorites. Please check your internet and try again.");
         }
     }         
 
@@ -125,7 +125,7 @@ function DetailedPropertyPage () {
         }
 
         catch (error) {
-            setErrorMessageFavorites("Something went wrong while removing this property from your favorite's list. Please check your internet and try again.")
+            setErrorMessageFavorites("Failed to remove from favorites. Please check your internet and try again.")
         }
     }
 

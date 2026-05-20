@@ -39,7 +39,7 @@ function Inquiries () {
         } 
     
         catch (error) {
-            setErrorMessage("Something went wrong while submiting your inquiry. Please check your internet and try again.")
+            setErrorMessage("Failed to submit inquiry. Please check your internet and try again.")
         }
     }
    

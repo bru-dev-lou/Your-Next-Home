@@ -2,6 +2,8 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom"; 
 
 
+//  Can all the states into one and add a Type here (before the function) 
+
 function PropertySearchPageSearchBar () {
     const [type, setType] = useState("");
     const [city, setCity] = useState("");
