@@ -103,7 +103,12 @@ function DashboardMain() {
     if (!data) {
         return (
             <div>
-                {fetchPropertyMessage ? <h3>{fetchPropertyMessage}</h3>
+                {fetchPropertyMessage ? 
+                <div>
+                    <br />
+                    <button onClick= {() => navigate(`/dashboard/property/add`)}>+ Add a new property</button>
+                    <h3>{fetchPropertyMessage}</h3>
+                </div>
                 : 
                 <h3>Loading...</h3>}
             </div>

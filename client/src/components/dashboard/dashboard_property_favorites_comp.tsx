@@ -21,9 +21,10 @@ const DashboardFavoriteProperties = () => {
     const [favoriteProps, setFavoriteProps] = useState<properties[]>([]); 
     const [removeIDConfirmation, setRemoveIDConfirmation] = useState<number | null>(); 
 
-    //  Error Messages →  FP = Favorite Properties
+    //  Error Messages →  FP = Favorite Properties / DP = Delete Properties
 
-    const [errorMessageFP, setErrorMessageFP] = useState("");
+    const [ errorMessageFP, setErrorMessageFP ] = useState("");
+    const [ errorMessageDP, setErrorMessageDP ] = useState("");
 
     useEffect(() => {
         async function fetchFavProperties() {
@@ -47,23 +48,46 @@ const DashboardFavoriteProperties = () => {
 
 
     async function deleteFavProperty(propID : number) {
-        await fetch (`/api/dashboard/property/favorites/${propID}`, {
-            method: "DELETE",
-            headers: {
-                "Content-Type" : "application/json"
-            },
-            body: JSON.stringify({propID})
-        });
+        try {
+            const res = await fetch (`/api/dashboard/property/favorites/${propID}`, {
+                method: "DELETE",
+                headers: {
+                    "Content-Type" : "application/json"
+                },
+                body: JSON.stringify({propID})
+            });
 
-        const refreshRes = await fetch (`/api/dashboard/property/favorites`);
-        const refreshResult = await refreshRes.json(); 
-        setFavoriteProps(refreshResult); 
+            if (!res.ok) {
+                const result = await res.json();
+                setErrorMessageDP(result.error);
+            }
+             
+            else {
+                const refreshFavoritesPage = await fetch (`/api/dashboard/property/favorites`);
+                const newFavoritesList = await refreshFavoritesPage.json(); 
+
+                if (refreshFavoritesPage.ok) {
+                    setFavoriteProps(newFavoritesList); 
+                    setErrorMessageDP("");
+                }
+                else {
+                    setFavoriteProps([]);
+                    setErrorMessageFP(newFavoritesList.error);
+                }
+            }
+        }
+        
+        catch(error){
+            setErrorMessageDP("Server Error: The team has been notified.");
+        }
     }
+
 
     if (favoriteProps.length === 0) {
         return (
            <div>
-                <h3>{errorMessageFP}</h3>
+                <h3>Favorite Properties</h3>
+                <h4>{errorMessageFP}</h4>
             </div>
         )
     }
@@ -90,6 +114,7 @@ const DashboardFavoriteProperties = () => {
                                 <p> Are you sure? </p>
                                 <button onClick={() => deleteFavProperty(property.id)}> Confirm </button>
                                 <button onClick={() => {setRemoveIDConfirmation(null);}}> Cancel </button>
+                                {errorMessageDP && <p>{errorMessageDP}</p>}
                             </div>                        
                             ) : null 
                         }

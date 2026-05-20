@@ -3,9 +3,13 @@ import { useNavigate } from "react-router-dom";
 
 import { useUser } from "../../context/user_context";
 
+type userData = {
+    username: string;
+    password: string;
+}
+
 function SignIn () {
-    const [ username, setUsername ] = useState("");
-    const [ password, setPassword ] = useState(""); 
+    const [ data, setData ] = useState<userData>({username: "", password: ""})
     const [ errorMessage, setErrorMessage ] = useState(""); 
     
     const navigate = useNavigate(); 
@@ -14,11 +18,6 @@ function SignIn () {
     const signIn = async (e:React.SubmitEvent<HTMLFormElement>) => {
         e.preventDefault(); 
         setErrorMessage("");
-
-        const data = {
-            username,
-            password
-        };
 
         try { 
             const res = await fetch ("api/signIn", {
@@ -30,19 +29,19 @@ function SignIn () {
             });
 
             const result = await res.json();
-            console.log(result);
 
             if (res.ok) {
                 setUser({ id: result.id, name: result.name, username: result.username }); 
                 navigate(`/dashboard`);
             }   
+
             else {
                 setErrorMessage(result.error);
             }
         }
 
         catch (error) {
-            console.error(error);
+            setErrorMessage("Something went wrong while signing you in. Please check your internet and try again.");
         }
     };
 
@@ -52,16 +51,16 @@ return (
             <label> Username: </label>
                 <input
                     type="text"
-                    value={username}
-                    onChange={(e) => setUsername(e.target.value)}
+                    value={data.username}
+                    onChange={(e) => setData({...data, username: e.target.value})}
                     autoComplete= "username"
                 />
             <br />
             <label> Password: </label>
                 <input
                     type="password"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
+                    value={data.password}
+                    onChange={(e) => setData({...data, password: e.target.value})}
                     autoComplete= "current-password"
                 />
                 <br />
