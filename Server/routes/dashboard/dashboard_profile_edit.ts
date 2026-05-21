@@ -24,7 +24,7 @@ router.route("/")
     }
 
     catch (error) {
-        console.error("Error while retrieving user data: ", error);
+        console.error("Error while retrieving user's data: ", error);
         return res.status(500).json({error: "Server Error: The team has been notified."})
     }
 
@@ -42,18 +42,6 @@ router.route("/")
 
 
     try {
-        const user  = db.prepare(`SELECT password_hash FROM property_owners WHERE id = ?`).get(ownerID) as Data;
-
-        if (!password) {
-            return res.status(400).json({error: "Please provide your password to confirm these changes."})
-        }
-
-        const match = await bcrypt.compare(password, user.password_hash);
-    
-        if (!match) {
-            return res.status(400).json({error: "Incorrect password, please try again."});
-        }
-
         const fieldCheck = [
             {field: name, error: "Please provide your name to update your profile."},
             {field: address, error: "Please provide your address to update your profile."},
@@ -66,6 +54,19 @@ router.route("/")
                 return res.status(400).json ({error}); 
             }
         }
+
+        const user  = db.prepare(`SELECT password_hash FROM property_owners WHERE id = ?`).get(ownerID) as Data;
+
+        if (!password) {
+            return res.status(400).json({passwordError: "Please provide your password to confirm these changes."})
+        }
+
+        const match = await bcrypt.compare(password, user.password_hash);
+    
+        if (!match) {
+            return res.status(400).json({passwordError: "Incorrect password, please try again."});
+        }
+
 
         const SQLPublic = "UPDATE property_owners SET name = ?, address = ?, phone_number = ?, email = ? WHERE id = ?";
         
@@ -156,7 +157,7 @@ router.route("/password_change")
     } 
 
     catch(error) {
-        console.error("Error while updating password: ", error);
+        console.error("Error while changing user's password: ", error);
         return res.status(500).json({error: "Server Error: The team has been notified."});    
     }
 })

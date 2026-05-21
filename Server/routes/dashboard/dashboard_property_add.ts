@@ -43,16 +43,17 @@ router.route("/")
         if (detail.split(/\s+/).filter(Boolean).length > 250) {
             return res.status(400).json({ error: "Detailed description cannot exceed 250 words." });
         }
-
+        
         if (files.length <= 4) {
             return res.status(400).json({ error: `Please upload at least ${5 - files.length} more ${files.length == 4 ? "photo" : "photos"} .` });
         }
+        
 
         const newPropertyData = db.prepare(`INSERT INTO property_list (type, city, price, no_bedrooms, no_bathrooms, size, furniture, summary, owner_id, detail)
         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`)
         .run(type, city, price, bedrooms, bathrooms, size, furniture, summary, ownerID, detail);
         
-
+    
         const newPropertyPhotos = db.prepare(`INSERT INTO property_photos (property_id, photo_path) VALUES (?, ?)`);
 
         for (const file of files) {

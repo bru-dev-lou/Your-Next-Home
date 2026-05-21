@@ -59,7 +59,7 @@ function DashboardMain() {
             }
             
             catch (error) {
-                setFetchPropertyMessage("Something went wrong while fetching your properties. Please check your internet and refresh the page.")
+                setFetchPropertyMessage("Failed to fetch your properties. Please check your internet and refresh the page.")
             }
         }
         
@@ -83,20 +83,34 @@ function DashboardMain() {
 
 
             if (!res.ok) {
-                setDeletePropertyMessage(result.error) ;
+                setDeletePropertyMessage(result.error);
             }
-
+                    
             else {
-                const refreshRes = await fetch(`/api/dashboard`);
-                const refreshResult = await refreshRes.json();
-                setData(refreshResult);
                 setDeletePropertyMessage(result.message); 
                 messageReset();
+
+                const refreshPropertyPage = await fetch(`/api/dashboard`);
+                const refreshResult = await refreshPropertyPage.json();
+                
+                if (!refreshPropertyPage.ok) {
+                    setData(null);
+                    setFetchPropertyMessage(refreshResult.error);
+                }
+
+                else if (refreshResult.message) {
+                    setData(null);
+                    setFetchPropertyMessage(refreshResult.message);
+                }
+
+                else {
+                    setData(refreshResult);  
+                }
             }
         }
 
         catch(error) {
-            setDeletePropertyMessage("Something went wrong, please try again later.");
+            setDeletePropertyMessage("Failed to delete property. Please check your internet and try again.");
         }
     }
     

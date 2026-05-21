@@ -27,8 +27,9 @@ function DashboardPropertyEdit() {
 
     const [ originalPropertyDetails, setOriginalPropertyDetails ] = useState<property | null>(null); 
     const [ propertyDetails, setPropertyDetails ] = useState<property | null>(null);
-    const [ propertyPhotos, setPropertyPhotos ] = useState<photo[]>([]);
 
+    const [ propertyPhotos, setPropertyPhotos ] = useState<photo[]>([]);
+    
 // Error Messages → PD = Photo Display, PE = Property Edit, PF = Photo Fetch, PU = Photo Upload
 
     const [ errorMessagePD, setErrorMessagePD ] = useState("");
@@ -113,7 +114,7 @@ function DashboardPropertyEdit() {
         } 
             
         catch (error) {
-            setErrorMessagePE("Something went wrong while updating your property. Please check your internet and try again.");
+            setErrorMessagePE("Failed to update property. Please check your internet and try again.");
         }
     }
 
@@ -122,7 +123,7 @@ function DashboardPropertyEdit() {
         
         const files = e.target.files;
         const formData = new FormData();
-
+        
         if (!files) {
             return; 
         }
@@ -134,7 +135,8 @@ function DashboardPropertyEdit() {
             }
             
             else {
-                setErrorMessagePU("You may only upload 10 photos!");
+                setErrorMessagePU("You may only upload 10 photos.");
+                setSuccessMessagePU("");
                 return;
             }
         }
@@ -143,6 +145,8 @@ function DashboardPropertyEdit() {
             setPhotoUploading(true);
             setSuccessMessagePU("");
             setErrorMessagePU("");
+            setErrorMessagePE("");
+            setSuccessMessagePE("");
 
             const res = await fetch(`/api/dashboard/property/edit/${propID}`, {
                 method: "POST",
@@ -164,7 +168,7 @@ function DashboardPropertyEdit() {
         }
 
         catch (error) {
-            setErrorMessagePU("Something went wrong while uploading your photos. Please check your internet and try again.");
+            setErrorMessagePU("Failed to upload new photos. Please check your internet and try again.");
         }
 
         finally {
@@ -198,7 +202,7 @@ function DashboardPropertyEdit() {
         }
         
         catch (error) { 
-            setErrorMessagePU("Something went wrong while deleting your photos, please check your internet and try again.")
+            setErrorMessagePU("Failed to delete photo. Please check your internet and try again.")
         }
     }
 

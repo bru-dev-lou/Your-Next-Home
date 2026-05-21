@@ -72,7 +72,7 @@ function DashboardPropertyAdd () {
         }
 
         catch (error) {
-            setDataErrorMessage("Something went wrong while creating your property. Please check your internet and try again."); 
+            setDataErrorMessage("Failed to create new property. Please check your internet and try again."); 
         }
 
         finally {
@@ -102,7 +102,7 @@ function DashboardPropertyAdd () {
             }   
             
             else {
-                setExcessPhotosMessage("Maximum of 10 photos reached. Some photos were not added.");
+                setExcessPhotosMessage("Maximum of 10 photos reached. Some photos were not added.")
                 return;
             }
         }
@@ -121,7 +121,10 @@ function DashboardPropertyAdd () {
             <br />
             <label>
                 City: 
-                <input onChange={(e) => setCity(e.target.value)}/>
+                    <input 
+                        onChange={(e) => setCity(e.target.value)}
+                        value={city}
+                    />
             </label>
             <br />
             <label>
@@ -138,38 +141,36 @@ function DashboardPropertyAdd () {
             <br />
             <label>
                 Price (£):
-            {price == 0 ?
-                <input type="number" onChange={(e) => setPrice(Number(e.target.value))} value=""/>
-                :
-                <input type="number" onChange={(e) => setPrice(Number(e.target.value))} value={price}/>
-            }           
+                    <input 
+                        type="number" 
+                        onChange={(e) => setPrice(Number(e.target.value))} 
+                        value={price || ""}
+                    />
             </label>
             <br />
             <label>
                 Bedrooms:
-            {bedrooms == 0 ? 
-                <input type= "number" onChange={(e) => setBedrooms(Number(e.target.value))} value=""/>
-                : 
-                <input type= "number" onChange={(e) => setBedrooms(Number(e.target.value))} value={bedrooms}/>
-            }
+                    <input 
+                        type= "number" 
+                        onChange={(e) => setBedrooms(Number(e.target.value))} 
+                        value={bedrooms || ""}
+                    />
             </label>
             <br />
             <label>
                 Bathrooms:
-            {bathrooms == 0 ? 
-                <input type= "number" onChange={(e) => setBathrooms(Number(e.target.value))} value=""/>
-                : 
-                <input type= "number" onChange={(e) => setBathrooms(Number(e.target.value))} value={bathrooms}/>
-            }
+                    <input type= "number" 
+                    onChange={(e) => setBathrooms(Number(e.target.value))} 
+                    value={bathrooms || ""}
+                    />
             </label>
             <br />
             <label>
-                Size:
-            {size == 0 ? 
-                <input type= "number" onChange={(e) => setSize(Number(e.target.value))} value=""/>
-                : 
-                <input type= "number" onChange={(e) => setSize(Number(e.target.value))} value={size}/>
-            }
+                Size: 
+                    <input type= "number" 
+                    onChange={(e) => setSize(Number(e.target.value))} 
+                    value={size || ""}
+                    />
             <br />
             </label>
             <label>
@@ -225,7 +226,7 @@ function DashboardPropertyAdd () {
                     <p>You can upload {10 - tempURLs.length} more photos.</p>
                 </div>
             ) : (
-                <p> You have reached the maximum number of photos.</p>
+                null
             )} 
             {excessPhotosMessage && <p>{excessPhotosMessage}</p>}
             {dataErrorMessage && !uploading && <p style={{color: "red"}}>{dataErrorMessage}</p>}

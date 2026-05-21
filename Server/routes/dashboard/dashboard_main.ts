@@ -31,7 +31,7 @@ router.route("/")
     }
 
     catch(error) {
-        console.log(error); 
+        console.log("Error retrieving user's properties: ", error); 
         res.status(500).json({error: "Server Error: The team has been notified."});
     }
 
@@ -53,7 +53,7 @@ router.route("/")
     }
 
     catch(error) {
-        console.log(error); 
+        console.log("Error deleting user's property: ", error); 
         res.status(500).json({error: "Server Error: The team has been notified."});        
     }
 

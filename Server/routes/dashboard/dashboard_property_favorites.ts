@@ -20,7 +20,7 @@ router.get("/", (req, res) => {
         const showFavProperties = db.prepare(SQL).all(ownerID);
         
         if (showFavProperties.length === 0) {
-            return res.status(404).json({error: "No favorite properties found."})
+            return res.status(404).json({error: "No properties found."})
         }
 
         else {
@@ -29,7 +29,7 @@ router.get("/", (req, res) => {
     }
 
     catch(error) {
-        console.log("Error while retrieving favorite properties: ", error); 
+        console.log("Error while retrieving user's favorite properties: ", error); 
         res.status(500).json({ error: "Server Error: The team has been notified." });
     }
 })

@@ -49,7 +49,7 @@ router.route("/:propID")
     }
 
     catch (error) {
-        console.error("Error while retrieving property: ", error);
+        console.error("Error while retrieving property in edit page: ", error);
         return res.status(500).json({ error: "Server Error: The team has been notified." });
     }
 })
@@ -90,11 +90,10 @@ router.route("/:propID")
         .run(type, city, price, no_bedrooms, no_bathrooms, size, furniture, summary, detail, propID, ownerID);
         
         return res.status(200).json({ message: "Property updated successfully!" });
-
     }
     
     catch (error) {
-        console.error("Error while updating property details: ", error);
+        console.error("Error while updating property's details: ", error);
         return res.status(500).json({ error: "Server Error: The team has been notified." });
     }
 })
@@ -122,7 +121,12 @@ router.route("/:propID")
 
         db.prepare(`UPDATE property_photos SET is_main = 1 WHERE property_id = ? ORDER BY id ASC LIMIT 1`).run(propID);
 
-        if (files.length > 0) {
+        if (files.length === 1) {
+            const SQLPhotosUpdated = db.prepare(`SELECT * FROM property_photos WHERE property_id = ?`).all(propID);
+            return res.status(201).json({ message: "Photo added successfully!", newPhotos: SQLPhotosUpdated });
+        }
+
+        else if (files.length > 1 && files.length <=10) {
             const SQLPhotosUpdated = db.prepare(`SELECT * FROM property_photos WHERE property_id = ?`).all(propID);
             return res.status(201).json({ message: "Photos added successfully!", newPhotos: SQLPhotosUpdated });
         }
@@ -133,7 +137,7 @@ router.route("/:propID")
     }
 
     catch (error) {
-        console.error("Error while adding photos:", error);
+        console.error("Error while adding property photos: ", error);
         return res.status(500).json({ error: "Server Error: The team has been notified." });
     }
 
@@ -157,10 +161,9 @@ router.route("/:propID")
     }
     
     catch (error) {
-        console.error("Error while deleting property photos: ", error);
+        console.error("Error while deleting property's photos: ", error);
         return res.status(500).json({ error: "Server Error: The team has been notified." });
-        }
-
+    }
 })
 
 

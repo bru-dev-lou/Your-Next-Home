@@ -24,6 +24,7 @@ function DashboardProfileEdit () {
 
     const [ originalUserPublicDetails, setOriginalUserPublicDetails] = useState<UserPublicData>({name: "", address: "", phone_number: "", email: "", password: ""}); 
     const [ userPublicDetails, setUserPublicDetails ] = useState<UserPublicData>({name: "", address: "", phone_number: "", email: "", password: ""}); 
+
     const [ userPrivateDetails, setUserPrivateDetails ] = useState<UserPrivateData>({password: "", newPassword: "", passwordConfirmation: ""});
     const [ userAccountDeleteDetails, setUserAccountDeleteDetails ] = useState<UserAccountDeleteData>({password: ""});
     
@@ -67,7 +68,7 @@ function DashboardProfileEdit () {
             }
 
             catch(error) {
-                setErrorGeneralMessage("Something went wrong while fetching your profile data. Please check your internet and refresh the page.");
+                setErrorGeneralMessage("Failed to fetch user's data. Please check your internet and refresh the page.");
             }
 
             finally{
@@ -99,6 +100,7 @@ function DashboardProfileEdit () {
             if (JSON.stringify(detailsToCompare) === JSON.stringify(originalDetails)) {
             setErrorMessageMP("Please update at least one field.");
             setSuccessMessageMP("");
+            setChangeRequest(false);
             return;
             }
 
@@ -119,15 +121,23 @@ function DashboardProfileEdit () {
                 setUserPublicDetails({...userPublicDetails, password: ""});
             }
 
+            else if (result.passwordError) {
+                setErrorMessageMP(result.passwordError);
+                setSuccessMessageMP("");
+                setChangeRequest(true);
+                setUserPublicDetails({...userPublicDetails, password: ""});            
+            }
+
             else {
                 setSuccessMessageMP("");
                 setErrorMessageMP(result.error);
+                setChangeRequest(false);
                 setUserPublicDetails({...userPublicDetails, password: ""});            
             }
         }
 
         catch (error) {
-            setErrorMessageMP("Something went wrong while editing your profile. Please check your internet and try again.")
+            setErrorMessageMP("Failed to update user's profile. Please check your internet and try again.")
         };
     }
 
@@ -158,7 +168,7 @@ function DashboardProfileEdit () {
         }
             
         catch (error) {
-            setErrorMessageAM("Something went wrong while changing your password. Please check your internet and try again.")
+            setErrorMessageAM("Failed to update user's password. Please check your internet and try again.")
         }
     }
 
@@ -190,7 +200,7 @@ function DashboardProfileEdit () {
         }
 
         catch(error) {
-            setErrorMessageDA("Something went wrong while deleting your account. Please check your internet and try again.")
+            setErrorMessageDA("Failed to delete user's account. Please check your internet and try again.")
         }
     }
 
@@ -331,8 +341,8 @@ function DashboardProfileEdit () {
                         <br />
                         <button onClick= {updateUserPrivateDetails}>Change Password</button>
                         <br />                            
-                        {errorMessageAM && <h3>{errorMessageAM}</h3>}
-                        {successMessageAM && <h3>{successMessageAM}</h3>}
+                        {errorMessageAM && <h4>{errorMessageAM}</h4>}
+                        {successMessageAM && <h4>{successMessageAM}</h4>}
 
 
                         <h5>Delete your account</h5>

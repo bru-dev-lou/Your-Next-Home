@@ -40,7 +40,7 @@ const DashboardFavoriteProperties = () => {
             }
             
             catch (error) {
-                setErrorMessageFP("Something went wrong while fetching properties. Please check your internet and refresh the page.")
+                setErrorMessageFP("Failed to fetch user's favorite properties. Please check your internet and refresh the page.")
             }
         }
         fetchFavProperties();
@@ -78,7 +78,7 @@ const DashboardFavoriteProperties = () => {
         }
         
         catch(error){
-            setErrorMessageDP("Server Error: The team has been notified.");
+            setErrorMessageDP("Failed to delete property. Please check your internet and try again.");
         }
     }
 
