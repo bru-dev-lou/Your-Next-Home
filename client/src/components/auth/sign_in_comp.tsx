@@ -41,7 +41,7 @@ function SignIn () {
         }
 
         catch (error) {
-            setErrorMessage("Something went wrong while signing you in. Please check your internet and try again.");
+            setErrorMessage("Failed to sign user in. Please check your internet and try again.");
         }
     };
 

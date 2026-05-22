@@ -45,7 +45,7 @@ router.post("/", async (req, res) => {
         }
 
         if (confirmPass !== password) {
-            return res.status(400).json( {error: "Passwords must match!"}); 
+            return res.status(400).json( {error: "Passwords must match."}); 
         }    
     
         const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[?!@#$%^&*]).{8,}$/;

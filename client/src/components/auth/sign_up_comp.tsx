@@ -49,7 +49,7 @@ function SignUp () {
         }
 
         catch(error) {
-            setErrorMessage("Something went wrong while creating your account. Please check your internet and try again.")
+            setErrorMessage("Failed to create account. Please check your internet and try again.")
         }
     }
 
