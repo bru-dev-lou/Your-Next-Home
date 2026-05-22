@@ -3,158 +3,162 @@ import express from 'express';
 import db from "../../database/database.js";
 
 type Data = {
-    password_hash: string;
-};
+    password_hash: string,
+}
 
 const router = express.Router();
 
-router.route("/:username/:ownerID")
+router.route("/")
 
 .get((req, res) => {
-    const {username, ownerID} = req.params;
-    const userData = db.prepare(`SELECT name, address, phone_number, email FROM property_owners WHERE username = ? AND id = ?`).get(username, ownerID);
+    const ownerID = req.user?.id;
 
-    if (!userData) {
-        return res.status(404).json({ error: "User not found. Please make an account first!" });
+    try {
+        const userData = db.prepare(`SELECT name, address, phone_number, email FROM property_owners WHERE id = ?`).get(ownerID);
+
+        if (!userData) {
+            return res.status(404).json({ error: "User data not found." });
+        }   
+
+        res.status(200).json({userData});
     }
 
-    res.status(200).json({userData});
+    catch (error) {
+        console.error("Error while retrieving user's data: ", error);
+        return res.status(500).json({error: "Server Error: The team has been notified."})
+    }
+
+
 })
 
 .patch(async (req, res) => {
-    const { username, ownerID } = req.params; 
+    const ownerID = req.user?.id;
 
-    const name = req.body.userPublicDetails?.name;
-    const address = req.body.userPublicDetails?.address.trim();
-    const number = req.body.userPublicDetails?.phone_number;
-    const email = req.body.userPublicDetails?.email.trim().toLowerCase();
-    const password = req.body.userPublicDetails?.password?.trim();
+    const name = req.body.userPublicDetails.name;
+    const address = req.body.userPublicDetails.address?.trim();
+    const number = req.body.userPublicDetails.number;
+    const email = req.body.userPublicDetails.email?.trim().toLowerCase();
+    const password = req.body.userPublicDetails.password?.trim();
 
 
     try {
-        const userData = db.prepare(`SELECT password_hash FROM property_owners WHERE username = ? AND id = ?`).get(username, ownerID) as Data; 
+        const fieldCheck = [
+            {field: name, error: "Please provide your name to update your profile."},
+            {field: address, error: "Please provide your address to update your profile."},
+            {field: number, error: "Please provide your phone number to update your profile."},
+            {field: email, error: "Please provide your email to update your profile."}
+        ];
 
-        if (!userData){
-            return res.status(404).json({error: "No user found."});
+        for (const {field, error} of fieldCheck) {
+            if (!field) {
+                return res.status(400).json ({error}); 
+            }
         }
+
+        const user  = db.prepare(`SELECT password_hash FROM property_owners WHERE id = ?`).get(ownerID) as Data;
 
         if (!password) {
-            return res.status(400).json({error: "Please provide your password to confirm these changes."})
+            return res.status(400).json({passwordError: "Please provide your password to confirm these changes."})
         }
 
-        const match = await bcrypt.compare(password, userData.password_hash);
+        const match = await bcrypt.compare(password, user.password_hash);
     
         if (!match) {
-            return res.status(400).json({error: "Incorrect password, please try again."});
+            return res.status(400).json({passwordError: "Incorrect password, please try again."});
         }
 
-        const SQLPublic = "UPDATE property_owners SET name = ?, address = ?, phone_number = ?, email = ? WHERE username = ? AND id = ?";
-        const publicDataUpdate = db.prepare(SQLPublic).run(name, address, number, email, username, ownerID); 
-    
-        if (publicDataUpdate.changes === 0) {
-            return res.status(404).json({error: "No information has been changed. Please edit your required fields."})
-        }    
+
+        const SQLPublic = "UPDATE property_owners SET name = ?, address = ?, phone_number = ?, email = ? WHERE id = ?";
+        
+        db.prepare(SQLPublic).run(name, address, number, email, ownerID); 
         
         res.status(200).json({ message: "Your account has been updated." });
-        console.log("Account updated."); 
     }           
 
     catch(error) {
-        console.log("An error occurred while updating your profile.", error);
-        return res.status(500).json({error: "An error occurred while updating your profile"});
+        console.log("Error while updating user data: ", error);
+        return res.status(500).json({error: "Server Error: The team has been notified."});
     }    
 })
 
 .delete(async (req, res) => {
-    const {username, ownerID} = req.params;
+    const ownerID = req.user?.id;
     const password = req.body.userAccountDeleteDetails.password?.trim();
 
     try {
-        const userData = db.prepare(`SELECT password_hash FROM property_owners WHERE username = ? AND id = ?`).get(username, ownerID) as Data;
-
-        if (!userData){
-            return res.status(404).json({error: "No user found"});
-        }
+        const user = db.prepare(`SELECT password_hash FROM property_owners WHERE id = ?`).get(ownerID) as Data;
 
         if(!password) {
             return res.status(400).json({error: "Please provide your password before deleting your account."})
         }
 
-        const match = await bcrypt.compare(password, userData.password_hash);
+        const match = await bcrypt.compare(password, user.password_hash);
 
         if(!match) {
-            return res.status(400).json({error: "Please provide the correct password before deleting your account."});
+            return res.status(400).json({error: "Incorrect password, please try again."});
         }
-        else {
-            db.prepare(`DELETE FROM property_owners WHERE username = ? AND id = ?`).run(username, ownerID); 
-            return res.status(204).send();
-        }
+
+        db.prepare(`DELETE FROM property_owners WHERE id = ?`).run(ownerID); 
+        
+        return res.status(204).send();
+        
     }
 
     catch(error) {
-        console.log("An error occurred while deleting your account.", error);
-        return res.status(500).json({error: "An error occurred while updating your profile"});
+        console.log("Error while deleting user account: ", error);
+        return res.status(500).json({error: "Server Error: The team has been notified."});
     }    
 })
 
-router.route("/:username/:ownerID/password_change")
+router.route("/password_change")
 
 .patch(async (req, res) => {
-    const { username, ownerID } = req.params; 
+    const ownerID  = req.user?.id;
     const password = req.body.userPrivateDetails.password?.trim();
     const newPassword = req.body.userPrivateDetails.newPassword?.trim();
     const passwordConfirmation = req.body.userPrivateDetails.passwordConfirmation?.trim();
     const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[?!@#$%^&*]).{8,}$/;
 
     try {
-        const userData = db.prepare(`SELECT password_hash FROM property_owners WHERE username = ? AND id = ?`).get(username, ownerID) as Data; 
-
-        if (!userData){
-            return res.status(404).json({error: "No user found."});
-        }
+        const user = db.prepare(`SELECT password_hash FROM property_owners WHERE id = ?`).get(ownerID) as Data; 
 
         if (!password) {
-            return res.status(400).json({error: "Please provide your password to confirm these changes."})
+            return res.status(400).json({error: "Please start by providing your password."})
         }
         
-        const match = await bcrypt.compare(password, userData.password_hash);
+        const match = await bcrypt.compare(password, user.password_hash);
     
         if (!match) {
             return res.status(400).json({error: "Incorrect password, please try again."});
         }
 
         if(!newPassword) {
-            return res.status(400).json({error: "Please choose a new password!"});
+            return res.status(400).json({error: "Please choose a new password."});
         }
 
-        if (newPassword) {
-            if (!passwordRegex.test(newPassword)) {
+        if (!passwordRegex.test(newPassword)) {
                 return res.status(400).json({ error: "Password must be 8+ characters with an uppercase, a lowercase, a number and a special character [?!@#$%^&*]."});
             }
 
-            if (newPassword !== passwordConfirmation) {
+        if (newPassword !== passwordConfirmation) {
                 return res.status(400).json({error: "Passwords do not match."})
             }
-        }
-
+        
         if (newPassword === password) {
-            return res.status(400).json({error: "Your new password cannot be the same as your old password."});
+            return res.status(400).json({error: "New password cannot be the same as old password."});
         }
            
         const newPasswordHash = await bcrypt.hash(newPassword, 10);
-        const SQLPrivate = "UPDATE property_owners SET password_hash = ? WHERE username = ? AND id = ?";
-        const privateDataUpdate = db.prepare(SQLPrivate).run(newPasswordHash, username, ownerID); 
-
-        if (privateDataUpdate.changes === 0) {
-            return res.status(500).json({error: "An error has occurred while updating your password. Please contact our teaam"});
-        }
+        const SQLPrivate = "UPDATE property_owners SET password_hash = ? WHERE id = ?";
+        
+        db.prepare(SQLPrivate).run(newPasswordHash, ownerID); 
 
         res.status(200).json({message: "Your password has been changed."});
-        console.log("Password updated");
     } 
 
     catch(error) {
-        return res.status(500).json({error: "An error has occurred while updating your password. Please contact our teaam"});
+        console.error("Error while changing user's password: ", error);
+        return res.status(500).json({error: "Server Error: The team has been notified."});    
     }
 })
 

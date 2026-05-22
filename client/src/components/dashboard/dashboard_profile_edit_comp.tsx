@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from "react";
-import { useParams, useNavigate, Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 type UserPublicData = {
     name: string;
     address: string;
-    phone_number: number;
+    phone_number: string;
     email: string;
     password: string;
 }
@@ -20,15 +20,17 @@ type UserAccountDeleteData = {
 }
 
 function DashboardProfileEdit () {
-    const { username, ownerID } = useParams();
     const navigate = useNavigate();
 
-    const [ userPublicDetails, setUserPublicDetails ] = useState<UserPublicData>({name: "", address: "", phone_number: 0, email: "", password: ""}); 
+    const [ originalUserPublicDetails, setOriginalUserPublicDetails] = useState<UserPublicData>({name: "", address: "", phone_number: "", email: "", password: ""}); 
+    const [ userPublicDetails, setUserPublicDetails ] = useState<UserPublicData>({name: "", address: "", phone_number: "", email: "", password: ""}); 
+
     const [ userPrivateDetails, setUserPrivateDetails ] = useState<UserPrivateData>({password: "", newPassword: "", passwordConfirmation: ""});
     const [ userAccountDeleteDetails, setUserAccountDeleteDetails ] = useState<UserAccountDeleteData>({password: ""});
     
     // MP = My Profile / AM = Account Management / DA = Delete Account 
 
+    const [ errorGeneralMessage, setErrorGeneralMessage ] = useState("");
     const [ errorMessageMP, setErrorMessageMP ] = useState(""); 
     const [ successMessageMP, setSuccessMessageMP ] = useState("");
     const [ errorMessageAM, setErrorMessageAM ] = useState(""); 
@@ -46,53 +48,96 @@ function DashboardProfileEdit () {
     const [ accountDeleteRequest, setAccountDeleteRequest ] = useState<boolean>(false);
     const [ accountDeleted, setAccountDeleted ] = useState<boolean>(false); 
 
+    const [ dataLoading, setDataLoading ] = useState<boolean>(true);
+
 
     useEffect(() => {
-        async function fetchData () {
-            const res = await fetch (`/api/dashboard/profile/edit/${username}/${ownerID}`);
-            const result = await res.json();
+        const fetchData = async () => {
+            try {
+                const res = await fetch (`/api/dashboard/profile/edit/`);
+                const result = await res.json();
 
-            setUserPublicDetails(result.userData); 
+                if (!res.ok) {
+                setErrorGeneralMessage(result.error);
+                }
+
+                else {
+                    setUserPublicDetails({...result.userData, phone_number: String(result.userData.phone_number,), password: ""});
+                    setOriginalUserPublicDetails({...result.userData, phone_number: String(result.userData.phone_number,), password: ""})
+                }
+            }
+
+            catch(error) {
+                setErrorGeneralMessage("Failed to fetch user's data. Please check your internet and refresh the page.");
+            }
+
+            finally{
+                setDataLoading(false);
+            }
         }
-
         fetchData();
-    }, [username, ownerID]);
 
-    // Dead code as this state no longer returns undefined. Keep in case needed for error checks late on. 
+    }, []);
     
-    if (!userPublicDetails) {
-        return <h3>Failed to retrieve data, please <Link to = "/inquiries"> contact</Link> our team.</h3>;
-    }
+    
+    if (dataLoading) {
+        return <h3>Retrieving Data</h3>;
+    };
+
+    if (errorGeneralMessage){
+        return <h3>{errorGeneralMessage}</h3>
+    };
+
+
 
     async function updateUserPublicDetails (e:React.MouseEvent<HTMLButtonElement>) {
         e.preventDefault();
 
         try {
-            const res = await fetch(`/api/dashboard/profile/edit/${username}/${ownerID}`, {
+            const {password: p1, ...detailsToCompare} = userPublicDetails;
+            const {password: p2, ...originalDetails} = originalUserPublicDetails;
+
+            if (JSON.stringify(detailsToCompare) === JSON.stringify(originalDetails)) {
+            setErrorMessageMP("Please update at least one field.");
+            setSuccessMessageMP("");
+            setChangeRequest(false);
+            return;
+            }
+
+            const res = await fetch(`/api/dashboard/profile/edit`, {
                 method: "PATCH",
                 headers: {
                     "Content-Type" : "application/json"
                 },
-                body: JSON.stringify({userPublicDetails})
+                body: JSON.stringify({ userPublicDetails: { ...userPublicDetails, number: Number(userPublicDetails.phone_number)}})
             });
 
-            const newUserPublicDetails = await res.json(); 
+            const result = await res.json(); 
         
             if (res.ok) {
                 setErrorMessageMP("");
-                setSuccessMessageMP(newUserPublicDetails.message);
-                setUserPublicDetails({...userPublicDetails, password: ""})
+                setSuccessMessageMP(result.message);
+                setOriginalUserPublicDetails({...userPublicDetails, password: ""});
+                setUserPublicDetails({...userPublicDetails, password: ""});
+            }
+
+            else if (result.passwordError) {
+                setErrorMessageMP(result.passwordError);
+                setSuccessMessageMP("");
+                setChangeRequest(true);
+                setUserPublicDetails({...userPublicDetails, password: ""});            
             }
 
             else {
                 setSuccessMessageMP("");
-                setErrorMessageMP(newUserPublicDetails.error);
-                setUserPublicDetails({...userPublicDetails, password: ""})            
+                setErrorMessageMP(result.error);
+                setChangeRequest(false);
+                setUserPublicDetails({...userPublicDetails, password: ""});            
             }
         }
 
         catch (error) {
-            console.error("Error updating user's details:", error)
+            setErrorMessageMP("Failed to update user's profile. Please check your internet and try again.")
         };
     }
 
@@ -100,7 +145,7 @@ function DashboardProfileEdit () {
         e.preventDefault(); 
         
         try {
-            const res = await fetch(`/api/dashboard/profile/edit/${username}/${ownerID}/password_change`, {
+            const res = await fetch(`/api/dashboard/profile/edit/password_change`, {
                 method: "PATCH",
                 headers: {
                     "Content-Type" : "application/json"
@@ -108,48 +153,54 @@ function DashboardProfileEdit () {
                 body: JSON.stringify({userPrivateDetails})
             });
 
-            const newUserPrivateDetails = await res.json(); 
+            const result = await res.json(); 
         
             if (res.ok) {
                 setErrorMessageAM("");
-                setSuccessMessageAM(newUserPrivateDetails.message);
+                setSuccessMessageAM(result.message);
                 setUserPrivateDetails({...userPrivateDetails, password: "", newPassword: "", passwordConfirmation: ""});
             }
 
             else {
                 setSuccessMessageAM("");
-                setErrorMessageAM(newUserPrivateDetails.error);
+                setErrorMessageAM(result.error);
             }
         }
             
         catch (error) {
-        console.error("Error updating user's password:", error)
+            setErrorMessageAM("Failed to update user's password. Please check your internet and try again.")
         }
     }
 
     async function deleteAccount (e:React.MouseEvent<HTMLButtonElement>) {
         e.preventDefault();
 
-        const res = await fetch (`/api/dashboard/profile/edit/${username}/${ownerID}`, {
-            method: "DELETE",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify({userAccountDeleteDetails})
-        });
+        try {
+            const res = await fetch (`/api/dashboard/profile/edit/`, {
+                method: "DELETE",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({userAccountDeleteDetails})
+            });
 
 
-        if (res.ok) {
-            setAccountDeleted(true); 
-            setTimeout (() => {
-                navigate("/");
-            }, 7000);
+            if (res.ok) {
+                setAccountDeleted(true); 
+                setTimeout (() => {
+                    navigate("/");
+                }, 7000);
+            }
+
+            else {
+                const result = await res.json();
+                setErrorMessageDA(result.error);
+                setUserAccountDeleteDetails({...userAccountDeleteDetails, password: ""});
+            }
         }
 
-        else {
-            const result = await res.json();
-            setErrorMessageDA(result.error);
-            setUserAccountDeleteDetails({...userAccountDeleteDetails, password: ""});
+        catch(error) {
+            setErrorMessageDA("Failed to delete user's account. Please check your internet and try again.")
         }
     }
 
@@ -191,7 +242,7 @@ function DashboardProfileEdit () {
                                 setErrorMessageMP(""), 
                                 setSuccessMessageMP(""), 
                                 setChangeRequest(false),
-                                setUserPublicDetails({...userPublicDetails, phone_number: Number(e.target.value)})]} 
+                                setUserPublicDetails({...userPublicDetails, phone_number: e.target.value})]} 
                                 value= {userPublicDetails.phone_number}>
                             </input>
                         </label>
@@ -207,7 +258,7 @@ function DashboardProfileEdit () {
                             </input>
                         </label>
                         <br />
-                        {!changeRequest ? 
+                        {!changeRequest ?
                             <button onClick={() => setChangeRequest(true)}>Save Changes</button>
                             :
                             <label>
@@ -290,8 +341,8 @@ function DashboardProfileEdit () {
                         <br />
                         <button onClick= {updateUserPrivateDetails}>Change Password</button>
                         <br />                            
-                        {errorMessageAM && <h3>{errorMessageAM}</h3>}
-                        {successMessageAM && <h3>{successMessageAM}</h3>}
+                        {errorMessageAM && <h4>{errorMessageAM}</h4>}
+                        {successMessageAM && <h4>{successMessageAM}</h4>}
 
 
                         <h5>Delete your account</h5>
@@ -313,7 +364,7 @@ function DashboardProfileEdit () {
                                     {showCurrentPasswordDA ? "Hide" : "Show"}
                                 </button>   
                                 <br />
-                                <button onClick= {deleteAccount}> Confirm Changes</button>
+                                <button onClick= {deleteAccount}> Confirm Account Deletion</button>
                             </label> 
                         }
                         {errorMessageDA && <h3>{errorMessageDA}</h3>}

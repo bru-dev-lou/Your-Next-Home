@@ -1,6 +1,9 @@
 import { useState } from "react"; 
 import { useNavigate } from "react-router-dom"; 
 
+
+//  Can all the states into one and add a Type here (before the function) 
+
 function PropertySearchPageSearchBar () {
     const [type, setType] = useState("");
     const [city, setCity] = useState("");
@@ -8,13 +11,13 @@ function PropertySearchPageSearchBar () {
     const [minBeds, setMinBeds] = useState(0);
     const [minBaths, setMinBaths] = useState(0);
     const [furniture, setFurniture] = useState("");
-    
+
     const navigate = useNavigate(); 
 
-const buttonSearch = (e: any) => {
-    e.preventDefault();
-    navigate(`/search?city=${city}&type=${type}&maxPrice=${maxPrice}&minBeds=${minBeds}&minBaths=${minBaths}&furniture=${furniture}`)
-};
+    const buttonSearch = (e: any) => {
+        e.preventDefault();
+        navigate(`/search?city=${city}&type=${type}&maxPrice=${maxPrice}&minBeds=${minBeds}&minBaths=${minBaths}&furniture=${furniture}`);
+    };
 
 return (
     <div>

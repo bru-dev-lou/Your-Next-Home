@@ -1,5 +1,5 @@
 import {useState} from "react";
-import {useParams, useNavigate} from "react-router-dom";
+import {useNavigate} from "react-router-dom";
 
 type Photos = {
     url: string;
@@ -7,7 +7,6 @@ type Photos = {
 };
 
 function DashboardPropertyAdd () {
-    const { username, ownerID } = useParams();
     const navigate = useNavigate();
 
     const [ type, setType ] = useState("");
@@ -22,13 +21,16 @@ function DashboardPropertyAdd () {
 
     const [ dataErrorMessage, setDataErrorMessage ] = useState("");
     const [ dataSuccessMessage, setDataSuccessMessage ] = useState("");
+    const [ excessPhotosMessage, setExcessPhotosMessage ] = useState(""); 
+
     const [ tempURLs, setTempURLs ] = useState<Photos[]>([]);
     const [ uploading, setUploading ] = useState(false);
-    const [ excessPhotosMessage, setExcessPhotosMessage ] = useState(""); 
+
   
 
     async function addPropertyData (e: React.MouseEvent<HTMLButtonElement>) {
         e.preventDefault();
+        
         const propertyData = new FormData();
         
         for(const tempURL of tempURLs) {
@@ -43,25 +45,23 @@ function DashboardPropertyAdd () {
         propertyData.append("size", size.toString());
         propertyData.append("furniture", furniture);
         propertyData.append("summary", summary);
-        propertyData.append("ownerID", ownerID as string);
         propertyData.append("detail", detail);
 
         try {
             setUploading(true);
 
-            const res = await fetch(`/api/dashboard/property/add/${username}/${ownerID}`, {
+            const res = await fetch(`/api/dashboard/property/add`, {
             method: "POST",
             body: propertyData,
             });
             
             const result = await res.json();
-            console.log(result); 
-
+            
             if (res.ok) {
                 setDataSuccessMessage(result.message);
                 setDataErrorMessage("");
                 setTimeout(function(){
-                    navigate(`/dashboard/${username}/${ownerID}`)},
+                    navigate(`/dashboard`)},
                 5000);
             }
 
@@ -72,9 +72,7 @@ function DashboardPropertyAdd () {
         }
 
         catch (error) {
-            console.error("Error creating property:", error);
-            setDataErrorMessage(`${error}`);
-            setDataSuccessMessage("");
+            setDataErrorMessage("Failed to create new property. Please check your internet and try again."); 
         }
 
         finally {
@@ -84,20 +82,27 @@ function DashboardPropertyAdd () {
 
     async function displayPhotos(e: React.ChangeEvent<HTMLInputElement>) {
         e.preventDefault(); 
+        
         const files = e.target.files;
         if (!files) {
             return;
         }
 
+        if (tempURLs.length + files.length >= 5) {
+            setDataErrorMessage("");
+        }
+
         for (const [ index, file ]  of Array.from(files).entries()) {
             const previewURL = URL.createObjectURL(file);
+
             if (tempURLs.length + index < 10) {
                 setExcessPhotosMessage("");
+                setDataErrorMessage("");
                 setTempURLs(prev => [...prev, {url: previewURL, file: file}])
-            }
-
+            }   
+            
             else {
-                setExcessPhotosMessage("Maximum of 10 photos reached. Some photos were not added.");
+                setExcessPhotosMessage("Maximum of 10 photos reached. Some photos were not added.")
                 return;
             }
         }
@@ -106,6 +111,7 @@ function DashboardPropertyAdd () {
     function deletePhotos(index: number) {
         setTempURLs(tempURLs.filter((_, i) => i !== index));    
             setExcessPhotosMessage("");
+            setDataErrorMessage("");
     }
 
     return (
@@ -115,7 +121,10 @@ function DashboardPropertyAdd () {
             <br />
             <label>
                 City: 
-                <input onChange={(e) => setCity(e.target.value)}/>
+                    <input 
+                        onChange={(e) => setCity(e.target.value)}
+                        value={city}
+                    />
             </label>
             <br />
             <label>
@@ -132,38 +141,36 @@ function DashboardPropertyAdd () {
             <br />
             <label>
                 Price (£):
-            {price === 0 ?
-                <input type="number" onChange={(e) => setPrice(Number(e.target.value))} value=""/>
-                :
-                <input type="number" onChange={(e) => setPrice(Number(e.target.value))} value={price}/>
-            }           
+                    <input 
+                        type="number" 
+                        onChange={(e) => setPrice(Number(e.target.value))} 
+                        value={price || ""}
+                    />
             </label>
             <br />
             <label>
                 Bedrooms:
-            {bedrooms === 0 ? 
-                <input type= "number" onChange={(e) => setBedrooms(Number(e.target.value))} value=""/>
-                : 
-                <input type= "number" onChange={(e) => setBedrooms(Number(e.target.value))} value={bedrooms}/>
-            }
+                    <input 
+                        type= "number" 
+                        onChange={(e) => setBedrooms(Number(e.target.value))} 
+                        value={bedrooms || ""}
+                    />
             </label>
             <br />
             <label>
                 Bathrooms:
-            {bathrooms === 0 ? 
-                <input type= "number" onChange={(e) => setBathrooms(Number(e.target.value))} value=""/>
-                : 
-                <input type= "number" onChange={(e) => setBathrooms(Number(e.target.value))} value={bathrooms}/>
-            }
+                    <input type= "number" 
+                    onChange={(e) => setBathrooms(Number(e.target.value))} 
+                    value={bathrooms || ""}
+                    />
             </label>
             <br />
             <label>
-                Size (m²):
-            {size === 0 ? 
-                <input type= "number" onChange={(e) => setSize(Number(e.target.value))} value=""/>
-                : 
-                <input type= "number" onChange={(e) => setSize(Number(e.target.value))} value={size}/>
-            }
+                Size: 
+                    <input type= "number" 
+                    onChange={(e) => setSize(Number(e.target.value))} 
+                    value={size || ""}
+                    />
             <br />
             </label>
             <label>
@@ -219,7 +226,7 @@ function DashboardPropertyAdd () {
                     <p>You can upload {10 - tempURLs.length} more photos.</p>
                 </div>
             ) : (
-                <p> You have reached the maximum number of photos.</p>
+                null
             )} 
             {excessPhotosMessage && <p>{excessPhotosMessage}</p>}
             {dataErrorMessage && !uploading && <p style={{color: "red"}}>{dataErrorMessage}</p>}
@@ -229,8 +236,8 @@ function DashboardPropertyAdd () {
             {uploading && <p>Please wait while we add your property!</p>}
             {dataSuccessMessage && (
                 <div>
-                    <p style={{color: "green"}}>{dataSuccessMessage}</p>
-                    <p style={{color: "green"}}> You will now be redirected to your properties.</p>
+                    <h3 style={{color: "green"}}>{dataSuccessMessage}</h3>
+                    <h3 style={{color: "green"}}> You will now be redirected to your properties.</h3>
                 </div>
             )}
         </div>

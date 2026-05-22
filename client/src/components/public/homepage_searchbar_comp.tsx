@@ -2,49 +2,67 @@ import { useState, type JSX, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 function HomePageSearchBar(): JSX.Element {
-    const [query, setQuery] = useState('');
+    const [autoCompleteQuery, setAutoCompleteQuery] = useState("");
     const [cities, setCities] = useState<{ city: string }[]>([]);
     const [maxPrice, setMaxPrice] = useState(10000);
     const navigate = useNavigate();
 
+    // Error Message → AC = Auto Complete 
 
+    const [errorMessageAC, setErrorMessageAC] = useState(""); 
 
     useEffect(() => {
-        if (query.length === 0) {
-            setCities([]);
-            return;
-        }
-
         const fetchCity = async () => {
-            const res = await fetch("/api/cities?city=" + query);
-            const data = await res.json();
-            setCities(data.cities);
-        };
+            try {
+                const res = await fetch(`/api/cities?city=${autoCompleteQuery}`);
+                const result = await res.json();
 
-    const timeout = setTimeout(() => {
-        fetchCity();
-    }, 250);
+                if (!res.ok) {
+                    setCities([]);
+                    setErrorMessageAC(result.error) 
+                }
 
-    return () => clearTimeout(timeout);
+                else if(autoCompleteQuery.length === 0) {
+                    setCities([]);
+                    setErrorMessageAC("");
+                }
 
-    }, [query]);
+                else {
+                    setCities(result.cities);
+                    setErrorMessageAC("");
+                }
+            }
 
-    const buttonSearch = (e:any) => {
+            catch(error) {
+                setErrorMessageAC("AutoComplete feature currently unavailable.")
+            }
+        }
+            
+        const timeout = setTimeout(() => {
+            fetchCity();
+        }, 250);
+    
+        return () => clearTimeout(timeout);
+        
+    }, [autoCompleteQuery]);
+        
+
+    const propertySearch = (e:any) => {
         e.preventDefault();
-        navigate(`/search?city=${query}&maxPrice=${maxPrice}`);
+        navigate(`/search?city=${autoCompleteQuery}&maxPrice=${maxPrice}`);
     };
 
     return (
         <div>
-            <form onSubmit={buttonSearch}>
+            <form onSubmit={propertySearch}>
             <label htmlFor = "citySelectHomePage">Location</label>
                 <input
                     id = "citySelectHomePage"
                     name="city"
                     type="text"
                     placeholder = "London"
-                    value={query}
-                    onChange={(e) => setQuery(e.target.value)}
+                    value={autoCompleteQuery}
+                    onChange={(e) => setAutoCompleteQuery(e.target.value)}
                 />
             <label htmlFor= "maxPriceHomePage"> Max Price </label>
             <select 
@@ -73,17 +91,16 @@ function HomePageSearchBar(): JSX.Element {
                 {cities.map((city, index) => (
                     <li 
                         key={index}
-                        onClick = {() => setQuery(city.city)}
+                        onClick = {() => setAutoCompleteQuery(city.city)}
                         style = {{ cursor: "pointer"}}
                         >
                         {city.city}
                     </li>
                 ))}
             </ul>
+            {errorMessageAC && <h3>{errorMessageAC}</h3>}
         </div>
     );
 }
 
 export default HomePageSearchBar;
-
-/// Add CSS italics to input 

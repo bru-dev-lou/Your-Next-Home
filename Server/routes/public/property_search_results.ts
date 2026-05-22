@@ -19,8 +19,8 @@ router.get("/", (req, res) => {
     const minBaths = Number(req.query.minBaths) || defaultMinBaths;
     const furniture = req.query.furniture || defaultFurniture;
 
-    console.log({ city, type, maxPrice, minBeds, minBaths, furniture });
 
+    try {
         const data = db.prepare(`
             SELECT property_list.*, property_photos.photo_path 
             FROM property_list 
@@ -33,80 +33,29 @@ router.get("/", (req, res) => {
             AND no_bedrooms >= ? 
             AND no_bathrooms >= ? 
             AND furniture LIKE ?
-            `)
-            .all(
-                `%${city}%`, 
-                `%${type}%`, 
-                maxPrice, 
-                minBeds, 
-                minBaths, 
-                `%${furniture}%`
-            ); 
-            
+            `).all(
+            `%${city}%`, 
+            `%${type}%`, 
+            maxPrice, 
+            minBeds, 
+            minBaths, 
+            `%${furniture}%`
+        ); 
+    
+        if (data.length === 0) {
+            return  res.status(200).json({message: "No properties found matching your search criteria, please try adjusting your fitlers."});
+        }
+
+        else {
             return res.status(200).json(data);       
-})
-
-router.post("/:ownerID", (req, res) => {
-    const ownerID = req.params.ownerID;
-    const propID = req.body.propID;
-
-    if (!ownerID) {
-        return res.status(400).json({error: "This feature is only available to our users. Please log in."})
-    }
-
-    if (!propID) {
-        return res.status(404).json({error: "This feature is currently unavailable"})
-    }
-
-    try {
-        const SQL = "INSERT INTO property_favorites (owner_id, property_id) VALUES (?, ?)";
-        const addFavProperty = db.prepare(SQL).run(ownerID, propID); 
-
-        if(addFavProperty.changes === 0) {
-            return res.status(400).json({error: "Property failed to be added to favorites." })
-        }
-        
-        else {
-            console.log("Property added to favorites.")
-            return res.status(201).json({message: "Property added to favorites."});
         }
     }
-
+    
     catch(error) {
-        console.log("Server error:", error)
-        res.status(500).json({error: "Server Error: The team has been notified."}); 
+        console.log("Error retrieving properties: ", error);
+        res.status(500).json({error: "Server Error: The team has been notified."});
     }
 })
 
-router.delete("/:ownerID", (req, res) => {
-    const ownerID = req.params.ownerID;
-    const propID = req.body.propID;
-
-    if (!ownerID) {
-        return res.status(400).json({error: "This feature is only available to our users. Please log in."})
-    }
-
-    if (!propID) {
-        return res.status(404).json({error: "This feature is currently unavailable"})
-    }
-
-    try {
-        const SQL = "DELETE FROM property_favorites WHERE owner_id = ? AND property_id = ?";
-        const removeFavProperty = db.prepare(SQL).run(ownerID, propID);
-
-        if (removeFavProperty.changes === 0) {
-            return res.status(400).json({error: "Property was not removed from favorites."});
-        }
-
-        else {
-            return res.status(204).send();
-        }
-    }
-
-    catch (error) {
-        console.log("Server Error:", error);
-        res.status(500).json({error: "Server Error: The team has been notified."}); 
-    }
-})
 
 export default router;  

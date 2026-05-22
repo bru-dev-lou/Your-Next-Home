@@ -5,64 +5,68 @@ import db from "../../database/database.js"
 const router = express.Router();
 
 router.post("/", async (req, res) => {
-    const username = req.body.username.trim();
+    const username = req.body.username?.trim();
     const name = req.body.name;
-    const address = req.body.address.trim();
-    const number = req.body.number.trim();
-    const email = req.body.email.trim().toLowerCase();
+    const address = req.body.address?.trim();
+    const number = req.body.number?.trim();
+    const email = req.body.email?.trim().toLowerCase();
     const password = req.body.password;
     const confirmPass = req.body.confirmPass;
-    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[?!@#$%^&*]).{8,}$/;
-    const passwordHash = await bcrypt.hash(password, 10);
 
+    const blankFieldCheck = [
+        {field: username, error:"Please choose a username."},
+        {field: name, error: "Please state your name / company's name."},
+        {field: address, error: "Please state your address / company's address."},
+        {field: number, error: "Please state your phone number / company's phone number."},
+        {field: email, error: "Please state your email address."},
+        {field: password, error: "Please choose a password."},
+        {field: confirmPass, error: "Please confirm your chosen password."}
+    ];
 
-    if (!username || !name || !address || !number || !email || !password) {
-        return res.status(400).json( {error: "All fields required!"} );
-    }
+    for (const {field, error} of blankFieldCheck) {
+        if(!field) {
+            return res.status(400).json({error});
+        }
+    } 
 
-    const usernameCheck = db.prepare(`SELECT username FROM property_owners WHERE username = ?`).get(username);
-    if (usernameCheck) {
-        return res.status(400).json({ error: 
-            "This username is already in use!"
-        });
-    }
+    try {
+        const existingFieldCheck = [
+            {column: "username", value: username, error: "This username is already in use. Please choose another one."},
+            {column: "address", value: address, error: "This address is already in use. Please choose another one."},
+            {column: "phone_number", value: number, error: "This phone number is already in use. Please choose another one."},
+            {column: "email", value: email, error: "This email is already in use. Please choose another one."}
+        ];
 
+        for (const {column, value, error} of existingFieldCheck){
+            const exists = db.prepare(`SELECT 1 FROM property_owners WHERE ${column} = ?`).get(value); 
+            if(exists){
+                return res.status(400).json({error});
+            }
+        }
 
-    const addressCheck = db.prepare(`SELECT address FROM property_owners WHERE address = ?`).get(address);
-    if (addressCheck) {
-        return res.status(400).json({ error: 
-            "This address is already in use!"
-        });
-    }
-
-    const numberCheck = db.prepare(`SELECT phone_number FROM property_owners WHERE phone_number = ?`).get(number);
-    if (numberCheck) {
-        return res.status(400).json({ error: 
-            "This number is already in use!"
-        });
-    }
-
-    const emailCheck = db.prepare(`SELECT email FROM property_owners WHERE email = ?`).get(email);
-    if (emailCheck) {
-        return res.status(400).json({ error: 
-            "This email is already in use!"
-        });
-    }
+        if (confirmPass !== password) {
+            return res.status(400).json( {error: "Passwords must match."}); 
+        }    
     
-    if (confirmPass !== password) {
-        return res.status(400).json( {error: "Passwords must match!"}); 
-    }    
-    
-    if (!passwordRegex.test(password)) {
-        return res.status(400).json({ error: "Password must be 8+ characters with an uppercase, a lowercase, a number and a special character [?!@#$%^&*]."
-        });
+        const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[?!@#$%^&*]).{8,}$/;
+
+        if (!passwordRegex.test(password)) {
+            return res.status(400).json({ error: "Password must be 8+ characters with an uppercase, a lowercase, a number and a special character [?!@#$%^&*]."
+            });
+        }
+
+        const passwordHash = await bcrypt.hash(password, 10);
+
+        db.prepare(`INSERT INTO property_owners (username, name, address, phone_number, email, password_hash) VALUES (?, ?, ?, ?, ?, ?)`)
+        .run(username, name, address, number, email, passwordHash);
+
+        res.status(201).json({ message: "Thank you, your account has been created!"});
     }
 
-
-    db.prepare(`INSERT INTO property_owners (username, name, address, phone_number, email, password_hash) VALUES (?, ?, ?, ?, ?, ?)`)
-    .run(username, name, address, number, email, passwordHash);
-
-    res.status(200).json({ message: "Accounnt created" });
+    catch(error) {
+        console.log("Error creating a new account: ", error);
+        res.status(500).json({error: "Server Error: The team has been notified."}); 
+    }
 
 }) 
 

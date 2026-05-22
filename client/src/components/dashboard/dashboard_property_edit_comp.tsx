@@ -19,136 +19,78 @@ type photo = {
     photo_path: string;
 }
 
-type user = {
-    username: string;
-}
-
-type info ={
-    property: property;
-    photos: photo[];
-    user: user;
-}
-
 function DashboardPropertyEdit() {
     const navigate = useNavigate();  
-    const { username, ownerID, propID } = useParams();
+    const { propID } = useParams();
  
-    const [ data, setData ] = useState<info | null>(null);
+// Original Property Details vs  Property Details prevents unneccessary API calls when fields have not been updated. 
+
+    const [ originalPropertyDetails, setOriginalPropertyDetails ] = useState<property | null>(null); 
     const [ propertyDetails, setPropertyDetails ] = useState<property | null>(null);
+
     const [ propertyPhotos, setPropertyPhotos ] = useState<photo[]>([]);
+    
+// Error Messages → PD = Photo Display, PE = Property Edit, PF = Photo Fetch, PU = Photo Upload
+
+    const [ errorMessagePD, setErrorMessagePD ] = useState("");
+    const [ errorMessagePF, setErrorMessagePF ] = useState("");
+
+//  Error / Success message states required for styling purposes.
+
+    const [ errorMessagePE, setErrorMessagePE ] = useState("");
+    const [ successMessagePE, setSuccessMessagePE ] = useState("");
     const [ propertyUpdated, setPropertyUpdated ] = useState(false);
 
-    const [ errorMessage, setErrorMessage ] = useState("");
-    const [ successMessage, setSuccessMessage ] = useState("");
-    
+    const [ errorMessagePU, setErrorMessagePU ] = useState(""); 
+    const [ successMessagePU, setSuccessMessagePU ] = useState("");
     const [ photoUploading, setPhotoUploading] = useState(false); 
-    const [ photoUploadSucessMessage, setPhotoUploadSuccessMessage ] = useState("");
-    const [ photoUploadErrorMessage, setPhotoUploadErrorMessage ] = useState("");
-    const [ excessPhotosMessage, setExcessPhotosMessage ] = useState("");
-
 
 
 
     useEffect(() => {
-        async function fetchData() {
-            const res = await fetch(`/api/dashboard/property/edit/${username}/${ownerID}/${propID}`);
-            const result = await res.json();
-            console.log(result);
-            setData(result);
-            setPropertyDetails(result.property);
-            setPropertyPhotos(result.photos);
+        const fetchData = async () => {
+            try {
+                const res = await fetch(`/api/dashboard/property/edit/${propID}`);
+                const result = await res.json();
+
+                if (!res.ok) {
+                    setErrorMessagePF(result.errorProp);
+                }
+
+                else if (result.errorPhotos) {
+                    setErrorMessagePD(result.errorPhotos);
+                    setOriginalPropertyDetails(result.property);
+                    setPropertyDetails(result.property); 
+                }
+
+                else {
+                    setOriginalPropertyDetails(result.property);
+                    setPropertyDetails(result.property);
+                    setPropertyPhotos(result.photos);           
+                    setErrorMessagePF("");
+                    setErrorMessagePD("");
+                }
+            }
+            
+            catch (error) {
+                setErrorMessagePF("Something went wrong while fetching your property. Please check your internet and refresh the page."); 
+            }
         }   
         fetchData();
-    }, [username, ownerID, propID]);
-
-    
-    if (!data || !propertyDetails) {
-        return <div>Loading...</div>;
-    }
-
-    async function photoDelete(photoID: number, photo_path: string, e: React.MouseEvent<HTMLButtonElement>) {
-        e.preventDefault();
-       try {
-            const res = await fetch(`/api/dashboard/property/edit/${username}/${ownerID}/${propID}`, {
-                method: "DELETE",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify({ photoID, photo_path })
-            });
-
-            const updatedPhotos = await res.json();
-            console.log(updatedPhotos);
-            setPropertyPhotos(propertyPhotos.filter(photo => photo.id !== photoID));
-            setExcessPhotosMessage("");
-            setPhotoUploadSuccessMessage("");
-            setPhotoUploadErrorMessage("");
-        }
-        
-        catch (error) {
-            console.error("Error deleting property:", error);
-        }
-    }
-
-    async function photoUpload(e: React.ChangeEvent<HTMLInputElement>) {
-        e.preventDefault();
-        const files = e.target.files;
-        const formData = new FormData();
-
-        if (!files) {
-            setPhotoUploadErrorMessage("No photos selected.");
-            setPhotoUploadSuccessMessage("");
-            return; 
-        }
-
-        for (const [index,  file] of Array.from(files).entries()) {
-            if (propertyPhotos.length + index < 10 ) {
-            formData.append("photos", file);
-            setPhotoUploadSuccessMessage("");
-            setExcessPhotosMessage("");
-            }
-            else {
-                setExcessPhotosMessage("You may only upload 10 photos!");
-                return;
-            }
-        }
-
-        try {
-            setPhotoUploading(true);
-
-            const res = await fetch(`/api/dashboard/property/edit/${username}/${ownerID}/${propID}`, {
-                method: "POST",
-                body: formData
-            });
-
-            const result = await res.json();
-            console.log(result);
-            
-            if (res.ok) {
-                setPropertyPhotos(result.newPhotos);
-                setPhotoUploadSuccessMessage(result.message);
-                setPhotoUploadErrorMessage("");
-            }
-            else {
-                setPhotoUploadErrorMessage(result.error);
-                setPhotoUploadSuccessMessage("");
-            }
-        }
-        catch (error) {
-            console.error("Error uploading photo:", error);
-            setPhotoUploadErrorMessage("An error occurred while uploading the photo.");
-            setPhotoUploadSuccessMessage("");
-        }
-
-        finally {
-            setPhotoUploading(false)
-        }
-    }
+    }, []);
 
     async function propertyDetailsUpdate(e: React.MouseEvent<HTMLButtonElement>) {
         e.preventDefault();
+
+        setPropertyUpdated(false);
+
+        if (JSON.stringify(propertyDetails) === JSON.stringify(originalPropertyDetails)) {
+            setErrorMessagePE("Please update at least one field.");
+            return;
+        } 
+
         try {
-            const res = await fetch(`/api/dashboard/property/edit/${username}/${ownerID}/${propID}`, {
+            const res = await fetch(`/api/dashboard/property/edit/${propID}`, {
                 method: "PATCH",
                 headers: {
                     "Content-Type": "application/json"
@@ -156,24 +98,123 @@ function DashboardPropertyEdit() {
                 body: JSON.stringify(propertyDetails)
             });
 
-            const newDetails = await res.json();
-            console.log(newDetails);
+            const result = await res.json();
 
             if (res.ok) {
                 setPropertyUpdated(true);
-                setSuccessMessage(newDetails.message);
-                setErrorMessage("");
-            } else {
-                setErrorMessage(newDetails.error);
-                setSuccessMessage("");
+                setOriginalPropertyDetails(propertyDetails); 
+                setSuccessMessagePE(result.message);
+                setErrorMessagePE("");
+            } 
+            
+            else {
+                setErrorMessagePE(result.error);
+                setSuccessMessagePE("");
             }
         } 
             
         catch (error) {
-            console.error("Error updating property:", error);
+            setErrorMessagePE("Failed to update property. Please check your internet and try again.");
         }
     }
 
+    async function photoUpload(e: React.ChangeEvent<HTMLInputElement>) {
+        e.preventDefault();
+        
+        const files = e.target.files;
+        const formData = new FormData();
+        
+        if (!files) {
+            return; 
+        }
+
+        for (const [index,  file] of Array.from(files).entries()) {
+            if (propertyPhotos.length + index < 10 ) {
+                formData.append("photos", file);
+                setErrorMessagePU("");
+            }
+            
+            else {
+                setErrorMessagePU("You may only upload 10 photos.");
+                setSuccessMessagePU("");
+                return;
+            }
+        }
+        
+        try {
+            setPhotoUploading(true);
+            setSuccessMessagePU("");
+            setErrorMessagePU("");
+            setErrorMessagePE("");
+            setSuccessMessagePE("");
+
+            const res = await fetch(`/api/dashboard/property/edit/${propID}`, {
+                method: "POST",
+                body: formData
+            });
+
+            const result = await res.json();
+            
+            if (res.ok) {
+                setPropertyPhotos(result.newPhotos);
+                setSuccessMessagePU(result.message);  
+                setErrorMessagePU("");          
+            }
+
+            else {
+                setErrorMessagePU(result.error);
+                setSuccessMessagePU("");
+            }
+        }
+
+        catch (error) {
+            setErrorMessagePU("Failed to upload new photos. Please check your internet and try again.");
+        }
+
+        finally {
+            setPhotoUploading(false)
+        }
+    }
+
+    async function photoDelete(photoID: number, photo_path: string, e: React.MouseEvent<HTMLButtonElement>) {
+        e.preventDefault();
+        
+        try {
+            const res = await fetch(`/api/dashboard/property/edit/${propID}`, {
+                method: "DELETE",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({ photoID, photo_path })
+            });
+            
+
+            if (!res.ok) {
+                const result = await res.json();
+                setErrorMessagePU(result.error);
+            }
+
+            else {
+                setPropertyPhotos(propertyPhotos.filter(photo => photo.id !== photoID));
+                setSuccessMessagePU(""); 
+                setErrorMessagePU("");
+            }
+        }
+        
+        catch (error) { 
+            setErrorMessagePU("Failed to delete photo. Please check your internet and try again.")
+        }
+    }
+
+    if (!propertyDetails) {
+        return (
+            <div>
+                {errorMessagePF ? <h3> {errorMessagePF} </h3>
+                :
+                <h3>Loading...</h3>}
+            </div>
+        );
+    }   
 
     return (
         <div>
@@ -182,7 +223,11 @@ function DashboardPropertyEdit() {
                 <h5> Update your property details below.</h5>
                 <label> 
                     Type:
-                    <select onChange={(e) => setPropertyDetails({...propertyDetails, type: e.target.value})} value={propertyDetails.type}>
+                    <select onChange={(e) => [
+                        setPropertyDetails({...propertyDetails, type: e.target.value}),
+                        setErrorMessagePE(""),
+                        setSuccessMessagePE("")]} 
+                        value={propertyDetails.type}>
                         <option value={propertyDetails.type}>
                             {propertyDetails.type}
                         </option>
@@ -196,32 +241,56 @@ function DashboardPropertyEdit() {
                 <br />
                 <label>
                     City:
-                    <input type="text" onChange={(e) => setPropertyDetails({...propertyDetails, city: e.target.value})} value={propertyDetails.city} />
+                    <input type="text" onChange={(e) => [
+                        setPropertyDetails({...propertyDetails, city: e.target.value}),
+                        setErrorMessagePE(""),
+                        setSuccessMessagePE("")]} 
+                        value={propertyDetails.city} />
                 </label>
                 <br />
                 <label>
                     Price (£):
-                    <input type="number" onChange={(e) => setPropertyDetails({...propertyDetails, price: parseFloat(e.target.value)})} value={propertyDetails.price} />
+                    <input type="number" onChange={(e) => [
+                        setPropertyDetails({...propertyDetails, price: e.target.value === "" ? undefined : parseFloat(e.target.value)}),
+                        setErrorMessagePE(""),
+                        setSuccessMessagePE("")]} 
+                        value={propertyDetails.price ?? ""} />
                 </label>
                 <br />
                 <label>
                     Bedrooms:
-                    <input type="number" onChange={(e) => setPropertyDetails({...propertyDetails, no_bedrooms: parseInt(e.target.value)})} value={propertyDetails.no_bedrooms} />
+                    <input type="number" onChange={(e) => [
+                        setPropertyDetails({...propertyDetails, no_bedrooms: e.target.value === "" ? undefined : parseInt(e.target.value)}),
+                        setErrorMessagePE(""),
+                        setSuccessMessagePE("")]} 
+                        value={propertyDetails.no_bedrooms ?? ""} />
                 </label>
                 <br />
                 <label>
                     Bathrooms:
-                    <input type="number" onChange={(e) => setPropertyDetails({...propertyDetails, no_bathrooms: parseInt(e.target.value)})} value={propertyDetails.no_bathrooms} />
+                    <input type="number" onChange={(e) => [ 
+                        setPropertyDetails({...propertyDetails, no_bathrooms: e.target.value === "" ? undefined : parseInt(e.target.value)}),
+                        setErrorMessagePE(""),
+                        setSuccessMessagePE("")]}
+                        value={propertyDetails.no_bathrooms ?? ""} />
                 </label>
                 <br />
                 <label>
                     Size (m²):
-                    <input type="number" onChange={(e) => setPropertyDetails({...propertyDetails, size: parseInt(e.target.value)})} value={propertyDetails.size} />
+                    <input type="number" onChange={(e) => [ 
+                        setPropertyDetails({...propertyDetails, size: e.target.value === "" ? undefined : parseInt(e.target.value)}),
+                        setErrorMessagePE(""),
+                        setSuccessMessagePE("")]} 
+                        value={propertyDetails.size ?? ""} />
                 </label>
                 <br />
                 <label>
                     Furniture:
-                    <select onChange={(e) => setPropertyDetails({...propertyDetails, furniture: e.target.value})} value={propertyDetails.furniture}>
+                    <select onChange={(e) => [
+                        setPropertyDetails({...propertyDetails, furniture: e.target.value}),
+                        setErrorMessagePE(""),
+                        setSuccessMessagePE("")]}
+                        value={propertyDetails.furniture}>
                         <option value={propertyDetails.furniture}>{propertyDetails.furniture}</option>
                         {propertyDetails.furniture === 'Furnished' ? null : <option onChange={(e) => setPropertyDetails({...propertyDetails, furniture: e.target.value})} value = 'Furnished'> Furnished</option>}
                         {propertyDetails.furniture === 'Semi-furnished' ? null : <option onChange={(e) => setPropertyDetails({...propertyDetails, furniture: e.target.value})} value = 'Semi-furnished'> Semi-Furnished</option>}
@@ -230,15 +299,17 @@ function DashboardPropertyEdit() {
                 </label>
                 <br />
                 <label>
-                    Summary (max 50 words):
+                    Summary:
                     <textarea
                         onChange={(e) => {
                             const words = e.target.value.split(/\s+/).filter(Boolean);
                             if (words.length <= 50) {
+                                setErrorMessagePE("");
+                                setSuccessMessagePE("");
                                 setPropertyDetails({ ...propertyDetails, summary: e.target.value });
                             }
                          }}
-                    value={propertyDetails.summary}
+                        value={propertyDetails.summary}
                     />
                 <>
                     {propertyDetails.summary ? propertyDetails.summary.split(/\s+/).filter(Boolean).length : 0} / 50 words
@@ -246,29 +317,31 @@ function DashboardPropertyEdit() {
                 </label>
                 <br />
                 <label>
-                    Detailed Description (max 250 words):
+                    Detailed Description:
                     <textarea
                         onChange={(e) => {
                             const words = e.target.value.split(/\s+/).filter(Boolean);
                             if (words.length <= 250) {
+                                setErrorMessagePE("");
+                                setSuccessMessagePE("");
                                 setPropertyDetails({ ...propertyDetails, detail: e.target.value });
                             }
                         }}
-                    value={propertyDetails.detail}
+                        value={propertyDetails.detail}
                     />
                 <>
                     {propertyDetails.detail ? propertyDetails.detail.split(/\s+/).filter(Boolean).length : 0} / 250 words
                 </>
                 </label>
                 <br />
-                <button onClick={propertyDetailsUpdate}> Update Property Details </button>
-                {propertyUpdated && !errorMessage &&
+                <button onClick={propertyDetailsUpdate}> Update Property </button>
+                {propertyUpdated && successMessagePE ?
                     <div>
-                        <p style={{ color: "green" }}>{successMessage}</p>
+                        <p style={{ color: "green" }}>{successMessagePE}</p>
                         <button onClick={() => {navigate(`/property/${propID}`)}}>Check your property out!</button>
                     </div>
-                }
-                {errorMessage && <p style={{ color: "red" }}>{errorMessage}</p> }
+                :
+                errorMessagePE && <p style={{ color: "red" }}>{errorMessagePE}</p>}
             </div>
             <div>
                 <h3> Property Photos </h3>
@@ -283,20 +356,19 @@ function DashboardPropertyEdit() {
                         ))}
                     </ul>
                 ) : (
-                    <p>No photos selected.</p>
+                    <p style={{ color: "red" }}>{errorMessagePD}</p>
                 )}
                 {propertyPhotos.length < 10 ? ( 
                     <div>
                         <input type="file" multiple accept="image/*" onChange={photoUpload} />
-                        <p>Upload up to {10 - propertyPhotos.length} more photos.</p>
+                        <p>Upload up to {10 - propertyPhotos.length} more {propertyPhotos.length === 9 ? "photo" : "photos"}.</p>
                     </div>
                 ) : (
                     <p>You have reached the maximum number of photos.</p>
                 )}
                 {photoUploading && <p>Please wait while we upload your photos!</p>}
-                {excessPhotosMessage && <p>{excessPhotosMessage}</p>}
-                {photoUploadSucessMessage && <p style={{ color: "green" }}>{photoUploadSucessMessage}</p>}
-                {photoUploadErrorMessage && <p style={{ color: "red" }}>{photoUploadErrorMessage}</p>}
+                {successMessagePU && <p style={{ color: "green" }}>{successMessagePU}</p>}
+                {errorMessagePU && <p style={{ color: "red" }}>{errorMessagePU}</p>}
             </div>
         </div>
     );

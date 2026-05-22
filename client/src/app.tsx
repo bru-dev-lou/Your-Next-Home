@@ -1,5 +1,7 @@
 import { BrowserRouter, Routes, Route,} from "react-router-dom";
 
+import { UserProvider } from "./context/user_context";
+
 import MainNavigationBar from "./components/public/main_navigation_bar_comp";
 
 import HomePage from "./pages/public/home_page";
@@ -21,6 +23,7 @@ function App() {
   return (
     <BrowserRouter>
       <div>
+      <UserProvider>
         <MainNavigationBar />
           <Routes>
             <Route path="/" element={<HomePage />} />
@@ -29,12 +32,13 @@ function App() {
             <Route path="/inquiries" element={<Inquiries />} />
             <Route path="/signIn" element={<SignInPage />} />
             <Route path="/signUp" element={<SignUpPage />} />
-            <Route path="/dashboard/:username/:ownerID" element={<DashboardMainPage />} />
-            <Route path="/dashboard/property/edit/:username/:ownerID/:propID" element={<DashboardEditPropertyPage />} />
-            <Route path="/dashboard/property/add/:username/:ownerID" element={<DashboardNewPropertyPage />} />
-            <Route path="/dashboard/profile/edit/:username/:ownerID" element={<DashboardProfileEditPage />} />
-            <Route path="/dashboard/property/favorites/:username/:ownerID" element={<DashboardFavoritePropertiesPage />} />
+            <Route path="/dashboard" element={<DashboardMainPage />} />
+            <Route path="/dashboard/property/edit/:propID" element={<DashboardEditPropertyPage />} />
+            <Route path="/dashboard/property/add" element={<DashboardNewPropertyPage />} />
+            <Route path="/dashboard/profile/edit" element={<DashboardProfileEditPage />} />
+            <Route path="/dashboard/property/favorites" element={<DashboardFavoritePropertiesPage />} />
           </Routes>
+        </UserProvider>
       </div>
     </BrowserRouter>    
   )

@@ -27,33 +27,81 @@ function PropertySearchPage () {
   const minBeds = params.get("minBeds") || "";
   const minBaths = params.get("minBaths") || "";
   const furniture = params.get("furniture") || "";
-  const ownerID = params.get("ownerID"); 
 
-  const [ results, setResults] = useState<Property[]>([]);
-  const [ propFavorite, setPropFavorite] = useState<Set<number>>(new Set());
+  const [propertyResults, setPropertyResults] = useState<Property[]>([]);
+  const [propFavorite, setPropFavorite] = useState<Set<number>>(new Set());
 
-  // Error Message → FP = Favorite Property
+  // Error Message → FP = Favorite Property, PR = Property Results
 
-  const [ errorMessageFP, setErrorMessageFP ] = useState("");
+  const [errorMessageFP, setErrorMessageFP] = useState("");
+  const [errorMessagePR, setErrorMessagePR] = useState("");
+  const [introMessage, setIntroMessage] = useState("");
 
 
-    useEffect(() => {
-      const fetchResults = async () => {
+  useEffect(() => {
+    const fetchPropertyResults = async () => {
+      
+      try{
         const res = await fetch(`/api/search?city=${city}&type=${type}&maxPrice=${maxPrice}&minBeds=${minBeds}&minBaths=${minBaths}&furniture=${furniture}`);
-        const data = await res.json()
-          console.log(data);
-          setResults(data); 
-          };
-      fetchResults();
-    }, [city, type, maxPrice, minBeds, minBaths, furniture]);
+        const data = await res.json();
+        if (!res.ok) {
+          setErrorMessagePR(data.error);
+          setIntroMessage("");
+        }
+      
+        else if (data.message) {
+          setErrorMessagePR(data.message);
+          setIntroMessage("");
+          setPropertyResults([]);
+        }
 
+        else {
+          setErrorMessagePR("");
+          setIntroMessage(`Properties avaliable for rent in ${city}:`);
+          setPropertyResults(data); 
+        }
+      }
 
+      catch (error){
+        setErrorMessagePR("Failed to fetch requested properties. Please check your internet and refresh the page.")
+      }
+    }
+    
+    fetchPropertyResults();
+    
+  }, [city, type, maxPrice, minBeds, minBaths, furniture]);
+
+  useEffect (() => {
+    const fetchFavorites = async () => {
+      const updateSet = new Set(propFavorite);
+    
+      try {
+        const res = await fetch ("/api/search/favorites");
+        const results = await res.json(); 
+        if (res.ok) {
+          for (const result of results) {
+            updateSet.add(result.property_id);
+          }
+          setPropFavorite(updateSet);
+        }
+
+        else {
+          return;
+        }
+      }
+      
+      // Silent crash coded to avoid bad UI / UX. 
+
+      catch(error) {}
+    }
+      fetchFavorites();
+  }, []);
 
   async function addToFavorites (propID : number) {
     const updateSet = new Set(propFavorite); 
 
     try {
-      const res = await fetch (`/api/search/${ownerID}`, {
+      const res = await fetch (`/api/search/favorites/`, {
         method: "POST",
         headers: {
           "Content-Type" : "application/json"
@@ -62,9 +110,6 @@ function PropertySearchPage () {
       });
 
       const result = await res.json(); 
-      console.log(result); 
-
-      // need to add button style change when res.ok
 
       if (res.ok) {
         setErrorMessageFP("");
@@ -77,17 +122,16 @@ function PropertySearchPage () {
       }
     }
 
-    // Will return error until ownerID param is added properly via users signing in and receiving a token
-
     catch (error) {
-      console.log(error);
+      setErrorMessageFP("Failed to add to favorites. Please check your internet and try again.");
     }
-  } 
+  }
 
   async function removeFromFavorites (propID : number) {
-      const updateSet = new Set(propFavorite); 
+    const updateSet = new Set(propFavorite); 
+    
     try {
-      const res = await fetch (`/api/search/${ownerID}`, {
+      const res = await fetch (`/api/search/favorites`, {
         method: "DELETE",
         headers: {
           "Content-Type" : "application/json"
@@ -95,49 +139,51 @@ function PropertySearchPage () {
         body: JSON.stringify({propID})
       });
       
-      const result = await res.json(); 
-
       if (!res.ok) {
-        setErrorMessageFP(result.error)
+        const result = await res.json(); 
+        setErrorMessageFP(result.error);
       }  
 
       else {
+        setErrorMessageFP("");
         updateSet.delete(propID);
         setPropFavorite(updateSet);
       }
     }
 
     catch (error) {
-      console.log(error);
+      setErrorMessageFP("Failed to remove from favorites. Please check your internet and try again.");    
     }
   }
 
   const propertyDetailResult = (propID : number) => {
     navigate(`/property/${propID}`)
-  };
+  }
 
   return (
     <div>
-        <div>
-          <PropertySearchPageSearchBar />
-          <h3>Properties for rent in {city}:</h3>
+      <PropertySearchPageSearchBar />
+      {errorMessagePR ?
+        <h4>{errorMessagePR}</h4>
+      :
+        <h4>{introMessage}</h4>
+      }       
+      {propertyResults.map(result => (
+        <div id = "propertyCard" key = {result.id}> 
+          <img onClick={ () => propertyDetailResult(result.id)} id = "propertyMainPhoto" src = {result.photo_path} />
+          {propFavorite.has(result.id) ?
+            <button onClick={ () => removeFromFavorites(result.id)}> Remove from favorites </button>
+            :
+            <button onClick={ () => addToFavorites(result.id)}> Add to favorites </button>
+          }
+          {errorMessageFP && <h4>{errorMessageFP}</h4>}
+          <p id = "propertyCity">{result.city}</p>
+          <p id = "propertyPrice">  £{result.price}</p>
+          <p id = "propertySummary"> {result.summary}</p>
+          <p id = "propertyDateListed"> {result.date_listed} </p>
+          <p> PROP{result.id}</p> 
         </div>
-          {results.map(result => (
-            <div id = "propertyCard" key = {result.id}> 
-            <img onClick={ () => propertyDetailResult(result.id)} id = "propertyMainPhoto" src = {result.photo_path} />
-            {propFavorite.has(result.id) ?
-              <button onClick={ () => removeFromFavorites(result.id)}> Remove from favorites </button>
-              :
-              <button onClick={ () => addToFavorites(result.id)}> Add to favorites </button>
-            }
-            {errorMessageFP && <h4>{errorMessageFP}</h4>}
-            <p id = "propertyCity">{result.city}</p>
-            <p id = "propertyPrice">  £{result.price}</p>
-            <p id = "propertySummary"> {result.summary}</p>
-            <p id = "propertyDateListed"> {result.date_listed} </p>
-            <p> PROP{result.id}</p> 
-            </div>
-          ))}
+      ))}
     </div>
   );
 }
