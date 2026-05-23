@@ -5,8 +5,8 @@ import jwt from "jsonwebtoken";
 
 type UserData = {
     id: number; 
-    name: string; 
     username: string;
+    name: string; 
     password_hash: string; 
 };
 
@@ -42,7 +42,7 @@ router.post("/", async (req, res) => {
 
         res.cookie("token", token,{httpOnly: true, secure: process.env.NODE_ENV === "production", sameSite: "lax", maxAge: 604800000});
 
-        res.status(200).json({ name: user.name, username: user.username, id: user.id });
+        res.status(200).json({ id: user.id, username: user.username, name: user.name });
     }
 
     catch(error){

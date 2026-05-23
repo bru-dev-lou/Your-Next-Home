@@ -2,7 +2,7 @@ import bcrypt from "bcrypt";
 import express from 'express';
 import db from "../../database/database.js";
 
-type Data = {
+type UserData = {
     password_hash: string,
 }
 
@@ -55,7 +55,7 @@ router.route("/")
             }
         }
 
-        const user  = db.prepare(`SELECT password_hash FROM property_owners WHERE id = ?`).get(ownerID) as Data;
+        const user  = db.prepare(`SELECT password_hash FROM property_owners WHERE id = ?`).get(ownerID) as UserData;
 
         if (!password) {
             return res.status(400).json({passwordError: "Please provide your password to confirm these changes."})
@@ -86,7 +86,7 @@ router.route("/")
     const password = req.body.userAccountDeleteDetails.password?.trim();
 
     try {
-        const user = db.prepare(`SELECT password_hash FROM property_owners WHERE id = ?`).get(ownerID) as Data;
+        const user = db.prepare(`SELECT password_hash FROM property_owners WHERE id = ?`).get(ownerID) as UserData;
 
         if(!password) {
             return res.status(400).json({error: "Please provide your password before deleting your account."})
@@ -120,7 +120,7 @@ router.route("/password_change")
     const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[?!@#$%^&*]).{8,}$/;
 
     try {
-        const user = db.prepare(`SELECT password_hash FROM property_owners WHERE id = ?`).get(ownerID) as Data; 
+        const user = db.prepare(`SELECT password_hash FROM property_owners WHERE id = ?`).get(ownerID) as UserData; 
 
         if (!password) {
             return res.status(400).json({error: "Please start by providing your password."})

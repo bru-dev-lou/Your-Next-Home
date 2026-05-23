@@ -33,19 +33,19 @@ router.route("/:propID")
     const ownerID = req.user?.id;
 
     try {
-        const SQLShow = db.prepare(`SELECT * FROM property_list WHERE owner_id = ? AND id = ?`).get(ownerID, propID) as PropertyData;
+        const SQLPropertyData = db.prepare(`SELECT * FROM property_list WHERE owner_id = ? AND id = ?`).get(ownerID, propID) as PropertyData;
         
-        if (!SQLShow) {
+        if (!SQLPropertyData) {
             return res.status(404).json({ errorProp: "Property not found." });
         }
 
-        const SQLPhotos = db.prepare(`SELECT * FROM property_photos WHERE property_id = ?`).all(propID);
+        const SQLPropertyPhotos = db.prepare(`SELECT * FROM property_photos WHERE property_id = ?`).all(propID);
         
-        if (SQLPhotos.length === 0) {
-            return res.status(200).json({ property: SQLShow, photos: SQLPhotos, errorPhotos: "No photos found for this property." });
+        if (SQLPropertyPhotos.length === 0) {
+            return res.status(200).json({ property: SQLPropertyData, photos: SQLPropertyPhotos, errorPhotos: "No photos found for this property." });
         }
 
-        res.status(200).json({ property: SQLShow, photos: SQLPhotos});
+        res.status(200).json({ property: SQLPropertyData, photos: SQLPropertyPhotos});
     }
 
     catch (error) {
@@ -156,7 +156,7 @@ router.route("/:propID")
         }
 
         else {
-            return res.status(400).json({error:  "Failed to delete photo. Please try again."});
+            return res.status(400).json({error:  "Failed to delete photos. Please try again."});
         }
     }
     

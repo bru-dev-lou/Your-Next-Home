@@ -3,21 +3,32 @@ import db from "../../database/database.js";
 
 const router = express.Router();
 
+type DefaultValues = {
+    city: string;
+    type: string;
+    furniture: string;
+    minBeds: number;
+    minBaths: number;
+    maxPrice: number; 
+}
 
 router.get("/", (req, res) => {
-    const defaultCity = '';
-    const defaultType = '';
-    const defaultFurniture = '';
-    const defaultMinBeds = 1;
-    const defaultMinBaths = 1;
-    const defaultMaxPrice = 1000000000;
+
+    const values : DefaultValues = {
+        city: "",
+        type: "",
+        furniture: "",
+        minBeds: 1,
+        minBaths: 1,
+        maxPrice: 10000
+    };
     
-    const type = req.query.type || defaultType;
-    const city = req.query.city || defaultCity;
-    const maxPrice = Number(req.query.maxPrice) || defaultMaxPrice;
-    const minBeds = Number(req.query.minBeds) || defaultMinBeds;    
-    const minBaths = Number(req.query.minBaths) || defaultMinBaths;
-    const furniture = req.query.furniture || defaultFurniture;
+    const city = req.query.city || values.city;
+    const type = req.query.type || values.type;
+    const furniture = req.query.furniture || values.furniture;
+    const minBeds = Number(req.query.minBeds) || values.minBeds;    
+    const minBaths = Number(req.query.minBaths) || values.minBaths;
+    const maxPrice = Number(req.query.maxPrice) || values.maxPrice;
 
 
     try {

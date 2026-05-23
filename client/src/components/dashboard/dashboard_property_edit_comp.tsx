@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 
-type property = {
+type PropertyDetails = {
     type?: string;
     city?: string;
     price?: number;
@@ -13,7 +13,7 @@ type property = {
     detail?: string
 };
 
-type photo = {
+type PropertyPhotos = {
     id: number;
     propID: number;
     photo_path: string;
@@ -25,10 +25,10 @@ function DashboardPropertyEdit() {
  
 // Original Property Details vs  Property Details prevents unneccessary API calls when fields have not been updated. 
 
-    const [ originalPropertyDetails, setOriginalPropertyDetails ] = useState<property | null>(null); 
-    const [ propertyDetails, setPropertyDetails ] = useState<property | null>(null);
+    const [ originalPropertyDetails, setOriginalPropertyDetails ] = useState<PropertyDetails | null>(null); 
+    const [ propertyDetails, setPropertyDetails ] = useState<PropertyDetails | null>(null);
 
-    const [ propertyPhotos, setPropertyPhotos ] = useState<photo[]>([]);
+    const [ propertyPhotos, setPropertyPhotos ] = useState<PropertyPhotos[]>([]);
     
 // Error Messages → PD = Photo Display, PE = Property Edit, PF = Photo Fetch, PU = Photo Upload
 

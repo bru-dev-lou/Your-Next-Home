@@ -1,7 +1,7 @@
-import { useState, type JSX, useEffect } from 'react'; 
+import { useState, useEffect } from 'react'; 
 import { useNavigate } from 'react-router-dom';
 
-function HomePageSearchBar(): JSX.Element {
+function HomePageSearchBar() {
     const [autoCompleteQuery, setAutoCompleteQuery] = useState("");
     const [cities, setCities] = useState<{ city: string }[]>([]);
     const [maxPrice, setMaxPrice] = useState(10000);
@@ -47,7 +47,7 @@ function HomePageSearchBar(): JSX.Element {
     }, [autoCompleteQuery]);
         
 
-    const propertySearch = (e:any) => {
+    const propertySearch = (e:React.SubmitEvent<HTMLFormElement>) => {
         e.preventDefault();
         navigate(`/search?city=${autoCompleteQuery}&maxPrice=${maxPrice}`);
     };

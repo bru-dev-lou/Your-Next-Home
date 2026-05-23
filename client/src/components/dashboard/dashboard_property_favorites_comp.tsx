@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
-type properties = {
+type Properties = {
     id: number;
     type: string;
     city: string;
@@ -18,8 +18,8 @@ type properties = {
 const DashboardFavoriteProperties = () => {
     const navigate = useNavigate();
 
-    const [favoriteProps, setFavoriteProps] = useState<properties[]>([]); 
-    const [removeIDConfirmation, setRemoveIDConfirmation] = useState<number | null>(); 
+    const [favoriteProps, setFavoriteProps] = useState<Properties[]>([]); 
+    const [removeIDConfirmation, setRemoveIDConfirmation] = useState<number | null>(null); 
 
     //  Error Messages →  FP = Favorite Properties / DP = Delete Properties
 
@@ -70,6 +70,7 @@ const DashboardFavoriteProperties = () => {
                     setFavoriteProps(newFavoritesList); 
                     setErrorMessageDP("");
                 }
+                
                 else {
                     setFavoriteProps([]);
                     setErrorMessageFP(newFavoritesList.error);

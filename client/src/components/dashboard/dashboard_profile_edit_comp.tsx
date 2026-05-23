@@ -37,18 +37,18 @@ function DashboardProfileEdit () {
     const [ successMessageAM, setSuccessMessageAM ] = useState("");
     const [ errorMessageDA, setErrorMessageDA ] = useState(""); 
 
-    const [ changeRequest, setChangeRequest ] = useState<boolean>(false);
-    const [ showCurrentPasswordMP, setShowCurrentPasswordMP ] = useState<boolean>(false);
-    const [ showCurrentPasswordAM, setShowCurrentPasswordAM ] = useState<boolean>(false);
-    const [ showCurrentPasswordDA, setShowCurrentPasswordDA ] = useState<boolean>(false);
+    const [ changeRequest, setChangeRequest ] = useState(false);
+    const [ showCurrentPasswordMP, setShowCurrentPasswordMP ] = useState(false);
+    const [ showCurrentPasswordAM, setShowCurrentPasswordAM ] = useState(false);
+    const [ showCurrentPasswordDA, setShowCurrentPasswordDA ] = useState(false);
 
-    const [ showNewPassword, setShowNewPassword ] = useState<boolean>(false);
-    const [ showConfirmPassword, setShowConfirmPassword ] = useState<boolean>(false);
+    const [ showNewPassword, setShowNewPassword ] = useState(false);
+    const [ showConfirmPassword, setShowConfirmPassword ] = useState(false);
     
-    const [ accountDeleteRequest, setAccountDeleteRequest ] = useState<boolean>(false);
-    const [ accountDeleted, setAccountDeleted ] = useState<boolean>(false); 
+    const [ accountDeleteRequest, setAccountDeleteRequest ] = useState(false);
+    const [ accountDeleted, setAccountDeleted ] = useState(false); 
 
-    const [ dataLoading, setDataLoading ] = useState<boolean>(true);
+    const [ dataLoading, setDataLoading ] = useState(true);
 
 
     useEffect(() => {

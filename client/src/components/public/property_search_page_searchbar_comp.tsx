@@ -2,21 +2,23 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom"; 
 
 
-//  Can all the states into one and add a Type here (before the function) 
+type PropertyData = {
+    city: string;
+    type: string;
+    furniture: string;
+    minBeds: number;
+    minBaths: number; 
+    maxPrice: number;
+}
 
 function PropertySearchPageSearchBar () {
-    const [type, setType] = useState("");
-    const [city, setCity] = useState("");
-    const [maxPrice, setMaxPrice] = useState(10000); 
-    const [minBeds, setMinBeds] = useState(0);
-    const [minBaths, setMinBaths] = useState(0);
-    const [furniture, setFurniture] = useState("");
+    const [ propData, setPropData ] = useState<PropertyData>({city: "", type: "", furniture: "", minBeds: 0, minBaths: 0, maxPrice: 100000});
 
     const navigate = useNavigate(); 
 
-    const buttonSearch = (e: any) => {
+    const buttonSearch = (e: React.SubmitEvent<HTMLFormElement>) => {
         e.preventDefault();
-        navigate(`/search?city=${city}&type=${type}&maxPrice=${maxPrice}&minBeds=${minBeds}&minBaths=${minBaths}&furniture=${furniture}`);
+        navigate(`/search?city=${propData.city}&type=${propData.type}&furniture=${propData.furniture}&minBeds=${propData.minBeds}&minBaths=${propData.minBaths}&maxPrice=${propData.maxPrice}`);
     };
 
 return (
@@ -24,28 +26,26 @@ return (
         <form onSubmit={buttonSearch} method="get">
             <label htmlFor = "citySelect">Enter a location</label>
                  <input 
-                        id = "citySelect"
-                        name = "city"
-                        type = "text"
-                        placeholder = "Enter your preferred location" 
-                        value = {city}
-                        onChange = {(e) => setCity(e.target.value)}  
-                    />
+                    name = "city"
+                    type = "text"
+                    placeholder = "Enter your preferred location" 
+                    value = {propData.city}
+                    onChange = {(e) => setPropData({...propData, city: e.target.value})}  
+                />
             <label htmlFor = "propertyType">Property Type</label>
                 <select 
-                    onChange = {(e) => setType(e.target.value)}
-                    id = "propertyType">
-                        <option value=''>Show all</option>
-                        <option value='Apartment'>Apartment</option>
-                        <option value='Terraced'>Terraced</option>
-                        <option value='Semi-Detached'>Semi-Detached</option>
-                        <option value='Detached'>Detached</option>
-                        <option value='Bungalow'>Bungalow</option>
+                    onChange = {(e) => setPropData({...propData, type: e.target.value})}
+                >
+                    <option value=''>Show all</option>
+                    <option value='Apartment'>Apartment</option>
+                    <option value='Terraced'>Terraced</option>
+                    <option value='Semi-Detached'>Semi-Detached</option>
+                    <option value='Detached'>Detached</option>
+                    <option value='Bungalow'>Bungalow</option>
                 </select>            
             <label htmlFor = "maxPrice"> Max Price</label>
                 <select 
-                    onChange = {(e) => setMaxPrice(Number(e.target.value))}
-                    id = "maxPrice"
+                    onChange = {(e) => setPropData({...propData, maxPrice: (Number(e.target.value))})}
                     >
                         <option value = {10000}> No max </option>
                         <option value = "500"> $500 PCM </option>
@@ -68,8 +68,7 @@ return (
             <br></br>
             <label htmlFor = "minBedrooms">No. of Bedrooms</label>
                 <select
-                    onChange={(e) => setMinBeds(Number(e.target.value))}
-                    id ="minBedrooms" 
+                    onChange={(e) => setPropData({...propData, minBeds: (Number(e.target.value))})}
                     >
                         <option value= {0}>No min</option>
                         <option value='1'>1</option>
@@ -80,8 +79,7 @@ return (
                 </select>
             <label htmlFor = "minBathrooms">No. of Bathrooms</label>
                 <select
-                    onChange={(e) => setMinBaths(Number(e.target.value))}
-                    id = "minBathrooms"
+                    onChange={(e) => setPropData({...propData, minBaths: (Number(e.target.value))})}
                     >
                         <option value= {0}>No min</option>
                         <option value='1'>1</option>
@@ -92,8 +90,7 @@ return (
                 </select>
             <label htmlFor = "Furniture">Furnishing</label>
             <select 
-                onChange={(e) => setFurniture(e.target.value)}
-                id = "Furniture"
+                onChange={(e) => setPropData({...propData, furniture: e.target.value})}
                 >
                         <option value = {""}> Any</option>
                         <option value = 'Furnished'> Furnished</option>
