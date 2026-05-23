@@ -1,7 +1,19 @@
 import {useState} from "react";
 import {useNavigate} from "react-router-dom";
 
-type Photos = {
+type PropertyData = {
+    type: string;
+    city: string;
+    price: number;
+    bedrooms: number;
+    bathrooms: number;
+    size: number;
+    furniture: string;
+    summary: string;
+    detail: string;
+}
+
+type PropertyPhotos = {
     url: string;
     file: File;
 };
@@ -9,21 +21,13 @@ type Photos = {
 function DashboardPropertyAdd () {
     const navigate = useNavigate();
 
-    const [ type, setType ] = useState("");
-    const [ city, setCity ] = useState("");
-    const [ price, setPrice ] = useState(0);
-    const [ bedrooms, setBedrooms ] = useState(0); 
-    const [ bathrooms, setBathrooms ] = useState(0); 
-    const [ size, setSize ] = useState(0); 
-    const [ furniture, setFurniture ] = useState(""); 
-    const [ summary, setSummary ] = useState("");
-    const [ detail, setDetail ] = useState(""); 
+    const [ propertyDetails, setPropertyDetails ] = useState<PropertyData>({type: "", city: "", price: 0, bedrooms: 0, bathrooms: 0, size: 0, furniture: "", summary: "", detail: ""});
+    const [ tempURLs, setTempURLs ] = useState<PropertyPhotos[]>([]);
 
     const [ dataErrorMessage, setDataErrorMessage ] = useState("");
     const [ dataSuccessMessage, setDataSuccessMessage ] = useState("");
     const [ excessPhotosMessage, setExcessPhotosMessage ] = useState(""); 
 
-    const [ tempURLs, setTempURLs ] = useState<Photos[]>([]);
     const [ uploading, setUploading ] = useState(false);
 
   
@@ -37,15 +41,15 @@ function DashboardPropertyAdd () {
         propertyData.append("photos", tempURL.file);
         };
 
-        propertyData.append("type", type);
-        propertyData.append("city", city);
-        propertyData.append("price", price.toString());
-        propertyData.append("bedrooms", bedrooms.toString());
-        propertyData.append("bathrooms", bathrooms.toString());
-        propertyData.append("size", size.toString());
-        propertyData.append("furniture", furniture);
-        propertyData.append("summary", summary);
-        propertyData.append("detail", detail);
+        propertyData.append("type", propertyDetails.type);
+        propertyData.append("city", propertyDetails.city);
+        propertyData.append("price", propertyDetails.price.toString());
+        propertyData.append("bedrooms", propertyDetails.bedrooms.toString());
+        propertyData.append("bathrooms", propertyDetails.bathrooms.toString());
+        propertyData.append("size", propertyDetails.size.toString());
+        propertyData.append("furniture", propertyDetails.furniture);
+        propertyData.append("summary", propertyDetails.summary);
+        propertyData.append("detail", propertyDetails.detail);
 
         try {
             setUploading(true);
@@ -122,20 +126,21 @@ function DashboardPropertyAdd () {
             <label>
                 City: 
                     <input 
-                        onChange={(e) => setCity(e.target.value)}
-                        value={city}
+                        onChange={(e) => setPropertyDetails({...propertyDetails, city: e.target.value})}
+                        value={propertyDetails.city}
                     />
             </label>
             <br />
             <label>
                 Type:
-                    <select onChange={(e) => setType(e.target.value)} value={type}>
-                        <option value={type}> {type} </option>
-                        {type === "Apartment" ? null : <option value="Apartment">Apartment</option>}
-                        {type === "Terraced" ? null : <option value="Terraced">Terraced</option>}
-                        {type === "Semi-Detached" ? null : <option value="Semi-Detached">Semi-Detached</option>}
-                        {type === "Detached" ? null : <option value="Detached">Detached</option>}
-                        {type === "Bungalow" ? null : <option value="Bungalow">Bungalow</option>}
+                    <select onChange={(e) => setPropertyDetails({...propertyDetails, type: e.target.value})} 
+                    value={propertyDetails.type}>
+                        <option value={propertyDetails.type}> {propertyDetails.type} </option>
+                        {propertyDetails.type === "Apartment" ? null : <option value="Apartment">Apartment</option>}
+                        {propertyDetails.type === "Terraced" ? null : <option value="Terraced">Terraced</option>}
+                        {propertyDetails.type === "Semi-Detached" ? null : <option value="Semi-Detached">Semi-Detached</option>}
+                        {propertyDetails.type === "Detached" ? null : <option value="Detached">Detached</option>}
+                        {propertyDetails.type === "Bungalow" ? null : <option value="Bungalow">Bungalow</option>}
                     </select>
             </label>
             <br />
@@ -143,8 +148,8 @@ function DashboardPropertyAdd () {
                 Price (£):
                     <input 
                         type="number" 
-                        onChange={(e) => setPrice(Number(e.target.value))} 
-                        value={price || ""}
+                        onChange={(e) => setPropertyDetails({...propertyDetails, price: (Number(e.target.value))})} 
+                        value={propertyDetails.price || ""}
                     />
             </label>
             <br />
@@ -152,34 +157,36 @@ function DashboardPropertyAdd () {
                 Bedrooms:
                     <input 
                         type= "number" 
-                        onChange={(e) => setBedrooms(Number(e.target.value))} 
-                        value={bedrooms || ""}
+                        onChange={(e) => setPropertyDetails({...propertyDetails, bedrooms: (Number(e.target.value))})} 
+                        value={propertyDetails.bedrooms || ""}
                     />
             </label>
             <br />
             <label>
                 Bathrooms:
                     <input type= "number" 
-                    onChange={(e) => setBathrooms(Number(e.target.value))} 
-                    value={bathrooms || ""}
+                    onChange={(e) => setPropertyDetails({...propertyDetails, bathrooms: (Number(e.target.value))})} 
+                    value={propertyDetails.bathrooms || ""}
                     />
             </label>
             <br />
             <label>
                 Size: 
                     <input type= "number" 
-                    onChange={(e) => setSize(Number(e.target.value))} 
-                    value={size || ""}
+                    onChange={(e) => setPropertyDetails({...propertyDetails, size: (Number(e.target.value))})} 
+                    value={propertyDetails.size || ""}
                     />
             <br />
             </label>
             <label>
                 Furniture: 
-                    <select onChange={(e) => setFurniture(e.target.value)} value={furniture}>
-                        <option value={furniture}>{furniture}</option>
-                        {furniture === "Furnished" ? null : <option value="Furnished">Furnished</option>}
-                        {furniture === "Semi-Furnished" ? null : <option value="Semi-Furnished">Semi-Furnished</option>}
-                        {furniture === "Unfurnished" ? null : <option value="Unfurnished">Unfurnished</option>}
+                    <select onChange={(e) => setPropertyDetails({...propertyDetails, furniture: e.target.value})} 
+                    value={propertyDetails.furniture}
+                    >
+                        <option value={propertyDetails.furniture}>{propertyDetails.furniture}</option>
+                        {propertyDetails.furniture === "Furnished" ? null : <option value="Furnished">Furnished</option>}
+                        {propertyDetails.furniture === "Semi-Furnished" ? null : <option value="Semi-Furnished">Semi-Furnished</option>}
+                        {propertyDetails.furniture === "Unfurnished" ? null : <option value="Unfurnished">Unfurnished</option>}
                 </select>
             </label>
             <br />
@@ -188,13 +195,13 @@ function DashboardPropertyAdd () {
                     <textarea onChange={(e) => {
                         const summaryWords = e.target.value.split(/\s+/).filter(Boolean);
                         if (summaryWords.length <= 50) {
-                            setSummary(e.target.value)
+                            setPropertyDetails({...propertyDetails, summary: e.target.value})
                         }
                     }}
-                    value={summary} placeholder="Add a short summary about your property."/>
+                    value={propertyDetails.summary} placeholder="Add a short summary about your property."/>
             </label>
             <>
-                {summary ? summary.split(/\s+/).filter(Boolean).length : 0} / 50 words
+                {propertyDetails.summary ? propertyDetails.summary.split(/\s+/).filter(Boolean).length : 0} / 50 words
             </>
             <br />
             <label>
@@ -202,13 +209,13 @@ function DashboardPropertyAdd () {
                 <textarea onChange= {(e) => {
                     const detailwords = e.target.value.split(/\s+/).filter(Boolean); 
                     if (detailwords.length <= 250) {
-                        setDetail(e.target.value)
+                        setPropertyDetails({...propertyDetails, detail: e.target.value})
                     }
                 }}
-                value={detail} placeholder="Add a detailed description of your property."/>
+                value={propertyDetails.detail} placeholder="Add a detailed description of your property."/>
             </label>
             <>
-                {detail ? detail.split(/\s+/).filter(Boolean).length : 0} / 250 words
+                {propertyDetails.detail ? propertyDetails.detail.split(/\s+/).filter(Boolean).length : 0} / 250 words
             </>
 
             <h4>Step 2: Upload 5 to 10 photos.</h4>

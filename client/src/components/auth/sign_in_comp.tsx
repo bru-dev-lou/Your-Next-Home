@@ -3,13 +3,13 @@ import { useNavigate } from "react-router-dom";
 
 import { useUser } from "../../context/user_context";
 
-type userData = {
+type UserData = {
     username: string;
     password: string;
 }
 
 function SignIn () {
-    const [ data, setData ] = useState<userData>({username: "", password: ""})
+    const [ data, setData ] = useState<UserData>({username: "", password: ""})
     const [ errorMessage, setErrorMessage ] = useState(""); 
     
     const navigate = useNavigate(); 

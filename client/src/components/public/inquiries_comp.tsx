@@ -10,6 +10,7 @@ type inquiryData = {
 
 function Inquiries () {
     const [ data, setData ] = useState<inquiryData>({name: "", email: "", propID: undefined, messageTopic: "", message: ""}); 
+
     const [ errorMessage, setErrorMessage ] = useState(""); 
     const [ successMessage, setSuccessMessage ] = useState(""); 
 
@@ -90,27 +91,15 @@ function Inquiries () {
                     />
                 <br />
                 <label> Property ID: </label>
-                    {data.propID == 0 ?
                         <input
                             type="number"
-                            value={""}
+                            value= {data.propID || ""}
                             onChange={(e) => [
                                 setData({...data, propID: Number(e.target.value)}),
                                 setErrorMessage(""),
                                 setSuccessMessage("")
                             ]}
                         />
-                        :
-                            <input
-                                type="number" 
-                                value={data.propID}
-                                onChange={(e) => [
-                                    setData({...data, propID: Number(e.target.value)}),
-                                    setErrorMessage(""),
-                                    setSuccessMessage("")
-                                ]}
-                            />
-                        }
                 <br />
                 <button type="submit">Submit Inquiry</button>
             </form>

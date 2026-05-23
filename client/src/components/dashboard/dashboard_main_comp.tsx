@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-type properties ={
+type UserProperties ={
         id: number;
         type: string;
         city: string;
@@ -15,19 +15,19 @@ type properties ={
         photo_path: string;
 };
     
-type user = {
+type UserDetails = {
         name: string;
 };
 
-type dashboardData = {
-        user: user;
-        properties: properties[];
+type DashboardData = {
+        user: UserDetails;
+        properties: UserProperties[];
     };
 
 function DashboardMain() {
     const navigate = useNavigate();
 
-    const [ data, setData ] = useState<dashboardData | null>(null);
+    const [ data, setData ] = useState<DashboardData | null>(null);
     const [ deleteIDConfirmed, setDeleteIDConfirmed ] = useState<number | null>(null); 
 
     const [ fetchPropertyMessage, setFetchPropertyMessage ] = useState(""); 
@@ -142,7 +142,7 @@ function DashboardMain() {
                     {deletePropertyMessage && <h3>{deletePropertyMessage}</h3>}
                     {data.properties.length > 0 ? (
                         <ul style={{ listStyle: "none", padding: 0, margin: 0 }}>
-                            {data.properties.map((property: properties) => (
+                            {data.properties.map((property: UserProperties) => (
                                 <li key={property.id}>
                                     <img src={property.photo_path} alt="Property Main Image" style={{ width: "800px", height: "550px" }}/>
                                     <p><strong>Summary</strong></p>

@@ -22,7 +22,7 @@ function PropertySearchPage () {
   const navigate = useNavigate(); 
 
   const city = params.get("city") || ""; 
-  const type = params.get("type") || ""
+  const type = params.get("type") || "";
   const maxPrice = params.get("maxPrice") || "";
   const minBeds = params.get("minBeds") || "";
   const minBaths = params.get("minBaths") || "";
@@ -42,7 +42,8 @@ function PropertySearchPage () {
     const fetchPropertyResults = async () => {
       
       try{
-        const res = await fetch(`/api/search?city=${city}&type=${type}&maxPrice=${maxPrice}&minBeds=${minBeds}&minBaths=${minBaths}&furniture=${furniture}`);
+        const res = await fetch(`/api/search?city=${city}&type=${type}&furniture=${furniture}&minBeds=${minBeds}&minBaths=${minBaths}&maxPrice=${maxPrice}`);
+
         const data = await res.json();
         if (!res.ok) {
           setErrorMessagePR(data.error);

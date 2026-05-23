@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-type userData = {
+type NewUserData = {
     username: string;
     name: string;
     address: string;
@@ -12,7 +12,7 @@ type userData = {
 }
 
 function SignUp () {
-    const [ data, setData ] = useState<userData>({username: "", name: "", address: "", number: "", email: "", password: "", confirmPass: ""});
+    const [ data, setData ] = useState<NewUserData>({username: "", name: "", address: "", number: "", email: "", password: "", confirmPass: ""});
     const [ errorMessage, setErrorMessage ] = useState("");
     const [ successMessage, setSuccessMessage ] = useState(""); 
 
