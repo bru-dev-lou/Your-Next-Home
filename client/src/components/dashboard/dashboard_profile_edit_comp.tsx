@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useUser } from "../../context/user_context";
 
 type UserPublicData = {
     name: string;
@@ -21,6 +22,7 @@ type UserAccountDeleteData = {
 
 function DashboardProfileEdit () {
     const navigate = useNavigate();
+    const { setUser } = useUser();
 
     const [ originalUserPublicDetails, setOriginalUserPublicDetails] = useState<UserPublicData>({name: "", address: "", phone_number: "", email: "", password: ""}); 
     const [ userPublicDetails, setUserPublicDetails ] = useState<UserPublicData>({name: "", address: "", phone_number: "", email: "", password: ""}); 
@@ -187,6 +189,7 @@ function DashboardProfileEdit () {
 
             if (res.ok) {
                 setAccountDeleted(true); 
+                setUser(null);
                 setTimeout (() => {
                     navigate("/");
                 }, 7000);
