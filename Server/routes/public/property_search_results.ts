@@ -30,6 +30,11 @@ router.get("/", (req, res) => {
     const minBaths = Number(req.query.minBaths) || values.minBaths;
     const maxPrice = Number(req.query.maxPrice) || values.maxPrice;
 
+    const options: Record<string, string> = {highestprice: "price DESC", lowestprice: "price ASC", date: "date_listed"};
+    let sortBy = req.query.sortBy as string || "date";
+    if (!(sortBy in options)) {
+        sortBy = "date";
+    } 
 
     try {
         const data = db.prepare(`
@@ -44,15 +49,16 @@ router.get("/", (req, res) => {
             AND no_bedrooms >= ? 
             AND no_bathrooms >= ? 
             AND furniture LIKE ?
+            ORDER BY ${options[sortBy]}
             `).all(
             `%${city}%`, 
             `%${type}%`, 
             maxPrice, 
             minBeds, 
             minBaths, 
-            `%${furniture}%`
-        ); 
-    
+            `%${furniture}%`, 
+            )
+            
         if (data.length === 0) {
             return  res.status(200).json({message: "No properties found matching your search criteria, please try adjusting your fitlers."});
         }
@@ -60,6 +66,7 @@ router.get("/", (req, res) => {
         else {
             return res.status(200).json(data);       
         }
+        
     }
     
     catch(error) {

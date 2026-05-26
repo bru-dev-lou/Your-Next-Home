@@ -31,9 +31,14 @@ function MainNavigationBar (){
             const res = await fetch("/api/signOut/", {
                 method: "DELETE" 
             })
+            
+            // delay on setUser to allow navigation to Homepage instead of 401 status returning from route_protection 
 
             if (res.ok){
-                setUser(null); 
+                setTimeout(function(){
+                setUser(null);
+                }, 50);
+
                 navigate("/");
             }
         }

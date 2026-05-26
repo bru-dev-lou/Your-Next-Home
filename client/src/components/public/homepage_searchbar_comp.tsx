@@ -5,7 +5,9 @@ function HomePageSearchBar() {
     const [autoCompleteQuery, setAutoCompleteQuery] = useState("");
     const [cities, setCities] = useState<{ city: string }[]>([]);
     const [maxPrice, setMaxPrice] = useState(10000);
+    
     const navigate = useNavigate();
+    
 
     // Error Message → AC = Auto Complete 
 

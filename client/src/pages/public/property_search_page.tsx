@@ -27,6 +27,7 @@ function PropertySearchPage () {
   const minBeds = params.get("minBeds") || "";
   const minBaths = params.get("minBaths") || "";
   const furniture = params.get("furniture") || "";
+  const sortByValue = params.get("sortBy") || "";
 
   const [propertyResults, setPropertyResults] = useState<Property[]>([]);
   const [propFavorite, setPropFavorite] = useState<Set<number>>(new Set());
@@ -42,7 +43,7 @@ function PropertySearchPage () {
     const fetchPropertyResults = async () => {
       
       try{
-        const res = await fetch(`/api/search?city=${city}&type=${type}&furniture=${furniture}&minBeds=${minBeds}&minBaths=${minBaths}&maxPrice=${maxPrice}`);
+        const res = await fetch(`/api/search?city=${city}&type=${type}&furniture=${furniture}&minBeds=${minBeds}&minBaths=${minBaths}&maxPrice=${maxPrice}&sortBy=${sortByValue}`);
 
         const data = await res.json();
         if (!res.ok) {
@@ -58,7 +59,13 @@ function PropertySearchPage () {
 
         else {
           setErrorMessagePR("");
-          setIntroMessage(`Properties avaliable for rent in ${city}:`);
+          if (!city) {
+            setIntroMessage(`Properties avaliable for rent in England:`);
+          }
+
+          else {
+            setIntroMessage(`Properties available for rent in ${city}:`);
+          }
           setPropertyResults(data); 
         }
       }
@@ -70,7 +77,7 @@ function PropertySearchPage () {
     
     fetchPropertyResults();
     
-  }, [city, type, maxPrice, minBeds, minBaths, furniture]);
+  }, [city, type, maxPrice, minBeds, minBaths, furniture, sortByValue]);
 
   useEffect (() => {
     const fetchFavorites = async () => {
@@ -97,6 +104,10 @@ function PropertySearchPage () {
     }
       fetchFavorites();
   }, []);
+
+  function orderResults (filterValue : string) {
+    navigate(`/search?city=${city}&type=${type}&furniture=${furniture}&minBeds=${minBeds}&minBaths=${minBaths}&maxPrice=${maxPrice}&sortBy=${filterValue}`);
+  } 
 
   async function addToFavorites (propID : number) {
     const updateSet = new Set(propFavorite); 
@@ -163,7 +174,16 @@ function PropertySearchPage () {
 
   return (
     <div>
-      <PropertySearchPageSearchBar />
+      <PropertySearchPageSearchBar sortBy={sortByValue} />
+      <select 
+        onChange = { (e) => orderResults(e.target.value)}
+        value = {sortByValue} 
+        >
+        <option value = ""> Sort By</option>
+        <option value = "date">Date</option>
+        <option value = "highestprice">Highest Price</option>
+        <option value = "lowestprice">Lowest Price</option>
+      </select>
       {errorMessagePR ?
         <h4>{errorMessagePR}</h4>
       :
