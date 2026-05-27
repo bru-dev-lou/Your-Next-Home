@@ -38,7 +38,15 @@ router.get("/", (req, res) => {
 
     try {
         const data = db.prepare(`
-            SELECT property_list.*, property_photos.photo_path 
+            SELECT property_list.id,
+            property_list.city,
+            property_list.price, 
+            property_photos.photo_path,
+            property_list.summary,
+            property_list.date_listed,
+            property_list.type,
+            property_list.no_bedrooms,
+            property_list.no_bathrooms 
             FROM property_list 
             LEFT JOIN property_photos 
             ON property_photos.property_id = property_list.id

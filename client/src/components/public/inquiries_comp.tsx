@@ -3,7 +3,7 @@ import { useState } from "react";
 type inquiryData = {
     name: string;
     email: string;
-    propID?: number;
+    propID?: string;
     messageTopic: string;
     message: string;
 }
@@ -36,6 +36,10 @@ function Inquiries () {
             else {
                 setSuccessMessage(result.message);
                 setErrorMessage(""); 
+                setData({name: "", email: "", propID: undefined, messageTopic: "", message: ""});
+                setTimeout(function() {
+                    setSuccessMessage("");
+                }, 4000);
             }
         } 
     
@@ -73,29 +77,39 @@ function Inquiries () {
                     <input
                         type="text"
                         value={data.messageTopic}
-                        onChange={(e) => [
+                        onChange={(e) => {
+                            const topicWords = e.target.value.split(/\s+/).filter(Boolean); 
+                            if (topicWords.length <= 25) { 
                             setData({...data, messageTopic: e.target.value}),
                             setErrorMessage(""),
                             setSuccessMessage("")
-                        ]}
+                        }}}
                     />
+                <>
+                    {data.messageTopic ? <>{data.messageTopic.split(/\s+/).filter(Boolean).length}</> : <>0</>} <>/ 25 </>
+                </>
                 <br />
                 <label> Message: </label>
                     <textarea
                         value={data.message}
-                        onChange={(e) => [
+                        onChange={(e) => {
+                            const messageWords = e.target.value.split(/\s+/).filter(Boolean);
+                            if (messageWords.length <= 250) {
                             setData({...data, message: e.target.value}),
                             setErrorMessage(""),
                             setSuccessMessage("")
-                        ]}
+                            }}}
                     />
+                <>
+                    {data.message ?<>{data.message.split(/\s+/).filter(Boolean).length}</> : <>0</>} <>/ 250 </>
+                </>
                 <br />
                 <label> Property ID: </label>
                         <input
-                            type="number"
-                            value= {data.propID || ""}
+                            type="text"
+                            value= {data.propID || "PROP0000"}
                             onChange={(e) => [
-                                setData({...data, propID: Number(e.target.value)}),
+                                setData({...data, propID: e.target.value}),
                                 setErrorMessage(""),
                                 setSuccessMessage("")
                             ]}

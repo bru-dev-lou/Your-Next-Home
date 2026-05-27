@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 
-type PropertyDetail = {
+type PropertyDetails = {
     id: number;
     city: string;
     price: number;
@@ -11,17 +11,25 @@ type PropertyDetail = {
     detail: string;
 }
 
+type OwnerDetails = {
+    name: string; 
+    address: string;
+    phone_number: number;
+}
+
 function DetailedPropertyPage () {
     const {propID} = useParams();
 
-    const [ property, setProperty ] = useState<PropertyDetail | null>(null);
+    const [ property, setProperty ] = useState<PropertyDetails | null>(null);
+    const [ owner, setOwner ] = useState<OwnerDetails | null>(null);
+
     const [ propFavorite, setPropFavorite ] = useState<Set<number>>(new Set());
 
     const [ errorMessageFP,  setErrorMessageFP] = useState(""); 
     const [ errorMessageFavorites, setErrorMessageFavorites ] = useState("");
 
     useEffect (() => {
-        const fetchProperty = async () => {
+        const fetchData = async () => {
             try {
                 const res = await fetch(`/api/property/${propID}`);
                 const result = await res.json(); 
@@ -31,7 +39,8 @@ function DetailedPropertyPage () {
                 }
 
                 else {
-                    setProperty(result);
+                    setProperty(result.propertyData);
+                    setOwner(result.ownerData);
                 }
             }
 
@@ -40,7 +49,7 @@ function DetailedPropertyPage () {
             }
         }
         
-        fetchProperty();
+        fetchData();
 
     }, [propID]); 
 
@@ -156,6 +165,14 @@ function DetailedPropertyPage () {
                     <p>{property.date_listed}</p>
                 </div>
             )}
+            <br />
+            {owner && (
+                <div>
+                    <p>{owner!.name}</p>
+                    <p>{owner!.address}</p>
+                    <p>{owner!.phone_number}</p>
+                </div>
+            )}        
         </div>
     )
 };

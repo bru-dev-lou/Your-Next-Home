@@ -36,13 +36,24 @@ router.get("/:propID", (req, res) => {
 
         const {photo_path, ...propertyData} = propertyDetails[0];
 
-        const data = {...propertyData,
+        const propData = {...propertyData,
             photos: propertyDetails
                 .map(detail => detail.photo_path)
                 .filter(Boolean)
         }; 
         
-        res.status(200).json(data);
+        const ownerDetails = db.prepare(`
+            SELECT property_owners.name, property_owners.address, property_owners.phone_number
+            FROM property_owners
+            INNER JOIN property_list
+            ON property_owners.id = property_list.owner_id
+            WHERE property_list.id = ?`).get(propID);
+        
+        if (!ownerDetails) {
+            return res.status(404).json({error: `Owner details for property PROP${propID} are missing. The page cannot be loaded.`})
+        }
+
+        res.status(200).json({propertyData: propData, ownerData: ownerDetails});
     }
     
     catch(error) {

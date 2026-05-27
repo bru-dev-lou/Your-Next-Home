@@ -196,7 +196,7 @@ function DashboardPropertyAdd () {
                         const summaryWords = e.target.value.split(/\s+/).filter(Boolean);
                         if (summaryWords.length <= 50) {
                             setPropertyDetails({...propertyDetails, summary: e.target.value})
-                        }
+                        } 
                     }}
                     value={propertyDetails.summary} placeholder="Add a short summary about your property."/>
             </label>

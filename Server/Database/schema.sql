@@ -48,6 +48,7 @@ CREATE TABLE IF NOT EXISTS inquiries (
     email TEXT NOT NULL,
     property_id TEXT DEFAULT 'PROP0000',
     message_topic TEXT NOT NULL,
-    message TEXT NOT NULL
+    message TEXT NOT NULL,
+    date_added TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 

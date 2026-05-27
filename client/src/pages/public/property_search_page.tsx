@@ -4,17 +4,15 @@ import { useSearchParams, useNavigate } from "react-router-dom";
 import PropertySearchPageSearchBar from "../../components/public/property_search_page_searchbar_comp";
 
 type Property = { 
-  id : number; 
-  city : string; 
-  type :  string;
-  price : number; 
-  no_bedrooms : number;
-  no_bathrooms : number;
-  size : number;
-  furniture: string;
-  summary : string;
-  date_listed :  string;
-  photo_path : string;
+  id: number; 
+  city: string; 
+  price: number;   
+  photo_path: string;
+  summary: string;
+  date_listed: string;
+  type:  string;
+  no_bedrooms: number;
+  no_bathrooms: number; 
 }
 
 function PropertySearchPage () {
@@ -168,7 +166,7 @@ function PropertySearchPage () {
     }
   }
 
-  const propertyDetailResult = (propID : number) => {
+  const propertyDetailedResult = (propID : number) => {
     navigate(`/property/${propID}`)
   }
 
@@ -191,18 +189,21 @@ function PropertySearchPage () {
       }       
       {propertyResults.map(result => (
         <div id = "propertyCard" key = {result.id}> 
-          <img onClick={ () => propertyDetailResult(result.id)} id = "propertyMainPhoto" src = {result.photo_path} />
+          <p id = "propertyCity">{result.city}</p>
+          <p>£{result.price.toLocaleString()} pcm</p>
+          <img onClick={ () => propertyDetailedResult(result.id)} id = "propertyMainPhoto" src = {result.photo_path} />
+          <br />
           {propFavorite.has(result.id) ?
             <button onClick={ () => removeFromFavorites(result.id)}> Remove from favorites </button>
             :
             <button onClick={ () => addToFavorites(result.id)}> Add to favorites </button>
           }
           {errorMessageFP && <h4>{errorMessageFP}</h4>}
-          <p id = "propertyCity">{result.city}</p>
-          <p id = "propertyPrice">  £{result.price}</p>
           <p id = "propertySummary"> {result.summary}</p>
           <p id = "propertyDateListed"> {result.date_listed} </p>
-          <p> PROP{result.id}</p> 
+          <p>{result.type}</p>
+          <p>{result.no_bedrooms}</p>
+          <p>{result.no_bathrooms}</p>
         </div>
       ))}
     </div>

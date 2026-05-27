@@ -20,6 +20,14 @@ router.post("/", (req, res) => {
     }
     
     try {
+        if (messageTopic.split(/\s+/).filter(Boolean).length > 25) {
+            return res.status(400).json({ error: "Please keep your message topic to 25 words or less." });
+        }
+
+        if (message.split(/\s+/).filter(Boolean).length > 250) {
+            return res.status(400).json({ error: "Please keep your message to 250 words or less." });
+        }
+
         const inquiryFull = "INSERT INTO inquiries (name, email, property_id, message_topic, message) VALUES (?, ?, ?, ?, ?)";
         const inquiryPartial = "INSERT INTO inquiries (name, email, message_topic, message) VALUES (?, ?, ?, ?)";
 
