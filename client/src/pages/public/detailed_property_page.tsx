@@ -3,13 +3,17 @@ import { useParams } from "react-router-dom";
 
 type PropertyDetails = {
     id: number;
+    type: string;
     city: string;
     price: number;
-    summary: string;
+    no_bedrooms: number;
+    no_bathrooms: number;
+    size: number;
+    furniture: string;
     date_listed: string;
-    photos: string[]; 
     detail: string;
-}
+    photos: string[]; 
+};
 
 type OwnerDetails = {
     name: string; 
@@ -150,6 +154,9 @@ function DetailedPropertyPage () {
         <div>
             {property && (
                 <div key ={property.id}>
+                    <p>{property.city}</p>
+                    <p>£{property.price.toLocaleString()} pcm</p>
+                    <p>Date Listed: {new Date(property.date_listed).toLocaleDateString("en-GB")}</p>
                     {property.photos.map((photo, index) => (
                     <img key={index} src={photo} />
                     ))}
@@ -159,10 +166,11 @@ function DetailedPropertyPage () {
                         <button onClick={ () => addToFavorites(property.id)}> Add to favorites </button>
                     }                       
                     {errorMessageFavorites && <h4>{errorMessageFavorites}</h4>}
-                    <p>{property.city}</p>
-                    <p>£{property.price}</p>
+                    <p>Property Type: {property.type}</p>
+                    <p>Bedrooms: {property.no_bedrooms}</p>
+                    <p>Bathrooms: {property.no_bathrooms}</p>
+                    <p>Size: {property.size} m²</p>
                     <p>{property.detail}</p>
-                    <p>{property.date_listed}</p>
                 </div>
             )}
             <br />

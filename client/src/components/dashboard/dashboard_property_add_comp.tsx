@@ -1,4 +1,4 @@
-import {useState} from "react";
+import {useEffect, useState} from "react";
 import {useNavigate} from "react-router-dom";
 
 type PropertyData = {
@@ -21,6 +21,14 @@ type PropertyPhotos = {
 function DashboardPropertyAdd () {
     const navigate = useNavigate();
 
+    const [ autoCompleteQueries, setAutoCompleteQueries ] = useState<{city: string}[]>([]);
+    const [ autoCompleteQueryClicked, setAutoCompleteQueryClicked ] = useState(false); 
+
+    // Error Message → AC = Auto Complete 
+
+    const [ errorMessageAC, setErrorMessageAC ] = useState(""); 
+
+
     const [ propertyDetails, setPropertyDetails ] = useState<PropertyData>({type: "", city: "", price: 0, bedrooms: 0, bathrooms: 0, size: 0, furniture: "", summary: "", detail: ""});
     const [ tempURLs, setTempURLs ] = useState<PropertyPhotos[]>([]);
 
@@ -30,7 +38,46 @@ function DashboardPropertyAdd () {
 
     const [ uploading, setUploading ] = useState(false);
 
+    
+
+    useEffect(() => {
+        const fetchAutoComplete = async () => {
+            try {
   
+                const res = await fetch(`/api/cities?city=${propertyDetails.city}`);
+                const result = await res.json();
+  
+                if (!res.ok) {
+                    setAutoCompleteQueries([]);
+                    setErrorMessageAC(result.error) 
+                }
+  
+                else if(propertyDetails.city.length === 0) {
+                    setAutoCompleteQueries([]);
+                    setErrorMessageAC("");
+                }
+  
+                else {
+                    setAutoCompleteQueries(result.cities);
+                    setErrorMessageAC("");
+                }
+            }
+  
+            catch(error) {
+                setErrorMessageAC("AutoComplete feature currently unavailable.")
+            }
+        }
+          
+          if (autoCompleteQueryClicked) {
+              return;
+          }
+  
+          setTimeout(() => {
+              fetchAutoComplete();
+          }, 250);
+      
+          
+      }, [propertyDetails.city, autoCompleteQueryClicked]);
 
     async function addPropertyData (e: React.MouseEvent<HTMLButtonElement>) {
         e.preventDefault();
@@ -126,10 +173,30 @@ function DashboardPropertyAdd () {
             <label>
                 City: 
                     <input 
-                        onChange={(e) => setPropertyDetails({...propertyDetails, city: e.target.value})}
+                        onChange={(e) => {
+                            setPropertyDetails({...propertyDetails, city: e.target.value}),
+                            setAutoCompleteQueryClicked(false)}}
                         value={propertyDetails.city}
                     />
             </label>
+            <ul> 
+                {errorMessageAC ? 
+                        errorMessageAC 
+                    : 
+                        autoCompleteQueries.map((query, index) => (
+                        <li 
+                            key={index}
+                            onClick = {() => {
+                                setPropertyDetails({...propertyDetails, city: query.city}),
+                                setAutoCompleteQueries([]),
+                                setAutoCompleteQueryClicked(true)}}
+                                style = {{ cursor: "pointer"}}
+                            >
+                            {query.city}
+                        </li>
+                    ))
+                }
+            </ul>
             <br />
             <label>
                 Type:
@@ -196,7 +263,7 @@ function DashboardPropertyAdd () {
                         const summaryWords = e.target.value.split(/\s+/).filter(Boolean);
                         if (summaryWords.length <= 50) {
                             setPropertyDetails({...propertyDetails, summary: e.target.value})
-                        } 
+                        }
                     }}
                     value={propertyDetails.summary} placeholder="Add a short summary about your property."/>
             </label>

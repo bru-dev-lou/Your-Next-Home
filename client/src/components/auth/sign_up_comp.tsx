@@ -56,21 +56,23 @@ function SignUp () {
 return (
     <div>
         <form onSubmit={createAccount}>
-            <label> Username: </label>
+            <label htmlFor="username"> Username: </label>
                 <input 
+                    id="username"
                     type="text"
                     value={data.username}
                     onChange={(e) => setData({...data, username: e.target.value})}
+                    aria-describedby="usernameHint"
                 />
             <br></br>
-            <label> Name: </label>
+            <label htmlFor= "name"> Name: </label>
                 <input
                     type="text"
                     value={data.name}
                     onChange= {(e) => setData({...data, name: e.target.value})}
                 />
             <br></br>
-            <label> Address: </label>
+            <label htmlFor="address"> Address: </label>
                 <input 
                     type= "text"
                     value={data.address}

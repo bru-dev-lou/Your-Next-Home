@@ -2,8 +2,11 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 function HomePageSearchBar() {
-    const [autoCompleteQuery, setAutoCompleteQuery] = useState("");
-    const [cities, setCities] = useState<{ city: string }[]>([]);
+    const [autoCompleteQueries, setAutoCompleteQueries] = useState<{city: string}[]>([]);
+    const [autoCompleteQueryClicked, setAutoCompleteQueryClicked] = useState(false); 
+
+
+    const [city, setCity] = useState("");
     const [maxPrice, setMaxPrice] = useState(10000);
     
     const navigate = useNavigate();
@@ -14,23 +17,24 @@ function HomePageSearchBar() {
     const [errorMessageAC, setErrorMessageAC] = useState(""); 
 
     useEffect(() => {
-        const fetchCity = async () => {
+        const fetchAutoComplete = async () => {
             try {
-                const res = await fetch(`/api/cities?city=${autoCompleteQuery}`);
+
+                const res = await fetch(`/api/cities?city=${city}`);
                 const result = await res.json();
 
                 if (!res.ok) {
-                    setCities([]);
+                    setAutoCompleteQueries([]);
                     setErrorMessageAC(result.error) 
                 }
 
-                else if(autoCompleteQuery.length === 0) {
-                    setCities([]);
+                else if(city.length === 0) {
+                    setAutoCompleteQueries([]);
                     setErrorMessageAC("");
                 }
 
                 else {
-                    setCities(result.cities);
+                    setAutoCompleteQueries(result.cities);
                     setErrorMessageAC("");
                 }
             }
@@ -39,32 +43,38 @@ function HomePageSearchBar() {
                 setErrorMessageAC("AutoComplete feature currently unavailable.")
             }
         }
-            
-        const timeout = setTimeout(() => {
-            fetchCity();
+        
+        if (autoCompleteQueryClicked) {
+            return;
+        }
+
+        setTimeout(() => {
+            fetchAutoComplete();
         }, 250);
     
-        return () => clearTimeout(timeout);
         
-    }, [autoCompleteQuery]);
+    }, [city, autoCompleteQueryClicked]);
         
 
     const propertySearch = (e:React.SubmitEvent<HTMLFormElement>) => {
         e.preventDefault();
-        navigate(`/search?city=${autoCompleteQuery}&maxPrice=${maxPrice}`);
+        navigate(`/search?city=${city}&maxPrice=${maxPrice}`);
     };
 
     return (
         <div>
             <form onSubmit={propertySearch}>
-            <label htmlFor = "citySelectHomePage">Location</label>
+            <label htmlFor = "citySelectHomePage"> Location: </label>
                 <input
                     id = "citySelectHomePage"
                     name="city"
                     type="text"
                     placeholder = "London"
-                    value={autoCompleteQuery}
-                    onChange={(e) => setAutoCompleteQuery(e.target.value)}
+                    value= {city}
+                    onChange={(e) => {
+                        setCity(e.target.value),
+                        setAutoCompleteQueryClicked(false)
+                        }}
                 />
             <label htmlFor= "maxPriceHomePage"> Max Price </label>
             <select 
@@ -89,18 +99,24 @@ function HomePageSearchBar() {
             </select>
             <button type="submit"> Search </button>
             </form>
-            <ul>
-                {cities.map((city, index) => (
-                    <li 
-                        key={index}
-                        onClick = {() => setAutoCompleteQuery(city.city)}
-                        style = {{ cursor: "pointer"}}
-                        >
-                        {city.city}
-                    </li>
-                ))}
+            <ul> 
+                {errorMessageAC ? 
+                        errorMessageAC 
+                    : 
+                        autoCompleteQueries.map((query, index) => (
+                        <li 
+                            key={index}
+                            onClick = {() => {
+                                setCity(query.city),
+                                setAutoCompleteQueries([]),
+                                setAutoCompleteQueryClicked(true)}}
+                                style = {{ cursor: "pointer"}}
+                            >
+                            {query.city}
+                        </li>
+                    ))
+                }
             </ul>
-            {errorMessageAC && <h3>{errorMessageAC}</h3>}
         </div>
     );
 }

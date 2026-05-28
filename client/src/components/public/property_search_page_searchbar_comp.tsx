@@ -1,5 +1,5 @@
-import { useState } from "react"; 
-import { useNavigate } from "react-router-dom"; 
+import { useEffect, useState } from "react"; 
+import { useSearchParams, useNavigate } from "react-router-dom"; 
 
 
 type PropertyData = {
@@ -16,10 +16,56 @@ type FilterValue = {
 }
 
 function PropertySearchPageSearchBar ({sortBy} : FilterValue) {
-    const [ propData, setPropData ] = useState<PropertyData>({city: "", type: "", furniture: "", minBeds: 0, minBaths: 0, maxPrice: 100000});
+    const navigate = useNavigate();     
+    const [ params ] = useSearchParams();
     
-    const navigate = useNavigate(); 
+    const cityDefault = params.get("city") || "";
+    const [ propData, setPropData ] = useState<PropertyData>({city: cityDefault, type: "", furniture: "", minBeds: 0, minBaths: 0, maxPrice: 100000});
+  
+    const [ autoCompleteQueries, setAutoCompleteQueries ] = useState<{city: string}[]>([]);
+    const [ autoCompleteQueryClicked, setAutoCompleteQueryClicked ] = useState(false); 
 
+    // Error Message → AC = Auto Complete 
+
+    const [ errorMessageAC, setErrorMessageAC ] = useState(""); 
+
+    useEffect(() => {
+        const fetchAutoComplete = async () => {
+            try {
+  
+                const res = await fetch(`/api/cities?city=${propData.city}`);
+                const result = await res.json();
+  
+                if (!res.ok) {
+                    setAutoCompleteQueries([]);
+                    setErrorMessageAC(result.error) 
+                }
+  
+                else if(propData.city.length === 0) {
+                    setAutoCompleteQueries([]);
+                    setErrorMessageAC("");
+                }
+  
+                else {
+                    setAutoCompleteQueries(result.cities);
+                    setErrorMessageAC("");
+                }
+            }
+  
+            catch(error) {
+                setErrorMessageAC("AutoComplete feature currently unavailable.")
+            }
+        }
+          
+        if (autoCompleteQueryClicked) {
+            return;
+        }
+  
+        setTimeout(() => {
+            fetchAutoComplete();
+        }, 250);
+        
+    }, [propData.city, autoCompleteQueryClicked]);
 
     const buttonSearch = (e: React.SubmitEvent<HTMLFormElement>) => {
         e.preventDefault();
@@ -29,15 +75,35 @@ function PropertySearchPageSearchBar ({sortBy} : FilterValue) {
     return (
         <div>
             <form onSubmit={buttonSearch} method="get">
-                <label htmlFor = "citySelect">Enter a location</label>
-                     <input 
+                <label htmlFor = "citySelect"> Location: </label>
+                    <input 
                         name = "city"
                         type = "text"
                         placeholder = "Enter your preferred location" 
                         value = {propData.city}
-                        onChange = {(e) => setPropData({...propData, city: e.target.value})}  
+                        onChange = {(e) => {
+                            setPropData({...propData, city: e.target.value})
+                            setAutoCompleteQueryClicked(false)}}  
                     />
-                <label htmlFor = "propertyType">Property Type</label>
+            <ul> 
+                {errorMessageAC ? 
+                        errorMessageAC 
+                    : 
+                        autoCompleteQueries.map((query, index) => (
+                        <li 
+                            key={index}
+                            onClick = {() => {
+                                setPropData({...propData, city: query.city}),
+                                setAutoCompleteQueries([]),
+                                setAutoCompleteQueryClicked(true)}}
+                                style = {{ cursor: "pointer"}}
+                            >
+                            {query.city}
+                        </li>
+                    ))
+                }
+            </ul>
+                <label htmlFor = "propertyType"> Property Type: </label>
                     <select 
                         onChange = {(e) => setPropData({...propData, type: e.target.value})}
                     >
@@ -48,11 +114,11 @@ function PropertySearchPageSearchBar ({sortBy} : FilterValue) {
                         <option value='Detached'>Detached</option>
                         <option value='Bungalow'>Bungalow</option>
                     </select>            
-                <label htmlFor = "maxPrice"> Max Price</label>
+                <label htmlFor = "maxPrice"> Max Price: </label>
                     <select 
                         onChange = {(e) => setPropData({...propData, maxPrice: (Number(e.target.value))})}
                         >
-                            <option value = {10000}> No max </option>
+                            <option value = {10000}> No Max </option>
                             <option value = "500"> $500 PCM </option>
                             <option value = "600"> $600 PCM </option>
                             <option value = "700"> $700 PCM </option>
@@ -71,29 +137,29 @@ function PropertySearchPageSearchBar ({sortBy} : FilterValue) {
                             <option value = "2000"> $2,000 PCM </option>
                     </select>
                 <br></br>
-                <label htmlFor = "minBedrooms">No. of Bedrooms</label>
+                <label htmlFor = "minBedrooms"> Bedrooms: </label>
                     <select
                         onChange={(e) => setPropData({...propData, minBeds: (Number(e.target.value))})}
                         >
-                            <option value= {0}>No min</option>
+                            <option value= {0}>No Min</option>
                             <option value='1'>1</option>
                             <option value='2'>2</option>
                             <option value='3'>3</option>
                             <option value='4'>4</option>
                             <option value='5'>5</option>
                     </select>
-                <label htmlFor = "minBathrooms">No. of Bathrooms</label>
+                <label htmlFor = "minBathrooms"> Bathrooms: </label>
                     <select
                         onChange={(e) => setPropData({...propData, minBaths: (Number(e.target.value))})}
                         >
-                            <option value= {0}>No min</option>
+                            <option value= {0}>No Min</option>
                             <option value='1'>1</option>
                             <option value='2'>2</option>
                             <option value='3'>3</option>
                             <option value='4'>4</option>
                             <option value='5'>5</option>
                     </select>
-                <label htmlFor = "Furniture">Furnishing</label>
+                <label htmlFor = "Furniture"> Furnishing: </label>
                 <select 
                     onChange={(e) => setPropData({...propData, furniture: e.target.value})}
                     >

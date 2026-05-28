@@ -200,7 +200,7 @@ function PropertySearchPage () {
           }
           {errorMessageFP && <h4>{errorMessageFP}</h4>}
           <p id = "propertySummary"> {result.summary}</p>
-          <p id = "propertyDateListed"> {result.date_listed} </p>
+          <p id = "propertyDateListed">Date Listed: {new Date(result.date_listed).toLocaleDateString("en-GB")} </p>
           <p>{result.type}</p>
           <p>{result.no_bedrooms}</p>
           <p>{result.no_bathrooms}</p>
