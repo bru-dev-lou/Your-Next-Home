@@ -1,31 +1,15 @@
-import { useState, useEffect } from "react"; 
+import { useState } from "react"; 
 import { Link, useNavigate } from "react-router-dom";
 import { useUser } from "../../context/user_context";
+
 
 function MainNavigationBar (){
     const [ errorMessage, setErrorMessage ] = useState(""); 
     const { user, setUser } = useUser();
     const navigate = useNavigate();
 
-    useEffect (() => {
-        const fetchUserData = async () => {
-            try {
-                const res = await fetch("/api/userCheck");
-                const result = await res.json(); 
-            
-                if (res.ok) {
-                    setUser(result.userData);
-                }
-            }
-            catch (error) {
-            // silent fail - user will see the 'Sign in' link. 
-            }
-        }
-        fetchUserData()
-    }, []);
 
-    async function signUserOut (e:React.MouseEvent<HTMLButtonElement>) {
-        e.preventDefault(); 
+    async function signUserOut () {
         
         try {
             const res = await fetch("/api/signOut/", {
@@ -48,19 +32,55 @@ function MainNavigationBar (){
         }
     }
 
+    async function userNavigation (e: React.ChangeEvent<HTMLSelectElement>) {
+        e.preventDefault();
+
+        if (e.target.value === "My Properties") {
+            navigate("/dashboard")
+        }
+
+        if (e.target.value === "My Profile") {
+            navigate("/dashboard/profile/edit")
+        }
+
+        if (e.target.value === "Favorite Properties") {
+            navigate("/dashboard/property/favorites")
+        }
+
+        if (e.target.value === "Sign Out") {
+            signUserOut();
+        } 
+    }
+
     return (
-        <nav>
-            <header>
-                <Link to="/">Home</Link>
-                <Link to="/search">Rent</Link>
-                <Link to="/inquiries">Contact Us</Link>
-                {!user ? <Link to="/signIn">Sign In</Link>
-                :
-                <button onClick = {signUserOut}>Sign Out</button>
-                }
-            </header>
-            {errorMessage && <h3>{errorMessage}</h3>}
-        </nav>
+        <div>
+            <span>
+                <nav>
+                    <header>
+                        <Link to="/">Home</Link>
+                        <Link to="/search">Rent</Link>
+                        <Link to="/inquiries">Contact Us</Link>
+                        {!user ? <Link to="/signIn">Sign In</Link> : null }
+                    </header>
+                    {errorMessage && <h3>{errorMessage}</h3>}
+                </nav>
+            </span>
+            {user?
+                <span>
+                    <select onChange={(e) => {
+                        userNavigation(e)
+                    }}>
+                        <option value="User Name">{user.name}</option>
+                        <option value="My Properties"> My Properties </option>
+                        <option value ="My Profile"> My Profile </option>
+                        <option value ="Favorite Properties">Favorite Properties</option>
+                        <option value="Sign Out">Sign Out</option>
+                    </select>
+                </span>
+                : 
+                null
+            }
+        </div>
     );
 }
 
