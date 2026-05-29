@@ -48,16 +48,18 @@ function SignIn () {
 return (
     <div>
         <form onSubmit={signIn}>
-            <label> Username: </label>
+            <label htmlFor="username"> Username: </label>
                 <input
+                    id="username"               
                     type="text"
                     value={data.username}
                     onChange={(e) => setData({...data, username: e.target.value})}
                     autoComplete= "username"
                 />
             <br />
-            <label> Password: </label>
+            <label htmlFor="password"> Password: </label>
                 <input
+                    id="password"                     
                     type="password"
                     value={data.password}
                     onChange={(e) => setData({...data, password: e.target.value})}

@@ -144,7 +144,10 @@ function DashboardMain() {
                         <ul style={{ listStyle: "none", padding: 0, margin: 0 }}>
                             {data.properties.map((property: UserProperties) => (
                                 <li key={property.id}>
-                                    <img src={property.photo_path} alt="Property Main Image" style={{ width: "800px", height: "550px" }}/>
+                                    <img src={property.photo_path} 
+                                        alt="Property Main Image" 
+                                        style={{ width: "800px", height: "550px" }}
+                                        onClick={ () => navigate(`/property/${property.id}`)}/>
                                     <p><strong>Summary</strong></p>
                                     <p>{property.summary}</p>
                                     <p> <strong>Price:</strong> £{property.price} per month </p>

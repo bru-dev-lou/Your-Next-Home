@@ -100,6 +100,7 @@ router.route("/")
 
         db.prepare(`DELETE FROM property_owners WHERE id = ?`).run(ownerID); 
         
+        res.clearCookie("token");
         return res.status(204).send();
         
     }

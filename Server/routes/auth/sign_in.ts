@@ -43,7 +43,7 @@ router.post("/", async (req, res) => {
         res.cookie("token", token,{httpOnly: true, secure: process.env.NODE_ENV === "production", sameSite: "lax", maxAge: 604800000});
 
         res.status(200).json({ id: user.id, username: user.username, name: user.name });
-    }
+    }   
 
     catch(error){
         console.log("Error with user signing in: ", error);
