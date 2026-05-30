@@ -5,7 +5,7 @@ function authMiddleware(req: Request, res: Response, next: NextFunction) {
     const token = req.cookies.token;
 
     if (!token) {
-        return res.status(401). json({ error: "Please sign in first."})
+        return res.status(401).json({ error: "Please sign in first."})
     }
 
     try {

@@ -27,6 +27,8 @@ function SignUp () {
     const createAccount = async (e:React.SubmitEvent<HTMLFormElement>) => {
         e.preventDefault();
         setErrorMessage("");
+        setMissingField("");
+        setInUseField("");
 
         try {
             const res = await fetch("/api/signUp", {
@@ -55,7 +57,7 @@ function SignUp () {
         catch(error) {
             setErrorMessage("Failed to create account. Please check your internet and try again.")
         }
-    }
+    };
 
     return (
         <div>
@@ -174,7 +176,7 @@ function SignUp () {
             }
             { errorMessage && <p role="alert"> { errorMessage } </p> }
         </div>
-    )
+    );
 }
 
 export default SignUp; 

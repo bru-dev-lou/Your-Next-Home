@@ -9,7 +9,7 @@ type UserData = {
 }
 
 function SignIn () {
-    const [ data, setData ] = useState<UserData>({username: "", password: ""})
+    const [ data, setData ] = useState<UserData>({username: "", password: ""});
     const [ errorMessage, setErrorMessage ] = useState(""); 
     
     const navigate = useNavigate(); 
@@ -74,7 +74,7 @@ function SignIn () {
             </form>
             { errorMessage && <p role="alert"> { errorMessage } </p> }
         </div>
-    )
+    );
 }
 
 export default SignIn;

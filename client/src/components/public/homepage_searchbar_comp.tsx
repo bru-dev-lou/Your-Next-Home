@@ -21,7 +21,7 @@ function HomePageSearchBar() {
 
                 if (!res.ok) {
                     setCities([]);
-                    setErrorMessageAC(result.error) 
+                    setErrorMessageAC(result.error);
                 }
 
                 else if(autoCompleteQuery.length === 0) {
@@ -36,9 +36,9 @@ function HomePageSearchBar() {
             }
 
             catch(error) {
-                setErrorMessageAC("AutoComplete feature currently unavailable.")
+                setErrorMessageAC("AutoComplete feature currently unavailable.");
             }
-        }
+        };
             
         const timeout = setTimeout(() => {
             fetchCity();

@@ -43,7 +43,7 @@ router.post("/", async (req, res) => {
                 return res.status(400).json({column, error});
             }
         }
-// For the next two if statements, do not change the error message. Changing this will affect aria-invalid for the relevant fields in the frontend. 
+// For the next two if statements, do not change the error messages. Changing these will affect aria-invalid for the relevant fields in the frontend. 
 
         if (confirmPass !== password) {
             return res.status(400).json({error: "Passwords must match."}); 
@@ -52,7 +52,7 @@ router.post("/", async (req, res) => {
         const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[?!@#$%^&*]).{8,}$/;
 
         if (!passwordRegex.test(password)) {
-            return res.status(400).json({ error: "Password must be 8+ characters with an uppercase, a lowercase, a number and a special character [?!@#$%^&*]."
+            return res.status(400).json({error: "Password must be 8+ characters with an uppercase, a lowercase, a number and a special character [?!@#$%^&*]."
             });
         }
 
