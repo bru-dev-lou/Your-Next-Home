@@ -45,28 +45,34 @@ function SignIn () {
         }
     };
 
-return (
-    <div>
-        <form onSubmit={signIn}>
-            <label> Username: </label>
-                <input
-                    type="text"
-                    value={data.username}
-                    onChange={(e) => setData({...data, username: e.target.value})}
-                    autoComplete= "username"
-                />
-            <br />
-            <label> Password: </label>
-                <input
-                    type="password"
-                    value={data.password}
-                    onChange={(e) => setData({...data, password: e.target.value})}
-                    autoComplete= "current-password"
-                />
+    return (
+        <div>
+            <form onSubmit={signIn}>
+                <label htmlFor="username"> Username: </label>
+                    <input
+                        id="username"
+                        type="text"
+                        value={data.username}
+                        onChange={(e) => setData({...data, username: e.target.value})}
+                        autoComplete= "username"
+                        aria-invalid={errorMessage? "true" : "false"}
+                        aria-required="true"
+                    />
                 <br />
-            <button type="submit"> Sign In </button>
-        </form>
-            { errorMessage && <p> { errorMessage } </p> }
+                <label htmlFor="password"> Password: </label>
+                    <input
+                        id="password"
+                        type="password"
+                        value={data.password}
+                        onChange={(e) => setData({...data, password: e.target.value})}
+                        autoComplete= "current-password"
+                        aria-invalid={errorMessage ? "true" : "false"}
+                        aria-required="true"
+                    />
+                    <br />
+                <button type="submit"> Sign In </button>
+            </form>
+            { errorMessage && <p role="alert"> { errorMessage } </p> }
         </div>
     )
 }
