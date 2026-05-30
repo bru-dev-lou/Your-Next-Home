@@ -14,18 +14,18 @@ router.post("/", async (req, res) => {
     const confirmPass = req.body.confirmPass;
 
     const blankFieldCheck = [
-        {field: username, error:"Please choose a username."},
-        {field: name, error: "Please state your name / company's name."},
-        {field: address, error: "Please state your address / company's address."},
-        {field: number, error: "Please state your phone number / company's phone number."},
-        {field: email, error: "Please state your email address."},
-        {field: password, error: "Please choose a password."},
-        {field: confirmPass, error: "Please confirm your chosen password."}
+        {name: "username", field: username, error:"Please choose a username."},
+        {name: "name", field: name, error: "Please state your name / company's name."},
+        {name: "address", field: address, error: "Please state your address / company's address."},
+        {name: "phone_number", field: number, error: "Please state your phone number / company's phone number."},
+        {name: "email", field: email, error: "Please state your email address."},
+        {name: "password", field: password, error: "Please choose a password."},
+        {name: "confirm_password", field: confirmPass, error: "Please confirm your chosen password."}
     ];
 
-    for (const {field, error} of blankFieldCheck) {
+    for (const {name, field, error} of blankFieldCheck) {
         if(!field) {
-            return res.status(400).json({error});
+            return res.status(400).json({name, error});
         }
     } 
 
@@ -40,12 +40,13 @@ router.post("/", async (req, res) => {
         for (const {column, value, error} of existingFieldCheck){
             const exists = db.prepare(`SELECT 1 FROM property_owners WHERE ${column} = ?`).get(value); 
             if(exists){
-                return res.status(400).json({error});
+                return res.status(400).json({column, error});
             }
         }
+// For the next two if statements, do not change the error message. Changing this will affect aria-invalid for the relevant fields in the frontend. 
 
         if (confirmPass !== password) {
-            return res.status(400).json( {error: "Passwords must match."}); 
+            return res.status(400).json({error: "Passwords must match."}); 
         }    
     
         const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[?!@#$%^&*]).{8,}$/;
