@@ -69,7 +69,7 @@ function SignUp () {
                         value={data.username}
                         onChange={(e) => setData({...data, username: e.target.value})}
                         autoComplete="username"
-                        aria-required="true"
+                        required
                         aria-describedby="username_hint"
                         aria-invalid={missingField === "username" || inUseField === "username" ? "true" : "false"}
                     />
@@ -81,7 +81,7 @@ function SignUp () {
                         type="text"
                         value={data.name}
                         onChange= {(e) => setData({...data, name: e.target.value})}
-                        aria-required="true"
+                        required
                         aria-describedby="name_hint"
                         aria-invalid={missingField === "name" ? "true" : "false"}
                     />
@@ -93,7 +93,7 @@ function SignUp () {
                         type= "text"
                         value={data.address}
                         onChange= {(e) => setData({...data, address: e.target.value})}
-                        aria-required="true"
+                        required
                         aria-describedby="address_hint"
                         aria-invalid={missingField === "address" || inUseField === "address" ? "true" : "false"}
                     />
@@ -102,10 +102,10 @@ function SignUp () {
                 <label htmlFor="phone_number"> Phone Number:</label>
                     <input
                         id="phone_number"
-                        type= "text"
+                        type= "tel"
                         value= {data.number}
                         onChange= {(e) => setData({...data, number: e.target.value})}
-                        aria-required="true"
+                        required
                         aria-describedby="phone_number_hint"
                         aria-invalid={missingField === "phone_number" || inUseField === "phone_number" ? "true" : "false"}
                     />
@@ -117,11 +117,11 @@ function SignUp () {
                         type= "email"
                         value= {data.email}
                         onChange={(e) => setData({...data, email: e.target.value})}
-                        aria-required="true"
+                        required
                         aria-describedby="email_hint"           
                         aria-invalid={missingField === "email" || inUseField === "email" ? "true" : "false"}     
                     />
-                    <span id="email_hint" className="hidden-content">If you represent a company, inser your work email address. If you are an individual property owner, insert your prefered email address to be contacted on. This information will be visible to other users.</span>
+                    <span id="email_hint" className="hidden-content">If you represent a company, insert your work email address. If you are an individual property owner, insert your prefered email address to be contacted on. This information will be visible to other users.</span>
                 <br></br>
                 <label htmlFor="password"> Password: </label>
                     <input
@@ -130,7 +130,7 @@ function SignUp () {
                         value= {data.password}
                         onChange= {(e) => setData({...data, password: e.target.value})}
                         autoComplete= "new-password"
-                        aria-required="true"
+                        required
                         aria-describedby="password_hint"
                         aria-invalid={missingField === "password" || errorMessage.includes("password") ? "true" : "false"}
                     />
@@ -138,11 +138,9 @@ function SignUp () {
                     <button 
                         type="button"
                         onClick= {() => setShowPassword(!showPassword)}
-                        aria-describedby="password_button_hint"
                         >
                             {showPassword ? "Hide" : "Show"}
                     </button>
-                    <span id="password_button_hint" className="hidden-content">Clicking this button will make the password content visible. Clicking it once again, will make the password content private.</span>
                 <br></br>
                 <label htmlFor="confirm_password"> Confirm Password: </label>
                     <input
@@ -151,25 +149,21 @@ function SignUp () {
                         value= {data.confirmPass}
                         onChange= {(e) => setData({...data, confirmPass: e.target.value})}
                         autoComplete="new-password"
-                        aria-required="true"
-                        aria-describedby="password_confirmation_hint"
+                        required
                         aria-invalid={missingField === "confirm_password" || errorMessage.includes("password") ? "true" : "false"}
                     />
-                    <span id="password_confirmation_hint" className="hidden-content">Insert the same password as before in order to confirm you desired password matches your choice.</span>
                     <button 
                         type="button"
                         onClick= {() => setConfirmShowPassword(!showConfirmPassword)}
-                        aria-describedby="password_confirmation_button_hint"
                         >
                             {showConfirmPassword ? "Hide" : "Show"}
                     </button>
-                    <span id="password_confirmation_button_hint" className="hidden-content">Clicking this button will make the confirm password content visible. Clicking it once again, will make the confirm password content private.</span>
                 <br></br>
                 {!accountCreated && <button type="submit"> Create Account </button> }
             </form>
             { accountCreated &&
-                <div>
-                    <h3 role="status">{successMessage}</h3>
+                <div role="status">
+                    <h3>{successMessage}</h3>
                     <h4>Please note down your username and password for future reference.</h4>
                     <button onClick={ () => navigate("/signIn")}> Sign In </button>
                 </div> 

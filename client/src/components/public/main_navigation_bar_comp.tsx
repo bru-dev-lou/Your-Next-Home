@@ -14,7 +14,7 @@ function MainNavigationBar (){
         try {
             const res = await fetch("/api/signOut/", {
                 method: "DELETE" 
-            })
+            });
             
             // delay on setUser to allow navigation to Homepage instead of 401 status returning from route_protection 
 
@@ -54,29 +54,32 @@ function MainNavigationBar (){
 
     return (
         <div>
-            <span>
+            <div>
                 <nav>
-                    <header>
-                        <Link to="/">Home</Link>
-                        <Link to="/search">Rent</Link>
-                        <Link to="/inquiries">Contact Us</Link>
-                        {!user ? <Link to="/signIn">Sign In</Link> : null }
-                    </header>
-                    {errorMessage && <h3>{errorMessage}</h3>}
+                    <Link to="/">Home</Link>
+                    <Link to="/search">Rent</Link>
+                    <Link to="/inquiries">Contact Us</Link>
+                    {!user ? <Link to="/signIn">Sign In</Link> : null }
                 </nav>
-            </span>
+                {errorMessage && 
+                    <div role="alert">
+                        <h3>{errorMessage}</h3>
+                    </div>
+                }
+            </div>
             {user?
-                <span>
-                    <select onChange={(e) => {
-                        userNavigation(e)
-                    }}>
-                        <option value="User Name">{user.name}</option>
+                <div>
+                    <select 
+                        onChange={(e) => {userNavigation(e)}}
+                        aria-label="Dashboard navigation."
+                        >
+                        <option value="User Name"> {user.name} </option>
                         <option value="My Properties"> My Properties </option>
-                        <option value ="My Profile"> My Profile </option>
-                        <option value ="Favorite Properties">Favorite Properties</option>
-                        <option value="Sign Out">Sign Out</option>
+                        <option value="My Profile"> My Profile </option>
+                        <option value="Favorite Properties"> Favorite Properties </option>
+                        <option value="Sign Out"> Sign Out </option>
                     </select>
-                </span>
+                </div>
                 : 
                 null
             }

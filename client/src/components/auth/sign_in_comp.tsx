@@ -56,7 +56,7 @@ function SignIn () {
                         onChange={(e) => setData({...data, username: e.target.value})}
                         autoComplete= "username"
                         aria-invalid={errorMessage? "true" : "false"}
-                        aria-required="true"
+                        required
                     />
                 <br />
                 <label htmlFor="password"> Password: </label>
@@ -67,7 +67,7 @@ function SignIn () {
                         onChange={(e) => setData({...data, password: e.target.value})}
                         autoComplete= "current-password"
                         aria-invalid={errorMessage ? "true" : "false"}
-                        aria-required="true"
+                        required
                     />
                     <br />
                 <button type="submit"> Sign In </button>

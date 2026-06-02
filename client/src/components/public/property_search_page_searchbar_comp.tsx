@@ -38,7 +38,7 @@ function PropertySearchPageSearchBar ({sortBy} : FilterValue) {
   
                 if (!res.ok) {
                     setAutoCompleteQueries([]);
-                    setErrorMessageAC(result.error) 
+                    setErrorMessageAC(result.error); 
                 }
   
                 else if(propData.city.length === 0) {
@@ -53,7 +53,7 @@ function PropertySearchPageSearchBar ({sortBy} : FilterValue) {
             }
   
             catch(error) {
-                setErrorMessageAC("AutoComplete feature currently unavailable.")
+                setErrorMessageAC("AutoComplete feature currently unavailable.");
             }
         }
           
@@ -74,48 +74,52 @@ function PropertySearchPageSearchBar ({sortBy} : FilterValue) {
 
     return (
         <div>
-            <form onSubmit={buttonSearch} method="get">
-                <label htmlFor = "citySelect"> Location: </label>
+            <form onSubmit={buttonSearch}>
+                <label htmlFor ="location"> Location: </label>
                     <input 
-                        name = "city"
+                        id="location"
                         type = "text"
-                        placeholder = "Enter your preferred location" 
                         value = {propData.city}
                         onChange = {(e) => {
                             setPropData({...propData, city: e.target.value})
-                            setAutoCompleteQueryClicked(false)}}  
+                            setAutoCompleteQueryClicked(false)}}   
+                        placeholder = "Enter your preferred location" 
                     />
-            <ul> 
-                {errorMessageAC ? 
-                        errorMessageAC 
-                    : 
-                        autoCompleteQueries.map((query, index) => (
+            <ul aria-live="polite" aria-label="City autocomplete suggestions.">
+                    {autoCompleteQueries.map((query, index) => (
                         <li 
                             key={index}
                             onClick = {() => {
-                                setPropData({...propData, city: query.city}),
-                                setAutoCompleteQueries([]),
-                                setAutoCompleteQueryClicked(true)}}
-                                style = {{ cursor: "pointer"}}
-                            >
+                                setPropData({...propData, city: query.city});
+                                setAutoCompleteQueries([]);
+                                setAutoCompleteQueryClicked(true);
+                                }}
+                            style = {{ cursor: "pointer"}}
+                            aria-label={`Select ${query.city}`}>
                             {query.city}
                         </li>
-                    ))
-                }
+                    ))}
             </ul>
-                <label htmlFor = "propertyType"> Property Type: </label>
+            {errorMessageAC && 
+                <div role="alert">
+                    <h3>{errorMessageAC}</h3>
+                </div>
+            }
+                <label htmlFor ="property_type"> Property Type: </label>
                     <select 
+                        id="property_type"
                         onChange = {(e) => setPropData({...propData, type: e.target.value})}
                     >
-                        <option value=''>Show all</option>
-                        <option value='Apartment'>Apartment</option>
-                        <option value='Terraced'>Terraced</option>
-                        <option value='Semi-Detached'>Semi-Detached</option>
-                        <option value='Detached'>Detached</option>
-                        <option value='Bungalow'>Bungalow</option>
+                        <option value="">Show all</option>
+                        <option value="Apartment">Apartment</option>
+                        <option value="Terraced">Terraced</option>
+                        <option value="Semi-Detached">Semi-Detached</option>
+                        <option value="Detached">Detached</option>
+                        <option value="Bungalow">Bungalow</option>
                     </select>            
-                <label htmlFor = "maxPrice"> Max Price: </label>
+                <label htmlFor = "max_price"> Max Price: </label>
                     <select 
+                        id="max_price"
                         onChange = {(e) => setPropData({...propData, maxPrice: (Number(e.target.value))})}
                         >
                             <option value = {10000}> No Max </option>
@@ -137,36 +141,43 @@ function PropertySearchPageSearchBar ({sortBy} : FilterValue) {
                             <option value = "2000"> $2,000 PCM </option>
                     </select>
                 <br></br>
-                <label htmlFor = "minBedrooms"> Bedrooms: </label>
+                <label htmlFor ="min_bedrooms"> Bedrooms: </label>
                     <select
+                        id="min_bedrooms"
                         onChange={(e) => setPropData({...propData, minBeds: (Number(e.target.value))})}
+                        aria-describedby="bedroom_hint"
                         >
                             <option value= {0}>No Min</option>
-                            <option value='1'>1</option>
-                            <option value='2'>2</option>
-                            <option value='3'>3</option>
-                            <option value='4'>4</option>
-                            <option value='5'>5</option>
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                            <option value="5">5</option>
                     </select>
-                <label htmlFor = "minBathrooms"> Bathrooms: </label>
+                    <span id="bedroom_hint" className="hidden-content">Minimum number of bedrooms you require.</span>
+                <label htmlFor = "min_bathrooms"> Bathrooms: </label>
                     <select
+                        id="min_bathrooms"
                         onChange={(e) => setPropData({...propData, minBaths: (Number(e.target.value))})}
+                        aria-describedby="bathroom_hint"
                         >
                             <option value= {0}>No Min</option>
-                            <option value='1'>1</option>
-                            <option value='2'>2</option>
-                            <option value='3'>3</option>
-                            <option value='4'>4</option>
-                            <option value='5'>5</option>
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                            <option value="5">5</option>
                     </select>
-                <label htmlFor = "Furniture"> Furnishing: </label>
+                    <span id="bathroom_hint" className="hidden-content">Minimum number of bathrooms you require.</span>
+                <label htmlFor = "furniture"> Furnishing: </label>
                 <select 
+                    id="furniture"
                     onChange={(e) => setPropData({...propData, furniture: e.target.value})}
                     >
                             <option value = {""}> Any</option>
-                            <option value = 'Furnished'> Furnished</option>
-                            <option value = 'Semi-furnished'> Semi-Furnished</option>
-                            <option value = 'Unfurnished'> Unfurnished</option>        
+                            <option value = "Furnished"> Furnished</option>
+                            <option value = "Semi-furnished"> Semi-Furnished</option>
+                            <option value = "Unfurnished"> Unfurnished</option>        
                 </select>
                 <button type="submit">Search</button>
             </form>

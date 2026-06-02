@@ -65,7 +65,7 @@ function Inquiries () {
                             setErrorMessage("");
                             setSuccessMessage("");
                         }}
-                        aria-required="true"
+                        required
                         aria-invalid={missingField === "name" ? "true" : "false"}   
                     />
                 <br />
@@ -79,7 +79,7 @@ function Inquiries () {
                             setErrorMessage("");
                             setSuccessMessage("");
                         }}
-                        aria-required="true"
+                        required
                         aria-invalid={missingField === "email" ? "true" : "false"}
                     />
                 <br />
@@ -95,7 +95,7 @@ function Inquiries () {
                             setErrorMessage("");
                             setSuccessMessage("");
                         }}}
-                        aria-required="true"
+                        required
                         aria-describedby="topic_hint"
                         aria-invalid={missingField === "topic" || errorMessage.includes("25") ? "true" : "false"}
                     />
@@ -115,7 +115,7 @@ function Inquiries () {
                             setErrorMessage("");
                             setSuccessMessage("");
                             }}}
-                        aria-required="true"
+                        required
                         aria-describedby="message_hint"
                         aria-invalid={missingField === "message" || errorMessage.includes("250") ? "true" : "false"}
                     />
@@ -140,8 +140,16 @@ function Inquiries () {
                 <br />
                 <button type="submit">Submit Inquiry</button>
             </form>
-            {errorMessage && <h3 role="alert">{errorMessage}</h3>}
-            {successMessage && <h3 role="status">{successMessage}</h3>}
+            {errorMessage && 
+                <div role="alert">
+                    <h3>{errorMessage}</h3>
+                </div>
+            }
+            {successMessage && 
+                <div role="status">
+                    <h3>{successMessage}</h3>
+                </div>
+            }
         </div>
     );
 }

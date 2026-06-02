@@ -91,20 +91,23 @@ function HomePageSearchBar() {
                     </select>
                 <button type="submit"> Search </button>
             </form>
-            <ul role="listbox" aria-live="polite" aria-label="City autocomplete suggestions based on user input.">
+            <ul aria-live="polite" aria-label="City autocomplete suggestions.">
                 {cities.map((city, index) => (
                     <li 
                         key={index}
                         onClick = {() => setAutoCompleteQuery(city.city)}
                         style = {{ cursor: "pointer"}}
-                        role="option"
                         aria-label={`Select ${city.city}`}
                         >
                         {city.city}
                     </li>
                 ))}
             </ul>
-            {errorMessageAC && <h3 role="alert">{errorMessageAC}</h3>}
+            {errorMessageAC && 
+                <div role="alert">
+                    <h3>{errorMessageAC}</h3>
+                </div>
+            }
         </div>
     );
 }
