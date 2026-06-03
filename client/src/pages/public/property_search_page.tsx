@@ -3,16 +3,16 @@ import { useSearchParams, useNavigate } from "react-router-dom";
 
 import PropertySearchPageSearchBar from "../../components/public/property_search_page_searchbar_comp";
 
-type Property = { 
-  id: number; 
-  city: string; 
-  price: number;   
-  photo_path: string;
+type PropertyDetails = {
+  id: number;
+  type: string;
+  city: string;
+  price: number;
+  no_bedrooms: number;
+  no_bathrooms: number;
   summary: string;
   date_listed: string;
-  type:  string;
-  no_bedrooms: number;
-  no_bathrooms: number; 
+  photo_path: string;
 }
 
 type ErrorResponse = {
@@ -32,7 +32,7 @@ function PropertySearchPage () {
   const furniture = params.get("furniture") || "";
   const sortByValue = params.get("sortBy") || "";
 
-  const [propertyResults, setPropertyResults] = useState<Property[]>([]);
+  const [propertyResults, setPropertyResults] = useState<PropertyDetails[]>([]);
   const [propFavorite, setPropFavorite] = useState<Set<number>>(new Set());
 
   // Error Message → FP = Favorite Property, PR = Property Results
@@ -116,7 +116,9 @@ function PropertySearchPage () {
       fetchFavorites();
   }, []);
 
-
+  const propertyDetailedResult = (propID : number) => {
+    navigate(`/property/${propID}`);
+  };
 
   async function addToFavorites (propID : number) {
     const updateSet = new Set(propFavorite); 
@@ -189,9 +191,7 @@ function PropertySearchPage () {
     }
   };
 
-  const propertyDetailedResult = (propID : number) => {
-    navigate(`/property/${propID}`);
-  };
+
 
   return (
     <div>
@@ -221,12 +221,16 @@ function PropertySearchPage () {
           <span className="hidden-content">Address</span>
           <p>{property.city}</p>
           <span className="hidden-content">Monthly rental rate</span>
-          <p>£{property.price.toLocaleString()} pcm</p>
+          <p> £{property.price.toLocaleString()} per month </p>
           <img 
             src={property.photo_path}
-            alt={`Main photo for property number ${property.id}`} 
+            role="button"
+            alt={`Main photo for property number ${property.id} - press enter to view detailed property page.`}
+            tabIndex={0} 
+            onKeyDown= { (e) => { if (e.key === "Enter" || e.key === " ") {
+              propertyDetailedResult(property.id);
+            }}} 
             onClick={ () => propertyDetailedResult(property.id)} 
-            aria-describedby="photo_hint"
           />
           <br />
           {propFavorite.has(property.id) ?
@@ -240,7 +244,7 @@ function PropertySearchPage () {
             </div>
           }
           <br/>
-          <span className="hidden-content">Summary</span>
+          <p className="hidden-content">Summary</p>
           <p>{property.summary}</p>
           <p>Date Listed: {new Date(property.date_listed).toLocaleDateString("en-GB")} </p>
           <p>Property Type: {property.type}</p>
@@ -248,7 +252,6 @@ function PropertySearchPage () {
           <p>Bathrooms: {property.no_bathrooms}</p>
         </div>
       ))}
-    <span id="photo_hint" className="hidden-content">"Click image to navigate to its detailed page"</span>
     </div>
   );
 }

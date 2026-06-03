@@ -8,8 +8,6 @@ type UserProperties ={
         price: number;
         no_bedrooms: number;
         no_bathrooms: number;
-        size: string;
-        furniture: string;
         summary: string;
         date_listed: string;
         photo_path: string;
@@ -36,7 +34,7 @@ function DashboardMain() {
     function messageReset () {
         setTimeout (function () {
             setDeletePropertyMessage("");
-        }, 5000);
+        }, 7000);
     }
 
     
@@ -123,7 +121,7 @@ function DashboardMain() {
                 <div>
                     <br />
                     <button onClick= {() => navigate(`/dashboard/property/add`)}>+ Add a new property</button>
-                    <h3>{fetchPropertyMessage}</h3>
+                    <h3 role="alert">{fetchPropertyMessage}</h3>
                 </div>
                 : 
                 <h3>Loading...</h3>}
@@ -139,24 +137,33 @@ function DashboardMain() {
                     <button onClick= {() => navigate(`/dashboard/property/add`)}>+ Add a new property</button>
                     <br />
                     <br />
-                    {deletePropertyMessage && <h3>{deletePropertyMessage}</h3>}
+                    {deletePropertyMessage && <h3 role="alert">{deletePropertyMessage}</h3>}
                     {data.properties.length > 0 ? (
                         <ul style={{ listStyle: "none", padding: 0, margin: 0 }}>
                             {data.properties.map((property: UserProperties) => (
                                 <li key={property.id}>
+                                    <span className="hidden-content">Address</span>
+                                    <p>{property.city}</p>
+                                    <span className="hidden-content">Monthly rental rate</span>
+                                    <p> £{property.price.toLocaleString()} per month </p>
                                     <img src={property.photo_path} 
-                                        alt="Property Main Image" 
-                                        style={{ width: "800px", height: "550px" }}
-                                        onClick={ () => navigate(`/property/${property.id}`)}/>
-                                    <p><strong>Summary</strong></p>
+                                        role="button"
+                                        alt="Property's main photo - press enter to view detailed property page."
+                                        tabIndex={0} 
+                                        onKeyDown= { (e) => { if (e.key === "Enter" || e.key === " ") {
+                                            navigate(`/property/${property.id}`);
+                                        }}}
+                                        onClick={ () => navigate(`/property/${property.id}`)}
+                                        style={{ width: "800px", height: "550px" }}/>
+                                    <p className="hidden-content">Summary</p>
                                     <p>{property.summary}</p>
-                                    <p> <strong>Price:</strong> £{property.price} per month </p>
-                                    <p> <strong>Bedrooms:</strong> {property.no_bedrooms} </p>
-                                    <p> <strong>Bathrooms:</strong> {property.no_bathrooms} </p>
-                                    <p> <strong>Size:</strong> {property.size} m²</p>
+                                    <p> Date Listed: {new Date(property.date_listed).toLocaleDateString("en-GB")} </p>
+                                    <p> Property Type: {property.type}</p>
+                                    <p> Bedrooms: {property.no_bedrooms} </p>
+                                    <p> Bathrooms: {property.no_bathrooms} </p>
                                     <button onClick = {() => navigate(`/dashboard/property/edit/${property.id}`)}> Edit Property </button>
                                     <button onClick = {() => setDeleteIDConfirmed(property.id)}> Delete Property </button>
-                                   {deleteIDConfirmed === property.id ? (
+                                    {deleteIDConfirmed === property.id ? (
                                         <div>
                                             <p> Are you sure ? </p>
                                             <button onClick={() => propertyDelete(property.id)}> Confirm </button>
@@ -169,7 +176,7 @@ function DashboardMain() {
                             ))}
                         </ul>
                     ) : (
-                        <h3>{fetchPropertyMessage}</h3>
+                        <h3 role="alert">{fetchPropertyMessage}</h3>
                     )}
                 </div>
         );

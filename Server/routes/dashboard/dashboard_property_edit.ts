@@ -36,10 +36,14 @@ router.route("/:propID")
         const SQLPropertyData = db.prepare(`SELECT * FROM property_list WHERE owner_id = ? AND id = ?`).get(ownerID, propID) as PropertyData;
         
         if (!SQLPropertyData) {
-            return res.status(404).json({ errorProp: "Property not found." });
+            return res.status(404).json({ errorProperty: "Property not found." });
         }
 
-        const SQLPropertyPhotos = db.prepare(`SELECT * FROM property_photos WHERE property_id = ?`).all(propID);
+        const SQLPropertyPhotos = db.prepare(`SELECT 
+            property_photos.property_id,
+            property_photos.photo_path
+            FROM property_photos 
+            WHERE property_id = ?`).all(propID);
         
         if (SQLPropertyPhotos.length === 0) {
             return res.status(200).json({ property: SQLPropertyData, photos: SQLPropertyPhotos, errorPhotos: "No photos found for this property." });
@@ -61,20 +65,20 @@ router.route("/:propID")
     
     try {
         const fieldCheck = [
-            { field: city, error: "Please state where your property is located." },
-            { field: type, error: "Please choose a property type." },
-            { field: price, error: "Please state the property's monthly rental rate." },
-            { field: no_bedrooms, error: "Please state how many bedrooms your property has." },
-            { field: no_bathrooms, error: "Please state how many bathrooms your property has." },
-            { field: size, error: "Please state the size of your property in m²." },
-            { field: furniture, error: "Please choose your property's type of furnishing." },
-            { field: summary, error: "Please provide a summary of your property." },
-            { field: detail, error: "Please provide a detailed description of your property." } 
+            { field: city, name: "city", error: "Please state where your property is located." },
+            { field: type, name: "type", error: "Please choose a property type." },
+            { field: price, name: "price", error: "Please state the property's monthly rental rate." },
+            { field: no_bedrooms, name: "bedrooms", error: "Please state how many bedrooms your property has." },
+            { field: no_bathrooms, name: "bathrooms", error: "Please state how many bathrooms your property has." },
+            { field: size, name: "size", error: "Please state the size of your property in m²." },
+            { field: furniture, name: "furniture", error: "Please choose your property's type of furnishing." },
+            { field: summary, name: "summary", error: "Please provide a summary of your property." },
+            { field: detail, name: "description", error: "Please provide a description of your property." } 
         ];
         
-        for (const {field, error} of fieldCheck) {
+        for (const {field, name, error} of fieldCheck) {
             if (!field) {
-                return res.status(400).json({error});
+                return res.status(400).json({name, error});
             }
         }
         
