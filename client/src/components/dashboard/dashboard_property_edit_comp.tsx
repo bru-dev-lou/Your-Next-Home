@@ -45,6 +45,14 @@ function DashboardPropertyEdit() {
     const [ successMessagePU, setSuccessMessagePU ] = useState("");
     const [ photoUploading, setPhotoUploading] = useState(false); 
 
+// WAI-ARIA states for live region updates on word count for summary and description fields.
+
+    const [ announceSummaryWordCount, setAnnounceSummaryWordCount ] = useState(0); 
+    const summaryWordCount = propertyDetails?.summary ? propertyDetails.summary.split(/\s+/).filter(Boolean).length : 0;
+
+    const [ announceDescriptionWordCount, setAnnounceDescriptionWordCount ] = useState(0); 
+    const descriptionWordCount = propertyDetails?.detail ? propertyDetails.detail?.split(/\s+/).filter(Boolean).length : 0;
+
 
 
     useEffect(() => {
@@ -119,6 +127,27 @@ function DashboardPropertyEdit() {
             setErrorMessagePE("Failed to update property. Please check your internet and try again.");
         }
     }
+
+// Word count useEffects for property summary and property description with 1.5 second debounce. 
+
+    useEffect(() => {
+        const summaryWordCountTimeout = setTimeout(() => {
+            setAnnounceSummaryWordCount(summaryWordCount); 
+        }, 1500);
+
+        return () => clearTimeout(summaryWordCountTimeout);
+    
+    }, [summaryWordCount]); 
+
+    useEffect(() => {
+        const descriptionWordCountTimeout = setTimeout(() => {
+            setAnnounceDescriptionWordCount(descriptionWordCount); 
+        }, 1500);
+
+        return () => clearTimeout(descriptionWordCountTimeout);
+    
+    }, [descriptionWordCount]);
+
 
     async function photoUpload(e: React.ChangeEvent<HTMLInputElement>) {
         e.preventDefault();
@@ -346,12 +375,12 @@ function DashboardPropertyEdit() {
                         required
                         aria-invalid={propertyMissingField === "summary"}
                     />
-                <span 
-                    aria-live="polite"
-                    aria-describedby="summary_word_count">
-                        {propertyDetails.summary ? propertyDetails.summary.split(/\s+/).filter(Boolean).length : 0} / 50 words
+                <span>{summaryWordCount} / 50 words</span>
+                <span
+                    aria-live="polite" 
+                    className="hidden-content">
+                        {announceSummaryWordCount > 0 && `${announceSummaryWordCount} out of 50 words used.`}
                 </span>
-                <span id="summary_word_count" className="hidden-content">The first number is the number of words typed. The second number is the word limit.</span>
                 <br />
                 <label htmlFor="description"> Property Description: </label>
                     <textarea
@@ -368,12 +397,12 @@ function DashboardPropertyEdit() {
                         required
                         aria-invalid={propertyMissingField === "description"}
                     />
+                <span>{descriptionWordCount} / 250 words</span>
                 <span 
-                    aria-live="polite"
-                    aria-describedby="description_word_count">
-                        {propertyDetails.detail ? propertyDetails.detail.split(/\s+/).filter(Boolean).length : 0} / 250 words
+                    aria-live="polite" 
+                    className="hidden-content">
+                        {announceDescriptionWordCount > 0 && `${announceDescriptionWordCount} out of 250 words used.`}
                 </span>
-                <span id="description_word_count" className="hidden-content">The first number is the number of words typed. The second number is the word limit.</span>
                 <br />
                 <button onClick={propertyDetailsUpdate}> Update Property </button>
                 {propertyUpdated && successMessagePE ?
@@ -426,7 +455,7 @@ function DashboardPropertyEdit() {
                 )}
                 {propertyPhotos.length < 10 ? ( 
                     <div>
-                        <label htmlFor="photo_upload"> Uoload Property Photos</label>
+                        <label htmlFor="photo_upload"> Upload Property Photos</label>
                         <input 
                             id="photo_upload"
                             type="file" 

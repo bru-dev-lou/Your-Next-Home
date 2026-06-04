@@ -98,7 +98,7 @@ function HomePageSearchBar() {
                         onClick = {() => setAutoCompleteQuery(city.city)}
                         style = {{ cursor: "pointer"}}
                         aria-label={`Select ${city.city}`}
-                        >
+                        >   
                         {city.city}
                     </li>
                 ))}

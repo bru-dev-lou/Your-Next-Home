@@ -19,20 +19,20 @@ router.route("/")
     
     try {
         const fieldCheck = [
-            { field: city, error: "Please state where your property is located." },
-            { field: type, error: "Please choose a property type." },
-            { field: price, error: "Please state the property's monthly rental rate." },
-            { field: bedrooms, error: "Please state how many bedrooms your property has." },
-            { field: bathrooms, error: "Please state how many bathrooms your property has." },
-            { field: size, error: "Please state the size of your property in m²." },
-            { field: furniture, error: "Please choose your property's type of furnishing." },
-            { field: summary, error: "Please provide a summary of your property." },
-            { field: detail, error: "Please provide a detailed description of your property." } 
+            { field: city, name:"city", error: "Please state where your property is located." },
+            { field: type, name:"type", error: "Please choose a property type." },
+            { field: price, name:"price", error: "Please state the property's monthly rental rate." },
+            { field: bedrooms, name:"bedrooms", error: "Please state how many bedrooms your property has." },
+            { field: bathrooms, name:"bathrooms", error: "Please state how many bathrooms your property has." },
+            { field: size, name:"size", error: "Please state the size of your property in m²." },
+            { field: furniture, name:"furniture", error: "Please choose your property's type of furnishing." },
+            { field: summary, name:"summary", error: "Please provide a summary of your property." },
+            { field: detail, name:"detail", error: "Please provide a detailed description of your property." } 
         ];
 
-        for (const {field, error} of fieldCheck) {
+        for (const {field, name, error} of fieldCheck) {
             if (!field || field == 0) {
-                return res.status(400).json ({error}); 
+                return res.status(400).json ({name, error}); 
             }
         }
 
@@ -49,12 +49,18 @@ router.route("/")
         }
         
 
-        const newPropertyData = db.prepare(`INSERT INTO property_list (type, city, price, no_bedrooms, no_bathrooms, size, furniture, summary, owner_id, detail)
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`)
-        .run(type, city, price, bedrooms, bathrooms, size, furniture, summary, ownerID, detail);
+        const newPropertyData = db.prepare(`
+            INSERT INTO property_list 
+            (type, city, price, no_bedrooms, no_bathrooms, size, furniture, summary, owner_id, detail)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`)
+            .run(type, city, price, bedrooms, bathrooms, size, furniture, summary, ownerID, detail)
+        ;
         
-    
-        const newPropertyPhotos = db.prepare(`INSERT INTO property_photos (property_id, photo_path) VALUES (?, ?)`);
+        const newPropertyPhotos = db.prepare(`
+            INSERT INTO property_photos 
+            (property_id, photo_path) 
+            VALUES (?, ?)`)
+        ;
 
         for (const file of files) {
             const result = await new Promise<CloudinaryResult>((resolve, reject) => {

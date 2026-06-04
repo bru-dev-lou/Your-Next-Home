@@ -4,7 +4,8 @@ import db from "../../database/database.js";
 const router = express.Router(); 
 
 router.post("/", (req, res) => {
-    const { name, email, propID, messageTopic, message } = req.body;
+    const { name, email, messageTopic, message } = req.body;
+    let { propID } = req.body;
     
     const fieldCheck = [
         {name: "name", field: name, error: "Please include your name."},
@@ -19,8 +20,11 @@ router.post("/", (req, res) => {
         }
     }
 
-// For the next two if statements, do not change the error messages. Changing these will affect aria-invalid for the relevant fields in the frontend. 
-
+/*  
+    For the next two if statements, do not change the error messages. 
+    Changing these will affect aria-invalid for the relevant fields in the frontend. 
+    Will add codes to the error responses in the future to avoid inference based on error message.
+*/
 
     try {
         if (messageTopic.split(/\s+/).filter(Boolean).length > 25) {
@@ -31,17 +35,16 @@ router.post("/", (req, res) => {
             return res.status(400).json({ error: "Please keep your message to 250 words or less." });
         }
 
-        const inquiryFull = "INSERT INTO inquiries (name, email, property_id, message_topic, message) VALUES (?, ?, ?, ?, ?)";
-        const inquiryPartial = "INSERT INTO inquiries (name, email, message_topic, message) VALUES (?, ?, ?, ?)";
+        const sendInquiry = `
+            INSERT INTO inquiries 
+            (name, email, property_id, message_topic, message) 
+            VALUES (?, ?, ?, ?)
+        `;
 
-        if (!propID || propID === "") {
-            db.prepare(inquiryPartial).run(name, email, messageTopic, message);
-            res.status(201).json({ message: "Inquiry submitted successfully" });
-        }
-
-        else {
-            db.prepare(inquiryFull).run(name, email, propID, messageTopic, message);
-            res.status(201).json({ message: "Inquiry submitted successfully" });
+        if (!propID) {
+            propID =  "PROP0000";
+            db.prepare(sendInquiry).run(name, email, propID, messageTopic, message);
+            return res.status(201).json({ message: "Inquiry submitted successfully" });
         }
     }
 
