@@ -28,7 +28,13 @@ function DashboardPropertyEdit() {
     const [ propertyDetails, setPropertyDetails ] = useState<PropertyDetails | null>(null);
 
     const [ propertyPhotos, setPropertyPhotos ] = useState<PropertyPhotos[]>([]);
-    
+
+//  Auto comnplete function states for city input. 
+
+    const [ cities, setCities ] = useState<{city: string}[]>([]);
+    const [ errorMessageAC , setErrorMessageAC ] = useState(""); 
+    const [ autoCompleteQueryClicked, setAutoCompleteQueryClicked ] = useState(false); 
+
 // Error Messages → PD = Photo Display, PE = Property Edit, PF = Photo Fetch, PU = Photo Upload
 
     const [ errorMessagePD, setErrorMessagePD ] = useState("");
@@ -52,8 +58,6 @@ function DashboardPropertyEdit() {
 
     const [ announceDescriptionWordCount, setAnnounceDescriptionWordCount ] = useState(0); 
     const descriptionWordCount = propertyDetails?.detail ? propertyDetails.detail?.split(/\s+/).filter(Boolean).length : 0;
-
-
 
     useEffect(() => {
         const fetchData = async () => {
@@ -86,6 +90,50 @@ function DashboardPropertyEdit() {
         }   
         fetchData();
     }, []);
+
+    useEffect (() => {
+        const fetchAutoComplete = async () => {
+            try {
+                const res = await fetch(`/api/cities?city=${propertyDetails!.city}`)
+                const result = await  res.json(); 
+
+                if (!res.ok) {
+                    setCities([]);
+                    setErrorMessageAC(result.error) 
+                }
+
+                else if(propertyDetails?.city?.length === 0) {
+                    setCities([]);
+                    setErrorMessageAC("");
+                } 
+
+                else if (result.cities.some( (query : {city: string}) => query.city === propertyDetails?.city)) {
+                    setCities([]);
+                    setErrorMessageAC("");
+                }
+                    
+                else {
+                    setCities(result.cities);
+                    setErrorMessageAC("");
+                }
+            }
+  
+            catch(error) {
+                setErrorMessageAC("AutoComplete feature currently unavailable.")
+            }
+        }
+          
+        if (autoCompleteQueryClicked) {
+            return;
+        }
+  
+        const timeout = setTimeout (() => {
+            fetchAutoComplete();
+        }, 100);
+
+        return () => clearTimeout(timeout);
+        
+    }, [propertyDetails?.city, autoCompleteQueryClicked]);
 
     async function propertyDetailsUpdate(e: React.MouseEvent<HTMLButtonElement>) {
         e.preventDefault();
@@ -252,6 +300,49 @@ function DashboardPropertyEdit() {
             <div>
                 <h3> Property Information </h3>
                 <h5> Update your property details below.</h5>
+                <label htmlFor="location"> City: </label>
+                    <input 
+                        id="location"
+                        type="text" 
+                        value={propertyDetails.city}
+                        onChange={(e) => {
+                            setPropertyDetails({...propertyDetails, city: e.target.value});
+                            setErrorMessagePE("");
+                            setSuccessMessagePE("");
+                            setAutoCompleteQueryClicked(false);
+                        }}
+                        required
+                        aria-invalid={propertyMissingField === "city"}
+                    />
+                <br />
+                <ul aria-live="polite" aria-label="City autocomplete suggestions"> 
+                {cities.map((query, index) => (
+                    <li 
+                        key={index}
+                        onClick = {() => {
+                            setPropertyDetails({...propertyDetails, city: query.city});
+                            setCities([]);
+                            setAutoCompleteQueryClicked(true);
+                            }}
+                        tabIndex={0} 
+                        onKeyDown= { (e) => { if (e.key === "Enter") {
+                            setPropertyDetails({...propertyDetails, city: query.city});
+                            setCities([]);
+                            setAutoCompleteQueryClicked(true);
+                        }}}
+                        style = {{ cursor: "pointer"}}
+                        aria-label={`Select ${query.city}`}
+                    >
+                        {query.city}
+                    </li>
+                ))}
+            </ul>
+                {errorMessageAC && 
+                    <div role="alert">
+                        <h3>{errorMessageAC}</h3>
+                    </div>
+                }
+            <br />
                 <label htmlFor="property_type"> Type: </label>
                     <select 
                         id="property_type"
@@ -271,20 +362,6 @@ function DashboardPropertyEdit() {
                     {propertyDetails.type !== "Detached" && <option value="Detached" >Detached</option>}
                     {propertyDetails.type !== "Bungalow" && <option value="Bungalow" >Bungalow</option>}
                     </select>  
-                <br />
-                <label htmlFor="location"> City: </label>
-                    <input 
-                        id="location"
-                        type="text" 
-                        value={propertyDetails.city}
-                        onChange={(e) => {
-                            setPropertyDetails({...propertyDetails, city: e.target.value});
-                            setErrorMessagePE("");
-                            setSuccessMessagePE("");
-                        }}
-                        required
-                        aria-invalid={propertyMissingField === "city"}
-                    />
                 <br />
                 <label htmlFor="rent"> Rate (£): </label>
                     <input 
@@ -433,7 +510,7 @@ function DashboardPropertyEdit() {
                 {propertyPhotos.length > 0 ? (
                     <ul style={{ listStyle: "none", padding: 0, margin: 0 }}>
                         {propertyPhotos.map((photo, index) => (
-                            <li key={photo.id}>
+                            <li key={index}>
                                 <img src={photo.photo_path} 
                                     alt={`Photo number ${index+1} of property number ${propID}`} 
                                     style={{ width: "200px", height: "150px" }} 

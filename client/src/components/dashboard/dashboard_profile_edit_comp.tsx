@@ -30,7 +30,7 @@ function DashboardProfileEdit () {
     const [ userPrivateDetails, setUserPrivateDetails ] = useState<UserPrivateData>({password: "", newPassword: "", passwordConfirmation: ""});
     const [ userAccountDeleteDetails, setUserAccountDeleteDetails ] = useState<UserAccountDeleteData>({password: ""});
     
-    // MP = My Profile / AM = Account Management / DA = Delete Account 
+    // Error Messages - MP = My Profile / AM = Account Management / DA = Delete Account 
 
     const [ errorGeneralMessage, setErrorGeneralMessage ] = useState("");
     const [ errorMessageMP, setErrorMessageMP ] = useState(""); 
@@ -80,17 +80,6 @@ function DashboardProfileEdit () {
         fetchData();
 
     }, []);
-    
-    
-    if (dataLoading) {
-        return <h3>Retrieving Data</h3>;
-    };
-
-    if (errorGeneralMessage){
-        return <h3>{errorGeneralMessage}</h3>
-    };
-
-
 
     async function updateUserPublicDetails (e:React.MouseEvent<HTMLButtonElement>) {
         e.preventDefault();
@@ -103,6 +92,7 @@ function DashboardProfileEdit () {
             setErrorMessageMP("Please update at least one field.");
             setSuccessMessageMP("");
             setChangeRequest(false);
+            setUserPublicDetails({...userPublicDetails, password: ""});     
             return;
             }
 
@@ -207,174 +197,225 @@ function DashboardProfileEdit () {
         }
     }
 
+    if (dataLoading) {
+        return <h3 role="status">Retrieving Data</h3>;
+    };
+
+    if (errorGeneralMessage){
+        return <h3 role="alert">{errorGeneralMessage}</h3>
+    };
 
     return (
         <div>
             {!accountDeleted ?
                 <div>
                     <div>
-                        <h3>My Profile</h3>
-                        <h5>Profile Information - This is what other users can see.</h5>
+                        <h3>Edit Profile</h3>
+                        <h5>Profile Information - This is what other users can see about you.</h5>
                     </div>
                     <div>
-                        <label>
-                            Name: 
-                            <input onChange={(e) => [
-                                setErrorMessageMP(""), 
-                                setSuccessMessageMP(""), 
-                                setChangeRequest(false),
-                                setUserPublicDetails({...userPublicDetails, name: e.target.value})]} 
-                                value= {userPublicDetails.name}>
-                            </input>
-                        </label>
+                        <label htmlFor="name"> Name: </label> 
+                            <input 
+                                id="name"
+                                type="text"
+                                value= {userPublicDetails.name}
+                                onChange={(e) => {
+                                    setErrorMessageMP(""); 
+                                    setSuccessMessageMP(""); 
+                                    setChangeRequest(false);
+                                    setUserPublicDetails({...userPublicDetails, name: e.target.value});
+                                }} 
+                                required
+                            />
                         <br />
-                        <label>
-                            Address:
-                            <input onChange={(e) => [
-                                setErrorMessageMP(""), 
-                                setSuccessMessageMP(""), 
-                                setChangeRequest(false),
-                                setUserPublicDetails({...userPublicDetails, address: e.target.value})]} 
-                                value= {userPublicDetails.address}>
-                            </input>
-                        </label>
+                        <label htmlFor="address"> Address: </label>
+                            <input 
+                                id="address"
+                                type="text"
+                                value= {userPublicDetails.address}
+                                onChange={(e) => {
+                                    setErrorMessageMP("");
+                                    setSuccessMessageMP("");
+                                    setChangeRequest(false);
+                                    setUserPublicDetails({...userPublicDetails, address: e.target.value});
+                                }} 
+                                required
+                            />
                         <br />
-                        <label>
-                            Phone Number: 
-                            <input onChange={(e) => [
-                                setErrorMessageMP(""), 
-                                setSuccessMessageMP(""), 
-                                setChangeRequest(false),
-                                setUserPublicDetails({...userPublicDetails, phone_number: e.target.value})]} 
-                                value= {userPublicDetails.phone_number}>
-                            </input>
-                        </label>
+                        <label htmlFor="phone_number"> Phone Number: </label> 
+                            <input 
+                                id="phone_number"
+                                type="tel"
+                                value= {userPublicDetails.phone_number}
+                                onChange={(e) => {
+                                    setErrorMessageMP(""); 
+                                    setSuccessMessageMP(""); 
+                                    setChangeRequest(false);
+                                    setUserPublicDetails({...userPublicDetails, phone_number: e.target.value});
+                                }} 
+                                required
+                            />
                         <br /> 
-                        <label>
-                            Email: 
-                            <input onChange={(e) => [
-                                setErrorMessageMP(""), 
-                                setSuccessMessageMP(""), 
-                                setChangeRequest(false),
-                                setUserPublicDetails({...userPublicDetails, email: e.target.value})]} 
-                                value= {userPublicDetails.email}>
-                            </input>
-                        </label>
+                        <label htmlFor="email"> Email: </label> 
+                            <input 
+                                id="email"
+                                type="email"
+                                value= {userPublicDetails.email}
+                                onChange={(e) => {
+                                    setErrorMessageMP(""); 
+                                    setSuccessMessageMP(""); 
+                                    setChangeRequest(false);
+                                    setUserPublicDetails({...userPublicDetails, email: e.target.value});
+                                }} 
+                                required
+                            />
                         <br />
                         {!changeRequest ?
                             <button onClick={() => setChangeRequest(true)}>Save Changes</button>
                             :
-                            <label>
-                                Please provide your password:
-                            <input type= {showCurrentPasswordMP ? "text" : "password"} 
-                                onChange= {(e) => [
-                                setErrorMessageMP(""), 
-                                setSuccessMessageMP(""), 
-                                setUserPublicDetails({...userPublicDetails, password: e.target.value})]}
-                                value = {userPublicDetails.password}>
-                            </input>
-                            <button 
-                                type="button"
-                                onClick= {() => setShowCurrentPasswordMP(!showCurrentPasswordMP)}>
-                                {showCurrentPasswordMP ? "Hide" : "Show"}
-                            </button>   
-                            <br />
-                            <button onClick= {updateUserPublicDetails}>Confirm Changes</button>
-                            </label> 
+                            <div>
+                                <label htmlFor="password_request1"> Please provide your password: </label>
+                                <input 
+                                    id="password_request1"
+                                    type= {showCurrentPasswordMP ? "text" : "password"} 
+                                    value = {userPublicDetails.password}
+                                    onChange= {(e) => {
+                                        setErrorMessageMP(""); 
+                                        setSuccessMessageMP(""); 
+                                        setUserPublicDetails({...userPublicDetails, password: e.target.value});
+                                    }}
+                                    required
+                                />
+                                <button 
+                                    type="button"
+                                    onClick= {() => setShowCurrentPasswordMP(!showCurrentPasswordMP)}
+                                    aria-describedby="button_hint1"
+                                    aria-pressed={showCurrentPasswordAM}
+                                >
+                                    {showCurrentPasswordMP ? "Hide" : "Show"}
+                                </button>   
+                                <span id="button_hint1" className="hidden-content">Clicking this button allows your screen reader to read the password you have inserted</span>
+                                <br />
+                                <button onClick= {updateUserPublicDetails}>Confirm Changes</button>
+                            </div>
                         }
-                        {errorMessageMP && <h3>{errorMessageMP}</h3>}
-                        {successMessageMP && <h3>{successMessageMP}</h3>}       
+                        {errorMessageMP && <h3 role="alert">{errorMessageMP}</h3>}
+                        {successMessageMP && <h3 role="status">{successMessageMP}</h3>}       
                     </div>
-
-
-                    <h3>Account Management</h3>
-                    <h5>Password Change</h5>
                     <div>
-                        <label>
-                            Current password:
+                        <h3>Account Management</h3>
+                        <h5>Password Change</h5>
+                    </div>
+                    <div>
+                        <label htmlFor="current_password"> Current password: </label>
                             <input 
+                                id="current_password"
                                 type= {showCurrentPasswordAM ? "text" : "password"}
-                                onChange= {(e) => [
-                                    setErrorMessageAM(""),
-                                    setSuccessMessageAM(""),
-                                    setUserPrivateDetails({...userPrivateDetails, password: e.target.value})]}
-                                    value={userPrivateDetails.password}>
-                            </input>
+                                value={userPrivateDetails.password}
+                                onChange= {(e) => {
+                                    setErrorMessageAM("");
+                                    setSuccessMessageAM("");
+                                    setUserPrivateDetails({...userPrivateDetails, password: e.target.value})
+                                }}
+                                required
+                            />
                             <button 
                                 type="button"
-                                onClick= {() => setShowCurrentPasswordAM(!showCurrentPasswordAM,)}>
+                                onClick= {() => setShowCurrentPasswordAM(!showCurrentPasswordAM)}
+                                aria-describedby="button_hint2"
+                                aria-pressed={showCurrentPasswordAM}
+                            >
                                 {showCurrentPasswordAM ? "Hide" : "Show"}
                             </button>  
-                        </label>
+                            <span id="button_hint2" className="hidden-content">Clicking this button allows your screen reader to read the password you have inserted</span>
                         <br />
-                        <label>
-                            New password:
+                        <label htmlFor="new_password"> New password: </label>
                             <input 
+                                id="new_password"
                                 type= {showNewPassword ? "text" : "password"}
-                                onChange= {(e) => [
-                                    setErrorMessageAM(""),
-                                    setSuccessMessageAM(""),
-                                    setUserPrivateDetails({...userPrivateDetails, newPassword: e.target.value})]}
-                                    value={userPrivateDetails.newPassword}>
-                            </input>
+                                value={userPrivateDetails.newPassword}
+                                onChange= {(e) => {
+                                    setErrorMessageAM("");
+                                    setSuccessMessageAM("");
+                                    setUserPrivateDetails({...userPrivateDetails, newPassword: e.target.value});
+                                }}
+                                required
+                            />
                             <button 
                                 type="button"
-                                onClick= {() => setShowNewPassword(!showNewPassword)}>
+                                onClick= {() => setShowNewPassword(!showNewPassword)}
+                                aria-describedby="button_hint3"
+                                aria-pressed={showCurrentPasswordAM}
+                            >
                                 {showNewPassword ? "Hide" : "Show"}
-                            </button>  
-                        </label>
+                            </button>
+                            <span id="button_hint3" className="hidden-content">Clicking this button allows your screen reader to read the password you have inserted</span>
                         <br />
-                        <label>
-                            Confirm new password:
+                        <label htmlFor="password_confirmation"> Confirm new password: </label>
                             <input 
+                                id="password_confirmation"
                                 type= {showConfirmPassword ? "text" : "password"}
-                                onChange= {(e) => [
-                                    setErrorMessageAM(""),
-                                    setSuccessMessageAM(""),                                    
-                                    setUserPrivateDetails({...userPrivateDetails, passwordConfirmation: e.target.value})]}
-                                    value={userPrivateDetails.passwordConfirmation}>
-                            </input>
+                                value={userPrivateDetails.passwordConfirmation}
+                                onChange= {(e) => {
+                                    setErrorMessageAM("");
+                                    setSuccessMessageAM("");                                    
+                                    setUserPrivateDetails({...userPrivateDetails, passwordConfirmation: e.target.value});
+                                }}
+                                required
+                            />
                             <button 
                                 type="button"
-                                onClick= {() => setShowConfirmPassword(!showConfirmPassword)}>
-                            {showConfirmPassword ? "Hide" : "Show"}
-                            </button>  
-                        </label>
+                                onClick= {() => setShowConfirmPassword(!showConfirmPassword)}
+                                aria-describedby="button_hint4"
+                                aria-pressed={showCurrentPasswordAM}
+                            >
+                                {showConfirmPassword ? "Hide" : "Show"}
+                            </button> 
+                            <span id="button_hint4" className="hidden-content">Clicking this button allows your screen reader to read the password you have inserted</span>
                         <br />
                         <br />
                         <button onClick= {updateUserPrivateDetails}>Change Password</button>
                         <br />                            
-                        {errorMessageAM && <h4>{errorMessageAM}</h4>}
-                        {successMessageAM && <h4>{successMessageAM}</h4>}
-
-
+                        {errorMessageAM && <h4 role="alert">{errorMessageAM}</h4>}
+                        {successMessageAM && <h4 role="status">{successMessageAM}</h4>}
+                    </div>
+                    <div>
                         <h5>Delete your account</h5>
+                    </div>
+                    <div>
                         {!accountDeleteRequest ? 
                             <button onClick={() => setAccountDeleteRequest(true)}>Delete Account</button>
                             :
-                            <label>
-                                Please provide your password:
-                                <input 
+                            <div>
+                                <label htmlFor="password_request2"> Please provide your password: </label>
+                                <input
+                                    id="password_request2" 
                                     type= {showCurrentPasswordDA ? "text" : "password"} 
-                                    onChange= {(e) => [
+                                    value={userAccountDeleteDetails.password}
+                                    onChange= {(e) => {
                                         setErrorMessageDA(""),
-                                        setUserAccountDeleteDetails({...userAccountDeleteDetails, password: e.target.value})]}
-                                        value={userAccountDeleteDetails.password}>
-                                </input>
+                                        setUserAccountDeleteDetails({...userAccountDeleteDetails, password: e.target.value})
+                                    }}
+                                    required
+                                />
                                 <button 
                                     type="button"
-                                    onClick= {() => setShowCurrentPasswordDA(!showCurrentPasswordDA)}>
+                                    onClick= {() => setShowCurrentPasswordDA(!showCurrentPasswordDA)}
+                                    aria-describedby="button_hint5"
+                                    aria-pressed={showCurrentPasswordAM}
+                                    >
                                     {showCurrentPasswordDA ? "Hide" : "Show"}
                                 </button>   
+                                <span id="button_hint5" className="hidden-content">Clicking this button allows your screen reader to read the password you have inserted</span>
                                 <br />
                                 <button onClick= {deleteAccount}> Confirm Account Deletion</button>
-                            </label> 
+                            </div>
                         }
-                        {errorMessageDA && <h3>{errorMessageDA}</h3>}
+                        {errorMessageDA && <h3 role="alert">{errorMessageDA}</h3>}
                     </div>
                 </div>
             :
-                <div>
+                <div role="alert">
                     <h4> Your account is being deleted.</h4>
                     <h5> Please wait until you're redirected to our homepage.</h5>
                 </div>

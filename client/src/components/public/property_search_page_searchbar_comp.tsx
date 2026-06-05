@@ -32,7 +32,6 @@ function PropertySearchPageSearchBar ({sortBy} : FilterValue) {
     useEffect(() => {
         const fetchAutoComplete = async () => {
             try {
-  
                 const res = await fetch(`/api/cities?city=${propData.city}`);
                 const result = await res.json();
   
@@ -45,7 +44,15 @@ function PropertySearchPageSearchBar ({sortBy} : FilterValue) {
                     setAutoCompleteQueries([]);
                     setErrorMessageAC("");
                 }
-  
+
+                else if (propData.city === cityDefault) {
+                    setAutoCompleteQueries([]);
+                }
+
+                else if (autoCompleteQueries.some(query=> query.city.toLowerCase() === propData.city.toLowerCase())) {
+                    setAutoCompleteQueries([]);
+                }
+
                 else {
                     setAutoCompleteQueries(result.cities);
                     setErrorMessageAC("");
@@ -61,9 +68,11 @@ function PropertySearchPageSearchBar ({sortBy} : FilterValue) {
             return;
         }
   
-        setTimeout(() => {
+        const timeout = setTimeout(() => {
             fetchAutoComplete();
-        }, 250);
+        }, 100); 
+        
+        return () => clearTimeout(timeout)
         
     }, [propData.city, autoCompleteQueryClicked]);
 
@@ -81,8 +90,9 @@ function PropertySearchPageSearchBar ({sortBy} : FilterValue) {
                         type = "text"
                         value = {propData.city}
                         onChange = {(e) => {
-                            setPropData({...propData, city: e.target.value})
-                            setAutoCompleteQueryClicked(false)}}   
+                            setPropData({...propData, city: e.target.value});
+                            setAutoCompleteQueryClicked(false);
+                        }}   
                         placeholder = "Enter your preferred location" 
                     />
             <ul aria-live="polite" aria-label="City autocomplete suggestions.">
@@ -94,6 +104,12 @@ function PropertySearchPageSearchBar ({sortBy} : FilterValue) {
                                 setAutoCompleteQueries([]);
                                 setAutoCompleteQueryClicked(true);
                                 }}
+                            tabIndex={0}
+                            onKeyDown={(e) => { if (e.key === "Enter") {
+                                setPropData({...propData, city: query.city});
+                                setAutoCompleteQueries([]);
+                                setAutoCompleteQueryClicked(true);
+                            }}}
                             style = {{ cursor: "pointer"}}
                             aria-label={`Select ${query.city}`}>
                             {query.city}
@@ -123,22 +139,22 @@ function PropertySearchPageSearchBar ({sortBy} : FilterValue) {
                         onChange = {(e) => setPropData({...propData, maxPrice: (Number(e.target.value))})}
                         >
                             <option value = {10000}> No Max </option>
-                            <option value = "500"> $500 PCM </option>
-                            <option value = "600"> $600 PCM </option>
-                            <option value = "700"> $700 PCM </option>
-                            <option value = "800"> $800 PCM </option>
-                            <option value = "900"> $900 PCM </option>
-                            <option value = "1000"> $1,000 PCM </option>
-                            <option value = "1100"> $1,100 PCM </option>
-                            <option value = "1200"> $1,200 PCM </option>
-                            <option value = "1300"> $1,300 PCM </option>
-                            <option value = "1400"> $1,400 PCM </option>
-                            <option value = "1500"> $1,500 PCM </option>
-                            <option value = "1600"> $1,600 PCM </option>
-                            <option value = "1700"> $1,700 PCM </option>
-                            <option value = "1800"> $1,800 PCM </option>
-                            <option value = "1900"> $1,900 PCM </option>
-                            <option value = "2000"> $2,000 PCM </option>
+                            <option value = "500"> £500 PCM </option>
+                            <option value = "600"> £600 PCM </option>
+                            <option value = "700"> £700 PCM </option>
+                            <option value = "800"> £800 PCM </option>
+                            <option value = "900"> £900 PCM </option>
+                            <option value = "1000"> £1,000 PCM </option>
+                            <option value = "1100"> £1,100 PCM </option>
+                            <option value = "1200"> £1,200 PCM </option>
+                            <option value = "1300"> £1,300 PCM </option>
+                            <option value = "1400"> £1,400 PCM </option>
+                            <option value = "1500"> £1,500 PCM </option>
+                            <option value = "1600"> £1,600 PCM </option>
+                            <option value = "1700"> £1,700 PCM </option>
+                            <option value = "1800"> £1,800 PCM </option>
+                            <option value = "1900"> £1,900 PCM </option>
+                            <option value = "2000"> £2,000 PCM </option>
                     </select>
                 <br></br>
                 <label htmlFor ="min_bedrooms"> Bedrooms: </label>

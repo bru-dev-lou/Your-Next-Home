@@ -65,7 +65,11 @@ function DashboardPropertyAdd () {
                     setAutoCompleteQueries([]);
                     setErrorMessageAC("");
                 }
-  
+
+                else if (autoCompleteQueries.some( query => query.city === propertyDetails.city)) {
+                    setAutoCompleteQueries([]);
+                }
+                
                 else {
                     setAutoCompleteQueries(result.cities);
                     setErrorMessageAC("");
@@ -83,7 +87,7 @@ function DashboardPropertyAdd () {
   
         const timeout = setTimeout (() => {
             fetchAutoComplete();
-        }, 250);
+        }, 100);
 
         return () => clearTimeout(timeout);
         
@@ -208,8 +212,8 @@ function DashboardPropertyAdd () {
                     type="text"
                     value={propertyDetails.city}
                     onChange={(e) => {
-                        setPropertyDetails({...propertyDetails, city: e.target.value}),
-                        setAutoCompleteQueryClicked(false)
+                        setPropertyDetails({...propertyDetails, city: e.target.value});
+                        setAutoCompleteQueryClicked(false);
                     }}
                     required
                     aria-invalid={missingField === "city"}
@@ -221,15 +225,15 @@ function DashboardPropertyAdd () {
                     <li 
                         key={index}
                         onClick = {() => {
-                            setPropertyDetails({...propertyDetails, city: query.city}),
-                            setAutoCompleteQueries([]),
-                            setAutoCompleteQueryClicked(true)
+                            setPropertyDetails({...propertyDetails, city: query.city});
+                            setAutoCompleteQueries([]);
+                            setAutoCompleteQueryClicked(true);
                             }}
                         tabIndex={0} 
                         onKeyDown= { (e) => { if (e.key === "Enter") {
-                            setPropertyDetails({...propertyDetails, city: query.city}),
-                            setAutoCompleteQueries([]),
-                            setAutoCompleteQueryClicked(true)
+                            setPropertyDetails({...propertyDetails, city: query.city});
+                            setAutoCompleteQueries([]);
+                            setAutoCompleteQueryClicked(true);
                         }}}
                         style = {{ cursor: "pointer"}}
                         aria-label={`Select ${query.city}`}

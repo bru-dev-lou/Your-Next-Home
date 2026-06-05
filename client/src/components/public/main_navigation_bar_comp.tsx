@@ -36,15 +36,18 @@ function MainNavigationBar (){
         e.preventDefault();
 
         if (e.target.value === "My Properties") {
-            navigate("/dashboard")
+            navigate("/dashboard");
+            e.target.value = "User Name";
         }
 
         if (e.target.value === "My Profile") {
-            navigate("/dashboard/profile/edit")
+            navigate("/dashboard/profile/edit");
+            e.target.value = "User Name";            
         }
 
         if (e.target.value === "Favorite Properties") {
-            navigate("/dashboard/property/favorites")
+            navigate("/dashboard/property/favorites");
+            e.target.value = "User Name";
         }
 
         if (e.target.value === "Sign Out") {
