@@ -42,7 +42,7 @@ function MainNavigationBar (){
 
         if (e.target.value === "My Profile") {
             navigate("/dashboard/profile/edit");
-            e.target.value = "User Name";            
+            e.target.value = "User Name";
         }
 
         if (e.target.value === "Favorite Properties") {

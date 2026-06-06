@@ -39,19 +39,31 @@ function DashboardProfileEdit () {
     const [ successMessageAM, setSuccessMessageAM ] = useState("");
     const [ errorMessageDA, setErrorMessageDA ] = useState(""); 
 
-    const [ changeRequest, setChangeRequest ] = useState(false);
+    // Show / Hide password button states.
+
     const [ showCurrentPasswordMP, setShowCurrentPasswordMP ] = useState(false);
     const [ showCurrentPasswordAM, setShowCurrentPasswordAM ] = useState(false);
     const [ showCurrentPasswordDA, setShowCurrentPasswordDA ] = useState(false);
-
     const [ showNewPassword, setShowNewPassword ] = useState(false);
     const [ showConfirmPassword, setShowConfirmPassword ] = useState(false);
     
-    const [ accountDeleteRequest, setAccountDeleteRequest ] = useState(false);
-    const [ accountDeleted, setAccountDeleted ] = useState(false); 
+    // States to trigger password request upon being true.
 
+    const [ changeRequest, setChangeRequest ] = useState(false);
+    const [ accountDeleteRequest, setAccountDeleteRequest ] = useState(false);
+
+    // States for informative messages upon being true.
+
+    const [ accountDeleted, setAccountDeleted ] = useState(false); 
     const [ dataLoading, setDataLoading ] = useState(true);
 
+    // States for WAI ARIA invalid triggers - MP = My Profile / AM = Account Management / DA = Delete Account 
+
+    const [ missingField, setMissingField ] = useState("");
+    const [ passErrorCodeMP, setPassErrorCodeMP ] = useState(""); 
+    const [ passErrorCodeAM, setPassErrorCodeAM] = useState(""); 
+    const [ passErrorCodeDA, setPassErrorCodeDA ] = useState(""); 
+    
 
     useEffect(() => {
         const fetchData = async () => {
@@ -89,10 +101,10 @@ function DashboardProfileEdit () {
             const {password: p2, ...originalDetails} = originalUserPublicDetails;
 
             if (JSON.stringify(detailsToCompare) === JSON.stringify(originalDetails)) {
-            setErrorMessageMP("Please update at least one field.");
-            setSuccessMessageMP("");
-            setChangeRequest(false);
-            setUserPublicDetails({...userPublicDetails, password: ""});     
+                setErrorMessageMP("Please update at least one field.");
+                setSuccessMessageMP("");
+                setChangeRequest(false);
+                setUserPublicDetails({...userPublicDetails, password: ""});     
             return;
             }
 
@@ -108,6 +120,8 @@ function DashboardProfileEdit () {
         
             if (res.ok) {
                 setErrorMessageMP("");
+                setMissingField("");
+                setPassErrorCodeMP("");
                 setSuccessMessageMP(result.message);
                 setOriginalUserPublicDetails({...userPublicDetails, password: ""});
                 setUserPublicDetails({...userPublicDetails, password: ""});
@@ -115,6 +129,7 @@ function DashboardProfileEdit () {
 
             else if (result.passwordError) {
                 setErrorMessageMP(result.passwordError);
+                setPassErrorCodeMP(result.name); 
                 setSuccessMessageMP("");
                 setChangeRequest(true);
                 setUserPublicDetails({...userPublicDetails, password: ""});            
@@ -123,6 +138,7 @@ function DashboardProfileEdit () {
             else {
                 setSuccessMessageMP("");
                 setErrorMessageMP(result.error);
+                setMissingField(result.name);
                 setChangeRequest(false);
                 setUserPublicDetails({...userPublicDetails, password: ""});            
             }
@@ -156,6 +172,7 @@ function DashboardProfileEdit () {
             else {
                 setSuccessMessageAM("");
                 setErrorMessageAM(result.error);
+                setPassErrorCodeAM(result.name); 
             }
         }
             
@@ -188,6 +205,7 @@ function DashboardProfileEdit () {
             else {
                 const result = await res.json();
                 setErrorMessageDA(result.error);
+                setPassErrorCodeDA(result.name);
                 setUserAccountDeleteDetails({...userAccountDeleteDetails, password: ""});
             }
         }
@@ -221,11 +239,13 @@ function DashboardProfileEdit () {
                                 value= {userPublicDetails.name}
                                 onChange={(e) => {
                                     setErrorMessageMP(""); 
-                                    setSuccessMessageMP(""); 
+                                    setSuccessMessageMP("");
+                                    setMissingField("");
                                     setChangeRequest(false);
                                     setUserPublicDetails({...userPublicDetails, name: e.target.value});
                                 }} 
                                 required
+                                aria-invalid={missingField === "name"}
                             />
                         <br />
                         <label htmlFor="address"> Address: </label>
@@ -236,10 +256,12 @@ function DashboardProfileEdit () {
                                 onChange={(e) => {
                                     setErrorMessageMP("");
                                     setSuccessMessageMP("");
+                                    setMissingField("");
                                     setChangeRequest(false);
                                     setUserPublicDetails({...userPublicDetails, address: e.target.value});
                                 }} 
                                 required
+                                aria-invalid={missingField === "address"}
                             />
                         <br />
                         <label htmlFor="phone_number"> Phone Number: </label> 
@@ -250,10 +272,12 @@ function DashboardProfileEdit () {
                                 onChange={(e) => {
                                     setErrorMessageMP(""); 
                                     setSuccessMessageMP(""); 
+                                    setMissingField("");
                                     setChangeRequest(false);
                                     setUserPublicDetails({...userPublicDetails, phone_number: e.target.value});
                                 }} 
                                 required
+                                aria-invalid={missingField === "number"}
                             />
                         <br /> 
                         <label htmlFor="email"> Email: </label> 
@@ -264,10 +288,12 @@ function DashboardProfileEdit () {
                                 onChange={(e) => {
                                     setErrorMessageMP(""); 
                                     setSuccessMessageMP(""); 
+                                    setMissingField("");
                                     setChangeRequest(false);
                                     setUserPublicDetails({...userPublicDetails, email: e.target.value});
                                 }} 
                                 required
+                                aria-invalid={missingField === "email"}
                             />
                         <br />
                         {!changeRequest ?
@@ -282,15 +308,17 @@ function DashboardProfileEdit () {
                                     onChange= {(e) => {
                                         setErrorMessageMP(""); 
                                         setSuccessMessageMP(""); 
+                                        setPassErrorCodeMP("");
                                         setUserPublicDetails({...userPublicDetails, password: e.target.value});
                                     }}
                                     required
+                                    aria-invalid={passErrorCodeMP === "missing_password" || passErrorCodeMP === "incorrect_password"}
                                 />
                                 <button 
                                     type="button"
                                     onClick= {() => setShowCurrentPasswordMP(!showCurrentPasswordMP)}
                                     aria-describedby="button_hint1"
-                                    aria-pressed={showCurrentPasswordAM}
+                                    aria-pressed={showCurrentPasswordMP}
                                 >
                                     {showCurrentPasswordMP ? "Hide" : "Show"}
                                 </button>   
@@ -315,9 +343,11 @@ function DashboardProfileEdit () {
                                 onChange= {(e) => {
                                     setErrorMessageAM("");
                                     setSuccessMessageAM("");
+                                    setPassErrorCodeAM("");
                                     setUserPrivateDetails({...userPrivateDetails, password: e.target.value})
                                 }}
                                 required
+                                aria-invalid={passErrorCodeAM === "missing_current_pass" || passErrorCodeAM === "incorrect_current_pass"}
                             />
                             <button 
                                 type="button"
@@ -337,15 +367,22 @@ function DashboardProfileEdit () {
                                 onChange= {(e) => {
                                     setErrorMessageAM("");
                                     setSuccessMessageAM("");
+                                    setPassErrorCodeAM("");
                                     setUserPrivateDetails({...userPrivateDetails, newPassword: e.target.value});
                                 }}
                                 required
+                                aria-invalid={
+                                    passErrorCodeAM === "missing_new_pass" ||
+                                    passErrorCodeAM === "new_pass_wrong_format" ||
+                                    passErrorCodeAM === "no_match_passwords"    ||
+                                    passErrorCodeAM === "new_pass_same_old_pass"
+                                }
                             />
                             <button 
                                 type="button"
                                 onClick= {() => setShowNewPassword(!showNewPassword)}
                                 aria-describedby="button_hint3"
-                                aria-pressed={showCurrentPasswordAM}
+                                aria-pressed={showNewPassword}
                             >
                                 {showNewPassword ? "Hide" : "Show"}
                             </button>
@@ -358,16 +395,18 @@ function DashboardProfileEdit () {
                                 value={userPrivateDetails.passwordConfirmation}
                                 onChange= {(e) => {
                                     setErrorMessageAM("");
-                                    setSuccessMessageAM("");                                    
+                                    setSuccessMessageAM("");
+                                    setPassErrorCodeAM("");                                    
                                     setUserPrivateDetails({...userPrivateDetails, passwordConfirmation: e.target.value});
                                 }}
                                 required
+                                aria-invalid={passErrorCodeAM === "no_match_passwords"}
                             />
                             <button 
                                 type="button"
                                 onClick= {() => setShowConfirmPassword(!showConfirmPassword)}
                                 aria-describedby="button_hint4"
-                                aria-pressed={showCurrentPasswordAM}
+                                aria-pressed={showConfirmPassword}
                             >
                                 {showConfirmPassword ? "Hide" : "Show"}
                             </button> 
@@ -394,15 +433,17 @@ function DashboardProfileEdit () {
                                     value={userAccountDeleteDetails.password}
                                     onChange= {(e) => {
                                         setErrorMessageDA(""),
+                                        setPassErrorCodeDA("");
                                         setUserAccountDeleteDetails({...userAccountDeleteDetails, password: e.target.value})
                                     }}
                                     required
+                                    aria-invalid={passErrorCodeDA === "missing_password" || passErrorCodeDA === "incorrect_password"}
                                 />
                                 <button 
                                     type="button"
                                     onClick= {() => setShowCurrentPasswordDA(!showCurrentPasswordDA)}
                                     aria-describedby="button_hint5"
-                                    aria-pressed={showCurrentPasswordAM}
+                                    aria-pressed={showCurrentPasswordDA}
                                     >
                                     {showCurrentPasswordDA ? "Hide" : "Show"}
                                 </button>   
