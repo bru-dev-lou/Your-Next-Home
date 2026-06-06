@@ -7,7 +7,16 @@ router.get("/", (req, res) => {
     const ownerID = req.user?.id;
 
     try {
-        const SQL = `SELECT property_favorites.*, property_list.*, property_photos.photo_path
+        const SQL = `SELECT 
+            property_list.id,
+            property_list.type,
+            property_list.city,
+            property_list.price,
+            property_list.no_bedrooms,
+            property_list.no_bathrooms,
+            property_list.summary, 
+            property_list.date_listed, 
+            property_photos.photo_path
             FROM property_favorites
             INNER JOIN property_list
             ON property_favorites.property_id = property_list.id

@@ -43,28 +43,28 @@ router.route("/")
 
     try {
         const fieldCheck = [
-            {field: name, error: "Please provide your name to update your profile."},
-            {field: address, error: "Please provide your address to update your profile."},
-            {field: number, error: "Please provide your phone number to update your profile."},
-            {field: email, error: "Please provide your email to update your profile."}
+            {field: name, name: "name", error: "Please provide your name to update your profile."},
+            {field: address, name: "address", error: "Please provide your address to update your profile."},
+            {field: number, name: "number", error: "Please provide your phone number to update your profile."},
+            {field: email, name: "email", error: "Please provide your email to update your profile."}
         ];
 
-        for (const {field, error} of fieldCheck) {
+        for (const {field, name, error} of fieldCheck) {
             if (!field) {
-                return res.status(400).json ({error}); 
+                return res.status(400).json ({name, error}); 
             }
         }
 
         const user  = db.prepare(`SELECT password_hash FROM property_owners WHERE id = ?`).get(ownerID) as UserData;
 
         if (!password) {
-            return res.status(400).json({passwordError: "Please provide your password to confirm these changes."})
+            return res.status(400).json({name: "missing_password", passwordError: "Please provide your password to confirm these changes."})
         }
 
         const match = await bcrypt.compare(password, user.password_hash);
     
         if (!match) {
-            return res.status(400).json({passwordError: "Incorrect password, please try again."});
+            return res.status(400).json({name: "incorrect_password", passwordError: "Incorrect password, please try again."});
         }
 
 
@@ -89,13 +89,13 @@ router.route("/")
         const user = db.prepare(`SELECT password_hash FROM property_owners WHERE id = ?`).get(ownerID) as UserData;
 
         if(!password) {
-            return res.status(400).json({error: "Please provide your password before deleting your account."})
+            return res.status(400).json({name: "missing_password", error: "Please provide your password before deleting your account."})
         }
 
         const match = await bcrypt.compare(password, user.password_hash);
 
         if(!match) {
-            return res.status(400).json({error: "Incorrect password, please try again."});
+            return res.status(400).json({name: "incorrect_password", error: "Incorrect password, please try again."});
         }
 
         db.prepare(`DELETE FROM property_owners WHERE id = ?`).run(ownerID); 
@@ -124,29 +124,29 @@ router.route("/password_change")
         const user = db.prepare(`SELECT password_hash FROM property_owners WHERE id = ?`).get(ownerID) as UserData; 
 
         if (!password) {
-            return res.status(400).json({error: "Please start by providing your password."})
+            return res.status(400).json({name: "missing_current_pass", error: "Please start by providing your password."})
         }
         
         const match = await bcrypt.compare(password, user.password_hash);
     
         if (!match) {
-            return res.status(400).json({error: "Incorrect password, please try again."});
+            return res.status(400).json({name: "incorrect_current_pass", error: "Incorrect password, please try again."});
         }
 
         if(!newPassword) {
-            return res.status(400).json({error: "Please choose a new password."});
+            return res.status(400).json({name: "missing_new_pass", error: "Please choose a new password."});
         }
 
         if (!passwordRegex.test(newPassword)) {
-                return res.status(400).json({ error: "Password must be 8+ characters with an uppercase, a lowercase, a number and a special character [?!@#$%^&*]."});
+                return res.status(400).json({name: "new_pass_wrong_format", error: "Password must be 8+ characters with an uppercase, a lowercase, a number and a special character [?!@#$%^&*]."});
             }
 
         if (newPassword !== passwordConfirmation) {
-                return res.status(400).json({error: "Passwords do not match."})
+                return res.status(400).json({name: "no_match_passwords", error: "Passwords do not match."})
             }
         
         if (newPassword === password) {
-            return res.status(400).json({error: "New password cannot be the same as old password."});
+            return res.status(400).json({name: "new_pass_same_old_pass", error: "New password cannot be the same as old password."});
         }
            
         const newPasswordHash = await bcrypt.hash(newPassword, 10);

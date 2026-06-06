@@ -2,18 +2,16 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
 type Properties = {
-    id: number;
-    type: string;
-    city: string;
-    price: number;
-    no_bedrooms: number;
-    no_bathrooms: number;
-    size: number;
-    furniture: string;
-    summary: string;
-    detail: string
-    photo_path: string;
-};
+  id: number;
+  type: string;
+  city: string;
+  price: number;
+  no_bedrooms: number;
+  no_bathrooms: number;
+  summary: string;
+  date_listed: string;
+  photo_path: string;
+}
 
 const DashboardFavoriteProperties = () => {
     const navigate = useNavigate();
@@ -88,7 +86,7 @@ const DashboardFavoriteProperties = () => {
         return (
            <div>
                 <h3>Favorite Properties</h3>
-                <h4>{errorMessageFP}</h4>
+                {errorMessageFP && <h4 role="alert">{errorMessageFP}</h4>}
             </div>
         )
     }
@@ -99,23 +97,32 @@ const DashboardFavoriteProperties = () => {
             {favoriteProps.map((property) => {
                 return (
                     <div key = {property.id}>
-                        {property.type === "Detached" || property.type === "Semi-Detached" || property.type === "Terraced" ?
-                            <h4>{property.type} property in {property.city}</h4>
-                        : 
-                            <h4>{property.type} in {property.city}</h4>
-                        }
-                        <img src={property.photo_path} onClick = {() => navigate(`/property/${property.id}`)} style={{cursor: "pointer", width: "300px", height: "200px"}} />`
+                        <span className="hidden-content">Address</span>
+                        <p>{property.city}</p>
+                        <span className="hidden-content">Monthly rental rate</span>
+                        <p> £{property.price.toLocaleString()} per month </p>
+                        <img src={property.photo_path} 
+                            role="button"
+                            alt="Property's main photo - press enter to view detailed property page." 
+                            tabIndex={0}
+                            onKeyDown= { (e) => { if (e.key === "Enter" || e.key === " ") {
+                                navigate(`/property/${property.id}`);
+                            }}}
+                            onClick = {() => navigate(`/property/${property.id}`)} 
+                            style={{cursor: "pointer", width: "300px", height: "200px"}} />
+                        <p className="hidden-content">Summary</p>
                         <p>{property.summary}</p>
-                        <p>Price: £{property.price} PCM</p>
-                        <p>Bedrooms: {property.no_bedrooms}</p>
-                        <p>Bathrooms: {property.no_bathrooms}</p>
+                        <p> Date Listed: {new Date(property.date_listed).toLocaleDateString("en-GB")} </p>
+                        <p> Property Type: {property.type}</p>
+                        <p> Bedrooms: {property.no_bedrooms}</p>
+                        <p> Bathrooms: {property.no_bathrooms}</p>
                         <button onClick= {() => setRemoveIDConfirmation(property.id)}>Remove from Favorites</button>
                         {removeIDConfirmation === property.id ? (
                             <div>
                                 <p> Are you sure? </p>
                                 <button onClick={() => deleteFavProperty(property.id)}> Confirm </button>
                                 <button onClick={() => {setRemoveIDConfirmation(null);}}> Cancel </button>
-                                {errorMessageDP && <p>{errorMessageDP}</p>}
+                                {errorMessageDP && <p role="alert">{errorMessageDP}</p>}
                             </div>                        
                             ) : null 
                         }

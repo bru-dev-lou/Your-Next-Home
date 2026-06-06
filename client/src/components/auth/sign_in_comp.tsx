@@ -9,7 +9,7 @@ type UserData = {
 }
 
 function SignIn () {
-    const [ data, setData ] = useState<UserData>({username: "", password: ""})
+    const [ data, setData ] = useState<UserData>({username: "", password: ""});
     const [ errorMessage, setErrorMessage ] = useState(""); 
     
     const navigate = useNavigate(); 
@@ -56,7 +56,7 @@ function SignIn () {
                         onChange={(e) => setData({...data, username: e.target.value})}
                         autoComplete= "username"
                         aria-invalid={errorMessage? "true" : "false"}
-                        aria-required="true"
+                        required
                     />
                 <br />
                 <label htmlFor="password"> Password: </label>
@@ -67,14 +67,14 @@ function SignIn () {
                         onChange={(e) => setData({...data, password: e.target.value})}
                         autoComplete= "current-password"
                         aria-invalid={errorMessage ? "true" : "false"}
-                        aria-required="true"
+                        required
                     />
                     <br />
                 <button type="submit"> Sign In </button>
             </form>
             { errorMessage && <p role="alert"> { errorMessage } </p> }
         </div>
-    )
+    );
 }
 
 export default SignIn;

@@ -15,7 +15,6 @@ type PropertyDetails = {
 
 type PropertyPhotos = {
     id: number;
-    propID: number;
     photo_path: string;
 }
 
@@ -29,7 +28,13 @@ function DashboardPropertyEdit() {
     const [ propertyDetails, setPropertyDetails ] = useState<PropertyDetails | null>(null);
 
     const [ propertyPhotos, setPropertyPhotos ] = useState<PropertyPhotos[]>([]);
-    
+
+//  Auto comnplete function states for city input. 
+
+    const [ cities, setCities ] = useState<{city: string}[]>([]);
+    const [ errorMessageAC , setErrorMessageAC ] = useState(""); 
+    const [ autoCompleteQueryClicked, setAutoCompleteQueryClicked ] = useState(false); 
+
 // Error Messages → PD = Photo Display, PE = Property Edit, PF = Photo Fetch, PU = Photo Upload
 
     const [ errorMessagePD, setErrorMessagePD ] = useState("");
@@ -39,13 +44,20 @@ function DashboardPropertyEdit() {
 
     const [ errorMessagePE, setErrorMessagePE ] = useState("");
     const [ successMessagePE, setSuccessMessagePE ] = useState("");
+    const [ propertyMissingField, setPropertyMissingField ] = useState("");
     const [ propertyUpdated, setPropertyUpdated ] = useState(false);
 
     const [ errorMessagePU, setErrorMessagePU ] = useState(""); 
     const [ successMessagePU, setSuccessMessagePU ] = useState("");
     const [ photoUploading, setPhotoUploading] = useState(false); 
 
+// WAI-ARIA states for live region updates on word count for summary and description fields.
 
+    const [ announceSummaryWordCount, setAnnounceSummaryWordCount ] = useState(0); 
+    const summaryWordCount = propertyDetails?.summary ? propertyDetails.summary.split(/\s+/).filter(Boolean).length : 0;
+
+    const [ announceDescriptionWordCount, setAnnounceDescriptionWordCount ] = useState(0); 
+    const descriptionWordCount = propertyDetails?.detail ? propertyDetails.detail?.split(/\s+/).filter(Boolean).length : 0;
 
     useEffect(() => {
         const fetchData = async () => {
@@ -54,7 +66,7 @@ function DashboardPropertyEdit() {
                 const result = await res.json();
 
                 if (!res.ok) {
-                    setErrorMessagePF(result.errorProp);
+                    setErrorMessagePF(result.errorProperty);
                 }
 
                 else if (result.errorPhotos) {
@@ -79,10 +91,55 @@ function DashboardPropertyEdit() {
         fetchData();
     }, []);
 
+    useEffect (() => {
+        const fetchAutoComplete = async () => {
+            try {
+                const res = await fetch(`/api/cities?city=${propertyDetails!.city}`)
+                const result = await  res.json(); 
+
+                if (!res.ok) {
+                    setCities([]);
+                    setErrorMessageAC(result.error) 
+                }
+
+                else if(propertyDetails?.city?.length === 0) {
+                    setCities([]);
+                    setErrorMessageAC("");
+                } 
+
+                else if (result.cities.some( (query : {city: string}) => query.city === propertyDetails?.city)) {
+                    setCities([]);
+                    setErrorMessageAC("");
+                }
+                    
+                else {
+                    setCities(result.cities);
+                    setErrorMessageAC("");
+                }
+            }
+  
+            catch(error) {
+                setErrorMessageAC("AutoComplete feature currently unavailable.")
+            }
+        }
+          
+        if (autoCompleteQueryClicked) {
+            return;
+        }
+  
+        const timeout = setTimeout (() => {
+            fetchAutoComplete();
+        }, 100);
+
+        return () => clearTimeout(timeout);
+        
+    }, [propertyDetails?.city, autoCompleteQueryClicked]);
+
     async function propertyDetailsUpdate(e: React.MouseEvent<HTMLButtonElement>) {
         e.preventDefault();
 
         setPropertyUpdated(false);
+        setPropertyMissingField("");
 
         if (JSON.stringify(propertyDetails) === JSON.stringify(originalPropertyDetails)) {
             setErrorMessagePE("Please update at least one field.");
@@ -109,6 +166,7 @@ function DashboardPropertyEdit() {
             
             else {
                 setErrorMessagePE(result.error);
+                setPropertyMissingField(result.name);
                 setSuccessMessagePE("");
             }
         } 
@@ -117,6 +175,27 @@ function DashboardPropertyEdit() {
             setErrorMessagePE("Failed to update property. Please check your internet and try again.");
         }
     }
+
+// Word count useEffects for property summary and property description with 1.5 second debounce. 
+
+    useEffect(() => {
+        const summaryWordCountTimeout = setTimeout(() => {
+            setAnnounceSummaryWordCount(summaryWordCount); 
+        }, 1500);
+
+        return () => clearTimeout(summaryWordCountTimeout);
+    
+    }, [summaryWordCount]); 
+
+    useEffect(() => {
+        const descriptionWordCountTimeout = setTimeout(() => {
+            setAnnounceDescriptionWordCount(descriptionWordCount); 
+        }, 1500);
+
+        return () => clearTimeout(descriptionWordCountTimeout);
+    
+    }, [descriptionWordCount]);
+
 
     async function photoUpload(e: React.ChangeEvent<HTMLInputElement>) {
         e.preventDefault();
@@ -209,9 +288,9 @@ function DashboardPropertyEdit() {
     if (!propertyDetails) {
         return (
             <div>
-                {errorMessagePF ? <h3> {errorMessagePF} </h3>
+                {errorMessagePF ? <h3 role="alert"> {errorMessagePF} </h3>
                 :
-                <h3>Loading...</h3>}
+                <h3 role="status">Loading...</h3>}
             </div>
         );
     }   
@@ -221,86 +300,147 @@ function DashboardPropertyEdit() {
             <div>
                 <h3> Property Information </h3>
                 <h5> Update your property details below.</h5>
-                <label> 
-                    Type:
-                    <select onChange={(e) => [
-                        setPropertyDetails({...propertyDetails, type: e.target.value}),
-                        setErrorMessagePE(""),
-                        setSuccessMessagePE("")]} 
-                        value={propertyDetails.type}>
-                        <option value={propertyDetails.type}>
-                            {propertyDetails.type}
-                        </option>
-                        {propertyDetails.type === 'Apartment' ? null : <option onChange={(e) => setPropertyDetails({...propertyDetails, type: e.target.value})} value='Apartment'>Apartment</option>}
-                        {propertyDetails.type === 'Terraced' ? null : <option onChange={(e) => setPropertyDetails({...propertyDetails, type: e.target.value})} value='Terraced'>Terraced</option>}
-                        {propertyDetails.type === 'Semi-Detached' ? null : <option onChange={(e) => setPropertyDetails({...propertyDetails, type: e.target.value})} value='Semi-Detached'>Semi-Detached</option>}
-                        {propertyDetails.type === 'Detached' ? null : <option onChange={(e) => setPropertyDetails({...propertyDetails, type: e.target.value})} value='Detached'>Detached</option>}
-                        {propertyDetails.type === 'Bungalow' ? null : <option onChange={(e) => setPropertyDetails({...propertyDetails, type: e.target.value})} value='Bungalow'>Bungalow</option>}
+                <label htmlFor="location"> City: </label>
+                    <input 
+                        id="location"
+                        type="text" 
+                        value={propertyDetails.city}
+                        onChange={(e) => {
+                            setPropertyDetails({...propertyDetails, city: e.target.value});
+                            setErrorMessagePE("");
+                            setSuccessMessagePE("");
+                            setAutoCompleteQueryClicked(false);
+                        }}
+                        required
+                        aria-invalid={propertyMissingField === "city"}
+                    />
+                <br />
+                <ul aria-live="polite" aria-label="City autocomplete suggestions"> 
+                {cities.map((query, index) => (
+                    <li 
+                        key={index}
+                        onClick = {() => {
+                            setPropertyDetails({...propertyDetails, city: query.city});
+                            setCities([]);
+                            setAutoCompleteQueryClicked(true);
+                            }}
+                        tabIndex={0} 
+                        onKeyDown= { (e) => { if (e.key === "Enter") {
+                            setPropertyDetails({...propertyDetails, city: query.city});
+                            setCities([]);
+                            setAutoCompleteQueryClicked(true);
+                        }}}
+                        style = {{ cursor: "pointer"}}
+                        aria-label={`Select ${query.city}`}
+                    >
+                        {query.city}
+                    </li>
+                ))}
+            </ul>
+                {errorMessageAC && 
+                    <div role="alert">
+                        <h3>{errorMessageAC}</h3>
+                    </div>
+                }
+            <br />
+                <label htmlFor="property_type"> Type: </label>
+                    <select 
+                        id="property_type"
+                        value={propertyDetails.type}
+                        onChange={(e) => {
+                            setPropertyDetails({...propertyDetails, type: e.target.value});
+                            setErrorMessagePE("");
+                            setSuccessMessagePE("");
+                        }}
+                        required
+                        aria-invalid={propertyMissingField === "type"}
+                    >
+                    <option value={propertyDetails.type}>{propertyDetails.type}</option>
+                    {propertyDetails.type !== "Apartment" && <option value="Apartment">Apartment</option>}
+                    {propertyDetails.type !== "Terraced" && <option value="Terraced" >Terraced</option>}
+                    {propertyDetails.type !== "Semi-Detached" && <option value="Semi-Detached" >Semi-Detached</option>}
+                    {propertyDetails.type !== "Detached" && <option value="Detached" >Detached</option>}
+                    {propertyDetails.type !== "Bungalow" && <option value="Bungalow" >Bungalow</option>}
                     </select>  
-                </label>
                 <br />
-                <label>
-                    City:
-                    <input type="text" onChange={(e) => [
-                        setPropertyDetails({...propertyDetails, city: e.target.value}),
-                        setErrorMessagePE(""),
-                        setSuccessMessagePE("")]} 
-                        value={propertyDetails.city} />
-                </label>
+                <label htmlFor="rent"> Rate (£): </label>
+                    <input 
+                        id="rent"
+                        type="number" 
+                        value={propertyDetails.price ?? ""}
+                        onChange={(e) => {
+                            setPropertyDetails({...propertyDetails, price: e.target.value === "" ? undefined : parseFloat(e.target.value)});
+                            setErrorMessagePE("");
+                            setSuccessMessagePE("");
+                        }}
+                        required
+                        aria-invalid={propertyMissingField === "price"} 
+                     />
                 <br />
-                <label>
-                    Price (£):
-                    <input type="number" onChange={(e) => [
-                        setPropertyDetails({...propertyDetails, price: e.target.value === "" ? undefined : parseFloat(e.target.value)}),
-                        setErrorMessagePE(""),
-                        setSuccessMessagePE("")]} 
-                        value={propertyDetails.price ?? ""} />
-                </label>
+                <label htmlFor="bedrooms"> Bedrooms: </label>
+                    <input 
+                        id="bedrooms"
+                        type="number" 
+                        value={propertyDetails.no_bedrooms ?? ""}
+                        onChange={(e) => {
+                            setPropertyDetails({...propertyDetails, no_bedrooms: e.target.value === "" ? undefined : parseInt(e.target.value)});
+                            setErrorMessagePE("");
+                            setSuccessMessagePE("");
+                        }} 
+                        required
+                        aria-invalid={propertyMissingField === "bedrooms"}
+                    />
                 <br />
-                <label>
-                    Bedrooms:
-                    <input type="number" onChange={(e) => [
-                        setPropertyDetails({...propertyDetails, no_bedrooms: e.target.value === "" ? undefined : parseInt(e.target.value)}),
-                        setErrorMessagePE(""),
-                        setSuccessMessagePE("")]} 
-                        value={propertyDetails.no_bedrooms ?? ""} />
-                </label>
+                <label htmlFor="bathrooms"> Bathrooms: </label>
+                    <input 
+                        id="bathrooms"
+                        type="number" 
+                        value={propertyDetails.no_bathrooms ?? ""}
+                        onChange={(e) => {
+                            setPropertyDetails({...propertyDetails, no_bathrooms: e.target.value === "" ? undefined : parseInt(e.target.value)});
+                            setErrorMessagePE("");
+                            setSuccessMessagePE("");
+                        }}
+                        required
+                        aria-invalid={propertyMissingField === "bathrooms"}
+                    />
                 <br />
-                <label>
-                    Bathrooms:
-                    <input type="number" onChange={(e) => [ 
-                        setPropertyDetails({...propertyDetails, no_bathrooms: e.target.value === "" ? undefined : parseInt(e.target.value)}),
-                        setErrorMessagePE(""),
-                        setSuccessMessagePE("")]}
-                        value={propertyDetails.no_bathrooms ?? ""} />
-                </label>
+                <label htmlFor="property_size"> Size (m²): </label>
+                    <input 
+                        id="property_size"
+                        type="number" 
+                        value={propertyDetails.size ?? ""}    
+                        onChange={(e) => { 
+                            setPropertyDetails({...propertyDetails, size: e.target.value === "" ? undefined : parseInt(e.target.value)});
+                            setErrorMessagePE("");
+                            setSuccessMessagePE("");
+                        }} 
+                        required
+                        aria-invalid={propertyMissingField === "size"}
+                    />
                 <br />
-                <label>
-                    Size (m²):
-                    <input type="number" onChange={(e) => [ 
-                        setPropertyDetails({...propertyDetails, size: e.target.value === "" ? undefined : parseInt(e.target.value)}),
-                        setErrorMessagePE(""),
-                        setSuccessMessagePE("")]} 
-                        value={propertyDetails.size ?? ""} />
-                </label>
-                <br />
-                <label>
-                    Furniture:
-                    <select onChange={(e) => [
-                        setPropertyDetails({...propertyDetails, furniture: e.target.value}),
-                        setErrorMessagePE(""),
-                        setSuccessMessagePE("")]}
-                        value={propertyDetails.furniture}>
+                <label htmlFor="furniture"> Furniture: </label>
+                    <select 
+                        id="furniture"
+                        value={propertyDetails.furniture}
+                        onChange={(e) => {
+                            setPropertyDetails({...propertyDetails, furniture: e.target.value});
+                            setErrorMessagePE("");
+                            setSuccessMessagePE("");
+                        }}
+                        required
+                        aria-invalid={propertyMissingField === "furniture"}
+                    >
                         <option value={propertyDetails.furniture}>{propertyDetails.furniture}</option>
-                        {propertyDetails.furniture === 'Furnished' ? null : <option onChange={(e) => setPropertyDetails({...propertyDetails, furniture: e.target.value})} value = 'Furnished'> Furnished</option>}
-                        {propertyDetails.furniture === 'Semi-furnished' ? null : <option onChange={(e) => setPropertyDetails({...propertyDetails, furniture: e.target.value})} value = 'Semi-furnished'> Semi-Furnished</option>}
-                        {propertyDetails.furniture === 'Unfurnished' ? null : <option onChange={(e) => setPropertyDetails({...propertyDetails, furniture: e.target.value})} value = 'Unfurnished'> Unfurnished</option>}        
+                        {propertyDetails.furniture !== "Furnished" && <option value = "Furnished"> Furnished</option>}
+                        {propertyDetails.furniture !== "Semi-furnished" && <option value = "Semi-furnished"> Semi-Furnished</option>}
+                        {propertyDetails.furniture !== "Unfurnished" && <option value = "Unfurnished"> Unfurnished</option>}        
                     </select>
-                </label>
                 <br />
-                <label>
-                    Summary:
+                <label htmlFor="summary"> Summary: </label>
                     <textarea
+                        id="summary"
+                        value={propertyDetails.summary}
                         onChange={(e) => {
                             const words = e.target.value.split(/\s+/).filter(Boolean);
                             if (words.length <= 50) {
@@ -308,17 +448,21 @@ function DashboardPropertyEdit() {
                                 setSuccessMessagePE("");
                                 setPropertyDetails({ ...propertyDetails, summary: e.target.value });
                             }
-                         }}
-                        value={propertyDetails.summary}
+                        }}
+                        required
+                        aria-invalid={propertyMissingField === "summary"}
                     />
-                <>
-                    {propertyDetails.summary ? propertyDetails.summary.split(/\s+/).filter(Boolean).length : 0} / 50 words
-                </>
-                </label>
+                <span>{summaryWordCount} / 50 words</span>
+                <span
+                    aria-live="polite" 
+                    className="hidden-content">
+                        {announceSummaryWordCount > 0 && `${announceSummaryWordCount} out of 50 words used.`}
+                </span>
                 <br />
-                <label>
-                    Detailed Description:
+                <label htmlFor="description"> Property Description: </label>
                     <textarea
+                        id="description"
+                        value={propertyDetails.detail}
                         onChange={(e) => {
                             const words = e.target.value.split(/\s+/).filter(Boolean);
                             if (words.length <= 250) {
@@ -327,48 +471,93 @@ function DashboardPropertyEdit() {
                                 setPropertyDetails({ ...propertyDetails, detail: e.target.value });
                             }
                         }}
-                        value={propertyDetails.detail}
+                        required
+                        aria-invalid={propertyMissingField === "description"}
                     />
-                <>
-                    {propertyDetails.detail ? propertyDetails.detail.split(/\s+/).filter(Boolean).length : 0} / 250 words
-                </>
-                </label>
+                <span>{descriptionWordCount} / 250 words</span>
+                <span 
+                    aria-live="polite" 
+                    className="hidden-content">
+                        {announceDescriptionWordCount > 0 && `${announceDescriptionWordCount} out of 250 words used.`}
+                </span>
                 <br />
                 <button onClick={propertyDetailsUpdate}> Update Property </button>
                 {propertyUpdated && successMessagePE ?
                     <div>
-                        <p style={{ color: "green" }}>{successMessagePE}</p>
-                        <button onClick={() => {navigate(`/property/${propID}`)}}>Check your property out!</button>
+                        <p 
+                            style={{ color: "green" }}
+                            role="status">
+                                {successMessagePE}
+                        </p>
+                        <button 
+                            onClick={() => {navigate(`/property/${propID}`)}}
+                            aria-describedby="navigation_hint">Check your property out!
+                        </button>
+                        <span id="navigation_hint" className="hidden-content">Clicking this button will navigate you to the detailed property page.</span>
                     </div>
                 :
-                errorMessagePE && <p style={{ color: "red" }}>{errorMessagePE}</p>}
+                errorMessagePE && 
+                    <p 
+                        style={{ color: "red" }}
+                        role="alert">
+                            {errorMessagePE}
+                    </p>
+                }
             </div>
             <div>
                 <h3> Property Photos </h3>
                 <h5> Update your property photos below. </h5>
                 {propertyPhotos.length > 0 ? (
                     <ul style={{ listStyle: "none", padding: 0, margin: 0 }}>
-                        {propertyPhotos.map((photo) => (
-                            <li key={photo.id}>
-                                <img src={photo.photo_path} alt="Property" style={{ width: "200px", height: "150px" }} />
-                                <button onClick={(e) => photoDelete(photo.id, photo.photo_path, e)}> x </button>
+                        {propertyPhotos.map((photo, index) => (
+                            <li key={index}>
+                                <img src={photo.photo_path} 
+                                    alt={`Photo number ${index+1} of property number ${propID}`} 
+                                    style={{ width: "200px", height: "150px" }} 
+                                />
+                                <button 
+                                    aria-label={`Delete photo number ${index+1}`}
+                                    onClick={(e) => photoDelete(photo.id, photo.photo_path, e)}> 
+                                    x 
+                                </button>
                             </li>
                         ))}
                     </ul>
                 ) : (
-                    <p style={{ color: "red" }}>{errorMessagePD}</p>
+                    <p 
+                        style={{ color: "red" }}
+                        role="alert">
+                            {errorMessagePD}
+                    </p>
                 )}
                 {propertyPhotos.length < 10 ? ( 
                     <div>
-                        <input type="file" multiple accept="image/*" onChange={photoUpload} />
+                        <label htmlFor="photo_upload"> Upload Property Photos</label>
+                        <input 
+                            id="photo_upload"
+                            type="file" 
+                            multiple 
+                            accept="image/*" 
+                            onChange={photoUpload} />
                         <p>Upload up to {10 - propertyPhotos.length} more {propertyPhotos.length === 9 ? "photo" : "photos"}.</p>
                     </div>
                 ) : (
                     <p>You have reached the maximum number of photos.</p>
                 )}
-                {photoUploading && <p>Please wait while we upload your photos!</p>}
-                {successMessagePU && <p style={{ color: "green" }}>{successMessagePU}</p>}
-                {errorMessagePU && <p style={{ color: "red" }}>{errorMessagePU}</p>}
+                {photoUploading && <p role="status">Please wait while we upload your photos!</p>}
+                {successMessagePU && 
+                    <p style={{ color: "green" }}
+                    role="status">
+                        {successMessagePU}
+                    </p>
+                }
+                {errorMessagePU && 
+                    <p 
+                        style={{ color: "red" }}
+                        role="alert">
+                            {errorMessagePU}
+                    </p>
+                }
             </div>
         </div>
     );

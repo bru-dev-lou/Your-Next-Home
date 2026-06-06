@@ -11,7 +11,13 @@ router.get('/cities', (req, res) => {
     }
 
     try { 
-        const autoCompleteResults = db.prepare('SELECT DISTINCT city FROM property_list WHERE city LIKE ? LIMIT 5').all(`${city}%`);
+        const autoCompleteResults = db.prepare(`
+            SELECT DISTINCT city 
+            FROM property_list 
+            WHERE city LIKE ? 
+            LIMIT 5`)
+            .all(`${city}%`)
+        ;
         
         if (autoCompleteResults.length === 0) {
             return res.status(200).json({cities: []});

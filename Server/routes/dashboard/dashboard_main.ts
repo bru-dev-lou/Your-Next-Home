@@ -12,8 +12,16 @@ router.route("/")
    try {
         const user = db.prepare("SELECT name FROM property_owners WHERE id =?").get(ownerID); 
 
-        const properties = db.prepare(`
-            SELECT property_list.*, property_photos.photo_path
+        const properties = db.prepare(`SELECT 
+            property_list.id,
+            property_list.type,
+            property_list.city,
+            property_list.price,
+            property_list.no_bedrooms,
+            property_list.no_bathrooms,
+            property_list.summary, 
+            property_list.date_listed,
+            property_photos.photo_path
             FROM property_list
             LEFT JOIN property_photos 
             ON property_photos.property_id = property_list.id 

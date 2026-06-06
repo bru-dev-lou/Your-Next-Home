@@ -3,8 +3,9 @@ import { useNavigate } from 'react-router-dom';
 
 function HomePageSearchBar() {
     const [ autoCompleteQuery, setAutoCompleteQuery ] = useState("");
+    const [ autoCompleteQueryClicked, setAutoCompleteQueryClicked ] = useState(true); 
 
-    const [ cities, setCities ] = useState<{ city: string }[]>([]);
+    const [ citySuggestions, setCitySuggestions ] = useState<{ city: string }[]>([]);
     const [ maxPrice, setMaxPrice ] = useState(10000);
     
     const navigate = useNavigate();
@@ -20,33 +21,41 @@ function HomePageSearchBar() {
                 const result = await res.json();
 
                 if (!res.ok) {
-                    setCities([]);
-                    setErrorMessageAC(result.error) 
+                    setCitySuggestions([]);
+                    setErrorMessageAC(result.error);
                 }
 
                 else if(autoCompleteQuery.length === 0) {
-                    setCities([]);
+                    setCitySuggestions([]);
                     setErrorMessageAC("");
                 }
 
+                else if (citySuggestions.some(query => query.city.toLowerCase() === autoCompleteQuery.toLowerCase())){
+                    setCitySuggestions([]);
+                }
+
                 else {
-                    setCities(result.cities);
+                    setCitySuggestions(result.cities);
                     setErrorMessageAC("");
                 }
             }
 
             catch(error) {
-                setErrorMessageAC("AutoComplete feature currently unavailable.")
+                setErrorMessageAC("AutoComplete feature currently unavailable.");
             }
-        }
+        };
             
+        if (autoCompleteQueryClicked) {
+            return;
+        }
+
         const timeout = setTimeout(() => {
             fetchCity();
-        }, 250);
+        }, 100);
     
         return () => clearTimeout(timeout);
         
-    }, [autoCompleteQuery]);
+    }, [autoCompleteQuery, autoCompleteQueryClicked]);
         
 
     const propertySearch = (e:React.SubmitEvent<HTMLFormElement>) => {
@@ -62,49 +71,65 @@ function HomePageSearchBar() {
                         id="location_selection"
                         type="text"
                         value={autoCompleteQuery}
-                        onChange={(e) => setAutoCompleteQuery(e.target.value)}
+                        onChange={(e) => {
+                            setAutoCompleteQuery(e.target.value);
+                            setAutoCompleteQueryClicked(false); 
+                        }}
                         placeholder = "London"
                         aria-describedby="location_hint"
                     />
-                    <span id="location_hint" className="hidden-content">Insert a city name to see properties for rent in that area.</span>
+                <span id="location_hint" className="hidden-content">Insert a city name to see properties for rent in that area.</span>
+                <ul aria-live="polite" aria-label="City autocomplete suggestions.">
+                    {citySuggestions.map((city, index) => (
+                        <li 
+                            key={index}
+                            onClick = {() => {
+                                setAutoCompleteQuery(city.city);
+                                setCitySuggestions([]);
+                                setAutoCompleteQueryClicked(true);
+                            }}
+                            tabIndex={0}
+                            onKeyDown= { (e) => { if (e.key === "Enter") {
+                                setAutoCompleteQuery(city.city);
+                                setCitySuggestions([]);
+                                setAutoCompleteQueryClicked(true);
+                            }}}
+                            style = {{ cursor: "pointer"}}
+                            aria-label={`Select ${city.city}`}
+                            >   
+                            {city.city}
+                        </li>
+                    ))}
+                </ul>
                 <label htmlFor= "max_price"> Max Price: </label>
                     <select 
                         id="max_price"
                         onChange = {(e) => setMaxPrice(Number(e.target.value))}>
                             <option value = {10000} > No Max </option>
-                            <option value = "500"> $500 PCM </option>
-                            <option value = "600"> $600 PCM </option>
-                            <option value = "700"> $700 PCM </option>
-                            <option value = "800"> $800 PCM </option>
-                            <option value = "900"> $900 PCM </option>
-                            <option value = "1000"> $1,000 PCM </option>
-                            <option value = "1100"> $1,100 PCM </option>
-                            <option value = "1200"> $1,200 PCM </option>
-                            <option value = "1300"> $1,300 PCM </option>
-                            <option value = "1400"> $1,400 PCM </option>
-                            <option value = "1500"> $1,500 PCM </option>
-                            <option value = "1600"> $1,600 PCM </option>
-                            <option value = "1700"> $1,700 PCM </option>
-                            <option value = "1800"> $1,800 PCM </option>
-                            <option value = "1900"> $1,900 PCM </option>
-                            <option value = "2000"> $2,000 PCM </option>
+                            <option value = "500"> £500 PCM </option>
+                            <option value = "600"> £600 PCM </option>
+                            <option value = "700"> £700 PCM </option>
+                            <option value = "800"> £800 PCM </option>
+                            <option value = "900"> £900 PCM </option>
+                            <option value = "1000"> £1,000 PCM </option>
+                            <option value = "1100"> £1,100 PCM </option>
+                            <option value = "1200"> £1,200 PCM </option>
+                            <option value = "1300"> £1,300 PCM </option>
+                            <option value = "1400"> £1,400 PCM </option>
+                            <option value = "1500"> £1,500 PCM </option>
+                            <option value = "1600"> £1,600 PCM </option>
+                            <option value = "1700"> £1,700 PCM </option>
+                            <option value = "1800"> £1,800 PCM </option>
+                            <option value = "1900"> £1,900 PCM </option>
+                            <option value = "2000"> £2,000 PCM </option>
                     </select>
                 <button type="submit"> Search </button>
             </form>
-            <ul role="listbox" aria-live="polite" aria-label="City autocomplete suggestions based on user input.">
-                {cities.map((city, index) => (
-                    <li 
-                        key={index}
-                        onClick = {() => setAutoCompleteQuery(city.city)}
-                        style = {{ cursor: "pointer"}}
-                        role="option"
-                        aria-label={`Select ${city.city}`}
-                        >
-                        {city.city}
-                    </li>
-                ))}
-            </ul>
-            {errorMessageAC && <h3 role="alert">{errorMessageAC}</h3>}
+            {errorMessageAC && 
+                <div role="alert">
+                    <h3>{errorMessageAC}</h3>
+                </div>
+            }
         </div>
     );
 }

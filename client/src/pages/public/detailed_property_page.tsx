@@ -145,7 +145,7 @@ function DetailedPropertyPage () {
     if (errorMessageFP) {
         return (
             <div>
-                <h3>{errorMessageFP}</h3>
+                <h3 role="alert">{errorMessageFP}</h3>
             </div>
         )
     }
@@ -154,33 +154,61 @@ function DetailedPropertyPage () {
         <div>
             {property && (
                 <div key ={property.id}>
+                    <span className="hidden-content">Address</span>
                     <p>{property.city}</p>
+                    <span className="hidden-content">Monthly rental rate</span>
                     <p>£{property.price.toLocaleString()} pcm</p>
                     <p>Date Listed: {new Date(property.date_listed).toLocaleDateString("en-GB")}</p>
-                    {property.photos.map((photo, index) => (
-                    <img key={index} src={photo} />
-                    ))}
+                    <div role="group" aria-label="Property photos">
+                        {property.photos.map((photo, index) => (
+                            <img 
+                                key={index} 
+                                src={photo}
+                                alt={`Photos number ${index + 1} of property number ${property.id}`} 
+                            />
+                        ))}
+                    </div>
                     {propFavorite.has(property.id) ?
-                        <button onClick={ () => removeFromFavorites(property.id)}> Remove from favorites </button>
-                    :
-                        <button onClick={ () => addToFavorites(property.id)}> Add to favorites </button>
-                    }                       
-                    {errorMessageFavorites && <h4>{errorMessageFavorites}</h4>}
+                        <button 
+                            onClick={ () => removeFromFavorites(property.id)}
+                            aria-describedby="button_hint"> 
+                             Remove from favorites 
+                            </button>
+                        :
+                        <button 
+                            onClick={ () => addToFavorites(property.id)}
+                            aria-describedby="button_hint">
+                             Add to favorites 
+                        </button>
+                    }                      
+                    <span id="button_hint" className="hidden-content">If button shows 'remove', it means the property is currently in your favorite properties' list. Clicking the button will remove it from this list.</span> 
+                    {errorMessageFavorites && 
+                        <div role="alert">
+                            <h4>{errorMessageFavorites}</h4>
+                        </div>
+                    }
                     <p>Property Type: {property.type}</p>
                     <p>Bedrooms: {property.no_bedrooms}</p>
                     <p>Bathrooms: {property.no_bathrooms}</p>
                     <p>Size: {property.size} m²</p>
+                    <span>Description: </span>
                     <p>{property.detail}</p>
                 </div>
             )}
             <br />
             {owner && (
                 <div>
-                    <p>{owner!.name}</p>
-                    <p>{owner!.address}</p>
-                    <p>{owner!.phone_number}</p>
+                    <span className="hidden-content">Property owner's name.</span>
+                    <p aria-describedby="owner_name_hint">{owner!.name}</p>
+                    <span className="hidden-content">Address where the property's owner is located</span>
+                    <p aria-describedby="owner_address_hint"> {owner!.address}</p>
+                    <span className="hidden-content">Property owner's phone number</span>
+                    <p aria-describedby="owner_phone_number_hint">{owner!.phone_number}</p>
                 </div>
             )}        
+            <span id="owner_name_hint" className="hidden-content">This could be an individual's name or a company's name, depending on who is letting the property.</span>
+            <span id="owner_address_hint" className="hidden-content">This could be an individual's address or a company's address, depending on who is letting the property.</span>
+            <span id="owner_phone_number_hint" className="hidden-content">This could be an individual's phone number or a company's phone number, depending on who is letting the property.</span>
         </div>
     )
 };
