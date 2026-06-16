@@ -68,7 +68,7 @@ router.get("/", (req, res) => {
             )
             
         if (data.length === 0) {
-            return  res.status(200).json({message: "No properties found matching your search criteria, please try adjusting your fitlers."});
+            return  res.status(200).json({message: "No properties found matching your search criteria, please try adjusting your filters."});
         }
 
         else {

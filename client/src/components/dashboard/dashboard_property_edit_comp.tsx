@@ -49,7 +49,8 @@ function DashboardPropertyEdit() {
 
     const [ errorMessagePU, setErrorMessagePU ] = useState(""); 
     const [ successMessagePU, setSuccessMessagePU ] = useState("");
-    const [ photoUploading, setPhotoUploading] = useState(false); 
+    const [ photoUploading, setPhotoUploading ] = useState(false); 
+    const [ uploadMessage, setUploadMessage ] = useState("");
 
 // WAI-ARIA states for live region updates on word count for summary and description fields.
 
@@ -207,6 +208,15 @@ function DashboardPropertyEdit() {
             return; 
         }
 
+        else if (files.length === 1) {
+            setUploadMessage("Please wait while we upload your photo.");
+        }
+
+        else if (files.length > 1 && files.length < 10) {
+            setUploadMessage("Please wait while we upload your photos.");
+        }
+
+
         for (const [index,  file] of Array.from(files).entries()) {
             if (propertyPhotos.length + index < 10 ) {
                 formData.append("photos", file);
@@ -219,6 +229,8 @@ function DashboardPropertyEdit() {
                 return;
             }
         }
+
+
         
         try {
             setPhotoUploading(true);
@@ -251,7 +263,8 @@ function DashboardPropertyEdit() {
         }
 
         finally {
-            setPhotoUploading(false)
+            setPhotoUploading(false);
+            setUploadMessage("");
         }
     }
 
@@ -510,7 +523,7 @@ function DashboardPropertyEdit() {
                 {propertyPhotos.length > 0 ? (
                     <ul style={{ listStyle: "none", padding: 0, margin: 0 }}>
                         {propertyPhotos.map((photo, index) => (
-                            <li key={index}>
+                            <li key={photo.id}>
                                 <img src={photo.photo_path} 
                                     alt={`Photo number ${index+1} of property number ${propID}`} 
                                     style={{ width: "200px", height: "150px" }} 
@@ -544,7 +557,7 @@ function DashboardPropertyEdit() {
                 ) : (
                     <p>You have reached the maximum number of photos.</p>
                 )}
-                {photoUploading && <p role="status">Please wait while we upload your photos!</p>}
+                {uploadMessage && photoUploading && <p role="status">{uploadMessage}</p>}
                 {successMessagePU && 
                     <p style={{ color: "green" }}
                     role="status">

@@ -27,11 +27,12 @@ function DashboardPropertyAdd () {
     const [ autoCompleteQueryClicked, setAutoCompleteQueryClicked ] = useState(false); 
     const [ errorMessageAC, setErrorMessageAC ] = useState(""); 
 
-    // States for roperty data and photos. 
+    // States for property data and photos. 
 
     const [ propertyDetails, setPropertyDetails ] = useState<PropertyData>({type: "", city: "", price: 0, bedrooms: 0, bathrooms: 0, size: 0, furniture: "", summary: "", detail: ""});
     const [ tempURLs, setTempURLs ] = useState<PropertyPhotos[]>([]);
 
+    const [ photoErrorMessage, setPhotoErrorMessage ] = useState("");
     const [ dataErrorMessage, setDataErrorMessage ] = useState("");
     const [ dataSuccessMessage, setDataSuccessMessage ] = useState("");
     const [ excessPhotosMessage, setExcessPhotosMessage ] = useState(""); 
@@ -126,13 +127,21 @@ function DashboardPropertyAdd () {
             if (res.ok) {
                 setDataSuccessMessage(result.message);
                 setDataErrorMessage("");
+                setPhotoErrorMessage("");
                 setTimeout(function(){
                     navigate(`/dashboard`)},
                 5000);
             }
 
+            else if (result.photosError) {
+                setDataErrorMessage("");
+                setPhotoErrorMessage(result.photosError); 
+                setDataSuccessMessage("");
+            }
+
             else {
                 setDataErrorMessage(result.error);
+                setPhotoErrorMessage("");
                 setMissingField(result.name);
                 setDataSuccessMessage("");
             }
@@ -176,7 +185,7 @@ function DashboardPropertyAdd () {
         }
 
         if (tempURLs.length + files.length >= 5) {
-            setDataErrorMessage("");
+            setPhotoErrorMessage("");
         }
 
         for (const [ index, file ]  of Array.from(files).entries()) {
@@ -184,7 +193,7 @@ function DashboardPropertyAdd () {
 
             if (tempURLs.length + index < 10) {
                 setExcessPhotosMessage("");
-                setDataErrorMessage("");
+                setPhotoErrorMessage("");
                 setTempURLs(prev => [...prev, {url: previewURL, file: file}])
             }   
             
@@ -198,7 +207,7 @@ function DashboardPropertyAdd () {
     function deletePhotos(index: number) {
         setTempURLs(tempURLs.filter((_, i) => i !== index));    
             setExcessPhotosMessage("");
-            setDataErrorMessage("");
+            setPhotoErrorMessage("");
     }
 
     return (
@@ -394,7 +403,8 @@ function DashboardPropertyAdd () {
             )} 
             {excessPhotosMessage && <p role="alert">{excessPhotosMessage}</p>}
             {dataErrorMessage && !uploading && <p role="alert" style={{color: "red"}}>{dataErrorMessage}</p>}
-            {!uploading && !dataSuccessMessage && (
+            {photoErrorMessage && <p role="alert" style={{color: "red"}}>{photoErrorMessage}</p>}
+            {!uploading && !dataSuccessMessage && !photoErrorMessage && (
                 <button onClick={addPropertyData}>Create your property!</button>
             )}
             {uploading && <p role="alert">Please wait while we add your property!</p>}

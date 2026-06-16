@@ -31,7 +31,7 @@ router.post("/", async (req, res) => {
 
     try {
         const existingFieldCheck = [
-            {column: "username", value: username, error: "This username is already in use. Please choose another one."},
+            {column: "username", value: username, error: "This username is unavailable. Please choose another one."},
             {column: "address", value: address, error: "This address is already in use. Please choose another one."},
             {column: "phone_number", value: number, error: "This phone number is already in use. Please choose another one."},
             {column: "email", value: email, error: "This email is already in use. Please choose another one."}

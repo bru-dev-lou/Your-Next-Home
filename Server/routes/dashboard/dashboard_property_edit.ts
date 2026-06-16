@@ -40,6 +40,7 @@ router.route("/:propID")
         }
 
         const SQLPropertyPhotos = db.prepare(`SELECT 
+            property_photos.id,
             property_photos.property_id,
             property_photos.photo_path
             FROM property_photos 
@@ -104,7 +105,7 @@ router.route("/:propID")
 
 .post (upload.array('photos', 10), async (req, res) => {
     const propID  = req.params.propID;
-    const files = req.files as Express.Multer.File[]; 
+    const photos = req.files as Express.Multer.File[]; 
 
     try {
         if (!req.files || req.files.length === 0) {
@@ -113,24 +114,24 @@ router.route("/:propID")
 
         const SQLAddPhoto = db.prepare(`INSERT INTO property_photos (property_id, photo_path) VALUES (?, ?)`);
         
-        for (const file of files) {
+        for (const photo of photos) {
             const result = await new Promise<CloudinaryResult>((resolve, reject) => {
                 cloudinary.uploader.upload_stream({ folder: 'new_property_photos' }, (error, result) => {
                     if (error || !result) reject(error);
                     else resolve(result);
-                }).end(file.buffer);
+                }).end(photo.buffer);
             });   
             SQLAddPhoto.run(propID, result.secure_url);
         }
 
         db.prepare(`UPDATE property_photos SET is_main = 1 WHERE property_id = ? ORDER BY id ASC LIMIT 1`).run(propID);
 
-        if (files.length === 1) {
+        if (photos.length === 1) {
             const SQLPhotosUpdated = db.prepare(`SELECT * FROM property_photos WHERE property_id = ?`).all(propID);
             return res.status(201).json({ message: "Photo added successfully!", newPhotos: SQLPhotosUpdated });
         }
 
-        else if (files.length > 1 && files.length <=10) {
+        else if (photos.length > 1 && photos.length <=10) {
             const SQLPhotosUpdated = db.prepare(`SELECT * FROM property_photos WHERE property_id = ?`).all(propID);
             return res.status(201).json({ message: "Photos added successfully!", newPhotos: SQLPhotosUpdated });
         }

@@ -14,7 +14,7 @@ router.route("/")
 
 .post (upload.array('photos', 10), async (req, res) => {
     const ownerID = req.user?.id;   
-    const files = req.files as Express.Multer.File[];
+    const photos = req.files as Express.Multer.File[];
     const { type, city, price, bedrooms, bathrooms, size, furniture, summary, detail } = req.body;
     
     try {
@@ -44,8 +44,8 @@ router.route("/")
             return res.status(400).json({ error: "Detailed description cannot exceed 250 words." });
         }
         
-        if (files.length <= 4) {
-            return res.status(400).json({ error: `Please upload at least ${5 - files.length} more ${files.length == 4 ? "photo" : "photos"} .` });
+        if (photos.length <= 4) {
+            return res.status(400).json({ photosError: `Please upload at least ${5 - photos.length} more ${photos.length == 4 ? "photo" : "photos"} .` });
         }
         
 
@@ -62,12 +62,12 @@ router.route("/")
             VALUES (?, ?)`)
         ;
 
-        for (const file of files) {
+        for (const photo of photos) {
             const result = await new Promise<CloudinaryResult>((resolve, reject) => {
                 cloudinary.uploader.upload_stream({ folder: 'new_property_photos' }, (error, result) => {
                     if (error || !result) reject(error);
                     else resolve(result);
-                }).end(file.buffer);
+                }).end(photo.buffer);
             });   
             newPropertyPhotos.run(newPropertyData.lastInsertRowid, result.secure_url);
         }
