@@ -1,10 +1,12 @@
 import { useState } from "react"; 
 import { Link, useNavigate } from "react-router-dom";
 import { useUser } from "../../context/user_context";
+import "../public/main_navigation_bar_comp.css";
 
 
 function MainNavigationBar (){
     const [ errorMessage, setErrorMessage ] = useState(""); 
+    const [ dashDrop, setDashDrop ] = useState<boolean>(false);
     const { user, setUser } = useUser();
     const navigate = useNavigate();
 
@@ -32,59 +34,116 @@ function MainNavigationBar (){
         }
     }
 
-    async function userNavigation (e: React.ChangeEvent<HTMLSelectElement>) {
-        e.preventDefault();
+    async function dashDropdown () {
+        setDashDrop(!dashDrop);
+    }
 
-        if (e.target.value === "My Properties") {
+    async function userNavigation (value : string) {
+
+        if (value === "My Properties") {
+            setDashDrop(!dashDrop);
             navigate("/dashboard");
-            e.target.value = "User Name";
         }
 
-        if (e.target.value === "My Profile") {
+        if (value === "My Profile") {
+            setDashDrop(!dashDrop);
             navigate("/dashboard/profile/edit");
-            e.target.value = "User Name";
         }
 
-        if (e.target.value === "Favorite Properties") {
+        if (value === "Favorite Properties") {
+            setDashDrop(!dashDrop);
             navigate("/dashboard/property/favorites");
-            e.target.value = "User Name";
         }
 
-        if (e.target.value === "Sign Out") {
+        if (value === "Sign Out") {
+            setDashDrop(!dashDrop);
             signUserOut();
         } 
     }
 
     return (
         <div>
-            <div>
-                <nav>
-                    <Link to="/">Home</Link>
-                    <Link to="/search">Rent</Link>
-                    <Link to="/inquiries">Contact Us</Link>
-                    {!user ? <Link to="/signIn">Sign In</Link> : null }
-                </nav>
-                {errorMessage && 
-                    <div role="alert">
-                        <h3>{errorMessage}</h3>
-                    </div>
-                }
-            </div>
             {user?
                 <div>
-                    <select 
-                        onChange={(e) => {userNavigation(e)}}
-                        aria-label="Dashboard navigation."
-                        >
-                        <option value="User Name"> {user.name} </option>
-                        <option value="My Properties"> My Properties </option>
-                        <option value="My Profile"> My Profile </option>
-                        <option value="Favorite Properties"> Favorite Properties </option>
-                        <option value="Sign Out"> Sign Out </option>
-                    </select>
+                    <nav>
+                        <div className="main_container">
+                            <div className="title_container">
+                                <h1 className="title_item">Your Next Home</h1>
+                            </div>
+                            <div className="link_container">
+                                <Link to="/" className="link_item">Home</Link>
+                                <Link to="/search" className="link_item">Rent</Link>
+                                <Link to="/inquiries" className="link_item">Inquiries</Link>
+                            </div>
+                            <div className="dropdown_container">
+                                <div className="dropdown_positioning">
+                                    {dashDrop ?
+                                        <div> 
+                                            <ul 
+                                                aria-label="Dashboard navigation."
+                                                className="dropdown_background"
+                                            >   
+                                                <li onClick = {dashDropdown} className="dropdown_item"> {user.name} </li>
+                                                <li 
+                                                    onClick = {(e) => userNavigation(e.currentTarget.dataset.value!)} 
+                                                    data-value="My Properties"
+                                                    className="dropdown_item"
+                                                >My Properties</li>
+                                                <li 
+                                                    onClick = {(e) => userNavigation(e.currentTarget.dataset.value!)}
+                                                    data-value="My Profile"
+                                                    className="dropdown_item"
+                                                >My Profile</li>
+                                                <li 
+                                                    onClick = {(e) => userNavigation(e.currentTarget.dataset.value!)}
+                                                    data-value="Favorite Properties"
+                                                    className="dropdown_item"
+                                                >Favorite Properties</li>
+                                                <li 
+                                                    onClick = {(e) => userNavigation(e.currentTarget.dataset.value!)}
+                                                    data-value="Sign Out"
+                                                    className="dropdown_item"
+                                                >Sign Out</li>
+                                            </ul>
+                                        </div>
+                                    :
+                                        <div>
+                                            <ul 
+                                                onClick = {dashDropdown}
+                                                aria-label="Dashboard navigation."
+                                            >
+                                                <li className="dropdown_item"> {user.name} </li>
+                                            </ul>
+                                        </div>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                    </nav>
                 </div>
-                : 
-                null
+            : 
+                <div>
+                    <nav>
+                        <div className="main_container">
+                            <div className="title_container">
+                                <h1 className="title_item">Your Next Home</h1>
+                            </div>
+                            <div className="link_container">
+                                <Link to="/" className="link_item">Home</Link>
+                                <Link to="/search" className="link_item">Rent</Link>
+                                <Link to="/inquiries" className="link_item">Inquiries</Link>
+                            </div>
+                            <div className="sign_in_container">
+                                <Link to="/signIn" className="sign_in_item">Sign In</Link>
+                            </div>
+                        </div>    
+                    </nav>
+                    {errorMessage && 
+                        <div role="alert">
+                            <h3>{errorMessage}</h3>
+                        </div>
+                    }
+                </div>
             }
         </div>
     );
