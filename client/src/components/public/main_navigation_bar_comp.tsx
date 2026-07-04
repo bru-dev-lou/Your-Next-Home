@@ -1,7 +1,7 @@
 import { useState } from "react"; 
 import { Link, useNavigate } from "react-router-dom";
 import { useUser } from "../../context/user_context";
-import "../public/main_navigation_bar_comp.css";
+import styles from "../public/main_navigation_bar_comp.module.css";
 
 
 function MainNavigationBar (){
@@ -66,43 +66,43 @@ function MainNavigationBar (){
             {user?
                 <div>
                     <nav>
-                        <div className="main_container">
-                            <div className="title_container">
-                                <h1 className="title_item">Your Next Home</h1>
+                        <div className={styles.main_container}>
+                            <div className={styles.title_container}>
+                                <h1 className={styles.title_item}>Your Next Home</h1>
                             </div>
-                            <div className="link_container">
-                                <Link to="/" className="link_item">Home</Link>
-                                <Link to="/search" className="link_item">Rent</Link>
-                                <Link to="/inquiries" className="link_item">Inquiries</Link>
+                            <div className={styles.link_container}>
+                                <Link to="/" className={styles.link_item}>Home</Link>
+                                <Link to="/search" className={styles.link_item}>Rent</Link>
+                                <Link to="/inquiries" className={styles.link_item}>Inquiries</Link>
                             </div>
-                            <div className="dropdown_container">
-                                <div className="dropdown_positioning">
+                            <div className={styles.dropdown_container}>
+                                <div className={styles.dropdown_positioning}>
                                     {dashDrop ?
                                         <div> 
                                             <ul 
                                                 aria-label="Dashboard navigation."
-                                                className="dropdown_background"
+                                                className={styles.dropdown_background}
                                             >   
-                                                <li onClick = {dashDropdown} className="dropdown_item"> {user.name} </li>
+                                                <li onClick = {dashDropdown} className={styles.dropdown_item}> {user.name} </li>
                                                 <li 
                                                     onClick = {(e) => userNavigation(e.currentTarget.dataset.value!)} 
                                                     data-value="My Properties"
-                                                    className="dropdown_item"
+                                                    className={styles.dropdown_item}
                                                 >My Properties</li>
                                                 <li 
                                                     onClick = {(e) => userNavigation(e.currentTarget.dataset.value!)}
                                                     data-value="My Profile"
-                                                    className="dropdown_item"
+                                                    className={styles.dropdown_item}
                                                 >My Profile</li>
                                                 <li 
                                                     onClick = {(e) => userNavigation(e.currentTarget.dataset.value!)}
                                                     data-value="Favorite Properties"
-                                                    className="dropdown_item"
+                                                    className={styles.dropdown_item}
                                                 >Favorite Properties</li>
                                                 <li 
                                                     onClick = {(e) => userNavigation(e.currentTarget.dataset.value!)}
                                                     data-value="Sign Out"
-                                                    className="dropdown_item"
+                                                    className={styles.dropdown_item}
                                                 >Sign Out</li>
                                             </ul>
                                         </div>
@@ -112,7 +112,7 @@ function MainNavigationBar (){
                                                 onClick = {dashDropdown}
                                                 aria-label="Dashboard navigation."
                                             >
-                                                <li className="dropdown_item"> {user.name} </li>
+                                                <li className={styles.dropdown_item}> {user.name} </li>
                                             </ul>
                                         </div>
                                     }
@@ -124,17 +124,17 @@ function MainNavigationBar (){
             : 
                 <div>
                     <nav>
-                        <div className="main_container">
-                            <div className="title_container">
-                                <h1 className="title_item">Your Next Home</h1>
+                        <div className={styles.main_container}>
+                            <div className={styles.title_container}>
+                                <h1 className={styles.title_item}>Your Next Home</h1>
                             </div>
-                            <div className="link_container">
-                                <Link to="/" className="link_item">Home</Link>
-                                <Link to="/search" className="link_item">Rent</Link>
-                                <Link to="/inquiries" className="link_item">Inquiries</Link>
+                            <div className={styles.link_container}>
+                                <Link to="/" className={styles.link_item}>Home</Link>
+                                <Link to="/search" className={styles.link_item}>Rent</Link>
+                                <Link to="/inquiries" className={styles.link_item}>Inquiries</Link>
                             </div>
-                            <div className="sign_in_container">
-                                <Link to="/signIn" className="sign_in_item">Sign In</Link>
+                            <div className={styles.sign_in_container}>
+                                <Link to="/signIn" className={styles.sign_in_item}>Sign In</Link>
                             </div>
                         </div>    
                     </nav>

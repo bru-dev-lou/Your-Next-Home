@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'; 
 import { useNavigate } from 'react-router-dom';
-import "../public/homepage_searchbar_comp.css";
+import styles from "../public/homepage_searchbar_comp.module.css";
 
 function HomePageSearchBar() {
     const [ autoCompleteQuery, setAutoCompleteQuery ] = useState("");
@@ -77,8 +77,8 @@ function HomePageSearchBar() {
     return (
         <div>
             <form onSubmit={propertySearch}>
-                <div className="first_row_container">
-                    <label htmlFor="location_selection" className="label"> Location: </label>
+                <div className={styles.first_row_container}>
+                    <label htmlFor="location_selection" className={styles.label}> Location: </label>
                         <input
                             id="location_selection"
                             type="text"
@@ -89,14 +89,14 @@ function HomePageSearchBar() {
                             }}
                             placeholder = " e.g. London"
                             aria-describedby="location_hint"
-                            className="location_input"
+                            className= {styles.location_input}
                         />
-                    <span id="location_hint" className="sr_content">Insert a city name to see properties for rent in that area.</span>
+                    <span id="location_hint" className={styles.sr_content}>Insert a city name to see properties for rent in that area.</span>
                 </div>
                     <ul 
                         aria-live="polite" 
                         aria-label="City autocomplete suggestions."
-                        className="autocomplete_container">
+                        className={styles.autocomplete_container}>
                         {citySuggestions.map((city, index) => (
                             <li 
                                 key={index}
@@ -112,56 +112,52 @@ function HomePageSearchBar() {
                                     setAutoCompleteQueryClicked(true);
                                 }}}
                                 aria-label={`Select ${city.city}`}
-                                className="autocomplete_item"
+                                className={styles.autocomplete_item}
                                 >   
                                 {city.city}
                             </li>
                         ))}
                     </ul>
                 { budgetDropdown ?
-                    <div>
-                        <div className="second_row_container">
-                            <label htmlFor= "max_price" className="label"> Budget: </label>
-                            <ul id="max_price" onClick = {showBudget} className="budget_container_open">
-                                <li data-value= {maxPrice} className="budget_item">{maxPriceLabel}</li>
-                                {maxPriceLabel !== " NO MAX " && 
-                                    <li data-value={10000} onClick={setBudget} className="budget_item"> NO MAX </li>
-                                }
-                                <li data-value = "500" onClick={setBudget} className="budget_item"> £500 PCM </li>
-                                <li data-value = "600" onClick={setBudget} className="budget_item"> £600 PCM </li>
-                                <li data-value = "700" onClick={setBudget} className="budget_item"> £700 PCM </li>
-                                <li data-value = "800" onClick={setBudget} className="budget_item"> £800 PCM </li>
-                                <li data-value = "900" onClick={setBudget} className="budget_item"> £900 PCM </li>
-                                <li data-value = "1000" onClick={setBudget} className="budget_item"> £1,000 PCM </li>
-                                <li data-value = "1100" onClick={setBudget} className="budget_item"> £1,100 PCM </li>
-                                <li data-value = "1200" onClick={setBudget} className="budget_item"> £1,200 PCM </li>
-                                <li data-value = "1300" onClick={setBudget} className="budget_item"> £1,300 PCM </li>
-                                <li data-value = "1400" onClick={setBudget} className="budget_item"> £1,400 PCM </li>
-                                <li data-value = "1500" onClick={setBudget} className="budget_item"> £1,500 PCM </li>
-                                <li data-value = "1600" onClick={setBudget} className="budget_item"> £1,600 PCM </li>
-                                <li data-value = "1700" onClick={setBudget} className="budget_item"> £1,700 PCM </li>
-                                <li data-value = "1800" onClick={setBudget} className="budget_item"> £1,800 PCM </li>
-                                <li data-value = "1900" onClick={setBudget} className="budget_item"> £1,900 PCM </li>
-                                <li data-value = "2000" onClick={setBudget} className="budget_item"> £2,000 PCM </li>
-                            </ul>                              
-                            <button type="submit" className='search_button'> Search </button>        
-                        </div>
-
+                    <div className={styles.second_row_container}>
+                        <label htmlFor= "max_price" className={styles.label}> Budget: </label>
+                        <ul id="max_price" onClick = {showBudget} className={styles.budget_container_open}>
+                            <li data-value= {maxPrice} className={styles.budget_item}>{maxPriceLabel}</li>
+                            {maxPriceLabel !== " NO MAX " && 
+                                <li data-value={10000} onClick={setBudget} className={styles.budget_item}> NO MAX </li>
+                            }
+                            <li data-value = "500" onClick={setBudget} className={styles.budget_item}> £500 PCM </li>
+                            <li data-value = "600" onClick={setBudget} className={styles.budget_item}> £600 PCM </li>
+                            <li data-value = "700" onClick={setBudget} className={styles.budget_item}> £700 PCM </li>
+                            <li data-value = "800" onClick={setBudget} className={styles.budget_item}> £800 PCM </li>
+                            <li data-value = "900" onClick={setBudget} className={styles.budget_item}> £900 PCM </li>
+                            <li data-value = "1000" onClick={setBudget} className={styles.budget_item}> £1,000 PCM </li>
+                            <li data-value = "1100" onClick={setBudget} className={styles.budget_item}> £1,100 PCM </li>
+                            <li data-value = "1200" onClick={setBudget} className={styles.budget_item}> £1,200 PCM </li>
+                            <li data-value = "1300" onClick={setBudget} className={styles.budget_item}> £1,300 PCM </li>
+                            <li data-value = "1400" onClick={setBudget} className={styles.budget_item}> £1,400 PCM </li>
+                            <li data-value = "1500" onClick={setBudget} className={styles.budget_item}> £1,500 PCM </li>
+                            <li data-value = "1600" onClick={setBudget} className={styles.budget_item}> £1,600 PCM </li>
+                            <li data-value = "1700" onClick={setBudget} className={styles.budget_item}> £1,700 PCM </li>
+                            <li data-value = "1800" onClick={setBudget} className={styles.budget_item}> £1,800 PCM </li>
+                            <li data-value = "1900" onClick={setBudget} className={styles.budget_item}> £1,900 PCM </li>
+                            <li data-value = "2000" onClick={setBudget} className={styles.budget_item}> £2,000 PCM </li>
+                        </ul>                              
+                        <button type="submit" className={styles.search_button}> Search </button>        
                     </div>
                 :
                     <div>
-                        <div className="second_row_container"> 
-                            <label htmlFor= "max_price" className="label"> Budget: </label>
+                        <div className={styles.second_row_container}> 
+                            <label htmlFor= "max_price" className={styles.label}> Budget: </label>
                             <ul 
                                 id="max_price"
                                 onClick = {showBudget}
-                                className="budget_container_closed"
+                                className={styles.budget_container_closed}
                                 >
-                                    <li data-vale= {maxPrice} className="budget_item">{maxPriceLabel}</li>
+                                    <li data-vale= {maxPrice} className={styles.budget_item}>{maxPriceLabel}</li>
                             </ul>  
-                            <button type="submit" className="search_button"> Search </button>
+                            <button type="submit" className={styles.search_button}> Search </button>
                         </div>
-
                     </div>
                 }
             </form>
