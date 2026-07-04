@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { useSearchParams, useNavigate } from "react-router-dom";
 
 import PropertySearchPageSearchBar from "../../components/public/property_search_page_searchbar_comp";
+import styles from "../public/property_search_page.module.css";
 
 type PropertyDetails = {
   id: number;
@@ -64,11 +65,11 @@ function PropertySearchPage () {
         else {
           setErrorMessagePR("");
           if (!city) {
-            setIntroMessage(`Properties available for rent in England:`);
+            setIntroMessage(`Properties available for rent in England`);
           }
 
           else {
-            setIntroMessage(`Properties available for rent in ${city}:`);
+            setIntroMessage(`Properties available for rent in ${city}`);
           }
 
           setPropertyResults(data); 
@@ -195,61 +196,66 @@ function PropertySearchPage () {
 
   return (
     <div>
-      <h4 className="hidden-content">Refine your search.</h4>
       <PropertySearchPageSearchBar sortBy={sortByValue} />
-      <select 
-        onChange = { (e) => orderResults(e.target.value)}
-        value = {sortByValue} 
-        aria-label="Sort by"
-        aria-describedby="sort_by_hint"
+      <div className={styles.intro_container}>
+        {introMessage && 
+          <h2 className={`${styles.intro_item} ${styles.intro_item_font}`}>{introMessage}</h2>
+        }
+        <h2 className={`${styles.intro_item} ${styles.intro_item_font}`}>Order by:</h2>
+        <select 
+          onChange = { (e) => orderResults(e.target.value)}
+          value = {sortByValue} 
+          aria-label="Sort by"
+          aria-describedby="sort_by_hint"
         >
-        <option value =""> Sort By</option>
-        <option value ="date">Date</option>
-        <option value ="highestprice">Highest Price</option>
-        <option value ="lowestprice">Lowest Price</option>
-      </select>
-      <span id="sort_by_hint" className="hidden-content">Choose in what order your properties are shown. Most recently listed is the default setting.</span>
-      {errorMessagePR ?
-        <div role="alert">
-          <h4>{errorMessagePR}</h4>
-        </div>
-      :
-        <h4>{introMessage}</h4>
+          <option value ="date">Date</option>
+          <option value ="highestprice">Highest Price</option>
+          <option value ="lowestprice">Lowest Price</option>
+        </select>
+        <span id="sort_by_hint" className={styles.sr_content}>Choose in what order your properties are shown. Most recently listed is the default setting.</span>
+      </div>
+      {errorMessagePR &&
+          <h4 role="alert" className={styles.pr_error_format}>{errorMessagePR}</h4>
       }       
       {propertyResults.map(property => (
-        <div key={property.id}> 
-          <span className="hidden-content">Address</span>
-          <p>{property.city}</p>
-          <span className="hidden-content">Monthly rental rate</span>
-          <p> £{property.price.toLocaleString()} per month </p>
-          <img 
-            src={property.photo_path}
-            role="button"
-            alt={`Main photo for property number ${property.id} - press enter to view detailed property page.`}
-            tabIndex={0} 
-            onKeyDown= { (e) => { if (e.key === "Enter" || e.key === " ") {
-              propertyDetailedResult(property.id);
-            }}} 
-            onClick={ () => propertyDetailedResult(property.id)} 
-          />
-          <br />
-          {propFavorite.has(property.id) ?
-            <button onClick={ () => removeFromFavorites(property.id)}> Remove from favorites </button>
-            :
-            <button onClick={ () => addToFavorites(property.id)}> Add to favorites </button>
-          }
-          {errorMessageFP.id === property.id && 
-            <div role="alert">
-              <h4>{errorMessageFP.error}</h4>
+        <div className={styles.property_card_container} key={property.id}>
+          <div className={styles.property_card_first_row}> 
+            <span className={styles.sr_content}>Address</span>
+            <h3 className={`${styles.h3_format} ${styles.address_format}`}>{property.city}</h3>
+            <span className={styles.sr_content}>Monthly rental rate</span>
+            <h3 className={`${styles.h3_format} ${styles.rate_format}`}>£{property.price.toLocaleString()} pcm</h3>
+          </div>
+          <div className={styles.property_card_second_row}>
+            <img 
+              src={property.photo_path}
+              role="button"
+              alt={`Main photo for property number ${property.id} - press enter to view detailed property page.`}
+              tabIndex={0} 
+              onKeyDown= { (e) => { if (e.key === "Enter" || e.key === " ") {
+                propertyDetailedResult(property.id);
+              }}} 
+              onClick={ () => propertyDetailedResult(property.id)} 
+              className={styles.image_format}
+            />
+            {propFavorite.has(property.id) ?
+              <button onClick={ () => removeFromFavorites(property.id)}> Remove from favorites </button>
+              :
+              <button onClick={ () => addToFavorites(property.id)}> Add to favorites </button>
+            }
+            {errorMessageFP.id === property.id && 
+                <h4 role="alert" className={styles.fp_error_format}>{errorMessageFP.error}</h4>
+            }
+            <p className={styles.sr_content}>Summary</p>
+            <h4 className={`${styles.h4_format} ${styles.date_summar_format}`}>{property.summary}</h4>
+          </div>
+          <div className={styles.property_card_third_row}>
+            <h4 className={`${styles.h4_format} ${styles.date_listed_format}`}>{new Date(property.date_listed).toLocaleDateString("en-GB")} </h4>
+            <div className={styles.basic_info_container}>
+              <h4  className={`${styles.h4_format} ${styles.property_type_format}`}>⌂   {property.type}</h4>
+              <h4  className={`${styles.h4_format} ${styles.bedrooms_format}`}>🛏   {property.no_bedrooms}</h4>
+              <h4  className={`${styles.h4_format} ${styles.bathrooms_format}`}>𓋥   {property.no_bathrooms}</h4>
             </div>
-          }
-          <br/>
-          <p className="hidden-content">Summary</p>
-          <p>{property.summary}</p>
-          <p>Date Listed: {new Date(property.date_listed).toLocaleDateString("en-GB")} </p>
-          <p>Property Type: {property.type}</p>
-          <p>Bedrooms: {property.no_bedrooms}</p>
-          <p>Bathrooms: {property.no_bathrooms}</p>
+          </div>
         </div>
       ))}
     </div>
