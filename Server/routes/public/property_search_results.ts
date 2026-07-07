@@ -30,7 +30,7 @@ router.get("/", (req, res) => {
     const minBaths = Number(req.query.minBaths) || values.minBaths;
     const maxPrice = Number(req.query.maxPrice) || values.maxPrice;
 
-    const options: Record<string, string> = {highestprice: "price DESC", lowestprice: "price ASC", date: "date_listed"};
+    const options: Record<string, string> = {highestprice: "price DESC", lowestprice: "price ASC", date: "date_listed DESC"};
     let sortBy = req.query.sortBy as string || "date";
     if (!(sortBy in options)) {
         sortBy = "date";
