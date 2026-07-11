@@ -300,8 +300,8 @@ function PropertySearchPage () {
               {errorMessageFP.id === property.id && 
                   <h4 role="alert" className={styles.fp_error_format}>{errorMessageFP.error}</h4>
               }
-              <p className={styles.sr_content}>Summary</p>
-              <h4 className={`${styles.h4_format} ${styles.summary_format}`}>{property.summary}</h4>
+              <h4 className={styles.summary_title_format}>Summary</h4>
+              <h4 className={`${styles.h4_format} ${styles.summary_content_format}`}>{property.summary}</h4>
             </div>
             <div className={styles.property_card_third_row}>
               <h4 className={`${styles.h4_format} ${styles.date_listed_format}`}>{new Date(property.date_listed).toLocaleDateString("en-GB").replace(/\//g, ".")} </h4>
