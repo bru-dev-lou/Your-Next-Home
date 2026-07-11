@@ -1,11 +1,12 @@
 import SignUp from "../../components/auth/sign_up_comp";;
+import register_account_photo from "../../assets/register_account_photo.jpg";
 
 function SignUpPage () {
 
     return (
         <div>
-        <h2> Make an account with us, it's easy!</h2>
-        <SignUp />
+            <SignUp />
+            <img src={register_account_photo}></img>
         </div>
     )
 }
