@@ -1,13 +1,13 @@
 import SignIn from "../../components/auth/sign_in_comp";
-import { Link } from "react-router-dom";
+import sign_in_photo from "../../assets/sign_in_photo.jpg";
+import styles from "../auth/sign_in_page.module.css";
 
 function SignInPage () {
 
     return (
-        <div>
-            <h2>Sign in and get started!</h2>
+        <div className={styles.main_container}>
             <SignIn />
-            <h5>Don't have an account? <Link to="/signUp">Register</Link> now, it's free!</h5>
+            <img src={sign_in_photo} className={styles.sign_in_photo}></img>
         </div>
     )
 }

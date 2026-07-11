@@ -1,0 +1,23 @@
+.main_container {
+    display: flex; 
+}
+
+.sign_in_photo {
+    position: absolute; 
+    z-index: -1; 
+
+    height: 550px;
+    width: 950px;
+
+    border-radius: 40px;
+    margin-top: 10px;
+    margin-left: 450px;
+
+        
+    box-shadow: 
+    -4px -4px 7px rgba(255, 255, 255, 0.596),
+    4px 4px 7px rgba(0,0,0,0.4);
+    
+    filter: drop-shadow(2px 2px 4px rgba(0,0,0,0.3));
+    
+}
