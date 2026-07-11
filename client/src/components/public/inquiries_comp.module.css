@@ -1,0 +1,149 @@
+/* sr = screen reader */
+
+.sr_content {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+}
+
+.main_container {
+    background-color: #125370;
+    border: solid 3px #002461;
+    border-radius: 60px;
+    width: 88%;
+    height: 395px;
+    padding: 2% 3% 3% 2%;
+
+    position: relative; 
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    row-gap: 15px;
+
+    margin: 80px 0 0 100px;
+}
+
+.main_title {
+    font-family: "Source Sans 3", sans-serif;
+    font-size: 26px;
+    color: #F2EFE2;
+    font-weight: 390;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.8);    
+    margin: 0px 0px 5px 215px;
+    
+}
+
+.container_format {
+    width: 100%;
+    display: flex; 
+    flex-direction: row;
+    column-gap: 10px;
+    margin-left: 15px;
+}
+
+.label_font {
+    font-family: "Source Sans 3", sans-serif;
+    font-size: 21px;
+    color: #F2EFE2;
+    font-weight: 390;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.8);    
+}
+
+.name_label_position {
+    margin-left: 30px;
+}
+
+.email_label_position {
+    margin-left: 32px;
+}
+
+.topic_label_position {
+    margin-left: 34px;
+}
+
+.message_label_position {
+    margin-left: 7px;
+}
+
+.prop_label_position {
+    margin-left: 17px;
+}
+
+.span_font {
+    font-family: "Source Sans 3", sans-serif;
+    font-size: 18px;
+    color: #F2EFE2;
+    font-weight: 390;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.8);    
+}
+
+.input_format {
+    background-color: #F5F2EB;
+    border-radius: 5px;
+
+    height: 18px;
+    width: 375px;
+
+    margin-top: 3px;
+    margin-left: 15px;
+
+    position: relative;
+}
+
+.word_count_25 {
+    width: 50px;
+    margin-top: 5px;
+    margin-left: 2px;
+}
+
+.word_count_250 {
+    width: 50px;
+    margin-top: 36px;
+    margin-left: 2px;
+}
+
+.textarea_format {
+    background-color: #F5F2EB;
+    border-radius: 10px;
+
+    height: 50px;
+    width: 375px;
+
+    margin-top: 3px;
+    margin-left: 16px;
+
+}
+
+.result_message {
+
+    font-family: "Source Sans 3", sans-serif;
+    font-size: 21px;
+    color: #F2EFE2;
+    font-weight: 390;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.8);    
+    text-align: center;
+    width: 350px;
+    position: absolute; 
+
+    margin: 0px 0 0 135px;
+}
+
+.button_format {
+    font-family: "Source Sans 3", sans-serif;
+    font-size: 20px;
+    color: #125370;
+    font-weight: 450;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.5);  
+
+    background-color: #BFBFBF;
+    border: 2px solid #747474;
+    border-radius: 10px;  
+    height: 35px;
+    width: 170px;
+    line-height: 23px;
+
+    margin: 5px 0 0 340px;
+}
