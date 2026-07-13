@@ -8,3 +8,164 @@
     clip: rect(0, 0, 0, 0);
     white-space: nowrap;
 }
+
+.main_container {
+    background-color: #125370;
+    border: solid 3px #002461;
+    border-radius: 80px; 
+
+    height: 550px;
+    width: 730px; 
+
+    margin-left: 690px;
+    margin-top: 18px;
+    
+    display: flex;
+    flex-direction: column;
+    row-gap: 17px;
+
+    position: absolute;
+    z-index: 10;
+}
+
+.main_title {
+    font-family: "Source Sans 3", sans-serif;
+    font-size: 26px;
+    color: #F2EFE2;
+    font-weight: 390;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.8);    
+    text-align: center;
+    margin: 30px 0 15px 0;
+}
+
+.container_format {
+    display: flex; 
+    margin-left: 80px;
+}
+
+.label_format {
+    font-family: "Source Sans 3", sans-serif;
+    font-size: 21px;
+    color: #F2EFE2;
+    font-weight: 390;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.8);    
+}
+
+.input_format {
+    background-color: #F5F2EB;
+    border-radius: 5px;
+    width: 300px;
+}
+
+.input_1{
+    margin-left: 159px;
+}
+
+.input_2{
+    margin-left: 197px;
+}
+
+.input_3{
+    margin-left: 180px;
+}
+
+.input_4{
+    margin-left: 116px;
+}
+
+.input_5{
+    margin-left: 200px;
+}
+
+.input_6{
+    margin-left: 165px;
+}
+
+.input_7{
+    margin-left: 90px;
+}
+
+
+.password_button{
+    background-color: #BFBFBF;
+    border: 1px solid #747474;
+    border-radius: 5px;  
+    border: none;
+
+    position: absolute;
+    margin-left: 535px;
+    margin-top: 1.5px;
+
+    height: 27px;
+    width: 26px;
+    line-height: 30px;
+
+}
+
+.results_container {
+    position: relative;
+}
+
+.create_account_button {
+    font-family: "Source Sans 3", sans-serif;
+    font-size: 21px;
+    color: #125370;
+    font-weight: 450;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.5);  
+
+    background-color: #BFBFBF;
+    border: 2px solid #747474;
+    border-radius: 7px;  
+
+    height: 40px;
+    width: 190px;
+    margin-top: 20px;
+    margin-left: 453px;
+
+}
+
+.error_message {    
+    font-family: "Source Sans 3", sans-serif;
+    font-size: 21px;
+    color: #F2EFE2;
+    font-weight: 390;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.8);    
+    text-align: center;
+
+    width: 550px;
+
+    position: absolute;
+    top: 0px;
+    left: 88px;
+}
+
+.success_message {
+    font-family: "Source Sans 3", sans-serif;
+    font-size: 23px;
+    color: #4fcb22;
+    font-weight: 390;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.8);    
+    text-align: center;
+
+    width: 550px;
+
+    position: absolute;
+    top: -10px;
+    left: 88px;
+}
+
+.success_instructions {
+    font-family: "Source Sans 3", sans-serif;
+    font-size: 18px;
+    color: #F2EFE2;
+    font-weight: 390;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.8);    
+    text-align: center;
+
+    width: 550px;
+
+    position: absolute;
+    top:  30px;
+    left: 88px;
+}
+

@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import styles from "../../components/auth/sign_up_comp.module.css"; 
 import { LuEye, LuEyeClosed } from "react-icons/lu";
 
@@ -24,8 +23,6 @@ function SignUp () {
     const [ showPassword, setShowPassword ] = useState(false);
     const [ showConfirmPassword, setConfirmShowPassword ] = useState(false);
    
-    const navigate = useNavigate(); 
-
     const createAccount = async (e:React.SubmitEvent<HTMLFormElement>) => {
         e.preventDefault();
         setErrorMessage("");
@@ -82,7 +79,7 @@ function SignUp () {
                             required
                             aria-describedby="username_hint"
                             aria-invalid={missingField === "username" || inUseField === "username" ? "true" : "false"}
-                            className={styles.input_format}
+                            className={`${styles.input_format} ${styles.input_1}`}
                         />
                         <span id="username_hint" className={styles.sr_content}>Choose a username to set up your account. This information will remain private. </span>
                     </div>
@@ -99,7 +96,7 @@ function SignUp () {
                             required
                             aria-describedby="name_hint"
                             aria-invalid={missingField === "name" ? "true" : "false"}
-                            className={styles.input_format}
+                            className={`${styles.input_format} ${styles.input_2}`}
                         />
                         <span id="name_hint" className={styles.sr_content}>If you represent a company, insert its name. If you are an individual property owner, insert your name. This information will be visible to other users.</span>
                     </div>
@@ -116,7 +113,7 @@ function SignUp () {
                             required
                             aria-describedby="address_hint"
                             aria-invalid={missingField === "address" || inUseField === "address" ? "true" : "false"}
-                            className={styles.input_format}
+                            className={`${styles.input_format} ${styles.input_3}`}
                         />
                         <span id="address_hint" className={styles.sr_content}>If you represent a company, insert its address. If you are an individual property owner, insert your property's address. This information will be visible to other users.</span>
                     </div>
@@ -133,7 +130,7 @@ function SignUp () {
                             required
                             aria-describedby="phone_number_hint"
                             aria-invalid={missingField === "phone_number" || inUseField === "phone_number" ? "true" : "false"}
-                            className={styles.input_format}
+                            className={`${styles.input_format} ${styles.input_4}`}
                         />
                         <span id="phone_number_hint" className={styles.sr_content}>If you represent a company, insert your work phone number. If you are an individual property owner, insert your prefered phone number to be contacted on. This information will be visible to other users.</span>
                     </div>
@@ -150,7 +147,7 @@ function SignUp () {
                             required
                             aria-describedby="email_hint"           
                             aria-invalid={missingField === "email" || inUseField === "email" ? "true" : "false"}   
-                            className={styles.input_format}  
+                            className={`${styles.input_format} ${styles.input_5}`}  
                         />
                         <span id="email_hint" className={styles.sr_content}>If you represent a company, insert your work email address. If you are an individual property owner, insert your prefered email address to be contacted on. This information will be visible to other users.</span>
                     </div>
@@ -168,7 +165,7 @@ function SignUp () {
                             required
                             aria-describedby="password_hint"
                             aria-invalid={missingField === "password" || errorMessage.includes("password") ? "true" : "false"}
-                            className={styles.input_format}
+                            className={`${styles.input_format} ${styles.input_6}`}
                         />
                         <span id="password_hint" className={styles.sr_content}>Your password must be 8 or more characters long. It must have one lowercase letter, one uppercase letter, a number and a special character from the following options: ? ! @ # $ % ^ & *. </span>
                         <button 
@@ -176,7 +173,7 @@ function SignUp () {
                             onClick= {() => setShowPassword(!showPassword)}
                             className={styles.password_button}
                             >
-                                {showPassword ? <LuEyeClosed /> : <LuEye />}
+                                {showPassword ? <LuEyeClosed color="#125370" /> : <LuEye color="#125370"/>}
                         </button>
                     </div>
                     <div className={styles.container_format}>
@@ -192,17 +189,17 @@ function SignUp () {
                             autoComplete="new-password"
                             required
                             aria-invalid={missingField === "confirm_password" || errorMessage.includes("password") ? "true" : "false"}
-                            className={styles.input_format}
+                            className={`${styles.input_format} ${styles.input_7}`}
                         />
                         <button 
                             type="button"
                             onClick= {() => setConfirmShowPassword(!showConfirmPassword)}
                             className={styles.password_button}
                             >
-                                {showPassword ? <LuEyeClosed /> : <LuEye />}
+                                {showConfirmPassword ? <LuEyeClosed color="#125370" /> : <LuEye color="#125370"/>}
                         </button>
                     </div>
-                    <div className={styles.container_format}>
+                    <div className={styles.results_container}>
                         <button 
                             type="submit" 
                             className={styles.create_account_button}
@@ -210,14 +207,13 @@ function SignUp () {
                         > 
                             Create Account 
                         </button>
+                        { errorMessage && <p role="alert" className={styles.error_message}> { errorMessage } </p> }
                         {successMessage &&
-                            <div role="status">
-                                <h3>{successMessage}</h3>
-                                <h4>Please note down your username and password for future reference.</h4>
-                                <button onClick={ () => navigate("/signIn")}> Sign In </button>        
+                            <div role="status" className={styles.success_container}>
+                                <h3 className={styles.success_message}>{successMessage}</h3>
+                                <h4 className={styles.success_instructions}>Please note down your username and password for future reference.</h4>
                             </div>
                         }
-                        { errorMessage && <p role="alert"> { errorMessage } </p> }
                     </div>
                 </div>
             </form>
