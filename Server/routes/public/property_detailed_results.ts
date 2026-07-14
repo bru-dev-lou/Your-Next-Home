@@ -12,7 +12,8 @@ type PropertyInfo = {
     furniture: string;
     date_listed: string;
     detail: string;
-    photo_path: string; 
+    photo_path: string;
+    is_main: boolean; 
 };
 
 const router = express.Router(); 
@@ -32,7 +33,8 @@ router.get("/:propID", (req, res) => {
             property_list.furniture,
             property_list.date_listed,
             property_list.detail,
-            property_photos.photo_path
+            property_photos.photo_path,
+            property_photos.is_main
             FROM property_list 
             LEFT JOIN property_photos
             ON property_photos.property_id = property_list.id
@@ -46,7 +48,7 @@ router.get("/:propID", (req, res) => {
 
         const propData = {...propertyData,
             photos: propertyDetails
-                .map(detail => detail.photo_path)
+                .map(detail => ({ photo_path: detail.photo_path, is_main: detail.is_main}))
                 .filter(Boolean)
         }; 
         
@@ -58,7 +60,7 @@ router.get("/:propID", (req, res) => {
             WHERE property_list.id = ?`).get(propID);
         
         if (!ownerDetails) {
-            return res.status(404).json({error: `Owner details for property PROP${propID} are missing. The page cannot be loaded.`})
+            return res.status(404).json({error: `Owner details for property PROP${propID} are missing.`})
         }
 
         res.status(200).json({propertyData: propData, ownerData: ownerDetails});

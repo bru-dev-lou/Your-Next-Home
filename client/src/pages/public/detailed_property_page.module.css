@@ -1,0 +1,41 @@
+/* sr = screen reader */
+
+.sr_content {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+}
+
+.main_container {
+    display: grid; 
+    grid-template-areas: 
+        "first_row first_row first_row"
+        "second_row second_row second_row"
+        "second_row second_row second_row"
+        "third_row . ."
+        "third_row . ."
+    ;
+}
+
+.first_row{
+    grid-area: first_row;
+}
+
+.second_row{
+    grid-area: second_row;
+}
+
+.third_row{
+    grid-area: third_row;
+}
+
+.main_photo {
+    width: 100%;
+}
+
+.extra_photo {
+    width: 100%;
+}
