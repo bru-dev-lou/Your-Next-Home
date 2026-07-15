@@ -4,6 +4,15 @@ import { useParams } from "react-router-dom";
 import styles from "../public/detailed_property_page.module.css";
 import adPhoto from "../../assets/detailed_page_ad_photo.jpg";
 
+import { IoIosHeartEmpty } from "react-icons/io";
+import { IoIosHeart } from "react-icons/io";
+import { BsHouse } from "react-icons/bs";
+import { IoBedSharp } from "react-icons/io5";
+import { LuToilet } from "react-icons/lu";
+import { IoMdResize } from "react-icons/io";
+
+
+
 type PropertyDetails = {
     id: number;
     type: string;
@@ -21,7 +30,7 @@ type PropertyDetails = {
 type OwnerDetails = {
     name: string; 
     address: string;
-    phone_number: number;
+    phone_number: string;
 }
 
 function DetailedPropertyPage () {
@@ -164,12 +173,14 @@ function DetailedPropertyPage () {
     return (
         <div key ={property.id} className={styles.main_container}>
             <div className={styles.first_row}>
-                <span className={styles.sr_content}>Address</span>
-                <h3 
-                    className={`${styles.h3_font} ${styles.address_position}`}
-                >
-                    {property.city}
-                </h3>
+                <div className={styles.address_trial}>
+                    <span className={styles.sr_content}>Address</span>
+                    <h3 
+                        className={`${styles.h3_font} ${styles.address_position}`}
+                    >
+                        {property.city}
+                    </h3>
+                </div>
                 <span className={styles.sr_content}>Monthly rental rate</span>
                 <h3 
                     className={`${styles.h3_font} ${styles.price_position}`}
@@ -183,7 +194,6 @@ function DetailedPropertyPage () {
                 </h3>
             </div>
             <div role="group" aria-label="Property photos" className={styles.second_row}>
-                <div className={styles.photo_container}>
                     <div className={styles.main_photo_container}>
                         <img 
                             src={mainPhoto[0].photo_path}
@@ -206,7 +216,7 @@ function DetailedPropertyPage () {
                             aria-describedby="button_hint"
                             className={styles.fav_button}
                         > 
-                            Remove from favorites 
+                            <IoIosHeart color="#a01313" size={40}/> 
                         </button>
                         :
                         <button 
@@ -214,51 +224,59 @@ function DetailedPropertyPage () {
                             aria-describedby="button_hint"
                             className={styles.fav_button}
                         >
-                            Add to favorites 
+                            <IoIosHeartEmpty color="#f60101" size={40} /> 
                         </button>
                     }                     
                     <span id="button_hint" className={styles.sr_content}>If button shows 'remove', it means the property is currently in your favorite properties' list. Clicking the button will remove it from this list.</span> 
                     {errorMessageFavorites && <h4 role="alert" className={styles.fav_error_message}>{errorMessageFavorites}</h4>}
-                </div>
                 {owner && (
-                    <div className={styles.owner_and_ad_container}>
-                        <span className={styles.sr_content}>Property owner's name.</span>
-                        <h4 
-                            aria-describedby="owner_name_hint"
-                            className={`${styles.h4_font} ${styles.owner_name_position}`}
-                        >
-                            {owner!.name}
-                        </h4>
-                        <span id="owner_name_hint" className={styles.sr_content}>This could be an individual's name or a company's name, depending on who is letting the property.</span>
-                        <span className={styles.sr_content}>Address where the owner of the property is located</span>
-                        <h4 
-                            aria-describedby="owner_address_hint"
-                            className={`${styles.h4_font} ${styles.owner_address_position}`}
-                        >
-                            {owner!.address}
-                        </h4>
-                        <span id="owner_address_hint" className={styles.sr_content}>This could be an individual's address or a company's address, depending on who is letting the property.</span>
-                        <span className={styles.sr_content}>Property owner's phone number</span>
-                        <h4 
-                            aria-describedby="owner_phone_number_hint"
-                            className={`${styles.h4_font} ${styles.owner_number_position}`}
-                        >
-                            {owner!.phone_number}
-                        </h4>
-                        <span id="owner_phone_number_hint" className={styles.sr_content}>This could be an individual's phone number or a company's phone number, depending on who is letting the property.</span>
-                        <img src={adPhoto} className={styles.ad_photo}></img>
+                    <div className={styles.owner_and_ad_main_container}>
+                        <div className={styles.owner_container}>
+                            <h4 className={`${styles.h3_font} ${styles.owner_title}`}>Owner Details</h4>
+                            <span className={styles.sr_content}>Property owner's name.</span>
+                            <h4 
+                                aria-describedby="owner_name_hint"
+                                className={`${styles.h4_font} ${styles.owner_name_position}`}
+                            >
+                                {owner!.name}
+                            </h4>
+                            <span id="owner_name_hint" className={styles.sr_content}>This could be an individual's name or a company's name, depending on who is letting the property.</span>
+                            <span className={styles.sr_content}>Address where the owner of the property is located</span>
+                            <h4 
+                                aria-describedby="owner_address_hint"
+                                className={styles.h4_font}
+                            >
+                                {owner!.address}
+                            </h4>
+                            <span id="owner_address_hint" className={styles.sr_content}>This could be an individual's address or a company's address, depending on who is letting the property.</span>
+                            <span className={styles.sr_content}>Property owner's phone number</span>
+                            <h4 
+                                aria-describedby="owner_phone_number_hint"
+                                className={styles.h4_font}
+                            >
+                                {owner!.phone_number}
+                            </h4>
+                            <span id="owner_phone_number_hint" className={styles.sr_content}>This could be an individual's phone number or a company's phone number, depending on who is letting the property.</span>
+                        </div>
+                        <div className={styles.ad_container}>
+                            <img src={adPhoto} className={styles.ad_photo}></img>
+                        </div>
                     </div>
                 )}
             </div>
             <div className={styles.third_row}>
-                <div className={styles.property_details_contaienr}>
+                <div className={styles.property_details_container}>
                     <span className={styles.sr_content}> Property type:</span>
+                    <span> <BsHouse className={styles.react_icon} /> </span>
                     <h4 className={`${styles.h4_font} ${styles.property_type_position}`}>{property.type}</h4>
                     <span className={styles.sr_content}> Number of bedrooms:</span>
+                    <span> <IoBedSharp className={styles.react_icon} /> </span>
                     <h4 className={`${styles.h4_font} ${styles.property_bedrooms_position}`}>{property.no_bedrooms}</h4>
                     <span className={styles.sr_content}> Number of bathrooms:</span>
+                    <span> <LuToilet className={styles.react_icon} /> </span>
                     <h4 className={`${styles.h4_font} ${styles.property_bathrooms_position}`}>{property.no_bathrooms}</h4>
                     <span className={styles.sr_content}> Property size: </span>
+                    <span> <IoMdResize className={styles.react_icon} /> </span>
                     <h4 className={`${styles.h4_font} ${styles.property_size_position}`}>{property.size} m²</h4>
                 </div>
                 <div className={styles.property_description_container}>

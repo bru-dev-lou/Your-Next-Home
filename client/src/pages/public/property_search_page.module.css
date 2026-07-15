@@ -183,7 +183,7 @@
     color: #F2EFE2;
     font-weight: 390;
     text-shadow: 1px 1px 2px rgba(0,0,0,0.8);    
-    margin: 0px 0px 0px 35px;
+    margin: 0px;
 }
 
 .summary_title_format {
@@ -201,6 +201,7 @@
 
 .summary_content_format {
     margin-top: 20px;
+    margin-left: 35px;
     grid-area: property_summary_content;
     overflow-wrap: break-word;
     hyphens: auto;
@@ -208,12 +209,26 @@
 
 .property_card_third_row {
     display: flex;
-    margin: 20px 45px 15px 0px;
+
+    margin: 20px 0 0 42px;
+    width: 1320px;
+    height: 45px;
 }
 
-.basic_info_container {
-    display: flex;
-    justify-content: space-between;
-    margin-left: 370px;
-    width: 870px;
+.date_listed_position {
+    width: 530px;
 }
+
+.react_icon {
+    color: #ECE7D4;
+    font-size: 18px;
+
+    margin-top: 5px;
+    margin-left: 105px;
+}
+
+.quick_data_position {
+    margin-left: 10px;
+    width: 250px;
+}
+

@@ -2,11 +2,13 @@ import { useState, useEffect } from "react";
 import { useSearchParams, useNavigate } from "react-router-dom";
 
 import PropertySearchPageSearchBar from "../../components/public/property_search_page_searchbar_comp";
+
 import styles from "../public/property_search_page.module.css";
 import { IoIosHeartEmpty } from "react-icons/io";
 import { IoIosHeart } from "react-icons/io";
-
-
+import { BsHouse } from "react-icons/bs";
+import { IoBedSharp } from "react-icons/io5";
+import { LuToilet } from "react-icons/lu";
 
 
 type PropertyDetails = {
@@ -304,12 +306,29 @@ function PropertySearchPage () {
               <h4 className={`${styles.h4_format} ${styles.summary_content_format}`}>{property.summary}</h4>
             </div>
             <div className={styles.property_card_third_row}>
-              <h4 className={`${styles.h4_format} ${styles.date_listed_format}`}>{new Date(property.date_listed).toLocaleDateString("en-GB").replace(/\//g, ".")} </h4>
-              <div className={styles.basic_info_container}>
-                <h4  className={styles.h4_format}>⌂ {property.type}</h4>
-                <h4  className={styles.h4_format}>🛏 {`${property.no_bedrooms} ${property.no_bedrooms > 1 ? "bedrooms" : "bedroom"}`}</h4>
-                <h4  className={styles.h4_format}>𓋥 {`${property.no_bathrooms} ${property.no_bathrooms > 1 ? "bathrooms" : "bathroom"}`}</h4>
-              </div>
+              <h4 
+                className={`${styles.h4_format} ${styles.date_listed_position}`}
+              >
+                {new Date(property.date_listed).toLocaleDateString("en-GB").replace(/\//g, ".")}
+              </h4>
+              <span> <BsHouse className={styles.react_icon}/> </span>
+              <h4  
+                className={`${styles.h4_format} ${styles.quick_data_position}`}
+              >
+                {property.type}
+              </h4>
+              <span> <IoBedSharp className={styles.react_icon} /> </span>
+              <h4  
+                className={`${styles.h4_format} ${styles.quick_data_position}`}
+              >
+                {`${property.no_bedrooms} ${property.no_bedrooms > 1 ? "bedrooms" : "bedroom"}`}
+              </h4>
+              <span> <LuToilet className={styles.react_icon} /> </span>
+              <h4  
+                className={`${styles.h4_format} ${styles.quick_data_position}`}
+              >
+                 {`${property.no_bathrooms} ${property.no_bathrooms > 1 ? "bathrooms" : "bathroom"}`}
+              </h4>
             </div>
           </div>
         ))}
