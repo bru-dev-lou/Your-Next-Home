@@ -4,8 +4,8 @@ import { useSearchParams, useNavigate } from "react-router-dom";
 import PropertySearchPageSearchBar from "../../components/public/property_search_page_searchbar_comp";
 
 import styles from "../public/property_search_page.module.css";
-import { IoIosHeartEmpty } from "react-icons/io";
-import { IoIosHeart } from "react-icons/io";
+
+import { IoIosHeartEmpty, IoIosHeart } from "react-icons/io";
 import { BsHouse } from "react-icons/bs";
 import { IoBedSharp } from "react-icons/io5";
 import { LuToilet } from "react-icons/lu";
@@ -287,6 +287,7 @@ function PropertySearchPage () {
               {propFavorite.has(property.id) ?
                 <button 
                   onClick={ () => removeFromFavorites(property.id)}
+                  aria-label="remove"
                   className={styles.fav_button}
                 > 
                   <IoIosHeart color="#a01313" size={40}/> 
@@ -294,11 +295,14 @@ function PropertySearchPage () {
               :
                 <button 
                   onClick={ () => addToFavorites(property.id)}
+                  aria-label="remove"
                   className={styles.fav_button}
                 > 
                   <IoIosHeartEmpty color="#f60101" size={40} /> 
                 </button>
               }
+              <span id="button_hint_1" className={styles.sr_content}>If aria-label shows 'remove', it means the property is currently in your favorite properties' list. Clicking the button will remove it from this list.</span>
+              <span id="button_hint_2" className={styles.sr_content}>If aria-label shows 'add', it means the property is not in your favorite properties' list. Clicking the button will add it to this list.</span> 
               {errorMessageFP.id === property.id && 
                   <h4 role="alert" className={styles.fp_error_format}>{errorMessageFP.error}</h4>
               }
