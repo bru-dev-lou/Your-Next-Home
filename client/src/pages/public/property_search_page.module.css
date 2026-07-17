@@ -205,6 +205,8 @@
     grid-area: property_summary_content;
     overflow-wrap: break-word;
     hyphens: auto;
+
+    text-align: justify;
 }
 
 .property_card_third_row {

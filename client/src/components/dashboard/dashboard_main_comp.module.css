@@ -1,0 +1,151 @@
+/* sr = screen reader */
+
+.sr_content {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+}
+
+.h2_font {
+    font-family: "Source Sans 3", sans-serif;
+    font-size: 26px;
+    color: #F2EFE2;
+    font-weight: 390;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.8);    
+    margin: 0px;
+}
+
+.h2_font_custom {
+    font-family: "Source Sans 3", sans-serif;
+    font-size: 28px;
+    color: #156082;
+    font-weight: 390;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.8);    
+    margin: 0px;
+}
+
+.h3_font {
+    font-family: "Source Sans 3", sans-serif;
+    font-size: 24px;
+    color: #F2EFE2;
+    font-weight: 390;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.8);    
+    margin: 0px;
+}
+
+.h4_font {
+    font-family: "Source Sans 3", sans-serif;
+    font-size: 21px;
+    color: #F2EFE2;
+    font-weight: 390;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.8);    
+    margin: 0px;
+}
+
+.title_container {
+    background-color: #156082;
+    border: solid 2px #042433;
+    border-radius: 5px;
+    margin-left: 40px;
+    width: 1420px;
+
+}
+
+.main_title {
+    margin-left: 610px;
+}
+
+
+.first_row {
+    display: flex;
+    margin: 40px 0px 0px 40px; 
+}
+
+.welcome_message {
+    width: 700px;
+}
+
+.add_property_button {
+    background-color: #156285;
+    border: solid 2px #042433;
+    border-radius: 5px;
+
+    height: 40px;
+    width: 220px;
+    margin-left: 503px;
+}
+
+.property_main_container {
+    display: flex;
+    flex-direction: column;
+    row-gap: 30px;
+}
+
+.property_card_container {
+    background-color: #125370;
+    border: solid 2px #042433;
+    border-radius: 30px;
+    
+    list-style: none;
+
+    width: 1100px;
+    margin-top: 30px;
+
+}
+
+.first_property_row{
+    display: flex; 
+    margin: 20px 0px 0px 30px;
+}
+
+.property_address {
+    width: 700px;
+}
+
+.property_rental_rate {
+    margin-left: 225px;
+    width: 150px;
+}
+
+.second_property_row {
+    display: flex;
+    margin: 20px 0px 0px 30px;
+}
+
+.main_photo {
+    border-radius: 20px;
+    border: solid 3px #002461;
+    width: 875px;
+    height: 250px;
+    object-fit: cover;
+}
+
+.property_summary_container {
+    margin-left: 25px;
+    margin-right: 35px;
+    width: 1100px;
+}
+
+.property_summary_title {
+    font-weight: 390;
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 3px;
+}
+
+.property_summary_content {
+    
+    text-align: justify;
+    overflow-wrap: break-word;
+    hyphens: auto;
+}
+
+.trial {
+    height: 218px;
+    display: flex; 
+    flex-direction: column;
+    justify-content: center; 
+}

@@ -189,7 +189,7 @@ function DetailedPropertyPage () {
     return (
         <div key ={property.id} className={styles.main_container}>
             <div className={styles.first_row}>
-                <div className={styles.address_trial}>
+                <div className={styles.address_container}>
                     <span className={styles.sr_content}>Address</span>
                     <h3 
                         className={`${styles.h3_font} ${styles.address_position}`}
