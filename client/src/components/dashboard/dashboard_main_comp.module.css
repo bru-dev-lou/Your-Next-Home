@@ -263,6 +263,7 @@
     border: solid 2px #042433;
     border-radius: 30px;
     height: 165px;
+    cursor: pointer;
 }
 
 .property_react_icon {
@@ -337,6 +338,7 @@
 
     margin-top: -35px;
     margin-left: 110px;
+    cursor: pointer;
 }
 
 .delete_cancel_button {
@@ -352,4 +354,5 @@
     height: 35px;
 
     margin-top: -35px;
+    cursor: pointer;
 }

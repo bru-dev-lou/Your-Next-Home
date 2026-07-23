@@ -1,0 +1,273 @@
+/* sr = screen reader */
+
+.sr_content {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+}
+
+.h2_font {
+    font-family: "Source Sans 3", sans-serif;
+    font-size: 26px;
+    color: #F2EFE2;
+    font-weight: 390;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.8);    
+    margin: 0px;
+}
+
+.h3_font {
+    font-family: "Source Sans 3", sans-serif;
+    font-size: 23px;
+    color: #156082;
+    font-weight: 390;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.8);    
+    margin: 0px;
+}
+
+.h4_font {
+    font-family: "Source Sans 3", sans-serif;
+    font-size: 20px;
+    color: #156082;
+    font-weight: 390;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.8);    
+    margin: 0px;
+}
+
+.title_container {
+    background-color: #156082;
+    border: solid 2px #042433;
+    border-radius: 5px;
+    margin-left: 30px;
+    width: 96%;
+}
+
+.title_format {
+    text-align: center;
+    margin-right: 60px;
+}
+
+.main_container{
+    display: grid;
+    grid-template: 100% / 50% 50%;
+    margin-left: 40px;
+}
+
+.data_fields_container {
+    display: grid;
+    grid-template: 75px repeat(7, 40px) 60px 75px / 22% 75%;
+    row-gap: 10px;
+}
+
+.data_error_message {
+    font-family: "Source Sans 3", sans-serif;
+    font-size: 23px;
+    color: #C00000;
+    font-weight: 390;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.8);
+    width: 600px;    
+    margin-top: 25px;
+    grid-column: span 2;     
+}
+
+.step1_format {
+    margin-top: 25px;
+    grid-column: span 2;
+}
+
+.city_container {
+    grid-column: span 2;
+    height: 30px;
+    position: relative; 
+}
+
+.city_input {
+    font-family: "Source Sans 3", sans-serif;
+    color: #125370;
+    font-size: 16px;
+    height: 25px;
+
+    background-color: #D9E4F3;
+    border: solid 2px #125370; 
+    border-radius: 5px; 
+    margin-left: 123px;
+    padding-left: 5px;
+    line-height: 20px;
+    width: 200px;    
+}
+
+.autocomplete_container {
+    background-color: #D9E4F3;
+
+    border-radius: 5px;
+    width: 210px;
+
+    position: absolute; 
+    margin-left: 163px;
+    margin-top: 0px; 
+
+    display: flex; 
+    flex-direction: column;
+    
+    list-style: none;
+    padding: 0px;
+
+    position: relative; 
+    z-index: 11;
+}
+
+.autocomplete_item {
+    color: #125370;
+    font-size: 16px;
+    height: 25px;
+    line-height: 25px;
+    padding-left: 5px;
+}
+
+.autocomplete_item:hover {
+    box-shadow: inset 0px 0px 15px rgba(0,36,97,0.5);
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.autocomplete_error_message {
+    font-family: "Source Sans 3", sans-serif;
+    font-size: 20px;
+    color: #C00000;
+    font-weight: 390;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.8);    
+    position: absolute; 
+    margin: 75px 0px 0px 450px;
+}
+
+/* The following styling is for "Property Type" and "Furniture" rows. */
+
+.ul_container_open {
+    font-family: "Source Sans 3", sans-serif;
+    color: #125370;
+    font-size: 16px;
+    padding: 0;
+    list-style: none;
+    
+    background-color: #D9E4F3;
+    border: solid 2px #125370; 
+    border-radius: 5px; 
+
+    height: 71px;
+    width: 210px;
+
+    display: flex; 
+    flex-direction: column;
+    position: relative;
+    z-index: 10; 
+
+    margin: 0;
+
+    overflow-y: scroll;
+}
+
+.list_item {
+    color: #125370;
+    font-size: 16px;
+    padding: 1px 0 1px 5px;
+}
+
+.list_item:hover {
+    box-shadow: inset 0px 0px 15px rgba(0,36,97,0.5);
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.ul_container_closed {
+    font-family: "Source Sans 3", sans-serif;
+    color: #125370;
+    font-size: 16px;
+    line-height: 25px;
+    list-style: none;
+    padding: 0;
+
+    background-color: #D9E4F3;
+    border: solid 2px #125370; 
+    border-radius: 5px; 
+
+    height: 25px;
+    width: 207.5px;
+    margin: 1px 0 0 0;
+}
+
+.ul_container_closed::after {
+    font-size: 16px;
+    content: "⏷";
+    position: absolute; 
+    margin-top: -25px;
+    margin-left: 185px;
+    line-height: 25px;
+}
+
+.list_item_closed {
+    color: #125370;
+    font-size: 16px;
+    padding-left: 5px;
+    line-height: 25px;  
+    cursor: pointer; 
+}
+
+/* Generalising input format to reduce verbose */
+
+.standard_input_format {
+    font-family: "Source Sans 3", sans-serif;
+    color: #125370;
+    font-size: 16px;
+    height: 25px;
+
+    background-color: #D9E4F3;
+    border: solid 2px #125370; 
+    border-radius: 5px; 
+    padding-left: 5px;
+    line-height: 20px;
+    width: 201px;    
+}
+
+.summary_container {
+    grid-column: span 2; 
+    display: flex;
+    flex-direction: row;
+}
+
+
+.textarea_format {
+    font-family: "Source Sans 3", sans-serif;
+    color: #125370;
+    font-size: 16px;
+
+    background-color: #D9E4F3;
+    border: solid 2px #125370; 
+    border-radius: 5px; 
+    padding-left: 5px;
+
+    flex-basis: 400px;
+    margin-left: 76px;
+}
+
+.summary_word_count_container {
+    display: flex; 
+    align-items:flex-end;
+
+}
+
+.summary_word_count {
+    font-family: "Source Sans 3", sans-serif;
+    color: #125370;
+    font-size: 15px;
+
+    font-weight: 620;
+    margin-left: 5px;
+}
+
+
+
+.description_container {
+    grid-column: span 2; 
+}

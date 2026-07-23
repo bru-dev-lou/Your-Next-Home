@@ -88,7 +88,7 @@ function PropertySearchPageSearchBar ({sortBy} : FilterValue) {
             }
   
             catch(error) {
-                setErrorMessageAC("AutoComplete feature currently unavailable.");
+                setErrorMessageAC("Autocomplete currently unavailable.");
             }
         }
           

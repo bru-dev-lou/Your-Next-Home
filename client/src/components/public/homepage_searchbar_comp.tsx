@@ -96,7 +96,8 @@ function HomePageSearchBar() {
                     <ul 
                         aria-live="polite" 
                         aria-label="City autocomplete suggestions."
-                        className={styles.autocomplete_container}>
+                        className={styles.autocomplete_container}
+                    >
                         {citySuggestions.map((city, index) => (
                             <li 
                                 key={index}
@@ -123,8 +124,8 @@ function HomePageSearchBar() {
                         <label htmlFor= "max_price" className={styles.label}> Budget: </label>
                         <ul id="max_price" onClick = {showBudget} className={styles.budget_container_open}>
                             <li data-value= {maxPrice} className={styles.budget_item}>{maxPriceLabel}</li>
-                            {maxPriceLabel !== " NO MAX " && 
-                                <li data-value={10000} onClick={setBudget} className={styles.budget_item}> NO MAX </li>
+                            {maxPriceLabel !== " No Max " && 
+                                <li data-value={10000} onClick={setBudget} className={styles.budget_item}> No Max </li>
                             }
                             <li data-value = "500" onClick={setBudget} className={styles.budget_item}> £500 PCM </li>
                             <li data-value = "600" onClick={setBudget} className={styles.budget_item}> £600 PCM </li>
