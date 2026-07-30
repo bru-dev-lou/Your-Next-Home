@@ -1,7 +1,13 @@
-import {useEffect, useState} from "react";
+import {useEffect, useState, useRef} from "react";
 import {useNavigate} from "react-router-dom";
 
 import styles from "../dashboard/dashboard_property_add_comp.module.css";
+import { LuPlus } from "react-icons/lu";
+import { TiDelete } from "react-icons/ti";
+import { IoMdArrowRoundBack } from "react-icons/io";
+import { IoMdArrowRoundForward } from "react-icons/io";
+
+
 
 type PropertyData = {
     type: string;
@@ -37,6 +43,10 @@ function DashboardPropertyAdd () {
 
     const [ propertyDetails, setPropertyDetails ] = useState<PropertyData>({type: "", city: "", price: 0, bedrooms: 0, bathrooms: 0, size: 0, furniture: "", summary: "", detail: ""});
     const [ tempURLs, setTempURLs ] = useState<PropertyPhotos[]>([]);
+    const [ mainPhotoIndex, setMainPhotoIndex ] = useState<number>(0); 
+    const [ galleryIndex, setGalleryIndex ] = useState<number>(0); 
+    
+
     const [ uploading, setUploading ] = useState(false);
 
     const [ propertyTypeDropdown, setPropertyTypeDropdown ] = useState<boolean>(false);
@@ -44,6 +54,10 @@ function DashboardPropertyAdd () {
 
     const [ furnitureDropdown, setFurnitureDropdown ] = useState<boolean>(false); 
     const [ furnitureLabel, setFurnitureLabel ] = useState("Select"); 
+
+    // React hooks for hiding file upload element
+
+    const photoUpload = useRef<HTMLInputElement>(null);
 
     // Error Message States
 
@@ -131,12 +145,15 @@ function DashboardPropertyAdd () {
         propertyData.append("detail", propertyDetails.detail);
 
         try {
-            setUploading(true);
+            const uploadTimeout = setTimeout(() => 
+            setUploading(true), 300);
 
             const res = await fetch(`/api/dashboard/property/add`, {
             method: "POST",
             body: propertyData,
             });
+            
+            clearTimeout(uploadTimeout);
             
             const result = await res.json();
             
@@ -221,9 +238,22 @@ function DashboardPropertyAdd () {
     }
 
     function deletePhotos(index: number) {
-        setTempURLs(tempURLs.filter((_, i) => i !== index));    
-            setExcessPhotosMessage("");
-            setPhotoErrorMessage("");
+        if (index === mainPhotoIndex) {
+            setTempURLs(tempURLs.filter((_, i) => i !== index));  
+            setMainPhotoIndex(0);
+        }
+
+        else if (index < mainPhotoIndex) {
+            setTempURLs(tempURLs.filter((_, i) => i !== index));  
+            setMainPhotoIndex(mainPhotoIndex - 1);
+        }
+        
+        else {
+            setTempURLs(tempURLs.filter((_, i) => i !== index));
+        }
+        
+        setExcessPhotosMessage("");
+        setPhotoErrorMessage("");
     }
 
     function clearDataErrorMessage () {
@@ -245,6 +275,19 @@ function DashboardPropertyAdd () {
 
     const remainingPropertyTypes = propertyTypes.filter(type => type !== propertyTypeLabel); 
     const remainingFurnitureTypes = furnitureTypes.filter(type => type !== furnitureLabel);
+    const visiblePhotos = tempURLs.slice(galleryIndex, galleryIndex + 3); 
+
+    function previousPhotos () {
+        if (galleryIndex >= 3) { 
+        setGalleryIndex(prev => prev - 3)
+        }
+    }
+
+    function nextPhotos () {
+        if (galleryIndex + 3 < tempURLs.length) {
+        setGalleryIndex(prev => prev + 3)
+        }
+    }
     
     return (
         <div>
@@ -510,7 +553,7 @@ function DashboardPropertyAdd () {
                         > 
                             Summary: 
                         </label>
-                            <input 
+                            <textarea 
                                 id="property_summary"
                                 value={propertyDetails.summary} 
                                 onChange={(e) => {
@@ -523,10 +566,10 @@ function DashboardPropertyAdd () {
                                 placeholder="Add a short summary about your property."
                                 required
                                 aria-invalid={missingField === "summary"}
-                                className={styles.textarea_format}
-                            />
-                        <div className={styles.summary_word_count_container}>
-                            <span className={styles.summary_word_count}>{summaryWordCount} / 50 </span>
+                                className={`${styles.textarea_format} ${styles.textarea_summary_custom}`}
+                            />                            
+                        <div className={styles.word_count_container}>
+                            <span className={styles.word_count_item}>{summaryWordCount} / 50 </span>
                         </div>
                         <span
                             aria-live="polite"
@@ -538,7 +581,7 @@ function DashboardPropertyAdd () {
                     <div className={styles.description_container}>
                         <label 
                             htmlFor="property_description"
-                            className={`${styles.h4_font} ${styles.description_label}`}
+                            className={styles.h4_font}
                         > 
                             Description: 
                         </label>
@@ -555,9 +598,11 @@ function DashboardPropertyAdd () {
                                 placeholder="Add a description of your property."
                                 required
                                 aria-invalid={missingField === "detail"}
-                                className={styles.description_textarea}
+                                className={`${styles.textarea_format} ${styles.textarea_description_custom}`}
                             />
-                        <span>{descriptionWordCount} / 250 words</span>
+                        <div className={styles.word_count_container}>
+                            <span className={styles.word_count_item}>{descriptionWordCount} / 250</span>
+                        </div>
                         <span 
                             aria-live="polite" 
                             className={styles.sr_content}
@@ -566,82 +611,136 @@ function DashboardPropertyAdd () {
                         </span>
                     </div>
                 </div>
-                <div className={styles.photo_main_container}>
+                <div>
                     {photoErrorMessage ?
                         <h3 role="alert" className={styles.photo_error_message}>{photoErrorMessage}</h3>
                     :
                         <h3 className={`${styles.h3_font} ${styles.step2_format}`}>Step 2: Upload between 5 to 10 photos.</h3>
                     }
-                    <div className={styles.photo_upload_container}>
-                        {tempURLs.length < 10 ? (
-                            <div className={styles.upload_button_container}>
-                                <input 
-                                    id="photo_upload"
-                                    type="file" 
-                                    multiple 
-                                    accept="image/*" 
-                                    onChange={ (e) => {displayPhotos(e); clearPhotoErrorMessages()}}
-                                    className={styles.upload_button}
-                                />
-                                <h4 role="status" className={`${styles.remmaining_photos_number_message} ${styles.h4_font}`}>You can upload {10 - tempURLs.length} more photos.</h4>
-                            </div>
-                        ) : (
-                            null
-                        )}                
-                        <ul>
-                            {tempURLs.map((tempURL, index) => (
-                                <li 
-                                    key={tempURL.url}
-                                    className={styles.uploaded_photos_contaienr}
-                                >
-                                    <img 
-                                        src={tempURL.url} 
-                                        alt={`Photo preview of photo number ${index}`} 
-                                        className={styles.uploaded_photos}/>
-                                    <button 
-                                        onClick={() => deletePhotos(index)}
-                                        aria-label="Remove photo"
-                                        className={styles.photo_removal_button}
+                    <div className={styles.photo_gallery_container}>
+                        {tempURLs.length > 0 ?                        
+                            <img 
+                                src={tempURLs[mainPhotoIndex].url}
+                                alt="Main property photo"
+                                className={styles.main_photo}
+                            />
+                        :
+                            <div className={styles.no_main_photo_div}></div>
+                        }
+                    </div>
+                    <div className={styles.photo_gallery_row}>
+                        <button
+                            disabled = {galleryIndex === 0}
+                            onClick={() => previousPhotos()}
+                            aria-describedby="button_hint_1"
+                            className={styles.left_arrow_format}
+                        >
+                        <IoMdArrowRoundBack className={styles.react_arrow_format} />                           
+                        </button>
+                        <span id="button_hint_1" className={styles.sr_content}>
+                            Display previous 3 uploaded photos. If these are the first 3 uploaded photos, this button will be disabled. 
+                        </span>
+                        <button 
+                            disabled={tempURLs.length >= 10}
+                            onClick={ () => photoUpload.current?.click()}
+                            className={styles.photo_upload_button}
+                            aria-label="Photo upload button"
+                        >
+                            <LuPlus className={styles.photo_upload_react_icon}/>
+                        </button> 
+                        <input 
+                            type="file" 
+                            multiple 
+                            accept="image/*" 
+                            onChange={ (e) => {displayPhotos(e); clearPhotoErrorMessages()}}
+                            ref={photoUpload}
+                            style={{display: "none"}}
+                        />                                                       
+                        <ul className={styles.extra_photos_container}>
+                            {visiblePhotos.map((tempURL, index) => {
+                                const realIndex = galleryIndex + index;
+                                return (
+                                    <li 
+                                        key={tempURL.url}
+                                        className={styles.li_element}
                                     >
-                                        x
-                                    </button>                       
+                                        <img 
+                                            src={tempURL.url} 
+                                            onClick={ () => setMainPhotoIndex(realIndex)}
+                                            alt={`Photo preview of photo number ${realIndex}`} 
+                                            className={styles.extra_photos}
+                                        />
+                                        <button 
+                                            onClick={() => deletePhotos(realIndex)}
+                                            aria-label="Remove photo"
+                                            className={styles.photo_delete_button}
+                                        >
+                                            <TiDelete className={styles.photo_delete_react_icon} />
+                                        </button>                       
+                                    </li>
+                                )
+                            })}  
+                            {Array.from({ length: 3 - visiblePhotos.length }).map((_, index) => (
+                                <li key={index} className={styles.li_element}>
+                                    <div className={styles.no_extra_photo_div}></div>
                                 </li>
-                            ))}            
-                        </ul>
+                            ))}       
+                        </ul>   
+                        <button 
+                            disabled={galleryIndex + 3 >= tempURLs.length}
+                            onClick={() => nextPhotos()}
+                            aria-labelledby="button_hint_2"
+                            className={styles.right_arrow_format}
+                        >
+                            <IoMdArrowRoundForward className={styles.react_arrow_format} />
+                        </button>
+                        <span id="button_hint_2" className={styles.sr_content}>
+                            Displays the next 3 uploaded photos. If there are no more photos, this button will be disabled. 
+                        </span>
+                    </div>                
+                    <div className={styles.feedback_messages_container}>    
+                        {tempURLs.length < 10 && !excessPhotosMessage && !uploading && !dataSuccessMessage && !photoErrorMessage &&
+                        <h3 
+                            role="status" 
+                            className={styles.h3_font}
+                        >
+                            Upload up to {10 - tempURLs.length} more {tempURLs.length === 9 ? "photo" : "photos"}.
+                        </h3> 
+                        }                          
+                        {excessPhotosMessage && 
+                            <h3 
+                                role="alert"
+                                className={styles.excess_photos_message}
+                            >
+                                {excessPhotosMessage}
+                            </h3>
+                        }
+                        {!uploading && !dataSuccessMessage && !photoErrorMessage && 
+                            <button 
+                                onClick={addPropertyData}
+                                className={styles.create_listing_button}
+                            >
+                                Create Listing
+                            </button>
+                        }
+                        {uploading &&
+                            <h3
+                                role="alert"
+                                className={`${styles.uploading_message} ${styles.h3_font}`}
+                            >
+                                Creating listing, please wait...
+                            </h3>
+                        }
+                        {dataSuccessMessage &&                         
+                            <div role="alert" className={styles.success_message_container}>
+                                <h3 className={styles.success_message_1}>*** Listing created ***</h3>
+                                <h3 className={`${styles.success_message_2} ${styles.h3_font}`}>
+                                    Redirecting you to your properties.
+                                </h3>
+                            </div>
+                        }                   
                     </div>
                 </div> 
-                <div className={styles.feedback_messages_container}>      
-                    {excessPhotosMessage && 
-                        <h3 
-                            role="alert"
-                            className={styles.excess_photos_message}
-                        >
-                            {excessPhotosMessage}
-                        </h3>
-                    }
-                    {!uploading && !dataSuccessMessage && !photoErrorMessage && 
-                        <button 
-                            onClick={addPropertyData}
-                            className={styles.create_listing_button}
-                        >
-                            Create Listing
-                        </button>
-                    }
-                    {uploading && 
-                        <h3
-                            role="alert"
-                            className={styles.uploading_message}
-                        >
-                            Please wait while we add your property!
-                        </h3>
-                    }
-                    {dataSuccessMessage && (
-                        <div role="alert" className={styles.success_message_container}>
-                            <h3 className={styles.success_message_1}>{dataSuccessMessage}</h3>
-                            <h3 className={styles.success_message_2}> You will now be redirected to your properties.</h3>
-                        </div>
-                    )}
-                </div>
             </div>
         </div>
     );

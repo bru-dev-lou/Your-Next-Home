@@ -42,7 +42,7 @@ function DetailedPropertyPage () {
 
     const [ propFavorite, setPropFavorite ] = useState<Set<number>>(new Set());
     
-    const [ startingIndex, setStartingIndex ] = useState<number>(0); 
+    const [ galleryIndex, setGalleryIndex ] = useState<number>(0); 
     const [ photoIndex, setPhotoIndex ] = useState<number>(0);
 
     const [ errorMessageFP,  setErrorMessageFP] = useState(""); 
@@ -161,11 +161,15 @@ function DetailedPropertyPage () {
     }
 
     function previousPhotos () {
-        setStartingIndex(startingIndex - 4)
+        if (galleryIndex >= 4) {
+        setGalleryIndex(prev => prev - 4)
+        }
     }
 
     function nextPhotos () {
-        setStartingIndex(startingIndex + 4)
+        if (galleryIndex + 4 < property!.photos.length) {
+        setGalleryIndex(prev => prev + 4)
+        }
     }
 
     if (errorMessageFP) {
@@ -179,11 +183,6 @@ function DetailedPropertyPage () {
     if (!property) {
         return null 
     }
-    
-
-    const extraPhotos = property.photos.filter((photo, index) => {
-        return index !== photoIndex; 
-    })
 
 
     return (
@@ -239,20 +238,20 @@ function DetailedPropertyPage () {
                 <span id="button_hint_1" className={styles.sr_content}>If aria-label shows 'remove', it means the property is currently in your favorite properties' list. Clicking the button will remove it from this list.</span>
                 <span id="button_hint_2" className={styles.sr_content}>If aria-label shows 'add', it means the property is not in your favorite properties' list. Clicking the button will add it to this list.</span> 
                 {errorMessageFavorites && <h4 role="alert" className={styles.fav_error_message}>{errorMessageFavorites}</h4>}             
-                    <ul className={styles.extra_photo_container}>
-                        {extraPhotos.slice(startingIndex, startingIndex + 4).map((photo, index) => ( 
-                           <li key={index} className={styles.list_format}> 
-                                <img 
-                                    onClick={ () => setPhotoIndex(property.photos.indexOf(photo))}
-                                    src={photo.photo_path}
-                                    alt={`Photos number ${index + 1} of property number ${property.id}`}
-                                    className={styles.extra_photo} 
-                                />
-                            </li> 
-                        ))}
-                    </ul>
+                <ul className={styles.extra_photo_container}>
+                    {property.photos.slice(galleryIndex, galleryIndex + 4).map((photo, index) => ( 
+                        <li key={index} className={styles.list_format}> 
+                            <img 
+                                onClick={ () => setPhotoIndex(property.photos.indexOf(photo))}
+                                src={photo.photo_path}
+                                alt={`Photos number ${index + 1} of property number ${property.id}`}
+                                className={styles.extra_photo} 
+                            />
+                        </li> 
+                    ))}
+                </ul>
                 <button 
-                    disabled= {startingIndex === 0}
+                    disabled= {galleryIndex === 0}
                     onClick= {() => previousPhotos()}
                     aria-describedby="button_hint_3"
                     className={styles.up_arrow_button}
@@ -261,7 +260,7 @@ function DetailedPropertyPage () {
                 </button>
                 <span id="button_hint_3" className={styles.sr_content}>Display previous 4 property photos. If these are the first 4 property photos, this button will be disabled. </span> 
                 <button 
-                    disabled= {startingIndex + 4 >= extraPhotos.length} 
+                    disabled= {galleryIndex + 4 >= property.photos.length} 
                     onClick= { () => nextPhotos() }
                     aria-describedby="button_hint_4"
                     className={styles.down_arrow_button}

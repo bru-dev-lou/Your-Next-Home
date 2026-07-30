@@ -108,7 +108,7 @@
     height: 75px;
     width: 110px;
     object-fit: cover;
-    cursor: pointer;
+    cursor: zoom-in;
 }
 
 .up_arrow_button {
