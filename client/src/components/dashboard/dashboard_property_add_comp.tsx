@@ -238,6 +238,8 @@ function DashboardPropertyAdd () {
     }
 
     function deletePhotos(index: number) {
+        URL.revokeObjectURL(tempURLs[index].url);
+
         if (index === mainPhotoIndex) {
             setTempURLs(tempURLs.filter((_, i) => i !== index));  
             setMainPhotoIndex(0);
@@ -707,7 +709,7 @@ function DashboardPropertyAdd () {
                             Upload up to {10 - tempURLs.length} more {tempURLs.length === 9 ? "photo" : "photos"}.
                         </h3> 
                         }                          
-                        {excessPhotosMessage && 
+                        {excessPhotosMessage && !dataSuccessMessage &&
                             <h3 
                                 role="alert"
                                 className={styles.excess_photos_message}
@@ -733,7 +735,7 @@ function DashboardPropertyAdd () {
                         }
                         {dataSuccessMessage &&                         
                             <div role="alert" className={styles.success_message_container}>
-                                <h3 className={styles.success_message_1}>*** Listing created ***</h3>
+                                <h3 className={styles.success_message_1}>{dataSuccessMessage}</h3>
                                 <h3 className={`${styles.success_message_2} ${styles.h3_font}`}>
                                     Redirecting you to your properties.
                                 </h3>

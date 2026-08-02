@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 
+import styles from "../dashboard/dashboard_property_edit_comp.module.css";
+
 type PropertyDetails = {
     type?: string;
     city?: string;
@@ -22,7 +24,7 @@ function DashboardPropertyEdit() {
     const navigate = useNavigate();  
     const { propID } = useParams();
  
-// Original Property Details vs  Property Details prevents unneccessary API calls when fields have not been updated. 
+// Original Property Details vs Property Details prevents unneccessary API calls when fields have not been updated. 
 
     const [ originalPropertyDetails, setOriginalPropertyDetails ] = useState<PropertyDetails | null>(null); 
     const [ propertyDetails, setPropertyDetails ] = useState<PropertyDetails | null>(null);
@@ -300,277 +302,369 @@ function DashboardPropertyEdit() {
 
     if (!propertyDetails) {
         return (
-            <div>
-                {errorMessagePF ? <h3 role="alert"> {errorMessagePF} </h3>
+            <div className={styles.no_property_error_container}>
+                {errorMessagePF ? 
+                    <h2 
+                        role="alert"
+                        className={styles.PF_error_message}
+                    > 
+                        {errorMessagePF} 
+                    </h2>
                 :
-                <h3 role="status">Loading...</h3>}
+                    <h2
+                        role="status"
+                        className={styles.loading_message}
+                    >
+                        Loading...
+                    </h2>
+                }
             </div>
         );
     }   
 
     return (
         <div>
-            <div>
-                <h3> Property Information </h3>
-                <h5> Update your property details below.</h5>
-                <label htmlFor="location"> City: </label>
-                    <input 
-                        id="location"
-                        type="text" 
-                        value={propertyDetails.city}
-                        onChange={(e) => {
-                            setPropertyDetails({...propertyDetails, city: e.target.value});
-                            setErrorMessagePE("");
-                            setSuccessMessagePE("");
-                            setAutoCompleteQueryClicked(false);
-                        }}
-                        required
-                        aria-invalid={propertyMissingField === "city"}
-                    />
-                <br />
-                <ul aria-live="polite" aria-label="City autocomplete suggestions"> 
-                {cities.map((query, index) => (
-                    <li 
-                        key={index}
-                        onClick = {() => {
-                            setPropertyDetails({...propertyDetails, city: query.city});
-                            setCities([]);
-                            setAutoCompleteQueryClicked(true);
-                            }}
-                        tabIndex={0} 
-                        onKeyDown= { (e) => { if (e.key === "Enter") {
-                            setPropertyDetails({...propertyDetails, city: query.city});
-                            setCities([]);
-                            setAutoCompleteQueryClicked(true);
-                        }}}
-                        style = {{ cursor: "pointer"}}
-                        aria-label={`Select ${query.city}`}
-                    >
-                        {query.city}
-                    </li>
-                ))}
-            </ul>
-                {errorMessageAC && 
-                    <div role="alert">
-                        <h3>{errorMessageAC}</h3>
-                    </div>
-                }
-            <br />
-                <label htmlFor="property_type"> Type: </label>
-                    <select 
-                        id="property_type"
-                        value={propertyDetails.type}
-                        onChange={(e) => {
-                            setPropertyDetails({...propertyDetails, type: e.target.value});
-                            setErrorMessagePE("");
-                            setSuccessMessagePE("");
-                        }}
-                        required
-                        aria-invalid={propertyMissingField === "type"}
-                    >
-                    <option value={propertyDetails.type}>{propertyDetails.type}</option>
-                    {propertyDetails.type !== "Apartment" && <option value="Apartment">Apartment</option>}
-                    {propertyDetails.type !== "Terraced" && <option value="Terraced" >Terraced</option>}
-                    {propertyDetails.type !== "Semi-Detached" && <option value="Semi-Detached" >Semi-Detached</option>}
-                    {propertyDetails.type !== "Detached" && <option value="Detached" >Detached</option>}
-                    {propertyDetails.type !== "Bungalow" && <option value="Bungalow" >Bungalow</option>}
-                    </select>  
-                <br />
-                <label htmlFor="rent"> Rate (£): </label>
-                    <input 
-                        id="rent"
-                        type="number" 
-                        value={propertyDetails.price ?? ""}
-                        onChange={(e) => {
-                            setPropertyDetails({...propertyDetails, price: e.target.value === "" ? undefined : parseFloat(e.target.value)});
-                            setErrorMessagePE("");
-                            setSuccessMessagePE("");
-                        }}
-                        required
-                        aria-invalid={propertyMissingField === "price"} 
-                     />
-                <br />
-                <label htmlFor="bedrooms"> Bedrooms: </label>
-                    <input 
-                        id="bedrooms"
-                        type="number" 
-                        value={propertyDetails.no_bedrooms ?? ""}
-                        onChange={(e) => {
-                            setPropertyDetails({...propertyDetails, no_bedrooms: e.target.value === "" ? undefined : parseInt(e.target.value)});
-                            setErrorMessagePE("");
-                            setSuccessMessagePE("");
-                        }} 
-                        required
-                        aria-invalid={propertyMissingField === "bedrooms"}
-                    />
-                <br />
-                <label htmlFor="bathrooms"> Bathrooms: </label>
-                    <input 
-                        id="bathrooms"
-                        type="number" 
-                        value={propertyDetails.no_bathrooms ?? ""}
-                        onChange={(e) => {
-                            setPropertyDetails({...propertyDetails, no_bathrooms: e.target.value === "" ? undefined : parseInt(e.target.value)});
-                            setErrorMessagePE("");
-                            setSuccessMessagePE("");
-                        }}
-                        required
-                        aria-invalid={propertyMissingField === "bathrooms"}
-                    />
-                <br />
-                <label htmlFor="property_size"> Size (m²): </label>
-                    <input 
-                        id="property_size"
-                        type="number" 
-                        value={propertyDetails.size ?? ""}    
-                        onChange={(e) => { 
-                            setPropertyDetails({...propertyDetails, size: e.target.value === "" ? undefined : parseInt(e.target.value)});
-                            setErrorMessagePE("");
-                            setSuccessMessagePE("");
-                        }} 
-                        required
-                        aria-invalid={propertyMissingField === "size"}
-                    />
-                <br />
-                <label htmlFor="furniture"> Furniture: </label>
-                    <select 
-                        id="furniture"
-                        value={propertyDetails.furniture}
-                        onChange={(e) => {
-                            setPropertyDetails({...propertyDetails, furniture: e.target.value});
-                            setErrorMessagePE("");
-                            setSuccessMessagePE("");
-                        }}
-                        required
-                        aria-invalid={propertyMissingField === "furniture"}
-                    >
-                        <option value={propertyDetails.furniture}>{propertyDetails.furniture}</option>
-                        {propertyDetails.furniture !== "Furnished" && <option value = "Furnished"> Furnished</option>}
-                        {propertyDetails.furniture !== "Semi-furnished" && <option value = "Semi-furnished"> Semi-Furnished</option>}
-                        {propertyDetails.furniture !== "Unfurnished" && <option value = "Unfurnished"> Unfurnished</option>}        
-                    </select>
-                <br />
-                <label htmlFor="summary"> Summary: </label>
-                    <textarea
-                        id="summary"
-                        value={propertyDetails.summary}
-                        onChange={(e) => {
-                            const words = e.target.value.split(/\s+/).filter(Boolean);
-                            if (words.length <= 50) {
-                                setErrorMessagePE("");
-                                setSuccessMessagePE("");
-                                setPropertyDetails({ ...propertyDetails, summary: e.target.value });
-                            }
-                        }}
-                        required
-                        aria-invalid={propertyMissingField === "summary"}
-                    />
-                <span>{summaryWordCount} / 50 words</span>
-                <span
-                    aria-live="polite" 
-                    className="hidden-content">
-                        {announceSummaryWordCount > 0 && `${announceSummaryWordCount} out of 50 words used.`}
-                </span>
-                <br />
-                <label htmlFor="description"> Property Description: </label>
-                    <textarea
-                        id="description"
-                        value={propertyDetails.detail}
-                        onChange={(e) => {
-                            const words = e.target.value.split(/\s+/).filter(Boolean);
-                            if (words.length <= 250) {
-                                setErrorMessagePE("");
-                                setSuccessMessagePE("");
-                                setPropertyDetails({ ...propertyDetails, detail: e.target.value });
-                            }
-                        }}
-                        required
-                        aria-invalid={propertyMissingField === "description"}
-                    />
-                <span>{descriptionWordCount} / 250 words</span>
-                <span 
-                    aria-live="polite" 
-                    className="hidden-content">
-                        {announceDescriptionWordCount > 0 && `${announceDescriptionWordCount} out of 250 words used.`}
-                </span>
-                <br />
-                <button onClick={propertyDetailsUpdate}> Update Property </button>
-                {propertyUpdated && successMessagePE ?
-                    <div>
-                        <p 
-                            style={{ color: "green" }}
-                            role="status">
-                                {successMessagePE}
-                        </p>
-                        <button 
-                            onClick={() => {navigate(`/property/${propID}`)}}
-                            aria-describedby="navigation_hint">Check your property out!
-                        </button>
-                        <span id="navigation_hint" className="hidden-content">Clicking this button will navigate you to the detailed property page.</span>
-                    </div>
-                :
-                errorMessagePE && 
-                    <p 
-                        style={{ color: "red" }}
-                        role="alert">
-                            {errorMessagePE}
-                    </p>
-                }
+            <div className={styles.main_title_container}>
+                <h2 className={`${styles.main_title} ${styles.h2_font}`}> Edit Property </h2>
             </div>
-            <div>
-                <h3> Property Photos </h3>
-                <h5> Update your property photos below. </h5>
-                {propertyPhotos.length > 0 ? (
-                    <ul style={{ listStyle: "none", padding: 0, margin: 0 }}>
-                        {propertyPhotos.map((photo, index) => (
-                            <li key={photo.id}>
-                                <img src={photo.photo_path} 
-                                    alt={`Photo number ${index+1} of property number ${propID}`} 
-                                    style={{ width: "200px", height: "150px" }} 
-                                />
-                                <button 
-                                    aria-label={`Delete photo number ${index+1}`}
-                                    onClick={(e) => photoDelete(photo.id, photo.photo_path, e)}> 
-                                    x 
-                                </button>
-                            </li>
-                        ))}
-                    </ul>
-                ) : (
-                    <p 
-                        style={{ color: "red" }}
-                        role="alert">
-                            {errorMessagePD}
-                    </p>
-                )}
-                {propertyPhotos.length < 10 ? ( 
-                    <div>
-                        <label htmlFor="photo_upload"> Upload Property Photos</label>
+            <div className={styles.property_edit_container}>
+                <div className={styles.property_data_container}>
+                    <div className={styles.subtitle_container}>
+                        {errorMessagePE ?
+                            <h3 
+                                role="alert"
+                                className={styles.PE_error_message}
+                            >
+                                {errorMessagePE}
+                            </h3>
+                            :
+                            <h3 className={styles.h3_font}> Update your property details:</h3>
+                        }
+                    </div>                    
+                    <div className={styles.city_container}>
+                        <label 
+                            htmlFor="location"
+                            className={styles.h4_font}
+                        > 
+                            City: 
+                        </label>
                         <input 
-                            id="photo_upload"
-                            type="file" 
-                            multiple 
-                            accept="image/*" 
-                            onChange={photoUpload} />
-                        <p>Upload up to {10 - propertyPhotos.length} more {propertyPhotos.length === 9 ? "photo" : "photos"}.</p>
+                            id="location"
+                            type="text" 
+                            value={propertyDetails.city}
+                            onChange={(e) => {
+                                setPropertyDetails({...propertyDetails, city: e.target.value});
+                                setErrorMessagePE("");
+                                setSuccessMessagePE("");
+                                setAutoCompleteQueryClicked(false);
+                            }}
+                            required
+                            aria-invalid={propertyMissingField === "city"}
+                            className={styles.city_input}
+                        />                    
+                        <ul 
+                            aria-live="polite" 
+                            aria-label="City autocomplete suggestions"
+                            className={styles.autocomplete_container}> 
+                            {cities.map((query, index) => (
+                                <li 
+                                    key={index}
+                                    onClick = {() => {
+                                        setPropertyDetails({...propertyDetails, city: query.city});
+                                        setCities([]);
+                                        setAutoCompleteQueryClicked(true);
+                                        }}
+                                    tabIndex={0} 
+                                    onKeyDown= { (e) => { if (e.key === "Enter") {
+                                        setPropertyDetails({...propertyDetails, city: query.city});
+                                        setCities([]);
+                                        setAutoCompleteQueryClicked(true);
+                                    }}}
+                                    style = {{ cursor: "pointer"}}
+                                    aria-label={`Select ${query.city}`}
+                                    className={styles.autocomplete_item}
+                                >
+                                    {query.city}
+                                </li>
+                            ))}
+                        </ul>
+                        {errorMessageAC && 
+                                <h3 role="alert" className={styles.AC_error}>{errorMessageAC}</h3>                                
+                        }
                     </div>
-                ) : (
-                    <p>You have reached the maximum number of photos.</p>
-                )}
-                {uploadMessage && photoUploading && <p role="status">{uploadMessage}</p>}
-                {successMessagePU && 
-                    <p style={{ color: "green" }}
-                    role="status">
-                        {successMessagePU}
-                    </p>
-                }
-                {errorMessagePU && 
-                    <p 
-                        style={{ color: "red" }}
-                        role="alert">
+                    <label 
+                        htmlFor="property_type"
+                        className={styles.h4_font}
+                    >
+                        Property Type: 
+                    </label>
+                        <select 
+                            id="property_type"
+                            value={propertyDetails.type}
+                            onChange={(e) => {
+                                setPropertyDetails({...propertyDetails, type: e.target.value});
+                                setErrorMessagePE("");
+                                setSuccessMessagePE("");
+                            }}
+                            required
+                            aria-invalid={propertyMissingField === "type"}
+                        >
+                            <option value={propertyDetails.type}>{propertyDetails.type}</option>
+                            {propertyDetails.type !== "Apartment" && <option value="Apartment">Apartment</option>}
+                            {propertyDetails.type !== "Terraced" && <option value="Terraced" >Terraced</option>}
+                            {propertyDetails.type !== "Semi-Detached" && <option value="Semi-Detached" >Semi-Detached</option>}
+                            {propertyDetails.type !== "Detached" && <option value="Detached" >Detached</option>}
+                            {propertyDetails.type !== "Bungalow" && <option value="Bungalow" >Bungalow</option>}
+                        </select>  
+                    
+                    <label 
+                        htmlFor="rental_rate"
+                        className={styles.h4_font}
+                    > 
+                        Monthly Rate: 
+                    </label>
+                        <input 
+                            id="rental_rate"
+                            type="number" 
+                            value={propertyDetails.price ?? ""}
+                            onChange={(e) => {
+                                setPropertyDetails({...propertyDetails, price: e.target.value === "" ? undefined : parseFloat(e.target.value)});
+                                setErrorMessagePE("");
+                                setSuccessMessagePE("");
+                            }}
+                            required
+                            aria-invalid={propertyMissingField === "price"} 
+                            className={styles.rental_rate_input}
+                        />
+                    <label 
+                        htmlFor="bedrooms"
+                        className={styles.h4_font}
+                    > 
+                        Bedrooms: 
+                    </label>
+                        <input 
+                            id="bedrooms"
+                            type="number" 
+                            value={propertyDetails.no_bedrooms ?? ""}
+                            onChange={(e) => {
+                                setPropertyDetails({...propertyDetails, no_bedrooms: e.target.value === "" ? undefined : parseInt(e.target.value)});
+                                setErrorMessagePE("");
+                                setSuccessMessagePE("");
+                            }} 
+                            required
+                            aria-invalid={propertyMissingField === "bedrooms"}
+                            className={styles.bedrooms_input}
+                        />
+                    <label 
+                        htmlFor="bathrooms"
+                        className={styles.h4_font}
+                    > 
+                        Bathrooms: 
+                    </label>
+                        <input 
+                            id="bathrooms"
+                            type="number" 
+                            value={propertyDetails.no_bathrooms ?? ""}
+                            onChange={(e) => {
+                                setPropertyDetails({...propertyDetails, no_bathrooms: e.target.value === "" ? undefined : parseInt(e.target.value)});
+                                setErrorMessagePE("");
+                                setSuccessMessagePE("");
+                            }}
+                            required
+                            aria-invalid={propertyMissingField === "bathrooms"}
+                            className={styles.bathrooms_input}
+                        />
+                    <label 
+                        htmlFor="property_size"
+                        className={styles.h4_font}
+                    > 
+                        Size (m²): 
+                    </label>
+                        <input 
+                            id="property_size"
+                            type="number" 
+                            value={propertyDetails.size ?? ""}    
+                            onChange={(e) => { 
+                                setPropertyDetails({...propertyDetails, size: e.target.value === "" ? undefined : parseInt(e.target.value)});
+                                setErrorMessagePE("");
+                                setSuccessMessagePE("");
+                            }} 
+                            required
+                            aria-invalid={propertyMissingField === "size"}
+                            className={styles.property_size_input}
+                        />
+                    <label 
+                        htmlFor="furniture"
+                        className={styles.h4_font}
+                    > 
+                        Furniture: 
+                    </label>
+                        <select 
+                            id="furniture"
+                            value={propertyDetails.furniture}
+                            onChange={(e) => {
+                                setPropertyDetails({...propertyDetails, furniture: e.target.value});
+                                setErrorMessagePE("");
+                                setSuccessMessagePE("");
+                            }}
+                            required
+                            aria-invalid={propertyMissingField === "furniture"}
+                        >
+                            <option value={propertyDetails.furniture}>{propertyDetails.furniture}</option>
+                            {propertyDetails.furniture !== "Furnished" && <option value = "Furnished"> Furnished</option>}
+                            {propertyDetails.furniture !== "Semi-furnished" && <option value = "Semi-furnished"> Semi-Furnished</option>}
+                            {propertyDetails.furniture !== "Unfurnished" && <option value = "Unfurnished"> Unfurnished</option>}        
+                        </select>
+                    <label 
+                        htmlFor="summary"
+                        className={styles.h4_font}
+                    > 
+                        Summary: 
+                    </label>
+                        <textarea
+                            id="summary"
+                            value={propertyDetails.summary}
+                            onChange={(e) => {
+                                const words = e.target.value.split(/\s+/).filter(Boolean);
+                                if (words.length <= 50) {
+                                    setErrorMessagePE("");
+                                    setSuccessMessagePE("");
+                                    setPropertyDetails({ ...propertyDetails, summary: e.target.value });
+                                }
+                            }}
+                            required
+                            aria-invalid={propertyMissingField === "summary"}
+                            className={styles.summary_textarea}
+                        />
+                    <span className={styles.word_count_container}>{summaryWordCount} / 50 words</span>
+                    <span
+                        aria-live="polite" 
+                        className={styles.sr_content}
+                    >
+                        {announceSummaryWordCount > 0 && `${announceSummaryWordCount} out of 50 words used.`}
+                    </span>
+                    <label 
+                        htmlFor="description"
+                        className={styles.h4_font}
+                    > 
+                        Property Description: 
+                    </label>
+                        <textarea
+                            id="description"
+                            value={propertyDetails.detail}
+                            onChange={(e) => {
+                                const words = e.target.value.split(/\s+/).filter(Boolean);
+                                if (words.length <= 250) {
+                                    setErrorMessagePE("");
+                                    setSuccessMessagePE("");
+                                    setPropertyDetails({ ...propertyDetails, detail: e.target.value });
+                                }
+                            }}
+                            required
+                            aria-invalid={propertyMissingField === "description"}
+                            className={styles.description_textarea}
+                        />
+                    <span>{descriptionWordCount} / 250 words</span>
+                    <span 
+                        aria-live="polite" 
+                        className={styles.sr_content}
+                    >
+                        {announceDescriptionWordCount > 0 && `${announceDescriptionWordCount} out of 250 words used.`}
+                    </span>
+                </div>
+                <div className={styles.property_photos_container}>
+                    <div className={styles.property_photos_title_container}>
+                        {errorMessagePD ? 
+                            <h3 
+                                role="alert" 
+                                className={styles.PD_error_message}
+                            >
+                                {errorMessagePD}
+                            </h3>
+                        :
+                        <h3 className={styles.h3_font}> Update your property photos: </h3>
+                        }
+                    </div>
+                    {propertyPhotos.length > 0 && (
+                        <ul style={{ listStyle: "none", padding: 0, margin: 0 }}>
+                            {propertyPhotos.map((photo, index) => (
+                                <li key={photo.id}>
+                                    <img src={photo.photo_path} 
+                                        alt={`Photo number ${index+1} of property number ${propID}`} 
+                                        style={{ width: "200px", height: "150px" }} 
+                                    />
+                                    <button 
+                                        aria-label={`Delete photo number ${index+1}`}
+                                        onClick={(e) => photoDelete(photo.id, photo.photo_path, e)}> 
+                                        x 
+                                    </button>
+                                </li>
+                            ))}
+                        </ul>
+                    )}
+                    {propertyPhotos.length < 10 ?  
+                        <div>
+                            <input 
+                                id="photo_upload"
+                                type="file" 
+                                multiple 
+                                accept="image/*" 
+                                onChange={photoUpload} 
+                            />
+                            <h3 className={styles.h3_font}>
+                                Upload up to {10 - propertyPhotos.length} more {propertyPhotos.length === 9 ? "photo" : "photos"}.
+                            </h3>
+                        </div>
+                    : 
+                        <h3 className={styles.excess_photos_message}>
+                            You have reached the maximum number of photos.
+                        </h3>
+                    }
+                    {uploadMessage && photoUploading && 
+                        <h3 
+                            role="status"
+                            className={styles.photo_uploading_message}
+                        >
+                            {uploadMessage}
+                        </h3>
+                    }
+                    {successMessagePU && 
+                        <h3
+                            role="status"
+                            className={styles.photo_upload_success_message}
+                        >
+                            {successMessagePU}
+                        </h3>
+                    }
+                    {errorMessagePU && 
+                        <h3 
+                            role="alert"
+                            className={styles.photo_upload_error_message}
+                        >
                             {errorMessagePU}
-                    </p>
-                }
+                        </h3>
+                    }
+                    <div className={styles.property_update_final_container}>
+                        <button onClick={propertyDetailsUpdate}> Update Property </button>
+                        {propertyUpdated && successMessagePE &&
+                            <div className={styles.property_update_success_container}>
+                                <h3
+                                    role="status"
+                                    className={styles.PE_success_message}
+                                >
+                                    {successMessagePE}
+                                </h3>
+                                <button 
+                                    onClick={() => {navigate(`/property/${propID}`)}}
+                                    aria-describedby="navigation_hint_2"
+                                    className={styles.navigation_button}
+                                >Check your property out!
+                                </button>
+                                <span id="navigation_hint_2" className={styles.sr_content}>Clicking this button will navigate you to the detailed property page.</span>
+                            </div>
+                        }
+                    </div>
+                </div>
             </div>
         </div>
     );

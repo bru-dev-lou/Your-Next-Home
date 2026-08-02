@@ -32,7 +32,7 @@ router.route("/:propID")
     const propID = req.params.propID;
     const ownerID = req.user?.id;
 
-    try {
+    try {        
         const SQLPropertyData = db.prepare(`SELECT * FROM property_list WHERE owner_id = ? AND id = ?`).get(ownerID, propID) as PropertyData;
         
         if (!SQLPropertyData) {
@@ -126,14 +126,9 @@ router.route("/:propID")
 
         db.prepare(`UPDATE property_photos SET is_main = 1 WHERE property_id = ? ORDER BY id ASC LIMIT 1`).run(propID);
 
-        if (photos.length === 1) {
+        if (photos.length >= 1 && photos.length <=10) {
             const SQLPhotosUpdated = db.prepare(`SELECT * FROM property_photos WHERE property_id = ?`).all(propID);
-            return res.status(201).json({ message: "Photo added successfully!", newPhotos: SQLPhotosUpdated });
-        }
-
-        else if (photos.length > 1 && photos.length <=10) {
-            const SQLPhotosUpdated = db.prepare(`SELECT * FROM property_photos WHERE property_id = ?`).all(propID);
-            return res.status(201).json({ message: "Photos added successfully!", newPhotos: SQLPhotosUpdated });
+            return res.status(201).json({ message: "Property photos have been updated!", newPhotos: SQLPhotosUpdated });
         }
 
         else {

@@ -74,7 +74,7 @@ router.route("/")
 
         db.prepare(`UPDATE property_photos SET is_main = 1 WHERE property_id = ? ORDER BY id ASC LIMIT 1`).run(newPropertyData.lastInsertRowid);
 
-        res.status(201).json({ message: "Your property has been added to our listings!", lastInsertRowid: newPropertyData.lastInsertRowid });
+        res.status(201).json({ message: "*** Listing Created ***", lastInsertRowid: newPropertyData.lastInsertRowid });
     }    
 
     catch (error) {
