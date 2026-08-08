@@ -163,7 +163,6 @@ function PropertySearchPageSearchBar ({sortBy} : FilterValue) {
                                     setAutoCompleteQueries([]);
                                     setAutoCompleteQueryClicked(true);
                                 }}}
-                                style = {{ cursor: "pointer"}}
                                 aria-label={`Select ${query.city}`}
                                 className={styles.autocomplete_item}
                             >

@@ -281,13 +281,13 @@ function DashboardPropertyAdd () {
 
     function previousPhotos () {
         if (galleryIndex >= 3) { 
-        setGalleryIndex(prev => prev - 3)
+            setGalleryIndex(prev => prev - 3)
         }
     }
 
     function nextPhotos () {
         if (galleryIndex + 3 < tempURLs.length) {
-        setGalleryIndex(prev => prev + 3)
+            setGalleryIndex(prev => prev + 3)
         }
     }
     
@@ -555,21 +555,21 @@ function DashboardPropertyAdd () {
                         > 
                             Summary: 
                         </label>
-                            <textarea 
-                                id="property_summary"
-                                value={propertyDetails.summary} 
-                                onChange={(e) => {
-                                    const summaryWords = e.target.value.split(/\s+/).filter(Boolean);
-                                    if (summaryWords.length <= 50) {
-                                        setPropertyDetails({...propertyDetails, summary: e.target.value})
-                                    }
-                                    clearDataErrorMessage(); 
-                                }}
-                                placeholder="Add a short summary about your property."
-                                required
-                                aria-invalid={missingField === "summary"}
-                                className={`${styles.textarea_format} ${styles.textarea_summary_custom}`}
-                            />                            
+                        <textarea 
+                            id="property_summary"
+                            value={propertyDetails.summary} 
+                            onChange={(e) => {
+                                const summaryWords = e.target.value.split(/\s+/).filter(Boolean);
+                                if (summaryWords.length <= 50) {
+                                    setPropertyDetails({...propertyDetails, summary: e.target.value})
+                                }
+                                clearDataErrorMessage(); 
+                            }}
+                            placeholder="Add a short summary about your property."
+                            required
+                            aria-invalid={missingField === "summary"}
+                            className={`${styles.textarea_format} ${styles.textarea_summary_custom}`}
+                        />                            
                         <div className={styles.word_count_container}>
                             <span className={styles.word_count_item}>{summaryWordCount} / 50 </span>
                         </div>
@@ -634,12 +634,12 @@ function DashboardPropertyAdd () {
                         <button
                             disabled = {galleryIndex === 0}
                             onClick={() => previousPhotos()}
-                            aria-describedby="button_hint_1"
+                            aria-describedby="previous_photos_button"
                             className={styles.left_arrow_format}
                         >
                         <IoMdArrowRoundBack className={styles.react_arrow_format} />                           
                         </button>
-                        <span id="button_hint_1" className={styles.sr_content}>
+                        <span id="previous_photos_button" className={styles.sr_content}>
                             Display previous 3 uploaded photos. If these are the first 3 uploaded photos, this button will be disabled. 
                         </span>
                         <button 
@@ -654,7 +654,10 @@ function DashboardPropertyAdd () {
                             type="file" 
                             multiple 
                             accept="image/*" 
-                            onChange={ (e) => {displayPhotos(e); clearPhotoErrorMessages()}}
+                            onChange={(e) => {
+                                displayPhotos(e); 
+                                clearPhotoErrorMessages()
+                            }}
                             ref={photoUpload}
                             style={{display: "none"}}
                         />                                                       
@@ -669,7 +672,7 @@ function DashboardPropertyAdd () {
                                         <img 
                                             src={tempURL.url} 
                                             onClick={ () => setMainPhotoIndex(realIndex)}
-                                            alt={`Photo preview of photo number ${realIndex}`} 
+                                            alt={`Photo preview of photo number ${realIndex + 1}`} 
                                             className={styles.extra_photos}
                                         />
                                         <button 
@@ -691,12 +694,12 @@ function DashboardPropertyAdd () {
                         <button 
                             disabled={galleryIndex + 3 >= tempURLs.length}
                             onClick={() => nextPhotos()}
-                            aria-labelledby="button_hint_2"
+                            aria-labelledby="next_photos_button"
                             className={styles.right_arrow_format}
                         >
                             <IoMdArrowRoundForward className={styles.react_arrow_format} />
                         </button>
-                        <span id="button_hint_2" className={styles.sr_content}>
+                        <span id="next_photos_button" className={styles.sr_content}>
                             Displays the next 3 uploaded photos. If there are no more photos, this button will be disabled. 
                         </span>
                     </div>                
