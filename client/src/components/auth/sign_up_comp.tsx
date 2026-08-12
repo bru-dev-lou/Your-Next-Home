@@ -1,4 +1,5 @@
 import { useState } from 'react';
+
 import styles from "../../components/auth/sign_up_comp.module.css"; 
 import { LuEye, LuEyeClosed } from "react-icons/lu";
 
@@ -172,8 +173,8 @@ function SignUp () {
                             type="button"
                             onClick= {() => setShowPassword(!showPassword)}
                             className={styles.password_button}
-                            >
-                                {showPassword ? <LuEyeClosed color="#125370" /> : <LuEye color="#125370"/>}
+                        >
+                            {showPassword ? <LuEyeClosed color="#125370" /> : <LuEye color="#125370"/>}
                         </button>
                     </div>
                     <div className={styles.container_format}>

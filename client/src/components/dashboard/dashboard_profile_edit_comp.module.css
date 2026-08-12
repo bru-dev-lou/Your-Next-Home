@@ -1,0 +1,311 @@
+/* sr = screen reader */
+
+.sr_content {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+}
+
+/*  General styling starts here - 3+ elements will use these. */
+
+
+.h2_font {
+    font-family: "Source Sans 3", sans-serif;
+    font-size: 26px;
+    color: #F2EFE2;
+    font-weight: 390;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.8);    
+}
+
+.h3_font {
+    font-family: "Source Sans 3", sans-serif;
+    font-size: 23px;
+    color: #F2EFE2;
+    font-weight: 390;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.8);    
+    margin: 0px;
+}
+
+.h4_font {
+    font-family: "Source Sans 3", sans-serif;
+    font-size: 20px;
+    color: #156082;
+    font-weight: 600;
+    margin: 0px;
+}
+
+/* Styling classes in the order they appear in the return */
+
+.main_container {
+    width: calc(100% - 87px);
+    margin-left: 41px;
+}
+
+.main_title {
+    background-color: #156082;
+    border: solid 2px #042433;
+    border-radius: 5px;
+}
+
+.main_title_format{
+    margin: 0 0 0 44%;
+}
+
+.retrieving_data_message {
+    font-family: "Source Sans 3", sans-serif;
+    font-size: 26px;
+    color: #156082;
+    font-weight: 390;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.8);    
+    margin: 5% 0 0 41%;
+}
+
+.server_error_image {
+    width: 400px;
+    height: 300px;
+
+    margin-top: 4%;
+    margin-left: 34%; 
+}
+
+.server_error_message {
+    font-family: "Source Sans 3", sans-serif;
+    font-size: 30px;
+    color: #C00000;
+    font-weight: 390;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.8);    
+    
+    margin-left: 31%;
+    margin-top: 3%; 
+}
+
+.no_internet_react_icon {
+    color: #8e0505;
+    width: 300px;
+    height: 300px; 
+
+    margin-left: 38%;
+    margin-top: 2%;
+}
+
+.no_user_data_error {
+    font-family: "Source Sans 3", sans-serif;
+    font-size: 30px;
+    color: #C00000;
+    font-weight: 390;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.8);    
+    
+    margin-left: 17%;
+    margin-top: 1%; 
+}
+
+.main_container{
+    height: 1100px;
+    
+}
+
+.subtitle_1_container {
+    display: flex;
+    flex-direction: column;
+    height: 40%;
+    width: 50%;
+}
+
+.subtitle_1_item {
+    background-color: #156082;
+    border: solid 2px #042433;
+    border-radius: 5px;
+
+    width: 25%;
+
+    text-align :center;
+    margin-top: 5%;
+}
+
+.subtitle_1_info {
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.8);    
+    font-weight: 390;
+
+    margin-top: 4%;    
+}
+
+.profile_error_message {
+    font-family: "Source Sans 3", sans-serif;
+    font-size: 20px;
+    color: #C00000;
+    font-weight: 390;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.8);    
+    margin: 4% 0 0 0;
+}
+
+.profile_success_message {
+    font-family: "Source Sans 3", sans-serif;
+    font-size: 20px;
+    color: #3B7D23;    
+    font-weight: 390;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.8);
+    margin: 4% 0 0 0;    
+}
+
+.edit_profile_container {
+    display: grid;
+    grid-template: repeat(6, 40px) / 35% 60% ;
+    align-items: center;
+    row-gap: 8px;
+    
+    margin-top: 3%; 
+}
+
+.input_format {
+    font-family: "Source Sans 3", sans-serif;
+    color: #125370;
+    font-size: 16px;
+    height: 25px;
+
+    background-color: #D9E4F3;
+    border: solid 2px #125370;  
+    border-radius: 5px; 
+}
+
+.save_profile_changes_button{
+    font-family: "Source Sans 3", sans-serif;
+    color: #125370;
+    font-size: 16px;
+    font-weight: 600;
+
+    background-color: #BFBFBF;
+    border: solid 2px #042433;
+    border-radius: 5px;
+
+    height: 100%;
+    width: 50%;
+
+    margin-top: 2%;   
+    
+    justify-self: end;
+    grid-column: span 2;     
+}
+
+
+.show_hide_password_button_MP {
+    color: #125370;
+    background-color: #BFBFBF;
+    
+    height: 27px;
+    line-height: 27px;    
+    border: none;
+    border-radius: 0 5px 5px 0;
+    
+    position: absolute;
+    margin-top: 144px;
+    margin-left: calc(42% + 8px);
+
+}
+
+.confirm_profile_changes_button {
+    font-family: "Source Sans 3", sans-serif;
+    color: #125370;
+    font-size: 16px;
+    font-weight: 600;
+
+    background-color: #BFBFBF;
+    border: solid 2px #042433;
+    border-radius: 5px;
+
+    height: 100%;
+    width: 50%;
+
+    grid-column: span 2;
+    justify-self: end;
+    margin-top: 2%;
+}
+
+
+.subtitle_2_container { 
+    
+    display: flex; 
+    flex-direction: column; 
+    
+    height: 30%;
+    width: 50%;
+
+    margin-top: 4%;    
+}
+
+.subtitle_2_item {
+    background-color: #156082;
+    border: solid 2px #042433;
+    border-radius: 5px;
+
+    width: 40%;
+    text-align :center;
+}
+
+.subtitle_2_info {
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.8);    
+    font-weight: 390;
+
+    margin-top: 4%;    
+}
+
+.account_management_container {
+    display: grid; 
+    grid-template: repeat(4, 40px) / 35% 60% 5%;
+    row-gap: 7px;
+    margin-top: 4%;
+}
+
+.show_hide_password_button_AM {
+    color: #125370;
+    background-color: #BFBFBF;
+
+    border: none;
+    border-radius: 0 5px 5px 0;    
+
+    height: 26px;
+    line-height: 27px;  
+    width: 71%;  
+
+    margin-left: -27px;
+    margin-top: 2px;    
+}
+
+.account_error_message {
+    font-family: "Source Sans 3", sans-serif;
+    font-size: 20px;
+    color: #C00000;
+    font-weight: 390;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.8);    
+    margin: 4% 0 0 0;
+}
+
+.account_success_message {
+    font-family: "Source Sans 3", sans-serif;
+    font-size: 20px;
+    color: #3B7D23;    
+    font-weight: 390;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.8);
+    margin: 4% 0 0 0;    
+}
+
+.change_password_confirm_button {
+    font-family: "Source Sans 3", sans-serif;
+    color: #125370;
+    font-size: 16px;
+    font-weight: 600;
+
+    background-color: #BFBFBF;
+    border: solid 2px #042433;
+    border-radius: 5px;
+
+    height: 100%;
+    width: 50%;
+
+    grid-column: span 2;
+    justify-self: end;
+    margin-top: 1%;
+}
+
