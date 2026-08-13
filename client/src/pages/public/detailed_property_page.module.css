@@ -1,0 +1,279 @@
+/* sr = screen reader */
+
+.sr_content {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+}
+
+.main_container {
+    display: flex;
+    flex-direction: column;
+}
+
+.h3_font {
+    font-family: "Source Sans 3", sans-serif;
+    font-size: 24px;
+    color: #F2EFE2;
+    font-weight: 390;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.8);    
+    margin: 0px;
+}
+
+.first_row {
+    display: flex;
+    margin-left: 40px;
+    width: 1400px;
+    height: 40px;
+
+    background-color: #125370;
+    border: solid 3px #002461;
+    border-radius: 10px;
+}
+
+.address_container {
+    margin-left: 15px;
+    width: 775px;
+    
+    line-height: 40px;
+}
+
+
+.price_position {
+    margin-left: 20px;
+    width: 425px;
+    line-height: 40px;
+}
+
+.date_position {
+    margin-left: 30px;
+    line-height: 40px;
+}
+
+.second_row {
+    display: flex;
+    margin-top: 25px;
+}
+
+.main_photo_container {
+    grid-area: main_photo_container;
+    margin-left: 40px;
+    margin-right: 25px;
+    width: 800px;
+}
+
+.main_photo{
+    border-radius: 30px;
+    border: solid 2px #002461;
+    width: 800px;
+    height: 400px;
+    object-fit:fill;
+}
+
+
+.fav_button {
+    border: none; 
+    background: none;
+    padding: none; 
+
+    cursor: pointer; 
+
+    position: absolute; 
+    margin: 15px 0 0 60px;
+}
+
+.extra_photo_container {
+    margin: 0px;
+    padding: 0px;
+    display: flex; 
+    flex-direction: column; 
+    justify-content: flex-start;
+    row-gap: 26px;
+
+    width: 150px;
+    height: 407px;
+    overflow: hidden;
+}
+
+.list_format {
+    list-style: none; 
+}
+
+.extra_photo {
+    border-radius: 10px;
+    border: solid 2px #002461;
+    height: 75px;
+    width: 110px;
+    object-fit: cover;
+    cursor: zoom-in;
+}
+
+.up_arrow_button {
+    position: absolute; 
+    margin: 0 0 0 865px;
+    width: 113px;
+    height: 25px;
+
+    background-color: rgba(191, 191, 191, 0.75);
+    border: none;
+    border-radius: 7px 7px 0 0;
+
+    cursor: pointer; 
+}
+
+
+.arrow_format {
+    font-size: 18px;
+    color: rgba(6, 56, 78, 0.8);    
+}
+
+.down_arrow_button {
+    position: absolute; 
+    margin: 378px 0 0 865px;
+    width: 113px;
+    height: 25px;
+
+    background-color: rgba(191, 191, 191, 0.75);
+    border: none;
+    border-radius: 0 0 7px 7px;
+
+    cursor: pointer; 
+}
+
+
+.owner_and_ad_main_container {
+    display: flex; 
+    flex-direction: column; 
+    justify-content: space-between;
+
+    height: 398px;
+    margin-left: 2px; 
+}
+
+.h4_font {
+    font-family: "Source Sans 3", sans-serif;
+    font-size: 21px;
+    color: #F2EFE2;
+    font-weight: 390;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.8);    
+    margin: 0px;
+}
+
+.owner_container {
+    background-color: #125370;
+    border: solid 3px #002461;
+    border-radius: 15px;
+
+    text-align: center;
+
+    display: flex;
+    flex-direction: column;
+    
+    padding-top: 10px;
+    
+
+    width: 425px;
+    height: 150px;
+}
+
+.owner_title {
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 3px;
+}
+
+.owner_name_position {
+    margin-top: 15px;
+}
+
+.ad_container {
+    width: 425px;
+    height: 175px;
+}
+
+.ad_photo {
+    border: solid 3px #002461;
+    border-radius: 15px;
+
+    width: 425px;
+    height: 175px;
+}
+
+
+.third_row{
+    display: flex;
+    flex-direction: column;
+
+    margin-top: 15px;
+    margin-left: 40px;
+    width: 948px;
+}
+
+.property_summary_container {
+    display: flex; 
+
+    background-color: #125370;
+    border: solid 2px #002461;
+    border-radius: 10px;
+
+    padding-left: 15px;
+    padding-right: 15px;
+
+    height: 35px;
+}
+
+.react_icon {
+    color: #ECE7D4;
+    font-size: 21px;
+
+    margin-top: 7px; 
+}
+
+.property_summary_position {
+    margin-left: 15px;  
+    width: 235px;
+    line-height: 36px;
+}
+
+.property_summary_custom_position {
+    margin-left: 10px;
+    width: 80px;
+
+    line-height: 36px;
+}
+
+.property_description_container {
+    display: flex; 
+    flex-direction: column;
+
+    background-color: #125370;
+    border: solid 2px #002461;
+    border-radius: 20px;
+
+    margin-top: 30px;
+    padding: 20px; 
+
+}
+
+.h5_font {
+    font-family: "Source Sans 3", sans-serif;
+    font-size: 18px;
+    color: #F2EFE2;
+    font-weight: 390;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.8);    
+    margin: 0px;
+
+    white-space: pre-wrap;
+}
+
+.property_description_title_position {
+    font-weight: 500;
+}
+
+.property_description_content_position {
+    margin-top: 20px;
+    text-align: justify;
+}

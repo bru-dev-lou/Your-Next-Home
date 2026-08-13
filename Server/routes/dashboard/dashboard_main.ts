@@ -9,7 +9,7 @@ router.route("/")
 .get((req, res) => {
     const ownerID = req.user?.id;
 
-   try {
+   try {    
         const user = db.prepare("SELECT name FROM property_owners WHERE id =?").get(ownerID); 
 
         const properties = db.prepare(`SELECT 
@@ -32,7 +32,7 @@ router.route("/")
             .all(ownerID);
 
         if (properties.length === 0) {
-            return res.status(200).json({ user, message: "You don't have any properties listed." });
+            return res.status(200).json({ user, properties:[], message: "You don't have any properties listed." });
         }
         
         res.status(200).json({ user, properties });

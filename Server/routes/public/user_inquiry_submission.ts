@@ -38,19 +38,20 @@ router.post("/", (req, res) => {
         const sendInquiry = `
             INSERT INTO inquiries 
             (name, email, property_id, message_topic, message) 
-            VALUES (?, ?, ?, ?)
+            VALUES (?, ?, ?, ?, ?)
         `;
 
         if (!propID) {
             propID =  "PROP0000";
-            db.prepare(sendInquiry).run(name, email, propID, messageTopic, message);
-            return res.status(201).json({ message: "Inquiry submitted successfully" });
         }
+
+        db.prepare(sendInquiry).run(name, email, propID, messageTopic, message);
+        return res.status(201).json({ message: "Inquiry submitted successfully" });
     }
 
     catch (error) {
         console.log("Error submiting inquiry: ", error);
-        res.status(500).json({error: "Server Error: The team has been notified."});
+        res.status(500).json({error: "Server Error: The team has TEST been notified."});
     }
 })
 

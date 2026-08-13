@@ -13,11 +13,11 @@ router.route("/")
 .get((req, res) => {
     const ownerID = req.user?.id;
 
-    try {
+    try {        
         const userData = db.prepare(`SELECT name, address, phone_number, email FROM property_owners WHERE id = ?`).get(ownerID);
 
         if (!userData) {
-            return res.status(404).json({ error: "User data not found." });
+            return res.status(404).json({ noUserError: "User data not found." });
         }   
 
         res.status(200).json({userData});
@@ -36,12 +36,24 @@ router.route("/")
 
     const name = req.body.userPublicDetails.name;
     const address = req.body.userPublicDetails.address?.trim();
-    const number = req.body.userPublicDetails.number;
+    const number = req.body.userPublicDetails.phone_number;
     const email = req.body.userPublicDetails.email?.trim().toLowerCase();
     const password = req.body.userPublicDetails.password?.trim();
 
 
     try {
+        const user  = db.prepare(`SELECT password_hash FROM property_owners WHERE id = ?`).get(ownerID) as UserData;
+
+        if (password === "") {
+            return res.status(400).json({name: "missing_password", passwordError: "Please provide your password to confirm these changes."})
+        }
+
+        const match = await bcrypt.compare(password, user.password_hash);
+    
+        if (!match) {
+            return res.status(400).json({name: "incorrect_password", passwordError: "Incorrect password, please try again."});
+        }
+        
         const fieldCheck = [
             {field: name, name: "name", error: "Please provide your name to update your profile."},
             {field: address, name: "address", error: "Please provide your address to update your profile."},
@@ -55,24 +67,12 @@ router.route("/")
             }
         }
 
-        const user  = db.prepare(`SELECT password_hash FROM property_owners WHERE id = ?`).get(ownerID) as UserData;
-
-        if (!password) {
-            return res.status(400).json({name: "missing_password", passwordError: "Please provide your password to confirm these changes."})
-        }
-
-        const match = await bcrypt.compare(password, user.password_hash);
-    
-        if (!match) {
-            return res.status(400).json({name: "incorrect_password", passwordError: "Incorrect password, please try again."});
-        }
-
 
         const SQLPublic = "UPDATE property_owners SET name = ?, address = ?, phone_number = ?, email = ? WHERE id = ?";
         
         db.prepare(SQLPublic).run(name, address, number, email, ownerID); 
         
-        res.status(200).json({ message: "Your account has been updated." });
+        res.status(200).json({ message: "Your profile has been updated." });
     }           
 
     catch(error) {
@@ -120,7 +120,7 @@ router.route("/password_change")
     const passwordConfirmation = req.body.userPrivateDetails.passwordConfirmation?.trim();
     const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[?!@#$%^&*]).{8,}$/;
 
-    try {
+    try {        
         const user = db.prepare(`SELECT password_hash FROM property_owners WHERE id = ?`).get(ownerID) as UserData; 
 
         if (!password) {

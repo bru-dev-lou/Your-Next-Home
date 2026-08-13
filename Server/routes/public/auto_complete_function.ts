@@ -3,7 +3,7 @@ import db from "../../database/database.js";
 
 const router = express.Router();
 
-router.get('/cities', (req, res) => {
+router.get('/cities', (req, res) => {    
     const {city} = req.query;
 
     if (!city) { 

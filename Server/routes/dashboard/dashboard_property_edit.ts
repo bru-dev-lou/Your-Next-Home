@@ -32,9 +32,9 @@ router.route("/:propID")
     const propID = req.params.propID;
     const ownerID = req.user?.id;
 
-    try {
+    try {     
         const SQLPropertyData = db.prepare(`SELECT * FROM property_list WHERE owner_id = ? AND id = ?`).get(ownerID, propID) as PropertyData;
-        
+
         if (!SQLPropertyData) {
             return res.status(404).json({ errorProperty: "Property not found." });
         }
@@ -44,8 +44,9 @@ router.route("/:propID")
             property_photos.property_id,
             property_photos.photo_path
             FROM property_photos 
-            WHERE property_id = ?`).all(propID);
-        
+            WHERE property_id = ?`).all(propID)
+        ;
+
         if (SQLPropertyPhotos.length === 0) {
             return res.status(200).json({ property: SQLPropertyData, photos: SQLPropertyPhotos, errorPhotos: "No photos found for this property." });
         }
@@ -106,14 +107,23 @@ router.route("/:propID")
 .post (upload.array('photos', 10), async (req, res) => {
     const propID  = req.params.propID;
     const photos = req.files as Express.Multer.File[]; 
-
+    
     try {
+        // Don't trust frontend - if statement below protects against direct API calls. 
+
         if (!req.files || req.files.length === 0) {
-            return res.status(400).json({ error: "No photos have been selected." });
+            return res.status(400).json({ noFilesError: "No photos have been selected." });
+        }
+
+        const SQLPhotosLengthCheck = db.prepare(`SELECT * FROM property_photos WHERE property_id = ?`).all(propID);
+        const remainingPhotoLength = 10 - SQLPhotosLengthCheck.length; 
+
+        if (photos.length > remainingPhotoLength) {
+            return res.status(400).json({ excessiveFiles: "You may only upload up to 10 photos in total."})
         }
 
         const SQLAddPhoto = db.prepare(`INSERT INTO property_photos (property_id, photo_path) VALUES (?, ?)`);
-        
+
         for (const photo of photos) {
             const result = await new Promise<CloudinaryResult>((resolve, reject) => {
                 cloudinary.uploader.upload_stream({ folder: 'new_property_photos' }, (error, result) => {
@@ -126,14 +136,9 @@ router.route("/:propID")
 
         db.prepare(`UPDATE property_photos SET is_main = 1 WHERE property_id = ? ORDER BY id ASC LIMIT 1`).run(propID);
 
-        if (photos.length === 1) {
+        if (photos.length >= 1 && photos.length <= 10) {
             const SQLPhotosUpdated = db.prepare(`SELECT * FROM property_photos WHERE property_id = ?`).all(propID);
-            return res.status(201).json({ message: "Photo added successfully!", newPhotos: SQLPhotosUpdated });
-        }
-
-        else if (photos.length > 1 && photos.length <=10) {
-            const SQLPhotosUpdated = db.prepare(`SELECT * FROM property_photos WHERE property_id = ?`).all(propID);
-            return res.status(201).json({ message: "Photos added successfully!", newPhotos: SQLPhotosUpdated });
+            return res.status(201).json({ message: photos.length === 1 ? "Photo added successfully!" : "Photos added successfully!", newPhotos: SQLPhotosUpdated });
         }
 
         else {
@@ -153,6 +158,12 @@ router.route("/:propID")
     const {photoID, photo_path} = req.body;
     
     try {
+        const SQLPhotoCheck = db.prepare(`SELECT * FROM property_photos WHERE property_id = ?`).all(propID);
+
+        if (SQLPhotoCheck.length <= 5) {
+            return res.status(400).json({minPhotosError: "Each property must have at least 5 photos." })
+        }
+
         const SQLDeletePhotos = db.prepare(`DELETE FROM property_photos WHERE id = ? AND property_id = ? AND photo_path = ?`).run(photoID, propID, photo_path);
 
         if (SQLDeletePhotos.changes > 0) {

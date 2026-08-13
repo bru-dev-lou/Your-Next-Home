@@ -1,0 +1,22 @@
+.main_container {
+    display: flex;
+}
+
+.inquiries_photo {
+    height: 550px;
+    width: 950px;
+
+    border-radius: 50px;
+    position: absolute; 
+    z-index: -1;
+
+    margin-left: 32%;
+    margin-top: 1%;
+    
+    box-shadow: 
+    -4px -4px 7px rgba(255, 255, 255, 0.596),
+    4px 4px 7px rgba(0,0,0,0.4);
+    
+    filter: drop-shadow(2px 2px 4px rgba(0,0,0,0.3));
+    
+}

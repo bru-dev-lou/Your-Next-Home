@@ -88,7 +88,7 @@ function PropertySearchPageSearchBar ({sortBy} : FilterValue) {
             }
   
             catch(error) {
-                setErrorMessageAC("AutoComplete feature currently unavailable.");
+                setErrorMessageAC("Autocomplete currently unavailable.");
             }
         }
           
@@ -163,7 +163,6 @@ function PropertySearchPageSearchBar ({sortBy} : FilterValue) {
                                     setAutoCompleteQueries([]);
                                     setAutoCompleteQueryClicked(true);
                                 }}}
-                                style = {{ cursor: "pointer"}}
                                 aria-label={`Select ${query.city}`}
                                 className={styles.autocomplete_item}
                             >

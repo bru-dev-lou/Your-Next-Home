@@ -3,7 +3,7 @@ CREATE TABLE IF NOT EXISTS property_owners (
     username TEXT NOT NULL UNIQUE,
     name TEXT NOT NULL,
     address TEXT NOT NULL UNIQUE,
-    phone_number INTEGER UNIQUE NOT NULL,
+    phone_number TEXT UNIQUE NOT NULL,
     email TEXT UNIQUE NOT NULL, 
     password_hash TEXT NOT NULL,
     created TEXT NOT NULL DEFAULT (datetime('now'))

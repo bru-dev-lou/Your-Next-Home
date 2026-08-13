@@ -5,14 +5,14 @@ import cookieParser from "cookie-parser";
 
 import autoCompleteRouter from "./routes/public/auto_complete_function.js";
 import authMiddleware from "./middleware/auth_middleware.js";
-import userCheck from "./routes/auth/user_check.ts";
+import userCheck from "./routes/auth/user_check.js";
 
 import propertySearchResultsRouter from "./routes/public/property_search_results.js";
 import detailedPropertyResultsRouter from "./routes/public/property_detailed_results.js";
 import inquirySubmissionRouter from "./routes/public/user_inquiry_submission.js";
 import signInRouter from "./routes/auth/sign_in.js";
 import signUpRouter from "./routes/auth/sign_up.js";
-import signOutRouter from "./routes/auth/sign_out.ts";
+import signOutRouter from "./routes/auth/sign_out.js";
 
 import dashboardMainRouter from "./routes/dashboard/dashboard_main.js";
 import dashboardPropertyEditRouter from "./routes/dashboard/dashboard_property_edit.js";

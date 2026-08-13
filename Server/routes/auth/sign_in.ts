@@ -13,9 +13,11 @@ type UserData = {
 const router = express.Router(); 
 const fakeHash = "$2b$10$invalidsaltinvalidsaltinv.u5u5u5u5u5u5u5u5u5u5u5u5u";
 
-router.post("/", async (req, res) => {
+router.post("/", async (req, res) => {    
     const username = req.body.username?.trim();
     const password = req.body.password?.trim();
+
+    
 
     if (!username || !password) {
         const missing = [];

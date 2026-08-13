@@ -15,10 +15,10 @@ router.post("/", async (req, res) => {
 
     const blankFieldCheck = [
         {name: "username", field: username, error:"Please choose a username."},
-        {name: "name", field: name, error: "Please state your name / company's name."},
-        {name: "address", field: address, error: "Please state your address / company's address."},
-        {name: "phone_number", field: number, error: "Please state your phone number / company's phone number."},
-        {name: "email", field: email, error: "Please state your email address."},
+        {name: "name", field: name, error: "Please provide your name / company's name."},
+        {name: "address", field: address, error: "Please provide your address / company's address."},
+        {name: "phone_number", field: number, error: "Please provide your phone number / company's phone number."},
+        {name: "email", field: email, error: "Please provide your email address."},
         {name: "password", field: password, error: "Please choose a password."},
         {name: "confirm_password", field: confirmPass, error: "Please confirm your chosen password."}
     ];
@@ -61,7 +61,7 @@ router.post("/", async (req, res) => {
         db.prepare(`INSERT INTO property_owners (username, name, address, phone_number, email, password_hash) VALUES (?, ?, ?, ?, ?, ?)`)
         .run(username, name, address, number, email, passwordHash);
 
-        res.status(201).json({ message: "Thank you, your account has been created!"});
+        res.status(201).json({ message: "Your account has been created!"});
     }
 
     catch(error) {
