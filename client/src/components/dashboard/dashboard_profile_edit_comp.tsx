@@ -220,9 +220,9 @@ function DashboardProfileEdit () {
 
             if (res.ok) {
                 setAccountDeleted(true); 
-                setUser(null);
                 setTimeout (() => {
                     navigate("/");
+                    setUser(null);                
                 }, 7000);
             }
 
@@ -507,53 +507,62 @@ function DashboardProfileEdit () {
                 </div>
             </div>
             <div className={styles.subtitle_3_container}>
-                <h4 className={`${styles.h4_font} ${styles.subtitle_3_item}`}>Delete your account</h4>
-                <div className={styles.delete_account_container}>
+                <div className={styles.delete_account_container}>   
+                    {errorMessageDA ? 
+                        <h3 role="alert" className={styles.delete_account_error_message}>{errorMessageDA}</h3>
+                    :
+                        <h4 className={`${styles.h4_font} ${styles.delete_account_title}`}>Delete Account</h4>
+                    }
                     {!accountDeleteRequest ? 
                         <button 
                             onClick={() => setAccountDeleteRequest(true)}
-                            className={styles.delete_account_request_button}
+                            className={`${styles.delete_account_buttons} ${styles.delete_account_button_custom_format}`}
                         >
                             Delete Account
                         </button>
                     :
-                        <div className={styles.delete_account_password_request_container}>
-                            <label htmlFor="password_request2" className={styles.h4_font}> Provide password:
-                                <input
-                                    id="password_request2" 
-                                    type= {showCurrentPasswordDA ? "text" : "password"} 
-                                    value={userAccountDeleteDetails.password}
-                                    onChange= {(e) => {
-                                        setErrorMessageDA("");
-                                        setPassErrorCodeDA("");
-                                        setUserAccountDeleteDetails({...userAccountDeleteDetails, password: e.target.value})
-                                    }}
-                                    required
-                                    aria-invalid={passErrorCodeDA === "missing_password" || passErrorCodeDA === "incorrect_password"}
-                                    className={styles.input_format}
-                                />
-                                <button 
-                                    type="button"
-                                    onClick= {() => setShowCurrentPasswordDA(!showCurrentPasswordDA)}
-                                    aria-describedby="button_hint5"
-                                    aria-pressed={showCurrentPasswordDA}
-                                    className={styles.show_hide_password_button}
-                                >
-                                    {showCurrentPasswordDA ? <LuEye/> : <LuEyeClosed/>}                                                                  
-                                </button>   
-                                <span id="button_hint5" className={styles.sr_content}>Clicking this button allows your screen reader to read the password you have inserted</span>
-                            </label>
-                            {accountDeleted ?
-                                <div role="alert" className={styles.account_deleted_container}>
-                                    <h3 className={styles.account_deleted_feedback}> Your account is being deleted.</h3>
-                                    <h3 className={styles.account_deleted_feedback}> Please wait until you're redirected to our homepage.</h3>
-                                </div>
-                            :                                    
-                                <button onClick= {deleteAccount} className={styles.confirm_account_deletion_button}> Confirm Account Deletion</button>
-                            }
-                        </div>
-                    }
-                    {errorMessageDA && <h3 role="alert" className={styles.error_message_format}>{errorMessageDA}</h3>}
+                        <>
+                            <label htmlFor="password_request2" className={styles.h4_font}> Provide Password: </label>
+                            <input
+                                id="password_request2" 
+                                type= {showCurrentPasswordDA ? "text" : "password"} 
+                                value={userAccountDeleteDetails.password}
+                                onChange= {(e) => {
+                                    setErrorMessageDA("");
+                                    setPassErrorCodeDA("");
+                                    setUserAccountDeleteDetails({...userAccountDeleteDetails, password: e.target.value})
+                                }}
+                                required
+                                aria-invalid={passErrorCodeDA === "missing_password" || passErrorCodeDA === "incorrect_password"}
+                                className={styles.input_format}
+                            />
+                            <button 
+                                type="button"
+                                onClick= {() => setShowCurrentPasswordDA(!showCurrentPasswordDA)}
+                                aria-describedby="button_hint5"
+                                aria-pressed={showCurrentPasswordDA}
+                                className={styles.show_hide_password_button_DA}
+                            >
+                                {showCurrentPasswordDA ? <LuEye/> : <LuEyeClosed/>}                                                                  
+                            </button>   
+                            <span id="button_hint5" className={styles.sr_content}>
+                                Clicking this button allows your screen reader to read the password you have inserted
+                            </span>
+                        </>
+                    }                                 
+                </div>            
+            </div>
+            <div className={styles.subtitle_4_container}>        
+                <div className={styles.account_deleted_container}>
+                    {accountDeleted && accountDeleteRequest &&
+                        <>
+                            <h3 className={styles.account_deleted_feedback}> Your account is being deleted, please wait.</h3>
+                            <h3 className={styles.account_deleted_feedback}> Thank you for using our services!</h3>
+                        </>
+                    }                                    
+                    {!accountDeleted && accountDeleteRequest &&
+                        <button onClick= {deleteAccount} className={`${styles.delete_account_buttons} ${styles.confirm_account_deletion_button_custom_format}`}> Confirm Account Deletion</button>
+                    }                       
                 </div>
             </div>
         </div>
