@@ -288,6 +288,7 @@ function PropertySearchPage () {
                 <button 
                   onClick={ () => removeFromFavorites(property.id)}
                   aria-label="remove"
+                  aria-describedby="button_hint_1"
                   className={styles.fav_button}
                 > 
                   <IoIosHeart color="#a01313" size={40}/> 
@@ -295,14 +296,19 @@ function PropertySearchPage () {
               :
                 <button 
                   onClick={ () => addToFavorites(property.id)}
-                  aria-label="remove"
+                  aria-label="add"
+                  aria-describedby="button_hint_2"
                   className={styles.fav_button}
                 > 
                   <IoIosHeartEmpty color="#f60101" size={40} /> 
                 </button>
               }
-              <span id="button_hint_1" className={styles.sr_content}>If aria-label shows 'remove', it means the property is currently in your favorite properties' list. Clicking the button will remove it from this list.</span>
-              <span id="button_hint_2" className={styles.sr_content}>If aria-label shows 'add', it means the property is not in your favorite properties' list. Clicking the button will add it to this list.</span> 
+              <span id="button_hint_1" className={styles.sr_content}>
+                If aria-label shows 'remove', it means the property is currently in your favorite properties' list. Clicking the button will remove it from this list.
+              </span>
+              <span id="button_hint_2" className={styles.sr_content}>
+                If aria-label shows 'add', it means the property is not in your favorite properties' list. Clicking the button will add it to this list.
+              </span> 
               {errorMessageFP.id === property.id && 
                   <h4 role="alert" className={styles.fp_error_format}>{errorMessageFP.error}</h4>
               }

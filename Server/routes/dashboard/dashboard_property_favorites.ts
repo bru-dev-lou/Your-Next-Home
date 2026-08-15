@@ -49,14 +49,14 @@ router.delete("/:propID", (req, res) => {
 
     try {
         if (!propID) {
-            return res.status(404).json({error: "This property has already been removed."})
+            return res.status(404).json({error: "The property you are trying to delete no longer exists. Please refresh your page."})
         }
 
         const SQL = "DELETE from property_favorites WHERE owner_id = ? AND property_id = ?";
         const removeFavProperty = db.prepare(SQL).run(ownerID, propID);
 
         if(removeFavProperty.changes === 0) {
-            return res.status(400).json({error: "This property has already been removed."}); 
+            return res.status(400).json({error: "The property you are trying to delete no longer exists. Please refresh your page."}); 
         }
 
         else {
