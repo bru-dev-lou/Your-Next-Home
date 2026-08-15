@@ -201,6 +201,7 @@
     width: 825px;
     height: 200px;
     object-fit: cover;
+    cursor: pointer;
 }
 
 .property_summary_container {
