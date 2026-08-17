@@ -66,6 +66,9 @@ function PropertySearchPageSearchBar ({sortBy} : FilterValue) {
                 if (!res.ok) {
                     setAutoCompleteQueries([]);
                     setErrorMessageAC(result.error); 
+                    setTimeout(() => {
+                        setErrorMessageAC("");
+                    }, 750)
                 }
   
                 else if(propData.city.length === 0) {
@@ -169,12 +172,12 @@ function PropertySearchPageSearchBar ({sortBy} : FilterValue) {
                                 {query.city}
                             </li>
                         ))}
+                        {errorMessageAC && 
+                            <li role="alert" className={`${styles.ac_error_message} ${styles.autocomplete_item}`}>
+                                {errorMessageAC}
+                            </li>
+                        }                        
                     </ul>
-                    {errorMessageAC && 
-                        <div role="alert">
-                            <h3>{errorMessageAC}</h3>
-                        </div>
-                    }
                     <label htmlFor ="property_type" className={` ${styles.h2_font} ${styles.property_type_label}`}> Property Type: </label>
                     {propertyTypeDropdown ? 
                         <ul 

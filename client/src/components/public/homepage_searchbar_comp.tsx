@@ -26,6 +26,9 @@ function HomePageSearchBar() {
                 if (!res.ok) {
                     setCitySuggestions([]);
                     setErrorMessageAC(result.error);
+                    setTimeout(() => {
+                        setErrorMessageAC("");
+                    }, 750)
                 }
 
                 else if(autoCompleteQuery.length === 0) {
@@ -93,32 +96,37 @@ function HomePageSearchBar() {
                         />
                     <span id="location_hint" className={styles.sr_content}>Insert a city name to see properties for rent in that area.</span>
                 </div>
-                    <ul 
-                        aria-live="polite" 
-                        aria-label="City autocomplete suggestions."
-                        className={styles.autocomplete_container}
-                    >
-                        {citySuggestions.map((city, index) => (
-                            <li 
-                                key={index}
-                                onClick = {() => {
-                                    setAutoCompleteQuery(city.city);
-                                    setCitySuggestions([]);
-                                    setAutoCompleteQueryClicked(true);
-                                }}
-                                tabIndex={0}
-                                onKeyDown= { (e) => { if (e.key === "Enter") {
-                                    setAutoCompleteQuery(city.city);
-                                    setCitySuggestions([]);
-                                    setAutoCompleteQueryClicked(true);
-                                }}}
-                                aria-label={`Select ${city.city}`}
-                                className={styles.autocomplete_item}
-                                >   
-                                {city.city}
-                            </li>
-                        ))}
-                    </ul>
+                <ul 
+                    aria-live="polite" 
+                    aria-label="City autocomplete suggestions."
+                    className={styles.autocomplete_container}
+                >
+                    {citySuggestions.map((city, index) => (
+                        <li 
+                            key={index}
+                            onClick = {() => {
+                                setAutoCompleteQuery(city.city);
+                                setCitySuggestions([]);
+                                setAutoCompleteQueryClicked(true);
+                            }}
+                            tabIndex={0}
+                            onKeyDown= { (e) => { if (e.key === "Enter") {
+                                setAutoCompleteQuery(city.city);
+                                setCitySuggestions([]);
+                                setAutoCompleteQueryClicked(true);
+                            }}}
+                            aria-label={`Select ${city.city}`}
+                            className={styles.autocomplete_item}
+                        >   
+                            {city.city}
+                        </li>
+                    ))}
+                    {errorMessageAC && 
+                        <li role="alert" className={`${styles.ac_error_message} ${styles.autocomplete_item}`}>
+                            {errorMessageAC}
+                        </li>
+                    }
+                </ul>
                 { budgetDropdown ?
                     <div className={styles.second_row_container}>
                         <label htmlFor= "max_price" className={styles.label}> Budget: </label>
@@ -162,11 +170,6 @@ function HomePageSearchBar() {
                     </div>
                 }
             </form>
-            {errorMessageAC && 
-                <div role="alert">
-                    <h3>{errorMessageAC}</h3>
-                </div>
-            }
         </div>
     );
 }

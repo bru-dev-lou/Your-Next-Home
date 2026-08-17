@@ -63,6 +63,15 @@
     cursor: pointer;
 }
 
+.ac_error_message {
+    font-family: "Source Sans 3", sans-serif;
+    font-weight: 390;
+
+    color: #C00000;
+
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.8);
+}
+
 .second_row_container {
     display: flex;
     justify-content: space-between;
@@ -91,6 +100,13 @@
     padding: 0px;
     margin: 3px 0px 0px 7px; 
     position: relative;
+}
+
+.budget_container_closed::after {
+    font-size: 20px;
+    content: "⏷";
+    position: absolute; 
+    margin: -27px 0 0 175px;
 }
 
 .budget_item {
