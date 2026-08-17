@@ -41,7 +41,7 @@ router.get("/:propID", (req, res) => {
             WHERE property_list.id = ?`).all(propID) as PropertyInfo[];
         
         if (propertyDetails.length === 0) {
-            return res.status(404).json({error: `Property with ID ${propID} does not exist.`})
+            return res.status(404).json({error: `This property does not exist.`})
         }
 
         const {photo_path, ...propertyData} = propertyDetails[0];

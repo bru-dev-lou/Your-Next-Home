@@ -131,7 +131,10 @@ function DashboardPropertyEdit() {
 
                 if (!res.ok) {
                     setCities([]);
-                    setErrorMessageAC(result.error) 
+                    setErrorMessageAC(result.error);
+                    setTimeout(() => {
+                        setErrorMessageAC("");
+                    }, 750) 
                 }
 
                 else if(propertyDetails?.city?.length === 0) {
@@ -490,10 +493,12 @@ function DashboardPropertyEdit() {
                                     {query.city}
                                 </li>
                             ))}
+                            {errorMessageAC && 
+                                <li role="alert" className={`${styles.error_message_ac} ${styles.autocomplete_item}`}>
+                                    {errorMessageAC}
+                                </li>                                
+                            }                            
                         </ul>
-                        {errorMessageAC && 
-                            <h3 role="alert" className={styles.autocomplete_error_message}>{errorMessageAC}</h3>                                
-                        }
                     </div>
                     <label 
                         htmlFor="property_type"

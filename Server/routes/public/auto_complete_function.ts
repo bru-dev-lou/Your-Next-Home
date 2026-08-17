@@ -9,7 +9,6 @@ router.get('/cities', (req, res) => {
     if (!city) { 
         return res.status(200).json([]);
     }
-
     try { 
         const autoCompleteResults = db.prepare(`
             SELECT DISTINCT city 
@@ -28,7 +27,7 @@ router.get('/cities', (req, res) => {
     
     catch (error) {
         console.log("Error fetching cities for auto complete feature: ", error);
-        res.status(500).json({ error: "Server Error: The team has been notified."});
+        res.status(500).json({ error: "Autocomplete is currently unavailable."});
     }
 });
 

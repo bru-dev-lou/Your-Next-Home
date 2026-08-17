@@ -87,6 +87,9 @@ function DashboardPropertyAdd () {
                 if (!res.ok) {
                     setAutoCompleteQueries([]);
                     setErrorMessageAC(result.error); 
+                    setTimeout(() => {
+                        setErrorMessageAC("");
+                    },750);
                 }
   
                 else if(propertyDetails.city.length === 0) {
@@ -296,14 +299,6 @@ function DashboardPropertyAdd () {
             <div className={styles.title_container}>
                 <h2 className={`${styles.title_format} ${styles.h2_font}`}>New Property</h2>
             </div>
-            {errorMessageAC && 
-                <h3 
-                    role="alert" 
-                    className={styles.autocomplete_error_message}
-                >
-                    {errorMessageAC}
-                </h3>
-            }
             <div className={styles.main_container}>
                 <div className={styles.data_fields_container}>
                     {dataErrorMessage ?
@@ -357,8 +352,13 @@ function DashboardPropertyAdd () {
                                     className={styles.autocomplete_item}
                                 >
                                      {query.city}
-                                </li>                                
-                            ))}                        
+                                </li>                                                                
+                            ))}                  
+                            {errorMessageAC && 
+                                <li role="alert" className={`${styles.error_message_ac} ${styles.autocomplete_item}`}>
+                                    {errorMessageAC}
+                                </li>
+                            }                                  
                         </ul>
                     </div>
                     <label 

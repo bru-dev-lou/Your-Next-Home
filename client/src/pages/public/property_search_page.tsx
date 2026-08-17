@@ -273,6 +273,9 @@ function PropertySearchPage () {
               <h3 className={styles.h3_format}>£{property.price.toLocaleString()} pcm</h3>
             </div>
             <div className={styles.property_card_second_row}>
+              {errorMessageFP.id === property.id &&
+                  <h4 role="alert" className={styles.fp_error_format}>{errorMessageFP.error}</h4>
+              }             
               <img 
                 src={property.photo_path}
                 role="button"
@@ -309,9 +312,6 @@ function PropertySearchPage () {
               <span id="button_hint_2" className={styles.sr_content}>
                 If aria-label shows 'add', it means the property is not in your favorite properties' list. Clicking the button will add it to this list.
               </span> 
-              {errorMessageFP.id === property.id && 
-                  <h4 role="alert" className={styles.fp_error_format}>{errorMessageFP.error}</h4>
-              }
               <h4 className={styles.summary_title_format}>Summary</h4>
               <h4 className={`${styles.h4_format} ${styles.summary_content_format}`}>{property.summary}</h4>
             </div>

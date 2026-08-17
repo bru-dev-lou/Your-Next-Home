@@ -3,13 +3,16 @@ import { useParams } from "react-router-dom";
 
 import styles from "../public/detailed_property_page.module.css";
 import adPhoto from "../../assets/detailed_page_ad_photo.jpg";
+import errorPhoto from "../../assets/server_error_photo.png";
 
 import { IoIosHeartEmpty, IoIosHeart, IoMdArrowRoundUp, IoMdArrowRoundDown } from "react-icons/io";
 
 import { BsHouse } from "react-icons/bs";
 import { IoBedSharp } from "react-icons/io5";
 import { LuToilet } from "react-icons/lu";
+import { BiCabinet } from "react-icons/bi";
 import { IoMdResize } from "react-icons/io";
+
 
 
 
@@ -123,6 +126,9 @@ function DetailedPropertyPage () {
 
             else {
                 setErrorMessageFavorites(result.error);
+                setTimeout(() => {
+                    setErrorMessageFavorites("");
+                }, 3000)
             }
         }
 
@@ -160,6 +166,7 @@ function DetailedPropertyPage () {
         }
     }
 
+
     function previousPhotos () {
         if (galleryIndex >= 4) {
         setGalleryIndex(prev => prev - 4)
@@ -174,17 +181,19 @@ function DetailedPropertyPage () {
 
     if (errorMessageFP) {
         return (
-            <div>
-                <h3 role="alert">{errorMessageFP}</h3>
+            <div className={styles.error_FP_container}>
+                <h3 role="alert" className={styles.error_FP_message}>{errorMessageFP}</h3>
+                <img src={errorPhoto} className={styles.error_FP_img} />
             </div>
         )
     }
 
     if (!property) {
-        return null 
+        return null
     }
 
-
+    const visiblePhotos = property.photos.slice(galleryIndex, galleryIndex + 4);
+    
     return (
         <div key ={property.id} className={styles.main_container}>
             <div className={styles.first_row}>
@@ -210,6 +219,7 @@ function DetailedPropertyPage () {
             </div>
             <div role="group" aria-label="Property photos" className={styles.second_row}>
                 <div className={styles.main_photo_container}>
+                    {errorMessageFavorites && <h4 role="alert" className={styles.fav_error_message}>{errorMessageFavorites}</h4>}                             
                     <img 
                         src={property.photos[photoIndex].photo_path}
                         alt={`Main photo of property number ${property.id}`}
@@ -237,9 +247,8 @@ function DetailedPropertyPage () {
                 }                     
                 <span id="button_hint_1" className={styles.sr_content}>If aria-label shows 'remove', it means the property is currently in your favorite properties' list. Clicking the button will remove it from this list.</span>
                 <span id="button_hint_2" className={styles.sr_content}>If aria-label shows 'add', it means the property is not in your favorite properties' list. Clicking the button will add it to this list.</span> 
-                {errorMessageFavorites && <h4 role="alert" className={styles.fav_error_message}>{errorMessageFavorites}</h4>}             
                 <ul className={styles.extra_photo_container}>
-                    {property.photos.slice(galleryIndex, galleryIndex + 4).map((photo, index) => ( 
+                    {visiblePhotos.map((photo, index) => ( 
                         <li key={index} className={styles.list_format}> 
                             <img 
                                 onClick={ () => setPhotoIndex(property.photos.indexOf(photo))}
@@ -248,6 +257,11 @@ function DetailedPropertyPage () {
                                 className={styles.extra_photo} 
                             />
                         </li> 
+                    ))}
+                    {Array.from({length: 4 - visiblePhotos.length}).map((_, index) => (
+                        <li key={index} className={styles.li_element}>
+                            <div className={styles.no_extra_photo_div}></div>
+                        </li>
                     ))}
                 </ul>
                 <button 
@@ -305,18 +319,31 @@ function DetailedPropertyPage () {
             </div>
             <div className={styles.third_row}>
                 <div className={styles.property_summary_container}>
-                    <span className={styles.sr_content}> Property type:</span>
-                    <span> <BsHouse className={styles.react_icon} /> </span>
-                    <h4 className={`${styles.h4_font} ${styles.property_summary_position}`}>{property.type}</h4>
-                    <span className={styles.sr_content}> Number of bedrooms:</span>
-                    <span> <IoBedSharp className={styles.react_icon} /> </span>
-                    <h4 className={`${styles.h4_font} ${styles.property_summary_position}`}>{property.no_bedrooms} bedrooms</h4>
-                    <span className={styles.sr_content}> Number of bathrooms:</span>
-                    <span> <LuToilet className={styles.react_icon} /> </span>
-                    <h4 className={`${styles.h4_font} ${styles.property_summary_position}`}>{property.no_bathrooms} bathrooms</h4>
-                    <span className={styles.sr_content}> Property size: </span>
-                    <span> <IoMdResize className={styles.react_icon} /> </span>
-                    <h4 className={`${styles.h4_font} ${styles.property_summary_custom_position}`}>{property.size} m²</h4>
+                    <div className={styles.property_summary_item}>
+                        <span className={styles.sr_content}> Property type:</span>
+                        <span> <BsHouse className={styles.react_icon} /> </span>
+                        <h4 className={styles.h4_font}>{property.type}</h4>
+                    </div>    
+                    <div className={styles.property_summary_item}>            
+                        <span className={styles.sr_content}> Number of bedrooms:</span>
+                        <span> <IoBedSharp className={styles.react_icon} /> </span>
+                        <h4 className={`${styles.h4_font} ${styles.property_summary_position}`}>{property.no_bedrooms} bedrooms</h4>
+                    </div>
+                    <div className={styles.property_summary_item}>
+                        <span className={styles.sr_content}> Number of bathrooms:</span>
+                        <span> <LuToilet className={styles.react_icon} /> </span>
+                        <h4 className={`${styles.h4_font} ${styles.property_summary_position}`}>{property.no_bathrooms} bathrooms</h4>
+                    </div>
+                    <div className={styles.property_summary_item}>
+                        <span className={styles.sr_content}>Furnishing:</span>
+                        <span> <BiCabinet className={styles.react_icon}/></span>
+                        <h4 className={styles.h4_font}>{property.furniture}</h4>
+                    </div>
+                    <div className={styles.property_summary_item}>
+                        <span className={styles.sr_content}> Property size: </span>
+                        <span> <IoMdResize className={styles.react_icon} /> </span>
+                        <h4 className={`${styles.h4_font} ${styles.property_summary_custom_position}`}>{property.size} m²</h4>
+                    </div>
                 </div>
                 <div className={styles.property_description_container}>
                     <h4 className={`${styles.h4_font} ${styles.property_description_title_position}`}>Description</h4>

@@ -132,14 +132,11 @@
     cursor: pointer;
 }
 
-.autocomplete_error_message {
+.error_message_ac {
     font-family: "Source Sans 3", sans-serif;
-    font-size: 20px;
     color: #C00000;
     font-weight: 390;
-    text-shadow: 1px 1px 2px rgba(0,0,0,0.8);    
-    position: absolute; 
-    margin: 75px 0px 0px 450px;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.5);    
 }
 
 /* The following styling is for "Property Type" and "Furniture" rows. */
