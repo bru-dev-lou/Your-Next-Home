@@ -7,11 +7,13 @@ router.post("/", (req, res) => {
     const { name, email, messageTopic, message } = req.body;
     let { propID } = req.body;
     
+    // Empty field check 
+
     const fieldCheck = [
         {name: "name", field: name, error: "Please include your name."},
         {name: "email", field: email, error: "Please include your email so we can get back to you."},
         {name: "topic", field: messageTopic, error: "Please include a message topic."},
-        {name: "message", field: message, error: "Please include a description."}
+        {name: "message", field: message, error: "Please include a message describing your inquiry."}
     ]
 
     for (const{name, field, error} of fieldCheck) {
@@ -20,30 +22,53 @@ router.post("/", (req, res) => {
         }
     }
 
+    //  Name validation  
+
+    if (name.length < 5 || name.length > 25 ) {
+        return res.status(400).json({error: "Please include a name between 5 and 25 characters long."})
+    }
+
+    const nameHasLetters = /\p{L}/u.test(name);
+    const nameIsValidFormat = /^[\p{L}\s'-]+$/u.test(name);
+
+    if (!nameHasLetters || !nameIsValidFormat) {
+        return res.status(400).json({error: "Please include a name with no numbers."})
+    }
+
+    // Email validation 
+
+    const isValidEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+
+    if (!isValidEmail) {
+        return res.status(400).json({ error: "Please include a valid email address."})
+    }
+
 /*  
     For the next two if statements, do not change the error messages. 
     Changing these will affect aria-invalid for the relevant fields in the frontend. 
     Will add codes to the error responses in the future to avoid inference based on error message.
-*/
+*/        
+
+    if (messageTopic.split(/\s+/).filter(Boolean).length < 5 || messageTopic.split(/\s+/).filter(Boolean).length > 25 ) {
+        return res.status(400).json({ error: "Topic should be between 5 and 25 words long." });
+    }
+
+    if (message.split(/\s+/).filter(Boolean).length < 25 || message.split(/\s+/).filter(Boolean).length > 250) {
+        return res.status(400).json({ error: "Message should be between 25 and 250 words long." });
+    }
+
+    //  PROPID validation and fallback value 
+
+    if (!propID) {
+        propID =  "PROP0000";
+    }
 
     try {
-        if (messageTopic.split(/\s+/).filter(Boolean).length > 25) {
-            return res.status(400).json({ error: "Please keep your message topic to 25 words or less." });
-        }
-
-        if (message.split(/\s+/).filter(Boolean).length > 250) {
-            return res.status(400).json({ error: "Please keep your message to 250 words or less." });
-        }
-
         const sendInquiry = `
             INSERT INTO inquiries 
             (name, email, property_id, message_topic, message) 
             VALUES (?, ?, ?, ?, ?)
         `;
-
-        if (!propID) {
-            propID =  "PROP0000";
-        }
 
         db.prepare(sendInquiry).run(name, email, propID, messageTopic, message);
         return res.status(201).json({ message: "Inquiry submitted successfully" });
@@ -51,7 +76,7 @@ router.post("/", (req, res) => {
 
     catch (error) {
         console.log("Error submiting inquiry: ", error);
-        res.status(500).json({error: "Server Error: The team has TEST been notified."});
+        res.status(500).json({error: "Server Error: The team has been notified."});
     }
 })
 

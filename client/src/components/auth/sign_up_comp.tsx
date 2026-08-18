@@ -30,6 +30,69 @@ function SignUp () {
         setMissingField("");
         setInUseField("");
 
+        //  Username validation 
+
+        if (data.username.length < 5 || data.username.length > 20) {
+            setErrorMessage("Username must be between 5 and 20 characters.");
+            return; 
+        }
+
+        //  Name validation 
+
+        if (data.name.length < 5 || data.name.length >= 50) {
+            setErrorMessage("Name must be between 5 and 50 characters.");
+            return;
+        }
+
+        const nameHasLetters = /\p{L}/u.test(data.name);
+        const nameIsValidFormat = /^[\p{L}\s'-]+$/u.test(data.name);
+
+        if (!nameHasLetters || !nameIsValidFormat) {
+            setErrorMessage("Please include a name with no numbers.");
+            return;
+        } 
+
+        //  Address validation 
+
+        if (data.address.split(/\s+/).filter(Boolean).length < 5) {
+            setErrorMessage("Address must be longer than 5 words.");
+            return;
+        }        
+
+        //  Phone number validation 
+
+        const validNumber = /^[0-9]{10,}$/.test(data.number);
+
+        if (!validNumber) {
+           setErrorMessage("Please ensure your phone number is at least 10 digits long with no spaces or symbols.");
+           return; 
+        }
+
+        //  Email validation 
+
+        const isValidEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(data.email);
+
+        if (!isValidEmail) {
+            setErrorMessage("Please include a valid email address.");
+            return;
+        }
+
+        /*  Password validation 
+            Do not change error messages - Changing them will affect ARIA-INVALID 
+        */
+
+        if (data.confirmPass !== data.password) {
+            setErrorMessage("Passwords must match.");
+            return; 
+        }    
+
+        const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[?!@#$%^&*]).{8,}$/;
+
+        if (!passwordRegex.test(data.password)) {
+            setErrorMessage("Password must be 8+ characters with an uppercase, a lowercase, a number and a special character [?!@#$%^&*].");
+            return;
+        }
+
         try {
             const res = await fetch("/api/signUp", {
                 method: "POST",
@@ -125,7 +188,8 @@ function SignUp () {
                             type= "tel"
                             value= {data.number}
                             onChange= {(e) => {
-                                setData({...data, number: e.target.value})
+                                const filteredNumber = e.target.value.replace(/[^0-9]/g, "");   
+                                setData({...data, number: filteredNumber})
                                 setErrorMessage("")
                             }}
                             required
