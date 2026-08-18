@@ -29,6 +29,52 @@ function Inquiries () {
         setErrorMessage("");
         setMissingField("");
 
+        // Name validation 
+
+        if (data.name.length < 3 || data.name.length >= 25) {
+            setErrorMessage("Invalid name - Please include a name between 3 and 25 characters long.");
+            return;
+        }
+
+        const nameHasLetters = /\p{L}/u.test(data.name);
+        const nameIsValidFormat = /^[\p{L}\s'-]+$/u.test(data.name);
+
+        if (!nameHasLetters || !nameIsValidFormat) {
+            setErrorMessage("Invalid name - Please include a name with no numbers.");
+            return;
+        } 
+
+        // Email validation 
+
+        const isValidEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(data.email);
+
+        if (!isValidEmail) {
+            setErrorMessage("Please include a valid email address.");
+            return;
+        }
+
+        /*  
+            For the next two if statements, do not change the error messages. 
+            Changing these will affect aria-invalid for the relevant fields in the frontend. 
+            Will add codes to the error responses in the future to avoid inference based on error message.
+        */        
+
+        if (topicWordCount < 5 || topicWordCount > 25) {
+            setErrorMessage("Your topic should be between 5 and 25 words long.");
+            return; 
+        }
+
+        if (messageWordCount < 25 || messageWordCount > 250) {
+            setErrorMessage("Your message should be between 25 and 250 words long.");
+            return; 
+        }
+
+        //  PROPID validation and fallback value 
+
+        if (!data.propID) {
+            data.propID =  "PROP0000";
+        }        
+
         try {
             const res = await fetch("/api/inquiries", {
                 method: "POST",
@@ -61,8 +107,8 @@ function Inquiries () {
         }
     }
 
-// Word count useEffects for messageTopic and message with 1.5 second debounce. 
-   
+// useEffects for WAI-ARIA word count announcements (messageTopic, message), 1500ms debounce
+
     useEffect(() => {
         const topicWordCountTimeout = setTimeout (() => {
             setAnnounceTopicWordCount(topicWordCount);
@@ -158,7 +204,7 @@ function Inquiries () {
                             value={data.message}
                             onChange={(e) => {
                                 const messageWords = e.target.value.split(/\s+/).filter(Boolean);
-                                if (messageWords.length <= 250) {
+                                if (messageWords.length >= 25 || messageWords.length <= 250) {
                                 setData({...data, message: e.target.value});
                                 setErrorMessage("");
                                 setSuccessMessage("");
