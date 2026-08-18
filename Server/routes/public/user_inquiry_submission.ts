@@ -22,17 +22,17 @@ router.post("/", (req, res) => {
         }
     }
 
-    //  Name validation check 
+    //  Name validation  
 
-    if (name.length < 3 || name.length >= 25 ) {
-        return res.status(400).json({error: "Invalid name - Please include a name between 3 and 25 characters long."})
+    if (name.length < 5 || name.length > 25 ) {
+        return res.status(400).json({error: "Please include a name between 5 and 25 characters long."})
     }
 
     const nameHasLetters = /\p{L}/u.test(name);
     const nameIsValidFormat = /^[\p{L}\s'-]+$/u.test(name);
 
     if (!nameHasLetters || !nameIsValidFormat) {
-        return res.status(400).json({error: "Invalid name - Please include a name with no numbers."})
+        return res.status(400).json({error: "Please include a name with no numbers."})
     }
 
     // Email validation 
@@ -50,11 +50,11 @@ router.post("/", (req, res) => {
 */        
 
     if (messageTopic.split(/\s+/).filter(Boolean).length < 5 || messageTopic.split(/\s+/).filter(Boolean).length > 25 ) {
-        return res.status(400).json({ error: "Your topic should be between 5 and 25 words long." });
+        return res.status(400).json({ error: "Topic should be between 5 and 25 words long." });
     }
 
     if (message.split(/\s+/).filter(Boolean).length < 25 || message.split(/\s+/).filter(Boolean).length > 250) {
-        return res.status(400).json({ error: "Your message should be between 25 and 250 words long." });
+        return res.status(400).json({ error: "Message should be between 25 and 250 words long." });
     }
 
     //  PROPID validation and fallback value 

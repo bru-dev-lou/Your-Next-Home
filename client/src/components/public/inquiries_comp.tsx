@@ -31,8 +31,8 @@ function Inquiries () {
 
         // Name validation 
 
-        if (data.name.length < 3 || data.name.length >= 25) {
-            setErrorMessage("Invalid name - Please include a name between 3 and 25 characters long.");
+        if (data.name.length < 5 || data.name.length > 25) {
+            setErrorMessage("Please include a name between 5 and 25 characters long.");
             return;
         }
 
@@ -40,7 +40,7 @@ function Inquiries () {
         const nameIsValidFormat = /^[\p{L}\s'-]+$/u.test(data.name);
 
         if (!nameHasLetters || !nameIsValidFormat) {
-            setErrorMessage("Invalid name - Please include a name with no numbers.");
+            setErrorMessage("Please include a name with no numbers.");
             return;
         } 
 
@@ -60,12 +60,12 @@ function Inquiries () {
         */        
 
         if (topicWordCount < 5 || topicWordCount > 25) {
-            setErrorMessage("Your topic should be between 5 and 25 words long.");
+            setErrorMessage("Topic should be between 5 and 25 words long.");
             return; 
         }
 
         if (messageWordCount < 25 || messageWordCount > 250) {
-            setErrorMessage("Your message should be between 25 and 250 words long.");
+            setErrorMessage("Message should be between 25 and 250 words long.");
             return; 
         }
 
