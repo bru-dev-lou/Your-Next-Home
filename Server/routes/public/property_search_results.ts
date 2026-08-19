@@ -23,7 +23,7 @@ router.get("/", (req, res) => {
         maxPrice: 10000
     };
     
-    const city = req.query.city || values.city;
+    const city = ((req.query.city || values.city) as string || "").replace(/[^a-zA-Z-]/g, "");    
     const type = req.query.type || values.type;
     const furniture = req.query.furniture || values.furniture;
     const minBeds = Number(req.query.minBeds) || values.minBeds;    
@@ -35,7 +35,7 @@ router.get("/", (req, res) => {
     if (!(sortBy in options)) {
         sortBy = "date";
     } 
-
+    
     try {
         const data = db.prepare(`
             SELECT property_list.id,

@@ -87,7 +87,8 @@ function HomePageSearchBar() {
                             type="text"
                             value={autoCompleteQuery}
                             onChange={(e) => {
-                                setAutoCompleteQuery(e.target.value);
+                                const validCity = e.target.value.replace(/[^a-zA-Z-]/g, "");
+                                setAutoCompleteQuery(validCity);
                                 setAutoCompleteQueryClicked(false); 
                             }}
                             placeholder = " e.g. London"

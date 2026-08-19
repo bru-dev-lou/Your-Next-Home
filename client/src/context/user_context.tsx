@@ -33,7 +33,7 @@ export function UserProvider ({ children }: { children: React.ReactNode }) {
             }
 
             catch (error) {
-            // silent fail - user will see the 'Sign in' link. 
+                // User will be asked to log in. 
             }
 
             finally{

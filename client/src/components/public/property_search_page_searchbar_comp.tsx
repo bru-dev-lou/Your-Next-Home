@@ -141,7 +141,8 @@ function PropertySearchPageSearchBar ({sortBy} : FilterValue) {
                         type = "text"
                         value = {propData.city}
                         onChange = {(e) => {
-                            setPropData({...propData, city: e.target.value});
+                            const validCity = e.target.value.replace(/[^a-zA-Z-]/g, "");
+                            setPropData({...propData, city: validCity});
                             setAutoCompleteQueryClicked(false);
                         }}   
                         placeholder = "Enter your preferred location" 

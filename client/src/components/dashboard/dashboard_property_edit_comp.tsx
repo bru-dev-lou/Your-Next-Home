@@ -181,6 +181,13 @@ function DashboardPropertyEdit() {
             return;
         } 
 
+        const validCity = /^[a-zA-Z\-]+$/.test(propertyDetails?.city ?? ""); 
+
+        if (!validCity) {
+            setErrorMessagePE("City name must only include letters and hyphens.");
+            return; 
+        }
+        
         try {
             const res = await fetch(`/api/dashboard/property/edit/${propID}`, {
                 method: "PATCH",
@@ -211,7 +218,7 @@ function DashboardPropertyEdit() {
         }
     }
 
-// Word count useEffects for property summary and property description with 1.5 second debounce. 
+    // Word count useEffects for property summary and property description with 1.5 second debounce. 
 
     useEffect(() => {
         const summaryWordCountTimeout = setTimeout(() => {
@@ -718,8 +725,7 @@ function DashboardPropertyEdit() {
                                     setErrorMessagePE("");
                                     setSuccessMessagePE("");
                                     setPropertyDetails({ ...propertyDetails, detail: e.target.value });
-                                }
-                            }}
+                            }}}
                             required
                             aria-invalid={propertyMissingField === "description"}
                             className={`${styles.textarea_format} ${styles.textarea_description_custom}`}
