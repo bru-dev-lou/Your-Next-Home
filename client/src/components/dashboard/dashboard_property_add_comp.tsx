@@ -8,7 +8,6 @@ import { IoMdArrowRoundBack } from "react-icons/io";
 import { IoMdArrowRoundForward } from "react-icons/io";
 
 
-
 type PropertyData = {
     type: string;
     city: string;
@@ -46,7 +45,6 @@ function DashboardPropertyAdd () {
     const [ mainPhotoIndex, setMainPhotoIndex ] = useState<number>(0); 
     const [ galleryIndex, setGalleryIndex ] = useState<number>(0); 
     
-
     const [ uploading, setUploading ] = useState(false);
 
     const [ propertyTypeDropdown, setPropertyTypeDropdown ] = useState<boolean>(false);
@@ -130,6 +128,21 @@ function DashboardPropertyAdd () {
     async function addPropertyData (e: React.MouseEvent<HTMLButtonElement>) {
         e.preventDefault();
         setMissingField("");
+        
+        const validCity = /^[a-zA-Z\-]+$/.test(propertyDetails?.city ?? ""); 
+
+        if (!validCity) {
+            setDataErrorMessage("City name must only include letters and hyphens.");
+            return;
+        }
+
+        if (tempURLs.length < 5) {
+            setPhotoErrorMessage(`Please upload at least ${5 - tempURLs.length} more ${tempURLs.length === 4 ? "photo" : "photos"}.`);
+            setTimeout(() => {
+                setPhotoErrorMessage("");
+            }, 5000);
+            return;
+        }
 
         const propertyData = new FormData();
         
@@ -146,7 +159,7 @@ function DashboardPropertyAdd () {
         propertyData.append("furniture", propertyDetails.furniture);
         propertyData.append("summary", propertyDetails.summary);
         propertyData.append("detail", propertyDetails.detail);
-
+        
         try {
             const uploadTimeout = setTimeout(() => 
             setUploading(true), 300);
@@ -172,6 +185,9 @@ function DashboardPropertyAdd () {
             else if (result.photosError) {
                 setDataErrorMessage("");
                 setPhotoErrorMessage(result.photosError); 
+                setTimeout(() => {
+                    setPhotoErrorMessage("");
+                }, 5000);
                 setDataSuccessMessage("");
             }
 

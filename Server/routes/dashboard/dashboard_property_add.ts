@@ -17,38 +17,43 @@ router.route("/")
     const photos = req.files as Express.Multer.File[];
     const { type, city, price, bedrooms, bathrooms, size, furniture, summary, detail } = req.body;
     
+    const fieldCheck = [
+        { field: city, name:"city", error: "Please state where your property is located." },
+        { field: type, name:"type", error: "Please choose a property type." },
+        { field: price, name:"price", error: "Please state the property's monthly rental rate." },
+        { field: bedrooms, name:"bedrooms", error: "Please state how many bedrooms your property has." },
+        { field: bathrooms, name:"bathrooms", error: "Please state how many bathrooms your property has." },
+        { field: size, name:"size", error: "Please state the size of your property in m²." },
+        { field: furniture, name:"furniture", error: "Please choose your property's type of furnishing." },
+        { field: summary, name:"summary", error: "Please provide a summary of your property." },
+        { field: detail, name:"detail", error: "Please provide a detailed description of your property." } 
+    ];
+
+    for (const {field, name, error} of fieldCheck) {
+        if (!field || field === 0) {
+            return res.status(400).json ({name, error}); 
+        }
+    }
+
+    const validCity = /^[a-zA-Z\-]+$/.test(city); 
+
+    if (!validCity) {
+        return res.status(400).json({ error: "City name must only include letters and hyphens."})
+    }    
+
+    if (summary.split(/\s+/).filter(Boolean).length > 50) {
+        return res.status(400).json({ error: "Property summary cannot exceed 50 words." });
+    }
+
+    if (detail.split(/\s+/).filter(Boolean).length > 250) {
+        return res.status(400).json({ error: "Property description cannot exceed 250 words." });
+    }
+    
+    if (photos.length <= 4) {
+        return res.status(400).json({ photosError: `Please upload at least ${5 - photos.length} more ${photos.length === 4 ? "photo" : "photos"}.` });
+    }
+
     try {
-        const fieldCheck = [
-            { field: city, name:"city", error: "Please state where your property is located." },
-            { field: type, name:"type", error: "Please choose a property type." },
-            { field: price, name:"price", error: "Please state the property's monthly rental rate." },
-            { field: bedrooms, name:"bedrooms", error: "Please state how many bedrooms your property has." },
-            { field: bathrooms, name:"bathrooms", error: "Please state how many bathrooms your property has." },
-            { field: size, name:"size", error: "Please state the size of your property in m²." },
-            { field: furniture, name:"furniture", error: "Please choose your property's type of furnishing." },
-            { field: summary, name:"summary", error: "Please provide a summary of your property." },
-            { field: detail, name:"detail", error: "Please provide a detailed description of your property." } 
-        ];
-
-        for (const {field, name, error} of fieldCheck) {
-            if (!field || field == 0) {
-                return res.status(400).json ({name, error}); 
-            }
-        }
-
-        if (summary.split(/\s+/).filter(Boolean).length > 50) {
-            return res.status(400).json({ error: "Summary cannot exceed 50 words." });
-        }
-
-        if (detail.split(/\s+/).filter(Boolean).length > 250) {
-            return res.status(400).json({ error: "Detailed description cannot exceed 250 words." });
-        }
-        
-        if (photos.length <= 4) {
-            return res.status(400).json({ photosError: `Please upload at least ${5 - photos.length} more ${photos.length == 4 ? "photo" : "photos"} .` });
-        }
-        
-
         const newPropertyData = db.prepare(`
             INSERT INTO property_list 
             (type, city, price, no_bedrooms, no_bathrooms, size, furniture, summary, owner_id, detail)
