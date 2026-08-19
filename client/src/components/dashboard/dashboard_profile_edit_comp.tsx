@@ -109,6 +109,53 @@ function DashboardProfileEdit () {
     async function updateUserPublicDetails (e:React.MouseEvent<HTMLButtonElement>) {
         e.preventDefault();
 
+        // Name validation 
+
+        if (userPublicDetails.name.length < 5 || userPublicDetails.name.length >= 50) {
+            setErrorMessageMP("Name must be between 5 and 50 characters.");
+            return;
+        }
+
+        const nameHasLetters = /\p{L}/u.test(userPublicDetails.name);
+        const nameIsValidFormat = /^[\p{L}\s'-]+$/u.test(userPublicDetails.name);
+
+        if (!nameHasLetters || !nameIsValidFormat) {
+            setErrorMessageMP("Please include a name with no numbers.");
+            return;
+        }
+
+        // Address validation 
+
+        if (userPublicDetails.address.split(/\s+/).filter(Boolean).length < 5) {
+            setErrorMessageMP("Address must be longer than 5 words.");
+            return;
+        }
+
+        // Phone number validation 
+
+        const validNumber = /^[0-9]{10,}$/.test(userPublicDetails.phone_number);
+        
+        if (!validNumber) {
+            setErrorMessageMP("Please ensure your phone number is at least 10 digits long with no spaces or symbols.");
+            return;
+        }
+
+        // Email validation 
+
+        const isValidEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(userPublicDetails.email);
+
+        if (!isValidEmail) {
+            setErrorMessageMP("Please include a valid email address.");
+            return;
+        }
+
+        // Password check
+
+        if (!userPublicDetails.password) {
+            setErrorMessageMP("Please provide your password to confirm these changes.");
+            return;
+        }        
+
         try {
             const {password: _password1, ...detailsToCompare} = userPublicDetails;
             const {password: _password2, ...originalDetails} = originalUserPublicDetails;
@@ -118,7 +165,7 @@ function DashboardProfileEdit () {
                 setSuccessMessageMP("");
                 setChangeRequest(false);
                 setUserPublicDetails({...userPublicDetails, password: ""});     
-            return;
+                return;
             }
 
             const res = await fetch(`/api/dashboard/profile/edit`, {
@@ -175,6 +222,36 @@ function DashboardProfileEdit () {
 
     async function updateUserPrivateDetails (e:React.MouseEvent<HTMLButtonElement>) {
         e.preventDefault(); 
+        const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[?!@#$%^&*]).{8,}$/;
+
+        // Current password check
+
+        if (!userPrivateDetails.password) {
+            setErrorMessageAM("Please start by providing your password.");
+            return;
+        }
+
+        // New password check & validation 
+
+        if(!userPrivateDetails.newPassword) {
+            setErrorMessageAM("Please choose a new password.");
+            return;
+        }
+
+        if (userPrivateDetails.newPassword !== userPrivateDetails.passwordConfirmation) {
+            setErrorMessageAM("Passwords do not match.");
+            return;
+        }                
+
+        if (!passwordRegex.test(userPrivateDetails.newPassword)) {
+            setErrorMessageAM("Password must be 8+ characters with an uppercase, a lowercase, a number and a special character [?!@#$%^&*].");
+            return;
+        }
+
+        if (userPrivateDetails.newPassword === userPrivateDetails.password) {
+            setErrorMessageAM("New password cannot be the same as old password.");
+            return;
+        }
         
         try {
             const res = await fetch(`/api/dashboard/profile/edit/password_change`, {
@@ -208,6 +285,13 @@ function DashboardProfileEdit () {
     async function deleteAccount (e:React.MouseEvent<HTMLButtonElement>) {
         e.preventDefault();
 
+        //  Password check 
+
+        if (!userAccountDeleteDetails.password) {
+            setErrorMessageDA("Please provide your password before deleting your account.");
+            return; 
+        }
+        
         try {
             const res = await fetch (`/api/dashboard/profile/edit/`, {
                 method: "DELETE",
@@ -260,7 +344,7 @@ function DashboardProfileEdit () {
                         My Profile
                     </h2>
                 </div>
-                <h3 role="status" className={styles.retrieving_data_message}>Fethcing user data...</h3>
+                <h3 role="status" className={styles.retrieving_data_message}>Fetching user data...</h3>
             </div>
         )    
     };
