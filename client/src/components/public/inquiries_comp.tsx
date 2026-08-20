@@ -13,6 +13,7 @@ function Inquiries () {
     const [ data, setData ] = useState<InquiryData>({name: "", email: "", propID: undefined, messageTopic: "", message: ""}); 
 
     const [ errorMessage, setErrorMessage ] = useState(""); 
+    const [ errorMessageSE, setErrorMessageSE ] = useState("");    
     const [ missingField, setMissingField ] = useState(""); 
     const [ successMessage, setSuccessMessage ] = useState(""); 
 
@@ -86,12 +87,19 @@ function Inquiries () {
             
             const result = await res.json();
 
-            if (!res.ok){
+            if (result.server_error) {
+                setErrorMessageSE(result.server_error);
+                setTimeout(() => {
+                    setErrorMessageSE("");
+                }, 5000);
+            }
+
+            else if (result.error){
                 setErrorMessage(result.error);
                 setMissingField(result.name);
                 setSuccessMessage("");
             }
-            
+                    
             else {
                 setSuccessMessage(result.message);
                 setErrorMessage(""); 
@@ -107,7 +115,7 @@ function Inquiries () {
         }
     }
 
-// useEffects for WAI-ARIA word count announcements (messageTopic, message), 1500ms debounce
+    // useEffects for WAI-ARIA word count announcements (messageTopic, message), 1500ms debounce
 
     useEffect(() => {
         const topicWordCountTimeout = setTimeout (() => {
@@ -180,7 +188,7 @@ function Inquiries () {
                             }}}
                             required
                             aria-describedby="topic_hint"
-                            aria-invalid={missingField === "topic" || errorMessage.includes("25")}
+                            aria-invalid={missingField === "topic" || errorMessage.includes("Topic should")}
                             className={styles.input_format}
                         />
                         <span 
@@ -211,7 +219,7 @@ function Inquiries () {
                                 }}}
                             required
                             aria-describedby="message_hint"
-                            aria-invalid={missingField === "message" || errorMessage.includes("250")}
+                            aria-invalid={missingField === "message" || errorMessage.includes("Message should")}
                             className={styles.textarea_format}
                         />
                         <span id="message_hint" className={styles.sr_content}>Provide a description regarding your inquiry. 250 words max.</span>
@@ -242,11 +250,12 @@ function Inquiries () {
                     </div>
                     <div className={styles.update_container}>
                         {errorMessage && <h3 role="alert" className={styles.result_message}>{errorMessage}</h3>}
+                        {errorMessageSE && <h3 role="allert" className={styles.server_error_message}>{errorMessageSE}</h3>}
                         {successMessage && <h3 role="status" className={styles.result_message}>{successMessage}</h3>}
                          <button 
                             type="submit" 
                             className={styles.button_format} 
-                            style={{visibility: errorMessage || successMessage ? "hidden" : "visible"}}
+                            style={{visibility: (errorMessage || errorMessageSE) || successMessage ? "hidden" : "visible"}}
                         >
                             Submit Inquiry
                         </button>

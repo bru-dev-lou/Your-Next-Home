@@ -140,7 +140,7 @@ function DashboardPropertyAdd () {
             setPhotoErrorMessage(`Please upload at least ${5 - tempURLs.length} more ${tempURLs.length === 4 ? "photo" : "photos"}.`);
             setTimeout(() => {
                 setPhotoErrorMessage("");
-            }, 5000);
+            }, 5000);   
             return;
         }
 
