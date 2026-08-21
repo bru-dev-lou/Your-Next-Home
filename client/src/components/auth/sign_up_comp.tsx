@@ -39,7 +39,7 @@ function SignUp () {
 
         //  Name validation 
 
-        if (data.name.length < 5 || data.name.length >= 50) {
+        if (data.name.length < 5 || data.name.length > 50) {
             setErrorMessage("Name must be between 5 and 50 characters.");
             return;
         }
