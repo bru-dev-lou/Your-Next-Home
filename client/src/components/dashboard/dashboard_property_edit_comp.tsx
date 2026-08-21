@@ -181,12 +181,16 @@ function DashboardPropertyEdit() {
             return;
         } 
 
+        //  City validation
+
         const validCity = /^[a-zA-Z\-]+$/.test(propertyDetails?.city ?? ""); 
 
         if (!validCity) {
             setErrorMessagePE("City name must only include letters and hyphens.");
             return; 
         }
+
+        // Property summary & description validations are inline in the JSX (onChange handlers) 
         
         try {
             const res = await fetch(`/api/dashboard/property/edit/${propID}`, {
@@ -357,7 +361,12 @@ function DashboardPropertyEdit() {
                     setMainPhotoIndex(mainPhotoIndex - 1);
                 } 
 
-                setPropertyPhotos(propertyPhotos.filter(photo => photo.id !== photoID));
+                const newPhotos = propertyPhotos.filter(photo => photo.id !== photoID);
+                setPropertyPhotos(newPhotos);
+
+                if (galleryIndex >= newPhotos.length) {
+                    setGalleryIndex(Math.max(0, galleryIndex - 3));
+                }
 
                 setSuccessMessagePU(""); 
                 setErrorMessagePU("");

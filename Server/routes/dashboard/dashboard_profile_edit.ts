@@ -13,7 +13,7 @@ router.route("/")
 .get((req, res) => {
     const ownerID = req.user?.id;
 
-    try {                
+    try {           
         const userData = db.prepare(`SELECT name, address, phone_number, email FROM property_owners WHERE id = ?`).get(ownerID);
 
         if (!userData) {
@@ -55,7 +55,7 @@ router.route("/")
 
     // Name validation 
 
-    if (name.length < 5 || name.length >= 50) {
+    if (name.length < 5 || name.length > 50) {
         return res.status(400).json({ error: "Name must be between 5 and 50 characters." })
     }
 
@@ -94,7 +94,7 @@ router.route("/")
         return res.status(400).json({name: "missing_password", passwordError: "Please provide your password to confirm these changes."})
     }
 
-    try {        
+    try {     
         const user  = db.prepare(`SELECT password_hash FROM property_owners WHERE id = ?`).get(ownerID) as UserData;
 
         const match = await bcrypt.compare(password, user.password_hash);
@@ -107,7 +107,7 @@ router.route("/")
         
         db.prepare(SQLPublic).run(name, address, number, email, ownerID); 
         
-        res.status(200).json({ message: "Your profile has been updated." });
+        res.status(200).json({ message: "*** Profile Updated ***" });
     }           
 
     catch(error) {
@@ -126,7 +126,7 @@ router.route("/")
         return res.status(400).json({name: "missing_password", error: "Please provide your password before deleting your account."})
     }
     
-    try {        
+    try {    
         const user = db.prepare(`SELECT password_hash FROM property_owners WHERE id = ?`).get(ownerID) as UserData;
 
         const match = await bcrypt.compare(password, user.password_hash);
@@ -192,7 +192,7 @@ router.route("/password_change")
         
         db.prepare(SQLPrivate).run(newPasswordHash, ownerID); 
 
-        res.status(200).json({message: "Your password has been changed."});
+        res.status(200).json({message: "*** Password Updated ***"});
     } 
 
     catch(error) {

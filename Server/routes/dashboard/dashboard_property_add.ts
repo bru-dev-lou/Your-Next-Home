@@ -17,6 +17,8 @@ router.route("/")
     const photos = req.files as Express.Multer.File[];
     const { type, city, price, bedrooms, bathrooms, size, furniture, summary, detail } = req.body;
     
+    // Empty field checks
+
     const fieldCheck = [
         { field: city, name:"city", error: "Please state where your property is located." },
         { field: type, name:"type", error: "Please choose a property type." },
@@ -35,11 +37,15 @@ router.route("/")
         }
     }
 
+    // City validation 
+
     const validCity = /^[a-zA-Z\-]+$/.test(city); 
 
     if (!validCity) {
         return res.status(400).json({ error: "City name must only include letters and hyphens."})
     }    
+
+    // Property summary & description validations
 
     if (summary.split(/\s+/).filter(Boolean).length > 50) {
         return res.status(400).json({ error: "Property summary cannot exceed 50 words." });
@@ -49,11 +55,13 @@ router.route("/")
         return res.status(400).json({ error: "Property description cannot exceed 250 words." });
     }
     
+    // Min photos check 
+
     if (photos.length <= 4) {
         return res.status(400).json({ photosError: `Please upload at least ${5 - photos.length} more ${photos.length === 4 ? "photo" : "photos"}.` });
     }
 
-    try {
+    try {        
         const newPropertyData = db.prepare(`
             INSERT INTO property_list 
             (type, city, price, no_bedrooms, no_bathrooms, size, furniture, summary, owner_id, detail)

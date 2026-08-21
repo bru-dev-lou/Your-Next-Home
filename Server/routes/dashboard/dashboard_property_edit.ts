@@ -64,6 +64,8 @@ router.route("/:propID")
     const propID = req.params.propID;
     const ownerID = req.user?.id;
     const {type, city, price, no_bedrooms, no_bathrooms, size, furniture, summary, detail} = req.body;
+
+    // Empty field checks
     
     const fieldCheck = [
         { field: city, name: "city", error: "Please state where your property is located." },
@@ -83,12 +85,16 @@ router.route("/:propID")
         }
     }
     
+    // City validation 
+
     const validCity = /^[a-zA-Z\-]+$/.test(city); 
 
     if (!validCity) {
         return res.status(400).json({ error: "City name must only include letters and hyphens."})
     }
     
+    //  Property summary & description validations
+
     if (summary.split(/\s+/).filter(Boolean).length > 50) {
         return res.status(400).json({ error: "Property summary cannot exceed 50 words." });
     }
@@ -101,7 +107,7 @@ router.route("/:propID")
         db.prepare(`UPDATE property_list SET type = ?, city = ?, price = ?, no_bedrooms = ?, no_bathrooms = ?, size = ?, furniture = ?, summary = ?, detail = ? WHERE id = ? AND owner_id = ?`)
         .run(type, city, price, no_bedrooms, no_bathrooms, size, furniture, summary, detail, propID, ownerID);
         
-        return res.status(200).json({ message: "Property updated successfully!" });
+        return res.status(200).json({ message: "*** Listing Updated ***" });
     }
     
     catch (error) {
@@ -123,7 +129,7 @@ router.route("/:propID")
         const remainingPhotoLength = 10 - SQLPhotosLengthCheck.length; 
 
         if (photos.length > remainingPhotoLength) {
-            return res.status(400).json({ excessiveFiles: "You may only upload up to 10 photos in total."})
+            return res.status(400).json({ excessiveFiles: "You may upload up to 10 photos in total."})
         }
 
         const SQLAddPhoto = db.prepare(`INSERT INTO property_photos (property_id, photo_path) VALUES (?, ?)`);

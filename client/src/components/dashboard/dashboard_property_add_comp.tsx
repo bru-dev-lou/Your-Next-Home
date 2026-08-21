@@ -128,7 +128,9 @@ function DashboardPropertyAdd () {
     async function addPropertyData (e: React.MouseEvent<HTMLButtonElement>) {
         e.preventDefault();
         setMissingField("");
-        
+
+        // City validation
+
         const validCity = /^[a-zA-Z\-]+$/.test(propertyDetails?.city ?? ""); 
 
         if (!validCity) {
@@ -136,11 +138,13 @@ function DashboardPropertyAdd () {
             return;
         }
 
+        //  Min photos check 
+
         if (tempURLs.length < 5) {
             setPhotoErrorMessage(`Please upload at least ${5 - tempURLs.length} more ${tempURLs.length === 4 ? "photo" : "photos"}.`);
             setTimeout(() => {
                 setPhotoErrorMessage("");
-            }, 5000);
+            }, 5000);   
             return;
         }
 
@@ -268,11 +272,14 @@ function DashboardPropertyAdd () {
             setTempURLs(tempURLs.filter((_, i) => i !== index));  
             setMainPhotoIndex(mainPhotoIndex - 1);
         }
+
+        const propertyPhotos = tempURLs.filter((_, i) => i !== index);
+        setTempURLs(propertyPhotos);
         
-        else {
-            setTempURLs(tempURLs.filter((_, i) => i !== index));
+        if (galleryIndex >= propertyPhotos.length) {
+            setGalleryIndex(Math.max(0, galleryIndex - 3));
         }
-        
+
         setExcessPhotosMessage("");
         setPhotoErrorMessage("");
     }

@@ -33,13 +33,13 @@ router.post("/", async (req, res) => {
 
     // Username validation 
 
-    if (username.length < 5 || username.length >= 20) {
+    if (username.length < 5 || username.length > 20) {
         return res.status(400).json({error: "Username must be between 5 and 20 characters."})
     }
 
     // Name validation 
 
-    if (name.length < 5 || name.length >= 50) {
+    if (name.length < 5 || name.length > 50) {
         return res.status(400).json({ error: "Name must be between 5 and 50 characters." })
     }
 

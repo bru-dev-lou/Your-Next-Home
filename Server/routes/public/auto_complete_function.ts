@@ -9,6 +9,7 @@ router.get('/cities', (req, res) => {
     if (!city) { 
         return res.status(200).json([]);
     }
+
     try { 
         const autoCompleteResults = db.prepare(`
             SELECT DISTINCT city 

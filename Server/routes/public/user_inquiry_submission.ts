@@ -63,7 +63,7 @@ router.post("/", (req, res) => {
         propID =  "PROP0000";
     }
 
-    try {
+    try {        
         const sendInquiry = `
             INSERT INTO inquiries 
             (name, email, property_id, message_topic, message) 
@@ -76,7 +76,7 @@ router.post("/", (req, res) => {
 
     catch (error) {
         console.log("Error submiting inquiry: ", error);
-        res.status(500).json({error: "Server Error: The team has been notified."});
+        res.status(500).json({server_error: "Server Error: The team has been notified."});
     }
 })
 

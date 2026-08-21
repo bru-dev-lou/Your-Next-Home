@@ -36,7 +36,7 @@ router.get("/", (req, res) => {
         sortBy = "date";
     } 
     
-    try {
+    try {        
         const data = db.prepare(`
             SELECT property_list.id,
             property_list.city,

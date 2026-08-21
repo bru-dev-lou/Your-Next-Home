@@ -111,7 +111,7 @@ function DashboardProfileEdit () {
 
         // Name validation 
 
-        if (userPublicDetails.name.length < 5 || userPublicDetails.name.length >= 50) {
+        if (userPublicDetails.name.length < 5 || userPublicDetails.name.length > 50) {
             setErrorMessageMP("Name must be between 5 and 50 characters.");
             return;
         }
