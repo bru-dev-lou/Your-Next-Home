@@ -82,52 +82,52 @@ function HomePageSearchBar() {
             <form onSubmit={propertySearch}>
                 <div className={styles.first_row_container}>
                     <label htmlFor="location_selection" className={styles.label}> Location: </label>
-                        <input
-                            id="location_selection"
-                            type="text"
-                            value={autoCompleteQuery}
-                            onChange={(e) => {
-                                const validCity = e.target.value.replace(/[^a-zA-Z-]/g, "");
-                                setAutoCompleteQuery(validCity);
-                                setAutoCompleteQueryClicked(false); 
-                            }}
-                            placeholder = " e.g. London"
-                            aria-describedby="location_hint"
-                            className= {styles.location_input}
-                        />
+                    <input
+                        id="location_selection"
+                        type="text"
+                        value={autoCompleteQuery}
+                        onChange={(e) => {
+                            const validCity = e.target.value.replace(/[^a-zA-Z-]/g, "");
+                            setAutoCompleteQuery(validCity);
+                            setAutoCompleteQueryClicked(false); 
+                        }}
+                        placeholder = " e.g. London"
+                        aria-describedby="location_hint"
+                        className= {styles.location_input}
+                    />
                     <span id="location_hint" className={styles.sr_content}>Insert a city name to see properties for rent in that area.</span>
+                    <ul 
+                        aria-live="polite" 
+                        aria-label="City autocomplete suggestions."
+                        className={styles.autocomplete_container}
+                    >
+                        {citySuggestions.map((city, index) => (
+                            <li 
+                                key={index}
+                                onClick = {() => {
+                                    setAutoCompleteQuery(city.city);
+                                    setCitySuggestions([]);
+                                    setAutoCompleteQueryClicked(true);
+                                }}
+                                tabIndex={0}
+                                onKeyDown= { (e) => { if (e.key === "Enter") {
+                                    setAutoCompleteQuery(city.city);
+                                    setCitySuggestions([]);
+                                    setAutoCompleteQueryClicked(true);
+                                }}}
+                                aria-label={`Select ${city.city}`}
+                                className={styles.autocomplete_item}
+                            >   
+                                {city.city}
+                            </li>
+                        ))}
+                        {errorMessageAC && 
+                            <li role="alert" className={`${styles.ac_error_message} ${styles.autocomplete_item}`}>
+                                {errorMessageAC}
+                            </li>
+                        }
+                    </ul>
                 </div>
-                <ul 
-                    aria-live="polite" 
-                    aria-label="City autocomplete suggestions."
-                    className={styles.autocomplete_container}
-                >
-                    {citySuggestions.map((city, index) => (
-                        <li 
-                            key={index}
-                            onClick = {() => {
-                                setAutoCompleteQuery(city.city);
-                                setCitySuggestions([]);
-                                setAutoCompleteQueryClicked(true);
-                            }}
-                            tabIndex={0}
-                            onKeyDown= { (e) => { if (e.key === "Enter") {
-                                setAutoCompleteQuery(city.city);
-                                setCitySuggestions([]);
-                                setAutoCompleteQueryClicked(true);
-                            }}}
-                            aria-label={`Select ${city.city}`}
-                            className={styles.autocomplete_item}
-                        >   
-                            {city.city}
-                        </li>
-                    ))}
-                    {errorMessageAC && 
-                        <li role="alert" className={`${styles.ac_error_message} ${styles.autocomplete_item}`}>
-                            {errorMessageAC}
-                        </li>
-                    }
-                </ul>
                 { budgetDropdown ?
                     <div className={styles.second_row_container}>
                         <label htmlFor= "max_price" className={styles.label}> Budget: </label>
@@ -164,7 +164,7 @@ function HomePageSearchBar() {
                                 onClick = {showBudget}
                                 className={styles.budget_container_closed}
                                 >
-                                    <li data-vale= {maxPrice} className={styles.budget_item}>{maxPriceLabel}</li>
+                                    <li data-vale= {maxPrice} className={styles.budget_item_closed}>{maxPriceLabel}</li>
                             </ul>  
                             <button type="submit" className={styles.search_button}> Search </button>
                         </div>

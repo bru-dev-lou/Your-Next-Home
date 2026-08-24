@@ -1,21 +1,4 @@
-.main_page_container {
-    position: relative;
-    height: 100vh; 
-}
-
-.search_box_container {
-    background-color: #125370;
-    border: solid 3px #002461;
-    border-radius: 40px;
-    width: 550px;
-    height: 160px;
-    padding: 20px;
-
-    position: absolute;
-    top: 27%;
-    left: 10%;
-    z-index: 1;
-}
+/* Fonts first */
 
 .h2_font {
     font-family: "Source Sans 3", sans-serif;
@@ -27,18 +10,42 @@
     justify-self: center;
 }
 
+/* Styling in the order it appears */
+
+.main_page_container {
+    position: relative; 
+    display: flex;
+    height: 100%;
+    width: 100%;
+}
+
+.search_box_container {
+    background-color: #125370;
+    border: solid 3px #002461;
+    border-radius: 40px;
+
+    width: 36%;
+    height: 26%;
+    padding: 20px;
+
+    margin: 13% 0 0 10%;
+
+    position: relative; 
+    z-index: 2;
+}
+
 
 .home_page_photo {
+    box-shadow: 0px 0px 20px rgba(0,0,0,0.6);
     border-radius: 50px;
         
-    width: 950px;
-    height: 550px;
+    width: 60%;
+    height: 85%;
     
     position: absolute;
-    top: 1%;
-    left: 31%;
 
-    z-index: -1;
+    top: 5%;
+    left: 30%;
 
-    box-shadow: 0px 0px 20px rgba(0,0,0,0.6);
+    z-index: 1;
 }

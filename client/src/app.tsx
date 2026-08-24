@@ -1,5 +1,7 @@
 import { BrowserRouter, Routes, Route,} from "react-router-dom";
 
+import styles from "../src/app.module.css";
+
 import { UserProvider } from "./context/user_context";
 import RouteProtection from "./components/auth/route_protection";
 
@@ -23,7 +25,7 @@ function App() {
 
   return (
     <BrowserRouter>
-      <div>
+      <div className={styles.main_site_container}>
       <UserProvider>
         <MainNavigationBar />
           <Routes>
