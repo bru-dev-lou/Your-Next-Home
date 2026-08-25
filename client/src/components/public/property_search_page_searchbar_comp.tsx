@@ -35,15 +35,15 @@ function PropertySearchPageSearchBar ({sortBy} : FilterValue) {
 
 
     const [ budgetDropdown, setBudgetDropdown ] = useState<boolean>(false); 
-    const [ maxPriceLabel, setMaxPriceLabel ] = useState("No Max");
+    const [ maxPriceLabel, setMaxPriceLabel ] = useState("No Maximum");
 
 
     const [ bedroomsDropdown, setBedroomsDropdown ] = useState<boolean>(false); 
-    const [ bedroomsLabel, setBedroomsLabel ] = useState("No Min"); 
+    const [ bedroomsLabel, setBedroomsLabel ] = useState("No Minimum"); 
 
 
     const [ bathroomsDropdown, setBathroomsDropdown ] = useState<boolean>(false); 
-    const [ bathroomsLabel, setBathroomsLabel ] = useState("No Min");
+    const [ bathroomsLabel, setBathroomsLabel ] = useState("No Minimum");
 
 
     const [ furnitureDropdown, setFurnitureDropdown ] = useState<boolean>(false);
@@ -135,293 +135,305 @@ function PropertySearchPageSearchBar ({sortBy} : FilterValue) {
         <div className={styles.main_container}>
             <form onSubmit={buttonSearch}>
                 <div className={styles.first_row_container}>
-                    <label htmlFor ="location" className={`${styles.h2_font} ${styles.location_label}`}> Location: </label>
-                    <input 
-                        id="location"
-                        type = "text"
-                        value = {propData.city}
-                        onChange = {(e) => {
-                            const validCity = e.target.value.replace(/[^a-zA-Z-]/g, "");
-                            setPropData({...propData, city: validCity});
-                            setAutoCompleteQueryClicked(false);
-                        }}   
-                        placeholder = "Enter your preferred location" 
-                        className={styles.location_input}
-                    />
-                    <ul 
-                        aria-live="polite" 
-                        aria-label="City autocomplete suggestions."
-                        className={styles.autocomplete_container}
-                    >
-                        {autoCompleteQueries.map((query, index) => (
-                            <li 
-                                key={index}
-                                onClick = {() => {
-                                    setPropData({...propData, city: query.city});
-                                    setAutoCompleteQueries([]);
-                                    setAutoCompleteQueryClicked(true);
-                                    }}
-                                tabIndex={0}
-                                onKeyDown={(e) => { if (e.key === "Enter") {
-                                    setPropData({...propData, city: query.city});
-                                    setAutoCompleteQueries([]);
-                                    setAutoCompleteQueryClicked(true);
-                                }}}
-                                aria-label={`Select ${query.city}`}
-                                className={styles.autocomplete_item}
-                            >
-                                {query.city}
-                            </li>
-                        ))}
-                        {errorMessageAC && 
-                            <li role="alert" className={`${styles.ac_error_message} ${styles.autocomplete_item}`}>
-                                {errorMessageAC}
-                            </li>
-                        }                        
-                    </ul>
-                    <label htmlFor ="property_type" className={` ${styles.h2_font} ${styles.property_type_label}`}> Property Type: </label>
-                    {propertyTypeDropdown ? 
+                    <div className={styles.location_container}>
+                        <label htmlFor ="location" className={`${styles.h2_font} ${styles.location_label}`}> Location: </label>
+                        <input 
+                            id="location"
+                            type = "text"
+                            value = {propData.city}
+                            onChange = {(e) => {
+                                const validCity = e.target.value.replace(/[^a-zA-Z-]/g, "");
+                                setPropData({...propData, city: validCity});
+                                setAutoCompleteQueryClicked(false);
+                            }}   
+                            placeholder = "Enter your preferred location" 
+                            className={styles.location_input}
+                        />
                         <ul 
-                            id="property_type"
-                            onClick ={() => showDropdown(setPropertyTypeDropdown)}
-                            className={styles.property_type_container_open}
+                            aria-live="polite" 
+                            aria-label="City autocomplete suggestions."
+                            className={styles.autocomplete_container}
                         >
-                            <li 
-                                data-value={propData.type} 
-                                className={styles.item_format}
-                            >
-                                {propertyTypeLabel}
-                            </li>
-                            {propertyTypeLabel !== "Show all" &&  
+                            {autoCompleteQueries.map((query, index) => (
                                 <li 
-                                    data-value="" 
-                                    onClick={(e) => {setValue(e, "type", setPropertyTypeLabel, "Show all" )}} 
-                                    className={styles.item_format}
+                                    key={index}
+                                    onClick = {() => {
+                                        setPropData({...propData, city: query.city});
+                                        setAutoCompleteQueries([]);
+                                        setAutoCompleteQueryClicked(true);
+                                        }}
+                                    tabIndex={0}
+                                    onKeyDown={(e) => { if (e.key === "Enter") {
+                                        setPropData({...propData, city: query.city});
+                                        setAutoCompleteQueries([]);
+                                        setAutoCompleteQueryClicked(true);
+                                    }}}
+                                    aria-label={`Select ${query.city}`}
+                                    className={styles.autocomplete_item}
                                 >
-                                    Show all
-                                </li>
-                            }
-                            {propertyTypeValues.map(value => (
-                                <li 
-                                    key={value} 
-                                    data-value={value} 
-                                    onClick={(e) => {setValue(e, "type", setPropertyTypeLabel, "Show all" )}} 
-                                    className={styles.item_format}
-                                >
-                                    {value}
+                                    {query.city}
                                 </li>
                             ))}
-                        </ul>            
-                    :
-                        <ul
-                            id="property_type"
-                            onClick ={() => showDropdown(setPropertyTypeDropdown)}
-                            className={styles.property_type_container_closed}
-                        >
-                            <li 
-                                data-value={propertyTypeLabel} 
-                                className={styles.item_format}
-                            >
-                                {propertyTypeLabel}
-                            </li>
+                            {errorMessageAC && 
+                                <li role="alert" className={`${styles.ac_error_message} ${styles.autocomplete_item}`}>
+                                    {errorMessageAC}
+                                </li>
+                            }                        
                         </ul>
-                    }
-                    <label htmlFor= "max_price" className={`${styles.budget_label} ${styles.h2_font}`}> Budget: </label>
-                    {budgetDropdown ?
-                        <ul 
-                            id="max_price" 
-                            onClick = {() => showDropdown(setBudgetDropdown)} 
-                            className={styles.budget_container_open}
-                        >
-                            <li 
-                                data-value= {propData.maxPrice} 
-                                className={styles.item_format}
+                    </div> 
+                    <div className={styles.property_type_container}>
+                        <label htmlFor ="property_type" className={` ${styles.h2_font} ${styles.property_type_label}`}> Property Type: </label>
+                        {!propertyTypeDropdown ? 
+                            <ul
+                                id="property_type"
+                                onClick ={() => showDropdown(setPropertyTypeDropdown)}
+                                className={styles.property_type_container_closed}
                             >
-                                {maxPriceLabel}
-                            </li>
-                            {maxPriceLabel !== "No Max" && 
                                 <li 
-                                    data-value={10000} 
-                                    onClick={(e) => {setValue(e, "maxPrice", setMaxPriceLabel, "No Max")}} 
-                                    className={styles.item_format}
-                                > 
-                                    No Max 
+                                    data-value={propertyTypeLabel} 
+                                    className={styles.generic_list_item_format}
+                                >
+                                    {propertyTypeLabel}
                                 </li>
-                            }
-                            {budgetValues.map(value => (
-                                <li 
-                                    key={value} 
-                                    data-value={value} 
-                                    onClick={(e) => {setValue(e, "maxPrice", setMaxPriceLabel, "No Max")}} 
-                                    className={styles.item_format}
-                                > 
-                                    £{value.toLocaleString()}PCM
-                                </li>
-                            ))}
-                        </ul>                              
-                    :
-                        <ul 
-                            id="max_price"
-                            onClick = {() => showDropdown(setBudgetDropdown)} 
-                            className={styles.budget_container_closed}
-                        >
-                            <li 
-                                data-value={propData.maxPrice} 
-                                className={styles.item_format}
+                            </ul>
+                        :                        
+                            <ul 
+                                id="property_type"
+                                onClick ={() => showDropdown(setPropertyTypeDropdown)}
+                                className={styles.property_type_container_open}
                             >
-                                {maxPriceLabel}
-                            </li>
-                        </ul>  
-                    }
+                                <li 
+                                    data-value={propData.type} 
+                                    className={styles.generic_list_item_format}
+                                >
+                                    {propertyTypeLabel}
+                                </li>
+                                {propertyTypeLabel !== "Show all" &&  
+                                    <li 
+                                        data-value="" 
+                                        onClick={(e) => {setValue(e, "type", setPropertyTypeLabel, "Show all" )}} 
+                                        className={styles.generic_list_item_format}
+                                    >
+                                        Show all
+                                    </li>
+                                }
+                                {propertyTypeValues.map(value => (
+                                    <li 
+                                        key={value} 
+                                        data-value={value} 
+                                        onClick={(e) => {setValue(e, "type", setPropertyTypeLabel, "Show all" )}} 
+                                        className={styles.generic_list_item_format}
+                                    >
+                                        {value}
+                                    </li>
+                                ))}
+                            </ul>            
+                        }
+                    </div>
+                    <div className={styles.budget_container}>
+                        <label htmlFor= "max_price" className={`${styles.budget_label} ${styles.h2_font}`}> Budget: </label>
+                        {!budgetDropdown ?
+                            <ul 
+                                id="max_price"
+                                onClick = {() => showDropdown(setBudgetDropdown)} 
+                                className={styles.budget_container_closed}
+                            >
+                                <li 
+                                    data-value={propData.maxPrice} 
+                                    className={styles.generic_list_item_format}
+                                >
+                                    {maxPriceLabel}
+                                </li>
+                            </ul>  
+                        :                    
+                            <ul 
+                                id="max_price" 
+                                onClick = {() => showDropdown(setBudgetDropdown)} 
+                                className={styles.budget_container_open}
+                            >
+                                <li 
+                                    data-value= {propData.maxPrice} 
+                                    className={styles.generic_list_item_format}
+                                >
+                                    {maxPriceLabel}
+                                </li>
+                                {maxPriceLabel !== "No Maximum" && 
+                                    <li 
+                                        data-value={10000} 
+                                        onClick={(e) => {setValue(e, "maxPrice", setMaxPriceLabel, "No Maximum")}} 
+                                        className={styles.generic_list_item_format}
+                                    > 
+                                        No Maximum 
+                                    </li>
+                                }
+                                {budgetValues.map(value => (
+                                    <li 
+                                        key={value} 
+                                        data-value={value} 
+                                        onClick={(e) => {setValue(e, "maxPrice", setMaxPriceLabel, "No Maximum")}} 
+                                        className={styles.generic_list_item_format}
+                                    > 
+                                        £{value.toLocaleString()}PCM
+                                    </li>
+                                ))}
+                            </ul>                              
+                        }
+                    </div>
                 </div>
                 <div className={styles.second_row_container}>
-                    <label htmlFor ="min_bedrooms" className={`${styles.h2_font} ${styles.bedrooms_label}`}> Bedrooms: </label>
-                    {bedroomsDropdown ? 
-                        <ul
-                            id="min_bedrooms"
-                            onClick = {() => showDropdown(setBedroomsDropdown)} 
-                            aria-describedby="bedroom_hint"
-                            className={styles.bedrooms_container_open}
-                        >
-                            <li 
-                                data-value={propData.minBeds} 
-                                className={styles.item_format}
-                            >
-                                {bedroomsLabel}
-                            </li>
-                            {bedroomsLabel !== "No Min" && 
-                                <li 
-                                    data-value={0} 
-                                    onClick={(e) => {setValue(e, "minBeds", setBedroomsLabel, "No Min")}}                                     
-                                    className={styles.item_format}
-                                >
-                                    No Min
-                                </li>
-                            }
-                            {bedroomValues.map(value => (
-                                <li 
-                                    key={value} 
-                                    data-value={value} 
-                                    onClick={(e) => {setValue(e, "minBeds", setBedroomsLabel, "No Min")}}  
-                                    className={styles.item_format}
-                                >
-                                    {value}
-                                </li>
-                            ))}
-                        </ul>
-                    :
-                        <ul
-                            id="min_bedrooms"
-                            onClick = {() => showDropdown(setBedroomsDropdown)}
-                            aria-describedby="bedroom_hint"
-                            className={styles.bedrooms_container_closed}
-                        >
-                            <li 
-                                data-value= {propData.minBeds} 
-                                className={styles.item_format}
-                            >
-                                {bedroomsLabel}
-                            </li>      
-                        </ul>
-                    }              
+                    <div className={styles.bedrooms_container}>
+                        <label htmlFor ="min_bedrooms" className={`${styles.h2_font} ${styles.bedrooms_label}`}> Bedrooms: </label>
                         <span id="bedroom_hint" className={styles.sr_content}>Minimum number of bedrooms you require.</span>
+                        {!bedroomsDropdown ? 
+                            <ul 
+                                id="min_bedrooms"
+                                onClick = {() => showDropdown(setBedroomsDropdown)}
+                                aria-describedby="bedroom_hint"
+                                className={styles.bedrooms_container_closed}
+                            >
+                                <li 
+                                    data-value= {propData.minBeds} 
+                                    className={styles.generic_list_item_format}
+                                >
+                                    {bedroomsLabel}
+                                </li>      
+                            </ul>
+                        :                        
+                            <ul
+                                id="min_bedrooms"
+                                onClick = {() => showDropdown(setBedroomsDropdown)} 
+                                aria-describedby="bedroom_hint"
+                                className={styles.bedrooms_container_open}
+                            >
+                                <li 
+                                    data-value={propData.minBeds} 
+                                    className={styles.generic_list_item_format}
+                                >
+                                    {bedroomsLabel}
+                                </li>
+                                {bedroomsLabel !== "No Minimum" && 
+                                    <li 
+                                        data-value={0} 
+                                        onClick={(e) => {setValue(e, "minBeds", setBedroomsLabel, "No Minimum")}}                                     
+                                        className={styles.generic_list_item_format}
+                                    >
+                                        No Minimum
+                                    </li>
+                                }
+                                {bedroomValues.map(value => (
+                                    <li 
+                                        key={value} 
+                                        data-value={value} 
+                                        onClick={(e) => {setValue(e, "minBeds", setBedroomsLabel, "No Minimum")}}  
+                                        className={styles.generic_list_item_format}
+                                    >
+                                        {value}
+                                    </li>
+                                ))}
+                            </ul>
+                        }                
+                    </div>
+                    <div className={styles.bathrooms_container}>
                         <label htmlFor = "min_bathrooms" className={`${styles.h2_font} ${styles.bathroom_label}`}> Bathrooms: </label>
-                    {bathroomsDropdown ? 
-                        <ul
-                            id="min_bathrooms"
-                            onClick = {() => showDropdown(setBathroomsDropdown)}
-                            aria-describedby="bathroom_hint"
-                            className={styles.bathrooms_container_open}
-                        >
-                            <li 
-                                data-value={propData.minBaths} 
-                                className={styles.item_format}
-                            >
-                                {bathroomsLabel}
-                            </li>
-                            {bathroomsLabel !== "No Min" &&
-                                <li 
-                                    data-value={0} 
-                                    onClick={(e) => {setValue(e, "minBaths", setBathroomsLabel, "No Min")}}
-                                    className={styles.item_format}
-                                >
-                                    No Min
-                                </li>
-                            }
-                            {bathroomValues.map(value => (
-                                <li 
-                                    key={value} 
-                                    data-value={value}
-                                    onClick={(e) => {setValue(e, "minBaths", setBathroomsLabel, "No Min")}}
-                                    className={styles.item_format}
-                                >
-                                    {value}
-                                </li>
-                            ))}
-                        </ul>
-                    :
-                        <ul
-                            id="min_bathrooms"
-                            onClick = {() => showDropdown(setBathroomsDropdown)}
-                            aria-describedby="bathroom_hint"
-                            className={styles.bathrooms_container_closed}
-                        >
-                            <li 
-                                data-value={propData.minBaths} 
-                                className={styles.item_format}
-                            >
-                                {bathroomsLabel}
-                            </li>
-                        </ul>
-                    }
                         <span id="bathroom_hint" className={styles.sr_content}>Minimum number of bathrooms you require.</span>
+                        {bathroomsDropdown ? 
+                            <ul
+                                id="min_bathrooms"
+                                onClick = {() => showDropdown(setBathroomsDropdown)}
+                                aria-describedby="bathroom_hint"
+                                className={styles.bathrooms_container_open}
+                            >
+                                <li 
+                                    data-value={propData.minBaths} 
+                                    className={styles.generic_list_item_format}
+                                >
+                                    {bathroomsLabel}
+                                </li>
+                                {bathroomsLabel !== "No Minimum" &&
+                                    <li 
+                                        data-value={0} 
+                                        onClick={(e) => {setValue(e, "minBaths", setBathroomsLabel, "No Minimum")}}
+                                        className={styles.generic_list_item_format}
+                                    >
+                                        No Minimum
+                                    </li>
+                                }
+                                {bathroomValues.map(value => (
+                                    <li 
+                                        key={value} 
+                                        data-value={value}
+                                        onClick={(e) => {setValue(e, "minBaths", setBathroomsLabel, "No Minimum")}}
+                                        className={styles.generic_list_item_format}
+                                    >
+                                        {value}
+                                    </li>
+                                ))}
+                            </ul>
+                        :
+                            <ul
+                                id="min_bathrooms"
+                                onClick = {() => showDropdown(setBathroomsDropdown)}
+                                aria-describedby="bathroom_hint"
+                                className={styles.bathrooms_container_closed}
+                            >
+                                <li 
+                                    data-value={propData.minBaths} 
+                                    className={styles.generic_list_item_format}
+                                >
+                                    {bathroomsLabel}
+                                </li>
+                            </ul>
+                        }
+                    </div>
+                    <div className={styles.furniture_container}>
                         <label htmlFor = "furniture" className={`${styles.h2_font} ${styles.furniture_label}`}> Furnishing: </label>
-                    { furnitureDropdown ?
-                        <ul 
-                            id="furniture"
-                            onClick = {() => showDropdown(setFurnitureDropdown)}
-                            className={styles.furniture_container_open}
-                        >
-                            <li 
-                                data-value = {propData.furniture}
-                                className={styles.item_format}
+                        { furnitureDropdown ?
+                            <ul 
+                                id="furniture"
+                                onClick = {() => showDropdown(setFurnitureDropdown)}
+                                className={styles.furniture_container_open}
                             >
-                                {furnitureLabel}
-                            </li>
-                            {furnitureLabel !== "Any" && 
                                 <li 
-                                    data-value = {""} 
-                                    onClick={(e) => {setValue(e, "furniture", setFurnitureLabel, "Any")}} 
-                                    className={styles.item_format}
+                                    data-value = {propData.furniture}
+                                    className={styles.generic_list_item_format}
                                 >
-                                    Any
+                                    {furnitureLabel}
                                 </li>
-                            }
-                            {furnitureValues.map(value => (
-                                <li 
-                                    key={value} 
-                                    data-value={value}
-                                    onClick={(e) => {setValue(e, "furniture", setFurnitureLabel, "Any")}} 
-                                    className={styles.item_format}
-                                >
-                                    {value}
-                                </li>
-                            ))}  
-                        </ul>
-                    :
-                        <ul 
-                            id="furniture"
-                            onClick = {() => showDropdown(setFurnitureDropdown)}
-                            className={styles.furniture_container_closed}
-                        >
-                            <li 
-                                data-value = {propData.furniture} 
-                                className={styles.item_format}
+                                {furnitureLabel !== "Any" && 
+                                    <li 
+                                        data-value = {""} 
+                                        onClick={(e) => {setValue(e, "furniture", setFurnitureLabel, "Any")}} 
+                                        className={styles.generic_list_item_format}
+                                    >
+                                        Any
+                                    </li>
+                                }
+                                {furnitureValues.map(value => (
+                                    <li 
+                                        key={value} 
+                                        data-value={value}
+                                        onClick={(e) => {setValue(e, "furniture", setFurnitureLabel, "Any")}} 
+                                        className={styles.generic_list_item_format}
+                                    >
+                                        {value}
+                                    </li>
+                                ))}  
+                            </ul>
+                        :
+                            <ul 
+                                id="furniture"
+                                onClick = {() => showDropdown(setFurnitureDropdown)}
+                                className={styles.furniture_container_closed}
                             >
-                                {furnitureLabel}
-                            </li>    
-                        </ul>
-                    }                    
+                                <li 
+                                    data-value = {propData.furniture} 
+                                    className={styles.generic_list_item_format}
+                                >
+                                    {furnitureLabel}
+                                </li>    
+                            </ul>
+                        }                    
+                    </div>
                     <button type="submit" className={styles.search_button}>Search</button>
                 </div>
             </form>
