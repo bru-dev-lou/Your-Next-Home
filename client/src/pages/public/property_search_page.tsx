@@ -204,73 +204,74 @@ function PropertySearchPage () {
   };
 
 
-
   return (
     <div>
       <PropertySearchPageSearchBar sortBy={sortByValue} />
       <div className={styles.intro_main_container}>
         <div className={styles.intro_title_container}>
-          {introMessage && 
-            <h2 className={`${styles.intro_item} ${styles.intro_item_font}`}>{introMessage}</h2>
-          }
-          {errorMessagePR &&
-            <h2 role="alert" className={styles.pr_error_format}>{errorMessagePR}</h2>
-          }       
-          <h2 className={styles.intro_item_font}>Order by:</h2>
+          {introMessage && <h2 className={styles.main_container_font}>{introMessage}</h2>}
+          {errorMessagePR &&<h2 role="alert" className={styles.pr_error_format}>{errorMessagePR}</h2>}       
         </div>
-        {orderDropdown ?
-          <ul 
-            aria-label="Sort by"
-            aria-describedby="sort_by_hint"
-            className={styles.order_by_container_open}
-          >
-            <li 
-              data-value ="date"
-              onClick={ (e) => {orderResults(e.currentTarget.dataset.value!, e.currentTarget.textContent)}}
-              className={styles.order_by_item}
+        <div className={styles.order_by_container}>
+          <h2 className={styles.main_container_font}>Order by:</h2>
+          {!orderDropdown ? 
+            <ul 
+              onClick={ () => {setOrderDropdown(!orderDropdown)}}
+              aria-label="Sort by"
+              aria-describedby="sort_by_hint"
+              className={styles.order_by_container_closed}
             >
-              Date
-            </li>
-            <li 
-              data-value ="highestprice" 
-              onClick={ (e) => {orderResults(e.currentTarget.dataset.value!, e.currentTarget.textContent)}}
-              className={styles.order_by_item}
+              <li 
+                data-value={sortByValue}
+                className={styles.order_by_item_custom}
+              >
+                {orderByLabel}
+              </li>
+            </ul>
+          :          
+            <ul 
+              aria-label="Sort by"
+              aria-describedby="sort_by_hint"
+              className={styles.order_by_container_open}
             >
-              Highest Price
-            </li>
-            <li 
-              data-value ="lowestprice" 
-              onClick={ (e) => {orderResults(e.currentTarget.dataset.value!, e.currentTarget.textContent)}}
-              className={styles.order_by_item}
-            >
-              Lowest Price
-            </li>
-          </ul>
-        :
-          <ul 
-            onClick={ () => {setOrderDropdown(!orderDropdown)}}
-            aria-label="Sort by"
-            aria-describedby="sort_by_hint"
-            className={styles.order_by_container_closed}
-          >
-            <li 
-              data-value={sortByValue}
-              className={styles.order_by_item}
-            >
-              {orderByLabel}
-            </li>
-          </ul>
-        }
-      <span id="sort_by_hint" className={styles.sr_content}>Choose in what order your properties are shown. Most recently listed is the default setting.</span>
+              <li 
+                data-value ="date"
+                onClick={ (e) => {orderResults(e.currentTarget.dataset.value!, e.currentTarget.textContent)}}
+                className={styles.order_by_item}
+              >
+                Date
+              </li>
+              <li 
+                data-value ="highestprice" 
+                onClick={ (e) => {orderResults(e.currentTarget.dataset.value!, e.currentTarget.textContent)}}
+                className={styles.order_by_item}
+              >
+                Highest Price
+              </li>
+              <li 
+                data-value ="lowestprice" 
+                onClick={ (e) => {orderResults(e.currentTarget.dataset.value!, e.currentTarget.textContent)}}
+                className={styles.order_by_item}
+              >
+                Lowest Price
+              </li>
+            </ul>
+          }
+          <span id="sort_by_hint" className={styles.sr_content}>Choose in what order your properties are shown. Most recently listed is the default setting.</span>
+        </div>
       </div>
       <div className={styles.property_main_container}>
         {propertyResults.map(property => (
           <div className={styles.property_card_container} key={property.id}>
             <div className={styles.property_card_first_row}> 
-              <span className={styles.sr_content}>Address</span>
-              <h3 className={styles.h3_format}>{property.city}</h3>
-              <span className={styles.sr_content}>Monthly rental rate</span>
-              <h3 className={styles.h3_format}>£{property.price.toLocaleString()} pcm</h3>
+              <div className={styles.address_container}>
+                <span className={styles.sr_content}>Address</span>
+                <h3 className={styles.h3_format}>{property.city}</h3>
+              </div>
+              <div className={styles.rental_rate_container}>
+                <span className={styles.sr_content}>Monthly rental rate</span>
+                <h3 className={styles.h3_format}>£{property.price.toLocaleString()} pcm</h3>
+              </div>
             </div>
             <div className={styles.property_card_second_row}>
               {errorMessageFP.id === property.id &&
@@ -321,24 +322,32 @@ function PropertySearchPage () {
               >
                 {new Date(property.date_listed).toLocaleDateString("en-GB").replace(/\//g, ".")}
               </h4>
-              <span> <BsHouse className={styles.react_icon}/> </span>
-              <h4  
-                className={`${styles.h4_format} ${styles.quick_data_position}`}
-              >
-                {property.type}
-              </h4>
-              <span> <IoBedSharp className={styles.react_icon} /> </span>
-              <h4  
-                className={`${styles.h4_format} ${styles.quick_data_position}`}
-              >
-                {`${property.no_bedrooms} ${property.no_bedrooms > 1 ? "bedrooms" : "bedroom"}`}
-              </h4>
-              <span> <LuToilet className={styles.react_icon} /> </span>
-              <h4  
-                className={`${styles.h4_format} ${styles.quick_data_position}`}
-              >
-                 {`${property.no_bathrooms} ${property.no_bathrooms > 1 ? "bathrooms" : "bathroom"}`}
-              </h4>
+              <div className={styles.quick_data_container}>
+                <div className={styles.property_type_container}>
+                  <span> <BsHouse className={styles.react_icon}/> </span>
+                  <h4  
+                    className={`${styles.h4_format} ${styles.quick_data_position}`}
+                  >
+                    {property.type}
+                  </h4>
+                </div>
+                <div className={styles.bedrooms_container}>
+                  <span> <IoBedSharp className={styles.react_icon} /> </span>
+                  <h4  
+                    className={`${styles.h4_format} ${styles.quick_data_position}`}
+                  >
+                    {`${property.no_bedrooms} ${property.no_bedrooms > 1 ? "bedrooms" : "bedroom"}`}
+                  </h4>
+                </div>
+                <div className={styles.bathrooms_container}>
+                  <span> <LuToilet className={styles.react_icon} /> </span>
+                  <h4  
+                    className={`${styles.h4_format} ${styles.quick_data_position}`}
+                  >
+                    {`${property.no_bathrooms} ${property.no_bathrooms > 1 ? "bathrooms" : "bathroom"}`}
+                  </h4>
+                </div>
+              </div>
             </div>
           </div>
         ))}
