@@ -92,17 +92,21 @@ function Inquiries () {
                 setTimeout(() => {
                     setErrorMessageSE("");
                 }, 5000);
+                setSuccessMessage("");
+                setErrorMessage("");
             }
 
             else if (result.error){
                 setErrorMessage(result.error);
                 setMissingField(result.name);
                 setSuccessMessage("");
+                setErrorMessageSE("");
             }
                     
             else {
                 setSuccessMessage(result.message);
                 setErrorMessage(""); 
+                setErrorMessageSE("");
                 setData({name: "", email: "", propID: undefined, messageTopic: "", message: ""});
                 setTimeout(function() {
                     setSuccessMessage("");
@@ -134,15 +138,15 @@ function Inquiries () {
     }, [messageWordCount]); 
 
     return (
-        <div>
+        <div className={styles.main_container}>
             <form 
                 onSubmit={submitInquiry}
                 noValidate
             >
-                <div className={styles.main_container}>
+                <div className={styles.inquiries_container}>
                     <h2 className={styles.main_title}>How can we help?</h2>
                     <div className={styles.container_format}>
-                        <label htmlFor="name" className={`${styles.label_font} ${styles.name_label_position}`}> Name: </label>
+                        <label htmlFor="name" className={styles.label_font}> Name: </label>
                         <input
                             id="name"
                             type="text"
@@ -158,7 +162,7 @@ function Inquiries () {
                         />
                     </div>
                     <div className={styles.container_format}>
-                        <label htmlFor="email" className={`${styles.label_font} ${styles.email_label_position}`}> Email: </label>
+                        <label htmlFor="email" className={styles.label_font}> Email: </label>
                         <input
                             id="email"
                             type="email"
@@ -174,7 +178,7 @@ function Inquiries () {
                         />
                     </div>
                     <div className={styles.container_format}>
-                        <label htmlFor="topic" className={`${styles.label_font} ${styles.topic_label_position}`}> Topic: </label>
+                        <label htmlFor="topic" className={styles.label_font}> Topic: </label>
                         <input
                             id="topic"
                             type="text"
@@ -206,13 +210,13 @@ function Inquiries () {
                         </span>
                     </div> 
                     <div className={styles.container_format}>
-                        <label htmlFor="message" className={`${styles.label_font} ${styles.message_label_position}`}> Message: </label>
+                        <label htmlFor="message" className={styles.label_font}> Message: </label>
                         <textarea
                             id="message"
                             value={data.message}
                             onChange={(e) => {
                                 const messageWords = e.target.value.split(/\s+/).filter(Boolean);
-                                if (messageWords.length >= 25 || messageWords.length <= 250) {
+                                if (messageWords.length >= 25 && messageWords.length <= 250) {
                                 setData({...data, message: e.target.value});
                                 setErrorMessage("");
                                 setSuccessMessage("");
@@ -232,7 +236,7 @@ function Inquiries () {
                         </span>
                     </div>
                     <div className={styles.container_format}> 
-                        <label htmlFor="property_id" className={`${styles.label_font} ${styles.prop_label_position}`}> Prop ID: </label>
+                        <label htmlFor="property_id" className={styles.label_font}> Prop ID: </label>
                         <input
                             id="property_id"
                             type="text"
@@ -250,12 +254,12 @@ function Inquiries () {
                     </div>
                     <div className={styles.update_container}>
                         {errorMessage && <h3 role="alert" className={styles.result_message}>{errorMessage}</h3>}
-                        {errorMessageSE && <h3 role="allert" className={styles.server_error_message}>{errorMessageSE}</h3>}
+                        {errorMessageSE && <h3 role="alert" className={styles.server_error_message}>{errorMessageSE}</h3>}
                         {successMessage && <h3 role="status" className={styles.result_message}>{successMessage}</h3>}
                          <button 
                             type="submit" 
                             className={styles.button_format} 
-                            style={{visibility: (errorMessage || errorMessageSE) || successMessage ? "hidden" : "visible"}}
+                            style={{display: (errorMessage || errorMessageSE) || successMessage ? "none" : "block"}}
                         >
                             Submit Inquiry
                         </button>

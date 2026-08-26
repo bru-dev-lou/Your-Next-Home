@@ -9,41 +9,16 @@
     white-space: nowrap;
 }
 
-.main_container {
-    background-color: #125370;
-    border: solid 3px #002461;
-    border-radius: 60px;
-    width: 88%;
-    height: 405px;
-    padding: 2% 3% 3% 2%;
-
-    position: relative; 
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    row-gap: 15px;
-
-    z-index: 1;
-
-    margin: 75px 0 0 100px;
-}
-
-.main_title {
-    font-family: "Source Sans 3", sans-serif;
-    font-size: 26px;
-    color: #F2EFE2;
-    font-weight: 390;
-    text-shadow: 1px 1px 2px rgba(0,0,0,0.8);    
-    margin: 0px 0px 5px 215px;
-    
-}
+/*  Generic styling for most containers and labels */
 
 .container_format {
-    width: 100%;
+    width: 95%;
+
     display: flex; 
     flex-direction: row;
     column-gap: 10px;
-    margin-left: 15px;
+
+    margin-left: 5%;
 }
 
 .label_font {
@@ -52,58 +27,64 @@
     color: #F2EFE2;
     font-weight: 390;
     text-shadow: 1px 1px 2px rgba(0,0,0,0.8);    
+
+    width: 17%;
 }
 
-.name_label_position {
-    margin-left: 30px;
+/* Styling code in the order it appears in the JSX */
+
+.main_container {
+    width: 100%;
 }
 
-.email_label_position {
-    margin-left: 32px;
+.inquiries_container {
+    background-color: #125370;
+    border: solid 3px #002461;
+    border-radius: 60px;
+    width: 35%;
+    
+    padding: 1%;
+
+    position: relative; 
+    display: flex;
+    flex-direction: column;
+    row-gap: 18px;
+
+    z-index: 2;
+
+    margin: calc(5% + 5px) 0 0 10%;
 }
 
-.topic_label_position {
-    margin-left: 34px;
-}
-
-.message_label_position {
-    margin-left: 7px;
-}
-
-.prop_label_position {
-    margin-left: 17px;
-}
-
-.span_font {
+.main_title {
     font-family: "Source Sans 3", sans-serif;
-    font-size: 18px;
+    font-size: 26px;
     color: #F2EFE2;
     font-weight: 390;
     text-shadow: 1px 1px 2px rgba(0,0,0,0.8);    
+    margin: 1% 0 0 37%;
 }
 
 .input_format {
     background-color: #F5F2EB;
     border-radius: 5px;
 
-    height: 18px;
-    width: 375px;
-
-    margin-top: 3px;
-    margin-left: 15px;
+    width: 65%;
 
     position: relative;
+
+    margin-left: 3%;
+}
+
+.span_font {
+    font-family: "Source Sans 3", sans-serif;
+    font-size: 16px;
+    color: #F2EFE2;
+    font-weight: 390;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.8);    
 }
 
 .word_count_25 {
-    width: 50px;
-    margin-top: 5px;
-    margin-left: 2px;
-}
-
-.word_count_250 {
-    margin-top: 61px;
-    margin-left: 2px;
+    margin: 2% 0 0 0;
 }
 
 .textarea_format {
@@ -114,40 +95,23 @@
     min-height: 75px;
     max-height: 75px;
     
-    width: 375px;
-    min-width: 375px;
-    max-width: 375px;
+    width: 65%;
+    max-width: 65%;
+    min-width: 65%;
 
-    margin-top: 3px;
-    margin-left: 16px;
-
+    margin-left: 3%;
 }
 
-.result_message {
-    font-family: "Source Sans 3", sans-serif;
-    font-size: 21px;
-    color: #F2EFE2;
-    font-weight: 390;
-    text-shadow: 1px 1px 2px rgba(0,0,0,0.8);    
-    text-align: center;
-    width: 350px;
-    position: absolute; 
-
-    margin: 0px 0 0 135px;
+.word_count_250 {
+    margin: 11% 0 0 0;
 }
 
-.server_error_message {
-    font-family: "Source Sans 3", sans-serif;
-    font-size: 20px;
-    color: #fe3c3c;
-    font-weight: 390;
-    text-shadow: 1px 1px 2px rgb(255, 5, 5);  
-
-    text-align: center;
-    width: 350px;
-    position: absolute; 
-
-    margin: 5px 0 0 135px;
+.update_container {    
+    width: 63%;
+    height: 65px;
+    margin-left: 26%;
+    display: flex;
+    justify-content: center;
 }
 
 .button_format {
@@ -159,10 +123,32 @@
 
     background-color: #BFBFBF;
     border: 2px solid #747474;
-    border-radius: 10px;  
-    height: 35px;
-    width: 170px;
-    line-height: 23px;
+    border-radius: 7px;  
 
-    margin: 5px 0 0 340px;
+    height: 35px;
+    width: 45%;   
+    
+    margin: 2% 0 0 55%;
+}
+
+.result_message {
+    font-family: "Source Sans 3", sans-serif;
+    font-size: 21px;
+    color: #F2EFE2;
+    font-weight: 390;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.8);    
+    
+    text-align: center;
+    margin: 1% 0 0 0;
+}
+
+.server_error_message {
+    font-family: "Source Sans 3", sans-serif;
+    font-size: 21px;
+    color: #fe3c3c;
+    font-weight: 550;
+    text-shadow: 1px 1px 2px rgb(0, 0, 0);  
+
+
+    margin: 3% 0 0 0;
 }
