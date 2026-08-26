@@ -216,7 +216,7 @@ function Inquiries () {
                             value={data.message}
                             onChange={(e) => {
                                 const messageWords = e.target.value.split(/\s+/).filter(Boolean);
-                                if (messageWords.length >= 25 && messageWords.length <= 250) {
+                                if (messageWords.length <= 250) {
                                 setData({...data, message: e.target.value});
                                 setErrorMessage("");
                                 setSuccessMessage("");
