@@ -23,6 +23,8 @@
     justify-content: center;
     row-gap: 15px;
 
+    z-index: 1;
+
     margin: 75px 0 0 100px;
 }
 
