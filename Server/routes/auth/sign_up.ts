@@ -34,26 +34,26 @@ router.post("/", async (req, res) => {
     // Username validation 
 
     if (username.length < 5 || username.length > 20) {
-        return res.status(400).json({error: "Username must be between 5 and 20 characters."})
+        return res.status(400).json({shortError: "Username must be between 5 and 20 characters."})
     }
 
     // Name validation 
 
     if (name.length < 5 || name.length > 50) {
-        return res.status(400).json({ error: "Name must be between 5 and 50 characters." })
+        return res.status(400).json({ shortError: "Name must be between 5 and 50 characters." })
     }
 
     const nameHasLetters = /\p{L}/u.test(name);
     const nameIsValidFormat = /^[\p{L}\s'-]+$/u.test(name);
 
     if (!nameHasLetters || !nameIsValidFormat) {
-        return res.status(400).json({error: "Please include a name with no numbers."})
+        return res.status(400).json({shortError: "Please include a name with no numbers."})
     }
 
     // Address validation 
 
-    if (address.split(/\s+/).filter(Boolean).length < 5) {
-        return res.status(400).json({error: "Address must be longer than 5 words."})
+    if (address.split(/\s+/).filter(Boolean).length < 5 || address.split(/\s+/).filter(Boolean).length > 25) {
+        return res.status(400).json({shortError: "Address must be between 5 and 25 words."})
     }
 
     // Phone number validation 
@@ -61,7 +61,7 @@ router.post("/", async (req, res) => {
     const validNumber = /^[0-9]{10,}$/.test(number);
     
     if (!validNumber) {
-        return res.status(400).json({ error: "Please ensure your phone number is at least 10 digits long with no spaces or symbols."})
+        return res.status(400).json({ longError: "Please ensure your phone number is at least 10 digits long with no spaces or symbols."})
     }
 
     // Email validation 
@@ -69,7 +69,7 @@ router.post("/", async (req, res) => {
     const isValidEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 
     if (!isValidEmail) {
-        return res.status(400).json({ error: "Please include a valid email address."})
+        return res.status(400).json({ shortError: "Please include a valid email address."})
     }
     
     
@@ -78,13 +78,13 @@ router.post("/", async (req, res) => {
 
     
     if (confirmPass !== password) {
-        return res.status(400).json({error: "Passwords must match."}); 
+        return res.status(400).json({shortError: "Passwords must match."}); 
     }    
 
     const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[?!@#$%^&*]).{8,}$/;
 
     if (!passwordRegex.test(password)) {
-        return res.status(400).json({error: "Password must be 8+ characters with an uppercase, a lowercase, a number and a special character [?!@#$%^&*]."
+        return res.status(400).json({longError: "Password must be 8+ characters with an uppercase, a lowercase, a number and a special character [?!@#$%^&*]."
         });
     }
 

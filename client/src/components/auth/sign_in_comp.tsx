@@ -49,7 +49,11 @@ function SignIn () {
 
     return (
         <div className={styles.main_container}>
-            <form onSubmit={signIn} noValidate className={styles.sign_in_container}>
+            <form 
+                onSubmit={signIn} 
+                noValidate 
+                className={styles.sign_in_container}
+            >
                     <h2 className={styles.main_title}>Sign in and get started!</h2>
                     <div className={styles.username_password_container}>
                         <label htmlFor="username" className={styles.username_password_label}> Username: </label>
