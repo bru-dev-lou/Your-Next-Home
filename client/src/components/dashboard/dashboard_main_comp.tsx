@@ -44,9 +44,11 @@ function DashboardMain() {
 
     const [ deletePropertyMessage, setDeletePropertyMessage ] = useState("");
     const [ deletePropertyError, setDeletePropertyError ] = useState("");  
+    
     function messageReset () {
         setTimeout (function () {
             setDeletePropertyMessage("");
+            setDeletePropertyError("");
         }, 7000);
     }
 
@@ -132,11 +134,11 @@ function DashboardMain() {
     
     if (!data) {
         return (
-            <div>
+            <div className={styles.main_container}>
                 {fetchPropertyError ?
                     <div>
                         <div className={styles.title_container}>
-                            <h2 className={`${styles.main_title} ${styles.h2_font}`}>My Properties</h2>
+                            <h2 className={styles.main_title}>My Properties</h2>
                         </div>
                         <img 
                             src={serverErrorPhoto} 
@@ -153,9 +155,8 @@ function DashboardMain() {
                 :
                     <div>
                         <div className={styles.title_container}>
-                            <h2 className={`${styles.main_title} ${styles.h2_font}`}>My Properties</h2>
+                            <h2 className={styles.loading_message}>Loading...</h2>
                         </div>
-                        <h2 className={styles.loading_message}>Loading...</h2>
                     </div>
                 }
             </div>
@@ -163,9 +164,9 @@ function DashboardMain() {
     }
 
     return (
-        <div>
+        <div className={styles.main_container}>
             <div className={styles.title_container}>
-                <h2 className={`${styles.main_title} ${styles.h2_font}`}> My Properties </h2>
+                <h2 className={styles.main_title}> My Properties </h2>
             </div>
             <div className={styles.first_row}>
                 {deletePropertyMessage &&  
@@ -185,9 +186,9 @@ function DashboardMain() {
                     </h2>
                 }
                 {fetchPropertyMessage && !deletePropertyMessage && !deletePropertyError &&
-                    <div>
-                    <h2 className={`${styles.welcome_message} ${styles.h2_font_custom}`}> Welcome back, {data.user.name}!</h2>
-                    <h2 className={styles.no_property_message}>{fetchPropertyMessage} </h2>
+                    <div className={styles.no_property_container}>
+                        <h2 className={`${styles.welcome_message} ${styles.h2_font_custom}`}> Welcome back, {data.user.name}!</h2>
+                        <h2 className={styles.no_property_message}>{fetchPropertyMessage} </h2>
                     </div>
                 }
                 {!deletePropertyMessage && !deletePropertyError && !fetchPropertyMessage &&
@@ -205,13 +206,17 @@ function DashboardMain() {
                     {data.properties.map((property: UserProperties) => (
                         <li key={property.id} className={styles.li_format}>
                             <div className={styles.property_card_container}>
-                                <div className={styles.first_property_row}>
-                                    <span className={styles.sr_content}>Address</span>
-                                    <h3 className={`${styles.property_address} ${styles.h3_font}`}>{property.city}</h3>
-                                    <span className={styles.sr_content}>Monthly rental rate</span>
-                                    <h3 className={`${styles.property_rental_rate} ${styles.h3_font}`}> £{property.price.toLocaleString()} pcm </h3>
+                                <div className={styles.property_row}>
+                                    <div className={styles.address_container}>
+                                        <span className={styles.sr_content}>Address</span>
+                                        <h3 className={styles.h3_font}>{property.city}</h3>
+                                    </div>
+                                    <div className={styles.budget_container}>
+                                        <span className={styles.sr_content}>Monthly rental rate</span>
+                                        <h3 className={styles.h3_font}> £{property.price.toLocaleString()} pcm </h3>
+                                    </div>
                                 </div>
-                                <div className={styles.second_property_row}>
+                                <div className={styles.property_row}>
                                     <img    
                                         src={property.photo_path} 
                                         role="button"
@@ -228,34 +233,48 @@ function DashboardMain() {
                                         <h5 className={`${styles.property_summary_content} ${styles.h5_font}`}>{property.summary}</h5>
                                     </div>
                                 </div>
-                                <div className={styles.third_property_row}>
-                                    <span className={styles.sr_content}> Date listed:</span>
-                                    <h4 
-                                        className={`${styles.property_date_listed} ${styles.h4_font}`}
-                                    >
-                                        {new Date(property.date_listed).toLocaleDateString("en-GB").replace(/\//g, ".")} 
-                                    </h4>
-                                    <span className={styles.sr_content}> Property type:</span>
-                                    <span><BsHouse className={styles.react_icon}/></span>                                        
-                                    <h4 
-                                        className={`${styles.summary_info_position} ${styles.h4_font}`}
-                                    >
-                                        {property.type}
-                                    </h4>
-                                    <span className={styles.sr_content}> Number of bedrooms:</span>
-                                    <span><IoBedSharp className={styles.react_icon}/></span>                                    
-                                    <h4 
-                                        className={`${styles.summary_info_position} ${styles.h4_font}`}
-                                    >
-                                        {property.no_bedrooms} bedrooms
-                                    </h4>
-                                    <span className={styles.sr_content}> Number of bathrooms:</span>
-                                    <span><LuToilet className={styles.react_icon}/></span>                                    
-                                    <h4 
-                                        className={`${styles.summary_info_position} ${styles.h4_font}`}
-                                    > 
-                                        {property.no_bathrooms} bathrooms 
-                                    </h4>
+                                <div className={styles.property_row}>
+                                    <div className={styles.date_listed_container}>
+                                        <span className={styles.sr_content}> Date listed:</span>
+                                        <h4 
+                                            className={styles.h4_font}
+                                        >
+                                            {new Date(property.date_listed).toLocaleDateString("en-GB").replace(/\//g, ".")} 
+                                        </h4>
+                                    </div>
+                                    <div className={styles.basic_info_main_container}>
+                                        <div className={styles.basic_info_property_type_container}>
+                                            <span className={styles.sr_content}> Property type:</span>
+                                            <span><BsHouse className={styles.react_icon}/></span>                                        
+                                            <h4 
+                                                className={`${styles.basic_info_position} ${styles.h4_font}`}
+                                            >
+                                                {property.type}
+                                            </h4>
+                                        </div>
+                                        <div className={styles.basic_info_bedrooms_container}>
+                                            <span className={styles.sr_content}> Number of bedrooms:</span>
+                                            <span><IoBedSharp className={styles.react_icon}/></span>                                    
+                                            <h4 
+                                                className={`${styles.basic_info_position} ${styles.h4_font}`}
+                                            >
+                                                {property.no_bedrooms} bedrooms
+                                            </h4>
+                                        </div>
+                                        <div className={property.no_bedrooms > 9 ? 
+                                            styles.basic_info_multiple_bathrooms_container 
+                                            : 
+                                            styles.basic_info_single_bathrooms_container
+                                        }>
+                                            <span className={styles.sr_content}> Number of bathrooms:</span>
+                                            <span><LuToilet className={styles.react_icon}/></span>                                    
+                                            <h4 
+                                                className={`${styles.basic_info_position} ${styles.h4_font}`}
+                                            > 
+                                                  {property.no_bathrooms} bathrooms 
+                                            </h4>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                             <div className={styles.buttons_container}>
@@ -271,24 +290,21 @@ function DashboardMain() {
                                 > 
                                     <BsTrash3Fill className={styles.property_react_icon} />
                                 </button>
-                                <div 
-                                    className= { deleteIDConfirmed === property.id ? styles.delete_container_visible : styles.delete_container_hidden} 
-                                >
-                                    <h4 className={`${styles.confirm_delete_message} ${styles.h4_font}`}> Are you sure ? </h4>
-                                    
-                                    <div className={styles.button_container}>
-                                        <button 
-                                            onClick={() => propertyDelete(property.id)}
-                                            className={styles.delete_confirm_button}                                            >
-                                            ✔
-                                        </button>
-                                        <button 
-                                            onClick={() => {setDeleteIDConfirmed(null)}}
-                                            className={styles.delete_cancel_button}
-                                        > 
-                                            ✖ 
-                                        </button>
-                                    </div>
+                            </div>
+                            <div className={ deleteIDConfirmed === property.id ? styles.delete_property_container_visible : styles.delete_property_container_hidden}>
+                                <h4 className={`${styles.confirm_delete_message} ${styles.h4_font}`}> Are you sure ? </h4>
+                                <div className={styles.delete_button_container}>
+                                    <button 
+                                        onClick={() => propertyDelete(property.id)}
+                                        className={styles.delete_button}                                            >
+                                        ✔
+                                    </button>
+                                    <button 
+                                        onClick={() => {setDeleteIDConfirmed(null)}}
+                                        className={styles.delete_button}
+                                    > 
+                                        ✖ 
+                                    </button>
                                 </div>
                             </div>
                         </li>

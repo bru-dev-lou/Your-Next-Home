@@ -1,33 +1,3 @@
-/* If !data styling */
-
-.error_image {
-    width: 400px;
-    height: 300px;
-
-    margin-top: 75px; 
-    margin-left: 530px; 
-}
-
-.error_message {
-    font-family: "Source Sans 3", sans-serif;
-    font-size: 30px;
-    color: #C00000;
-    font-weight: 390;
-    text-shadow: 1px 1px 2px rgba(0,0,0,0.8);    
-    text-align: center;
-    
-    margin-top: 50px; 
-}
-
-.loading_message {
-    font-family: "Source Sans 3", sans-serif;
-    font-size: 30px;
-    color: #156082;
-    font-weight: 390;
-    text-shadow: 1px 1px 2px rgba(0,0,0,0.8);    
-    margin: 40px 0px 0px 670px;
-}
-
 /* sr = screen reader */
 
 .sr_content {
@@ -38,6 +8,8 @@
     clip: rect(0, 0, 0, 0);
     white-space: nowrap;
 }
+
+/* Generic font styling code */
 
 .h2_font {
     font-family: "Source Sans 3", sans-serif;
@@ -84,22 +56,70 @@
     margin: 0px;
 }
 
+/* Styling code in the order it appears on the JSX */
+
+.main_container {
+    margin: 1% 0 0 2%;
+
+    width: 92%;
+    height: 100%;
+}
+
 .title_container {
     background-color: #156082;
     border: solid 2px #042433;
     border-radius: 5px;
-    margin-left: 40px;
-    width: 1408px;
+
+    height: 40px;
+    width: 100%;
 }
 
 .main_title {
-    margin-left: 610px;
+    font-family: "Source Sans 3", sans-serif;
+    font-size: 26px;
+    color: #F2EFE2;
+    font-weight: 390;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.8);    
+
+    margin: 0 0 0 44%;
+    line-height: 40px;
+}
+
+.error_image {
+    width: 30%;
+    height: 30%;
+
+    margin: 4% 0 0 35%; 
+}
+
+.error_message {
+    font-family: "Source Sans 3", sans-serif;
+    font-size: 30px;
+    color: #C00000;
+    font-weight: 390;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.8);    
+    text-align: center;
+    
+    margin-top: 5%;
+}
+
+.loading_message {
+    font-family: "Source Sans 3", sans-serif;
+    font-size: 30px;
+    color: #F2EFE2;
+    font-weight: 390;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.8);    
+
+    margin: 0 0 0 45%;
+    
+    line-height: 50px;
 }
 
 .first_row {
+    width: 100%;
+
     display: flex;
-    margin: 40px 0px 0px 40px; 
-    width: 1413px;
+    margin-top: 2%;
 }
 
 .delete_property_message {
@@ -109,8 +129,8 @@
     font-weight: 390;
     text-shadow: 1px 1px 2px rgba(0,0,0,0.8);    
     
-    width: 700px;
-    margin: 0px;
+    width: 75%;
+    margin: 0;
 }
 
 .delete_property_error {
@@ -120,12 +140,16 @@
     font-weight: 390;
     text-shadow: 1px 1px 2px rgba(0,0,0,0.8);    
     
-    width: 700px;
-    margin: 0px;
+    width: 75%;
+    margin: 0;
+}
+
+.no_property_container {
+    width: 75%;
 }
 
 .welcome_message {
-    width: 700px;
+    width: 75%;
 }
 
 .no_property_message {
@@ -136,10 +160,10 @@
     text-shadow: 1px 1px 2px rgba(0,0,0,0.8);    
     text-align: center;    
     
+    width: 92%;
+
     position: absolute; 
-    margin-top: 50px;
-    width: 1410px;
-    
+    margin-top: 12%;
 }
 
 .add_property_button {
@@ -148,184 +172,212 @@
     border-radius: 5px;
 
     height: 40px;
-    width: 220px;
-    margin-left: 492px;
+    width: 15%;
+
+    margin-left: 10%;
 
     cursor: pointer; 
 }
 
 .property_main_container {
+    width: 100%;
+    height: 20%;
+
     display: flex;
     flex-direction: column;
-    row-gap: 30px;
+    row-gap: 50px;
+    
+    margin-top: 2%;
+    padding: 0;
 }
 
 .li_format {
+    display: flex;
+
     list-style: none;
+    width: 100%;
+    height: 100%;
+
     position: relative;
 }
 
 .property_card_container {
     background-color: #125370;
-    border: solid 3px #042433;
-    border-radius: 30px;
+    border: solid 2px #042433;
+    border-radius: 25px;
 
-    width: 1220px;
-    margin-top: 30px;
+    width: 87%;
+
     position: relative;
-    z-index: 1;
+    z-index: 3;
+
+    flex-shrink: 0;
 }
 
-.first_property_row{
+/* ↓↓↓ Applies to all three rows inside the property card container ↓↓↓ */
+
+.property_row {
+    width: 95%;
+    
     display: flex; 
-    margin: 20px 0px 0px 30px;
+    margin: 1% 0 1% 2%;
 }
 
-.property_address {
-    width: 700px;
-}
+.address_container {
+    width: 85%;
 
-.property_rental_rate {
-    margin-left: 325px;
-    width: 150px;
-}
-
-.second_property_row {
     display: flex;
-    margin: 15px 0px 0px 30px;
+    justify-content: flex-start;
+}
+
+.budget_container {
+    width: 15%;
+
+    display: flex;
+    justify-content:flex-end
 }
 
 .main_photo {
     border-radius: 20px;
-    border: solid 3px #002461;
-    width: 825px;
+    border: solid 2px #002461;
+    
+    width: 40%;
     height: 200px;
+    
     object-fit: cover;
-    cursor: pointer;
+    cursor: pointer;    
 }
 
 .property_summary_container {
-    margin-left: 25px;
-    margin-right: 35px;
-    width: 1100px;
+    width: 55%;
+    margin: 0 0 0 5%;
 }
 
 .property_summary_title {
-    font-weight: 390;
-    text-decoration: underline;
-    text-decoration-thickness: 1px;
-    text-underline-offset: 3px;
+    line-height: 20px;
 }
 
 .property_summary_content {
-    margin-top: 20px; 
+    margin-top: 3%; 
+
     text-align: justify;
     overflow-wrap: break-word;
     hyphens: auto;
 }
 
-.third_property_row {
-    display: flex; 
-    margin: 10px 0px 10px 25px;
+.date_listed_container {
+    width: 40%;
 }
 
-.property_date_listed {
-    width: 405px;
+.basic_info_main_container {
+    width: 55%;
+    
+    display: flex;
+    justify-content: space-between;
+    margin: 0 0 0 5%;
+}
+
+.basic_info_property_type_container {
+    width: 28%;
+    display: flex;
+}
+
+.basic_info_bedrooms_container {
+    width: 24%;
+    display: flex;
+}
+
+.basic_info_multiple_bathrooms_container {
+    width: 24%;
+    display: flex;
+}
+
+.basic_info_single_bathrooms_container {
+    width: 22%; 
+    display: flex;
+    justify-content: space-between;
 }
 
 .react_icon {
     color: #ECE7D4;
     font-size: 18px;
 
-    margin-top: 5px;
-    margin-left: 102px;
+    margin-top: 35%;
 }
 
-.summary_info_position {
-    margin-left: 10px;
+.basic_info_position {
+    margin-left: 7%;
 }
 
 .buttons_container {
+    height: 100%;
+    width: 20%;
+
     display: flex;
     flex-direction: column;
 
-    height: 329px;  
-    width: 300px;
+    margin-left: -12%;
 
-    margin-top: -330px;
-    margin-left: 1025px;
-
-    position: relative; 
-    z-index: 0;
+    z-index: 1;
 }
 
 .property_button {
     background-color: #156082;
-    border: solid 2px #042433;
+    border: solid 1px #042433;
     border-radius: 30px;
-    height: 165px;
+    
+    height: 50%;
     cursor: pointer;
 }
 
 .property_react_icon {
     color: #ECE7D4;
     font-size: 30px;
-    margin-top: 5px;
-    margin-left: 180px;
+
+    margin-left: 55%;
 }
 
-.delete_container_visible { 
+.delete_property_container_visible {
     background-color: #156082;
-    border: solid 2px #042433;
+    border: solid 1px #042433;
     border-radius: 30px;
-    width: 310px;
-    height: 164px;
 
+    height: 50%;
+    width: 17%;
+    
     display: flex; 
     flex-direction: column;
-    justify-content: space-around;
-
+    justify-content: center;
+    
     position: absolute;
-    margin-top: 163px;
-    margin-left: 80px;
+    z-index: 2;
 
-    visibility: visible;
-    overflow: hidden;
-
-    transition: 0.5s linear 0s;
+    top: 50%;
+    left: 83%;
 }
 
-.delete_container_hidden {
-    background-color: #156082;
-    border: solid 2px #042433;
-    border-radius: 30px;
-    width: 0px;
-    height: 164px;
-
-    position: absolute;
-    margin-top: 163px;
-    margin-left: 100px;
-
-    visibility: hidden;
+.delete_property_container_hidden {
+    display: none;
     overflow: hidden;
-
 }
 
 .confirm_delete_message {
-    margin-top: 20px;
-    margin-left: 110px;
-
-    text-align: center;  
+    width: 78%;
+    text-align: center;
     white-space: nowrap; 
+    margin: 0 0 0 22%;  
 }
 
-.button_container {
+.delete_button_container {
     display: flex;
     justify-content: center;
-    column-gap: 20px;
+
+    height: 25%;
+    margin: 7% 0 0 22%;
+    column-gap: 10%;
 }
 
-.delete_confirm_button {
+.delete_button {
     background-color: #F5F2EB;
     border: none; 
     border-radius: 5px;
@@ -334,26 +386,8 @@
     color: #156082;
     line-height: 35px;
 
-    width: 70px;
-    height: 35px;
+    width: 35%;
+    height: 90%;
 
-    margin-top: -35px;
-    margin-left: 110px;
-    cursor: pointer;
-}
-
-.delete_cancel_button {
-    background-color: #F5F2EB;
-    border: none; 
-    border-radius: 5px;
-
-    font-size: 24px;
-    color: #156082;
-    line-height: 35px;
-
-    width: 70px;
-    height: 35px;
-
-    margin-top: -35px;
     cursor: pointer;
 }
