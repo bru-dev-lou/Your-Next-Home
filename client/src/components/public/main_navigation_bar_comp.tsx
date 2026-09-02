@@ -60,85 +60,81 @@ function MainNavigationBar (){
     }
 
     return (
-        <div>   
-            {user?
-                <nav>
-                    <div className={styles.main_container}>
-                        <div className={styles.title_container}>
-                            <h2 className={styles.font_format}>Your Next Home</h2>
-                            <img src={logo} className={styles.logo_img}/>
-                        </div>
-                        <div className={styles.link_container}>
-                            <Link to="/" className={`${styles.link_item} ${styles.font_format}`}>Home</Link>
-                            <Link to="/search" className={`${styles.link_item} ${styles.font_format}`}>Rent</Link>
-                            <Link to="/inquiries" className={`${styles.link_item} ${styles.font_format}`}>Inquiries</Link>
-                        </div>
-                        {dashDrop ?
-                            <div className={styles.dropdown_container_format}>
-                                <ul 
-                                    aria-label="Dashboard navigation."
-                                    className={styles.dropdown_container_open_user}
-                                >   
-                                    <li onClick = {dashDropdown} className={`${styles.dropdown_item_username} ${styles.font_format}`}> {user.name} </li>
-                                    <li 
-                                        onClick = {(e) => userNavigation(e.currentTarget.dataset.value!)} 
-                                        data-value="My Properties"
-                                        className={`${styles.dropdown_item} ${styles.font_format}`}
-                                    >
-                                        My Properties
-                                    </li>
-                                    <li 
-                                        onClick = {(e) => userNavigation(e.currentTarget.dataset.value!)}
-                                        data-value="My Profile"
-                                        className={`${styles.dropdown_item} ${styles.font_format}`}
-                                    >
-                                        My Profile
-                                    </li>
-                                    <li 
-                                        onClick = {(e) => userNavigation(e.currentTarget.dataset.value!)}
-                                        data-value="Favorite Properties"
-                                        className={`${styles.dropdown_item} ${styles.font_format}`}
-                                    >
-                                        Favorite Properties
-                                    </li>
-                                    <li 
-                                        onClick = {(e) => userNavigation(e.currentTarget.dataset.value!)}
-                                        data-value="Sign Out"
-                                        className={`${styles.dropdown_item} ${styles.font_format}`}
-                                    >
-                                        Sign Out
-                                    </li>
-                                </ul>
-                            </div>
-                        :
-                            <div className={styles.dropdown_container_format}>
-                                <ul 
-                                    onClick = {dashDropdown}
-                                    aria-label="Dashboard navigation."
-                                    className={styles.dropdown_container_closed_user}
-                                >
-                                    <li className={`${styles.dropdown_item_username} ${styles.font_format}`}> {user.name} </li>
-                                </ul>
-                            </div>
-                        }
+        <div className={styles.main_container}>   
+            {!user?
+                <nav className={styles.nav_container}>
+                    <div className={styles.title_container}>
+                        <h2 className={styles.font_format}>Your Next Home</h2>
+                        <img src={logo} className={styles.logo_img}/>
+                    </div>
+                    <div className={styles.link_container}>
+                        <Link to="/" className={`${styles.link_item} ${styles.font_format}`}>Home</Link>
+                        <Link to="/search" className={`${styles.link_item} ${styles.font_format}`}>Rent</Link>
+                        <Link to="/inquiries" className={`${styles.link_item} ${styles.font_format}`}>Inquiries</Link>
+                    </div>
+                    <div className={styles.sign_in_container}>
+                        <Link to="/signIn" className={`${styles.sign_in_item} ${styles.font_format}`}>Sign In</Link>
                     </div>
                 </nav>
-            : 
-                <nav>
-                    <div className={styles.main_container}>
-                        <div className={styles.title_container}>
-                            <h2 className={styles.font_format}>Your Next Home</h2>
-                            <img src={logo} className={styles.logo_img}/>
+            :            
+                <nav className={styles.nav_container}>
+                    <div className={styles.title_container}>
+                        <h2 className={styles.font_format}>Your Next Home</h2>
+                        <img src={logo} className={styles.logo_img}/>
+                    </div>
+                    <div className={styles.link_container}>
+                        <Link to="/" className={`${styles.link_item} ${styles.font_format}`}>Home</Link>
+                        <Link to="/search" className={`${styles.link_item} ${styles.font_format}`}>Rent</Link>
+                        <Link to="/inquiries" className={`${styles.link_item} ${styles.font_format}`}>Inquiries</Link>
+                    </div>
+                    {!dashDrop ?
+                        <div className={styles.dropdown_container_format}>
+                            <ul 
+                                onClick = {dashDropdown}
+                                aria-label="Dashboard navigation."
+                                className={styles.dropdown_container_closed}
+                            >
+                                <li className={`${styles.dropdown_item_username} ${styles.font_format}`}> {user.name} </li>
+                            </ul>
                         </div>
-                        <div className={styles.link_container_with_sign_in}>
-                            <Link to="/" className={`${styles.link_item} ${styles.font_format}`}>Home</Link>
-                            <Link to="/search" className={`${styles.link_item} ${styles.font_format}`}>Rent</Link>
-                            <Link to="/inquiries" className={`${styles.link_item} ${styles.font_format}`}>Inquiries</Link>
+                    :                            
+                        <div className={styles.dropdown_container_format}>
+                            <ul 
+                                aria-label="Dashboard navigation."
+                                className={styles.dropdown_container_open_user}
+                            >   
+                                <li onClick = {dashDropdown} className={`${styles.dropdown_item_username} ${styles.font_format}`}> {user.name} </li>
+                                <li 
+                                    onClick = {(e) => userNavigation(e.currentTarget.dataset.value!)} 
+                                    data-value="My Properties"
+                                    className={`${styles.dropdown_item} ${styles.font_format}`}
+                                >
+                                    My Properties
+                                </li>
+                                <li 
+                                    onClick = {(e) => userNavigation(e.currentTarget.dataset.value!)}
+                                    data-value="My Profile"
+                                    className={`${styles.dropdown_item} ${styles.font_format}`}
+                                >
+                                    My Profile
+                                </li>
+                                <li 
+                                    onClick = {(e) => userNavigation(e.currentTarget.dataset.value!)}
+                                    data-value="Favorite Properties"
+                                    className={`${styles.dropdown_item} ${styles.font_format}`}
+                                >
+                                    Favorite Properties
+                                </li>
+                                <li 
+                                    onClick = {(e) => userNavigation(e.currentTarget.dataset.value!)}
+                                    data-value="Sign Out"
+                                    className={`${styles.dropdown_item} ${styles.font_format}`}
+                                >
+                                    Sign Out
+                                </li>
+                            </ul>
                         </div>
-                        <div className={styles.sign_in_container}>
-                            <Link to="/signIn" className={`${styles.sign_in_item} ${styles.font_format}`}>Sign In</Link>
-                        </div>
-                    </div>    
+                    }
                 </nav>
             }      
             {errorMessage && 

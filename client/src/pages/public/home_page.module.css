@@ -2,18 +2,17 @@
 
 .h2_font {
     font-family: "Source Sans 3", sans-serif;
-    font-size: 29px;
+    font-size: 28px;
     color: #F2EFE2;
     font-weight: 390;
     text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
-    margin: 0px 0px 20px 0px;
     justify-self: center;
+    margin: 3% 0 0 0;
 }
 
 /* Styling in the order it appears */
 
 .main_page_container {
-    position: relative; 
     display: flex;
     height: 100%;
     width: 100%;
@@ -21,31 +20,28 @@
 
 .search_box_container {
     background-color: #125370;
-    border: solid 3px #002461;
+    border: solid 2px #002461;
     border-radius: 40px;
 
-    width: 36%;
-    height: 26%;
-    padding: 20px;
+    width: 38%;
+    height: 30%;
+    
 
-    margin: 13% 0 0 10%;
+    margin: 14% -8% 0 11%;
 
     position: relative; 
     z-index: 2;
 }
 
-
 .home_page_photo {
     box-shadow: 0px 0px 20px rgba(0,0,0,0.6);
     border-radius: 50px;
         
-    width: 60%;
-    height: 85%;
+    width: 65%;
+    height: 80%;
     
-    position: absolute;
-
-    top: 5%;
-    left: 30%;
-
+    position: relative;
     z-index: 1;
+
+    margin: 2% 0 0 -9%;
 }

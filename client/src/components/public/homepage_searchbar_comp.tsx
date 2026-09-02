@@ -81,7 +81,7 @@ function HomePageSearchBar() {
         <div>
             <form onSubmit={propertySearch}>
                 <div className={styles.main_container}>
-                    <div className={styles.first_row_container}>
+                    <div className={styles.location_container}>
                         <label htmlFor="location_selection" className={styles.label}> Location: </label>
                         <input
                             id="location_selection"
@@ -129,48 +129,46 @@ function HomePageSearchBar() {
                             }
                         </ul>
                     </div>
-                    <div className={styles.second_row_container}>                
-                        {!budgetDropdown ?
-                            <div className={styles.budget_container}> 
-                                <label htmlFor= "max_price" className={styles.label}> Budget: </label>
-                                <ul 
-                                    id="max_price"
-                                    onClick = {showBudget}
-                                    className={styles.budget_container_closed}
-                                    >
-                                        <li data-vale= {maxPrice} className={styles.budget_item_closed}>{maxPriceLabel}</li>
-                                </ul>  
-                                <button type="submit" className={styles.search_button}> Search </button>
-                            </div>
-                        :                        
-                            <div className={styles.budget_container}>
-                                <label htmlFor= "max_price" className={styles.label}> Budget: </label>
-                                <ul id="max_price" onClick = {showBudget} className={styles.budget_container_open}>
-                                    <li data-value= {maxPrice} className={styles.budget_item}>{maxPriceLabel}</li>
-                                    {maxPriceLabel !== " No Maximum " && 
-                                        <li data-value={10000} onClick={setBudget} className={styles.budget_item}> No Maximum </li>
-                                    }
-                                    <li data-value = "500" onClick={setBudget} className={styles.budget_item}> £500 PCM </li>
-                                    <li data-value = "600" onClick={setBudget} className={styles.budget_item}> £600 PCM </li>
-                                    <li data-value = "700" onClick={setBudget} className={styles.budget_item}> £700 PCM </li>
-                                    <li data-value = "800" onClick={setBudget} className={styles.budget_item}> £800 PCM </li>
-                                    <li data-value = "900" onClick={setBudget} className={styles.budget_item}> £900 PCM </li>
-                                    <li data-value = "1000" onClick={setBudget} className={styles.budget_item}> £1,000 PCM </li>
-                                    <li data-value = "1100" onClick={setBudget} className={styles.budget_item}> £1,100 PCM </li>
-                                    <li data-value = "1200" onClick={setBudget} className={styles.budget_item}> £1,200 PCM </li>
-                                    <li data-value = "1300" onClick={setBudget} className={styles.budget_item}> £1,300 PCM </li>
-                                    <li data-value = "1400" onClick={setBudget} className={styles.budget_item}> £1,400 PCM </li>
-                                    <li data-value = "1500" onClick={setBudget} className={styles.budget_item}> £1,500 PCM </li>
-                                    <li data-value = "1600" onClick={setBudget} className={styles.budget_item}> £1,600 PCM </li>
-                                    <li data-value = "1700" onClick={setBudget} className={styles.budget_item}> £1,700 PCM </li>
-                                    <li data-value = "1800" onClick={setBudget} className={styles.budget_item}> £1,800 PCM </li>
-                                    <li data-value = "1900" onClick={setBudget} className={styles.budget_item}> £1,900 PCM </li>
-                                    <li data-value = "2000" onClick={setBudget} className={styles.budget_item}> £2,000 PCM </li>
-                                </ul>                              
-                                <button type="submit" className={styles.search_button}> Search </button>                                    
-                            </div>        
-                        }
-                    </div>
+                    {!budgetDropdown ?
+                        <div className={styles.budget_container}> 
+                            <label htmlFor= "max_price" className={styles.label}> Budget: </label>
+                            <ul 
+                                id="max_price"
+                                onClick = {showBudget}
+                                className={styles.budget_container_closed}
+                                >
+                                    <li data-vale= {maxPrice} className={styles.budget_item_closed}>{maxPriceLabel}</li>
+                            </ul>  
+                            <button type="submit" className={styles.search_button}> Search </button>
+                        </div>
+                    :                        
+                        <div className={styles.budget_container}>
+                            <label htmlFor= "max_price" className={styles.label}> Budget: </label>
+                            <ul id="max_price" onClick = {showBudget} className={styles.budget_container_open}>
+                                <li data-value= {maxPrice} className={styles.budget_item}>{maxPriceLabel}</li>
+                                {maxPriceLabel !== " No Maximum " && 
+                                    <li data-value={10000} onClick={setBudget} className={styles.budget_item}> No Maximum </li>
+                                }
+                                <li data-value = "500" onClick={setBudget} className={styles.budget_item}> £500 PCM </li>
+                                <li data-value = "600" onClick={setBudget} className={styles.budget_item}> £600 PCM </li>
+                                <li data-value = "700" onClick={setBudget} className={styles.budget_item}> £700 PCM </li>
+                                <li data-value = "800" onClick={setBudget} className={styles.budget_item}> £800 PCM </li>
+                                <li data-value = "900" onClick={setBudget} className={styles.budget_item}> £900 PCM </li>
+                                <li data-value = "1000" onClick={setBudget} className={styles.budget_item}> £1,000 PCM </li>
+                                <li data-value = "1100" onClick={setBudget} className={styles.budget_item}> £1,100 PCM </li>
+                                <li data-value = "1200" onClick={setBudget} className={styles.budget_item}> £1,200 PCM </li>
+                                <li data-value = "1300" onClick={setBudget} className={styles.budget_item}> £1,300 PCM </li>
+                                <li data-value = "1400" onClick={setBudget} className={styles.budget_item}> £1,400 PCM </li>
+                                <li data-value = "1500" onClick={setBudget} className={styles.budget_item}> £1,500 PCM </li>
+                                <li data-value = "1600" onClick={setBudget} className={styles.budget_item}> £1,600 PCM </li>
+                                <li data-value = "1700" onClick={setBudget} className={styles.budget_item}> £1,700 PCM </li>
+                                <li data-value = "1800" onClick={setBudget} className={styles.budget_item}> £1,800 PCM </li>
+                                <li data-value = "1900" onClick={setBudget} className={styles.budget_item}> £1,900 PCM </li>
+                                <li data-value = "2000" onClick={setBudget} className={styles.budget_item}> £2,000 PCM </li>
+                            </ul>                              
+                            <button type="submit" className={styles.search_button}> Search </button>                                    
+                        </div>        
+                    }
                 </div>
             </form>
         </div>

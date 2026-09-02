@@ -12,22 +12,28 @@
     margin: 0;
 }
 
+/* Styling code in the order it appears in the JSX return */
+
 .main_container {
+    height: 11%;
     width: 100%;
+}
+
+.nav_container {
+    width: 95%;
+    height: 60%;
 
     display: flex;
     flex-direction: row;
+    column-gap: 10%;    
+
     position: relative;
-    column-gap: 7%;
-    
-    margin-top: 2%;
+    margin: 2% 0 0 2%;
 }
 
 .title_container {
     width: 20%;
-
     display: flex;
-    margin-left: 2%;
 }
 
 .logo_img {
@@ -38,14 +44,13 @@
 }
 
 .link_container {
-    width: 38%;
-
+    width: 40%;
     display: flex;
     justify-content: space-between;
 }
 
 .link_item {
-    padding: 0 3% 0 3%;
+    padding: 0 2% 0 2%;
 }
 
 .link_item:hover {
@@ -56,7 +61,10 @@
 .sign_in_container {
     width: 10%;
 
-    margin-left: 8%;
+    display: flex;
+    justify-content: flex-end;
+
+    margin-left: 10%;
 }
 
 .sign_in_item {
@@ -69,28 +77,50 @@
 }
 
 .dropdown_container_format {
-    width: 20%;
+    width: 22%;
+    height: 100%;
     position: relative;
+    line-height: 33px;
+}
+
+.dropdown_container_closed {    
+    width: 100%;
+    padding: 0;
+    margin: 0;
+}
+
+.dropdown_item_username {
+    border-radius: 10px;
+
+    list-style: none;
+
+    padding: 2% 0 2% 5%;
+    margin: 0;
+}
+
+.dropdown_item_username:hover {
+    box-shadow: 0px 0px 10px rgba(0,0,0,0.5);
+    cursor: pointer;
 }
 
 .dropdown_container_open_user {
     background-color: rgba(236,231,212,0.85);
     box-shadow: 0px 0px 5px rgba(0,0,0,0.5);
-
     border: solid 2px rgba(0,0,0,0.3);
     border-radius: 10px;
     
     width: 100%;
-    padding: 0 5% 1% 5%;    
-    margin: 0;    
-    
-    position: absolute;
-    top: -2%;
 
-    z-index: 2;
+    padding: 0;
+    margin: 0;    
+
+    position: absolute;
+    z-index: 5;
 
     display: flex; 
     flex-direction: column;
+    justify-content: space-between;
+    row-gap: 10px;
 }
 
 .dropdown_item {
@@ -98,47 +128,13 @@
 
     list-style: none;
     
-    padding: 0 2% 0 2%;    
-    margin: 2% 0 1% 0;    
+    padding: 2% 0 2% 5%;    
+    margin: 0 0 1% 0;    
 }
 
 .dropdown_item:hover {
     box-shadow: 0px 0px 10px rgba(0,0,0,0.5);
     cursor:pointer;
-}
-
-.dropdown_container_closed_user {
-    border-radius: 10px;
-    
-    width: 100%;
-
-    padding: 0 5% 1% 5%;    
-    margin: -2% 0 0 0;
-
-    position: absolute; 
-    z-index: 2;
-}
-
-.dropdown_item_username {
-    border-radius: 10px;
-
-    list-style: none;
-    padding: 0 2% 0 2%;
-    margin: 2% 0 0 0;
-}
-
-.dropdown_item_username:hover {
-    box-shadow: 0px 0px 10px rgba(0,0,0,0.5);
-    cursor:pointer;
-}
-
-.link_container_with_sign_in {
-    width: 38%;
-
-    display: flex;
-    justify-content: space-between;
-
-    margin-left: 3%;    
 }
 
 .error_message {
