@@ -1,7 +1,9 @@
 .main_container {
     display: flex;
-    width: 100%;
+    width: 95%;
     height: 100%;
+
+    margin-left: 2%;
 }
 
 .inquiries_photo {
