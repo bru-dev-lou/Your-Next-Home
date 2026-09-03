@@ -18,7 +18,7 @@
     flex-direction: row;
     column-gap: 10px;
 
-    margin-left: 5%;
+    margin: 0 0 0 5%;
 }
 
 .label_font {
@@ -33,34 +33,39 @@
 
 /* Styling code in the order it appears in the JSX */
 
-.main_container {
+.form_container {
+    height: 100%;
     width: 100%;
+    
+    position: relative;
 }
 
 .inquiries_container {
     background-color: #125370;
     border: solid 3px #002461;
-    border-radius: 60px;
-    width: 38%;
+    border-radius: 50px;
     
-    padding: 1%;
-
-    position: relative; 
+    height: 75%;
+    width: 45%;
+     
     display: flex;
     flex-direction: column;
-    row-gap: 18px;
-
+    row-gap: 20px;
+    
+    position: relative;
     z-index: 2;
 
-    margin: calc(5% + 5px) 0 0 10%;
+    padding: 1%;
+    margin: 5% 0 0 3%;    
 }
 
 .main_title {
+    color: #F2EFE2;
     font-family: "Source Sans 3", sans-serif;
     font-size: 26px;
-    color: #F2EFE2;
     font-weight: 390;
     text-shadow: 1px 1px 2px rgba(0,0,0,0.8);    
+    
     margin: 1% 0 0 37%;
 }
 
@@ -71,14 +76,13 @@
     width: 65%;
 
     position: relative;
-
     margin-left: 3%;
 }
 
 .span_font {
+    color: #F2EFE2;
     font-family: "Source Sans 3", sans-serif;
     font-size: 15px;
-    color: #F2EFE2;
     font-weight: 390;
     text-shadow: 1px 1px 2px rgba(0,0,0,0.8);    
 }
@@ -89,6 +93,7 @@
 
 .textarea_format {
     background-color: #F5F2EB;
+    border: 1px solid black;
     border-radius: 5px;
 
     height: 75px;
@@ -99,19 +104,21 @@
     max-width: 65%;
     min-width: 65%;
 
-    margin-left: calc(3% + 1px);
+    margin-left: 3%;
 }
 
 .word_count_250 {
-    margin: 11% 0 0 0;
+    margin: 10% 0 0 0;
 }
 
 .update_container {    
-    width: 63%;
-    height: 65px;
-    margin-left: 26%;
+    width: 62%;
+    height: 16%;
+
     display: flex;
     justify-content: center;
+
+    margin-left: 26%;
 }
 
 .button_format {
@@ -125,10 +132,10 @@
     border: 2px solid #747474;
     border-radius: 7px;  
 
-    height: 35px;
-    width: 45%;   
+    height: 55%;
+    width: 50%;   
     
-    margin: 2% 0 0 55%;
+    margin: 2% 0 0 0;
 }
 
 .result_message {
@@ -139,7 +146,7 @@
     text-shadow: 1px 1px 2px rgba(0,0,0,0.8);    
     
     text-align: center;
-    margin: 1% 0 0 0;
+    margin: 0;
 }
 
 .server_error_message {
@@ -149,6 +156,5 @@
     font-weight: 550;
     text-shadow: 1px 1px 2px rgb(0, 0, 0);  
 
-
-    margin: 3% 0 0 0;
+    margin: 2% 0 0 0;
 }

@@ -18,6 +18,8 @@
 
     display: flex;
     margin: 0 0 0 3%;
+
+    position: relative;
 }
 
 .search_box_container {
@@ -25,24 +27,24 @@
     border: solid 2px #002461;
     border-radius: 40px;
 
-    width: 38%;
-    height: 35%;
-
-    margin: 14% -5% 0 8%;
+    width: 40%;
+    height: 36%;
 
     position: relative; 
+    margin: 14% 0 0 9%;
     z-index: 2;
 }
 
 .home_page_photo {
-    box-shadow: 0px 0px 20px rgba(0,0,0,0.6);
+    box-shadow: 0px 0px 20px rgba(0,0,0,0.9);
     border-radius: 50px;
         
-    width: 73%;
+    width: 70%;
     height: 90%;
     
-    position: relative;
-    z-index: 1;
+    position: absolute;
+    top: 5%; 
+    left: 30%;
 
-    margin: 2% 0 0 -14%;
+    z-index: 1;
 }
