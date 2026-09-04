@@ -31,6 +31,13 @@
 
 /* Styling in the order it appears in the JSX */
 
+.main_container {
+    width: 94%;
+    height: 100%;
+
+    margin-left: 3%;
+}
+
 .intro_main_container {
     display: flex;
 

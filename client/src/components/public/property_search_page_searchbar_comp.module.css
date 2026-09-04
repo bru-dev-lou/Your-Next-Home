@@ -29,35 +29,33 @@
     display: flex;
     flex-direction: column;
 
-    width: 92%;
-    height: 145px;
+    width: 100%;
+    height: 156px;
     
-    margin: 2% 0 0 2%;
+    margin-top: 2%;
 }
 
 .first_row_container {
-    width: 100%;
-    height: 35px;
+    width: 96%;
+    height: 25%;
 
     display: flex;
-    justify-content: flex-start;
     
-    margin: 2% 0 0 0;
+    margin: 2% 0 0 2%;
 
     position: relative;
 }
 
 .location_container {
-    width: 33%; 
+    width: 32%; 
 
     display: flex;
     position: relative;
-
-    margin-left: 3%;
 }
 
 .location_label {
-    width: 35%;
+    height: 100%;
+    width: 24%;
 }   
 
 .location_input {
@@ -68,9 +66,11 @@
     border: solid 2px #002461;
     border-radius: 7px;
 
-    width: 64%;
+    height: 100%;
+    width: 68%;
     
     padding-left: 2%;
+    margin-left: 8%;
 }
 
 .autocomplete_container {    
@@ -78,16 +78,15 @@
     border: 2px solid #125370;
     border-radius: 7px;
 
-    width: calc(65% + 2px);
+    width: 68%;
 
     display: flex;
     flex-direction: column;
 
     position: absolute;
     z-index: 3;
-
-    top: 54%;
-    left: 34%;
+    top: 60%;
+    left: 32%;
     
     padding: 0;
 }
@@ -106,25 +105,24 @@
 }
 
 .ac_error_message {
+    color: #C00000;
     font-family: "Source Sans 3", sans-serif;
     font-size: 16px;
     font-weight: 390;
-
-    color: #C00000;
 
     text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
 }
 
 .property_type_container {
-    width: 30%;
+    width: 32%;
 
     display: flex;
-
-    margin-left: 3%;
+    margin-left: 5%;
 }
 
 .property_type_label {
-    width: 45%;
+    height: 100%;
+    width: 38%;
 }
 
 .property_type_container_closed {
@@ -135,11 +133,13 @@
     border: solid 2px #002461;
     border-radius: 7px;
 
-    width: 55%;
+    height: 100%;
+    width: 56%;
 
-    margin: 0;
-    padding: 0;
     position: relative;
+
+    margin: 0 0 0 6%;
+    padding: 0;
 }
 
 .property_type_container_closed::after {
@@ -151,7 +151,7 @@
     top: 0;
     left: 88%;    
 
-    line-height: 35px;
+    line-height: 36px;
 }
 
 .property_type_container_closed:hover{
@@ -166,7 +166,8 @@
     font-size: 16px;
 
     list-style: none;
-    line-height: 35px;
+    line-height: 36px;
+
     padding: 0 0 0 4%;
 }
 
@@ -187,27 +188,28 @@
 
     display: flex;
     flex-direction: column;
-
     row-gap: 2%;
-    height: 105px;
-    width: 55%;
-    overflow-y: scroll;
 
+    width: 56%;
+    height: 105px;
+    overflow-y: scroll;
+    
+    position: relative;
     z-index: 3;
 
-    margin: 0;
+    margin: 0 0 0 6%;
     padding: 0;
 }
 
 .budget_container {
-    width: 23%;
+    width: 25%;
 
     display: flex;
-    margin-left: 5%;    
+    margin-left: 6%;    
 }
 
 .budget_label {
-    width: 35%;
+    width: 25%;
 }
 
 .budget_container_closed{
@@ -218,10 +220,11 @@
     border: solid 2px #002461;
     border-radius: 7px;
 
-    width: 60%;
+    width: 64%;
     
-    margin: 0;
+    margin: 0 0 0 11%;
     padding: 0;
+
     position: relative;
 }
 
@@ -229,12 +232,11 @@
     font-family: "Source Sans 3", sans-serif;
     font-size: 16px;    
     content: "⏷";
+    line-height: 36px;
 
     position: absolute;
     top: 0;
     left: 85%;
-
-    line-height: 35px;
 }
 
 .budget_container_closed:hover{
@@ -250,34 +252,32 @@
     border: solid 2px #002461;
     border-radius: 7px;
 
-    width: 60%;
+    width: 64%;
     height: 105px;
     overflow-y: scroll;
 
     padding: 0;
-    margin: 0;
+    margin: 0 0 0 11%;
 
+    position: relative;
     z-index: 3;
 }
 
 .second_row_container {
-    width: 100%;
-    height: 35px;
+    width: 96%;
+    height: 25%;
 
-    display: flex;
-    
-    margin: calc(1% + 10px) 0 0 0;
+    display: flex;   
+    justify-content: space-between; 
+    margin: 2% 0 0 2%;
 
     position: relative;
 }
 
 .bedrooms_container {
-    width: 25%; 
+    width: 24%; 
 
     display: flex;
-    position: relative;
-
-    margin-left: 3%;
 }
 
 .bedrooms_label {
@@ -292,9 +292,9 @@
     border: solid 2px #002461;
     border-radius: 7px;
 
-    width: 50%;
+    width: 58%;
 
-    margin: 0 0 0 11%;
+    margin: 0 0 0 9%;
     padding: 0;
 
     position: relative;
@@ -304,12 +304,11 @@
     font-family: "Source Sans 3", sans-serif;
     font-size: 16px;    
     content: "⏷";
+    line-height: 35px;
 
     position: absolute;
-    top: 0px;
+    top: 0;
     left: 88%;
-
-    line-height: 35px;
 }
 
 .bedrooms_container_closed:hover {
@@ -325,26 +324,25 @@
     border: solid 2px #002461;
     border-radius: 7px;
 
-    width: 45%;
+    width: 58%;
     height: 105px;
     overflow-y: scroll;
 
-    margin: 0 0 0 11%;
+    margin: 0 0 0 9%;
     padding: 0;
     
+    position: relative; 
     z-index: 3;
 }
 
 .bathrooms_container {
-    width: 22%;
+    width: 24%;
 
-    display: flex; 
-    
-    margin: 0 0 0 3%; 
+    display: flex;  
 }
 
 .bathroom_label {
-    width: 45%;
+    width: 40%;
 }
 
 .bathrooms_container_closed {
@@ -355,10 +353,11 @@
     border: solid 2px #002461;
     border-radius: 7px;
 
-    width: 55%;
+    width: 58%;
 
+    margin: 0 0 0 9%;
     padding: 0;
-    margin: 0 0 0 8%;
+
     position: relative;
 }
 
@@ -371,9 +370,10 @@
     font-family: "Source Sans 3", sans-serif;    
     font-size: 16px;    
     content: "⏷";
-
+    line-height: 35px;
+    
     position: absolute;
-    top: 8%;
+    top: 0;
     left: 85%;
 }
 
@@ -385,20 +385,21 @@
     border: solid 2px #002461;
     border-radius: 7px;
 
-    width: 55%;
+    width: 58%;
     height: 105px;
     overflow-y: scroll;
     
     padding: 0;
-    margin: 0 0 0 8%;
+    margin: 0 0 0 9%;
 
+    position: relative;
     z-index: 3;
 }
 
 .furniture_container {
+    width: 23%;
+
     display: flex;
-    margin: 0 0 0 3%;
-    width: 25%;
 }
 
 .furniture_label {
@@ -413,10 +414,10 @@
     border: solid 2px #002461;
     border-radius: 7px;
 
-    width: 45%;
+    width: 56%;
     
     padding: 0;
-    margin: 0 0 0 8%;
+    margin: 0 0 0 9%;
     position: relative;
 }
 
@@ -429,9 +430,10 @@
     font-family: "Source Sans 3", sans-serif;        
     font-size: 16px;    
     content: "⏷";
-    
+    line-height: 35px;
+
     position: absolute;
-    top: 8%;
+    top: 0;
     left: 85%;
 }
 
@@ -443,21 +445,21 @@
     border: solid 2px #002461;
     border-radius: 7px;
 
-    width: 45%;
+    width: 56%;
     height: 105px;
     overflow-y: scroll;
     
     padding: 0;
-    margin: 0 0 0 8%;
+    margin: 0 0 0 9%;
     
     position: relative;
     z-index: 3;
 }
 
 .search_button {
+    color: #125370;    
     font-family: "Source Sans 3", sans-serif;
     font-size: 20px;
-    color: #125370;
     font-weight: 450;
     text-shadow: 1px 1px 2px rgba(0,0,0,0.5);  
 
@@ -465,6 +467,5 @@
     border: 2px solid #747474;
     border-radius: 7px;  
 
-    width: 10%;
-    margin: 0 0 0 5%;    
+    width: 11%;
 }

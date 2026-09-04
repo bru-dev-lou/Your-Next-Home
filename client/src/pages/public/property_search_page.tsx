@@ -205,7 +205,7 @@ function PropertySearchPage () {
 
 
   return (
-    <div>
+    <div className={styles.main_container}>
       <PropertySearchPageSearchBar sortBy={sortByValue} />
       <div className={styles.intro_main_container}>
         <div className={styles.intro_title_container}>
