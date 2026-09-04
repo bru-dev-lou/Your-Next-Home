@@ -4,7 +4,7 @@ import { useSearchParams, useNavigate } from "react-router-dom";
 import PropertySearchPageSearchBar from "../../components/public/property_search_page_searchbar_comp";
 
 import styles from "../public/property_search_page.module.css";
-
+import serverErrorPhoto from "../../assets/server_error_photo.png";
 import { IoIosHeartEmpty, IoIosHeart } from "react-icons/io";
 import { BsHouse } from "react-icons/bs";
 import { IoBedSharp } from "react-icons/io5";
@@ -207,59 +207,65 @@ function PropertySearchPage () {
   return (
     <div className={styles.main_container}>
       <PropertySearchPageSearchBar sortBy={sortByValue} />
-      <div className={styles.intro_main_container}>
-        <div className={styles.intro_title_container}>
-          {introMessage && <h2 className={styles.main_container_font}>{introMessage}</h2>}
-          {errorMessagePR &&<h2 role="alert" className={styles.pr_error_format}>{errorMessagePR}</h2>}       
+      {introMessage ?
+        <div className={styles.intro_main_container}>
+          <div className={styles.intro_title_container}>          
+            <h2 className={styles.main_container_font}>{introMessage}</h2>
+          </div>
+          <div className={styles.order_by_container}>
+            <h2 className={styles.main_container_font}>Order by:</h2>
+            {!orderDropdown ? 
+              <ul 
+                onClick={ () => {setOrderDropdown(!orderDropdown)}}
+                aria-label="Sort by"
+                aria-describedby="sort_by_hint"
+                className={styles.order_by_container_closed}
+              >
+                <li 
+                  data-value={sortByValue}
+                  className={styles.order_by_item_custom}
+                >
+                  {orderByLabel}
+                </li>
+              </ul>
+            :          
+              <ul 
+                aria-label="Sort by"
+                aria-describedby="sort_by_hint"
+                className={styles.order_by_container_open}
+              >
+                <li 
+                  data-value ="date"
+                  onClick={ (e) => {orderResults(e.currentTarget.dataset.value!, e.currentTarget.textContent)}}
+                  className={styles.order_by_item}
+                >
+                  Date
+                </li>
+                <li 
+                  data-value ="highestprice" 
+                  onClick={ (e) => {orderResults(e.currentTarget.dataset.value!, e.currentTarget.textContent)}}
+                  className={styles.order_by_item}
+                >
+                  Highest Price
+                </li>
+                <li 
+                  data-value ="lowestprice" 
+                  onClick={ (e) => {orderResults(e.currentTarget.dataset.value!, e.currentTarget.textContent)}}
+                  className={styles.order_by_item}
+                >
+                  Lowest Price
+                </li>
+              </ul>
+            }
+            <span id="sort_by_hint" className={styles.sr_content}>Choose in what order your properties are shown. Most recently listed is the default setting.</span>
+          </div>
         </div>
-        <div className={styles.order_by_container}>
-          <h2 className={styles.main_container_font}>Order by:</h2>
-          {!orderDropdown ? 
-            <ul 
-              onClick={ () => {setOrderDropdown(!orderDropdown)}}
-              aria-label="Sort by"
-              aria-describedby="sort_by_hint"
-              className={styles.order_by_container_closed}
-            >
-              <li 
-                data-value={sortByValue}
-                className={styles.order_by_item_custom}
-              >
-                {orderByLabel}
-              </li>
-            </ul>
-          :          
-            <ul 
-              aria-label="Sort by"
-              aria-describedby="sort_by_hint"
-              className={styles.order_by_container_open}
-            >
-              <li 
-                data-value ="date"
-                onClick={ (e) => {orderResults(e.currentTarget.dataset.value!, e.currentTarget.textContent)}}
-                className={styles.order_by_item}
-              >
-                Date
-              </li>
-              <li 
-                data-value ="highestprice" 
-                onClick={ (e) => {orderResults(e.currentTarget.dataset.value!, e.currentTarget.textContent)}}
-                className={styles.order_by_item}
-              >
-                Highest Price
-              </li>
-              <li 
-                data-value ="lowestprice" 
-                onClick={ (e) => {orderResults(e.currentTarget.dataset.value!, e.currentTarget.textContent)}}
-                className={styles.order_by_item}
-              >
-                Lowest Price
-              </li>
-            </ul>
-          }
-          <span id="sort_by_hint" className={styles.sr_content}>Choose in what order your properties are shown. Most recently listed is the default setting.</span>
+      :
+        <div className={styles.error_main_container}>
+          <h2 role="alert" className={styles.pr_error_format}>{errorMessagePR}</h2>
+          <img src={serverErrorPhoto} className={styles.server_error_photo}/>       
         </div>
-      </div>
+      }  
       <div className={styles.property_main_container}>
         {propertyResults.map(property => (
           <div className={styles.property_card_container} key={property.id}>

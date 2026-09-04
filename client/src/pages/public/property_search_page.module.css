@@ -39,17 +39,16 @@
 }
 
 .intro_main_container {
-    display: flex;
-
-    width: 92%;
+    width: 100%;
     height: 35px;
-
-    margin: 2% 0 0 2%;
+    
+    display: flex;
+    margin: 2% 0 0 0;
 }
 
 .intro_title_container {
     display: flex;
-    width: 81%;
+    width: 80%;
 }
 
 .main_container_font {
@@ -61,17 +60,9 @@
     margin: 0;
 }
 
-.pr_error_format {
-    font-family: "Source Sans 3", sans-serif;
-    font-size: 26px;
-    color: #C00000;
-    font-weight: 390;
-    text-shadow: 1px 1px 2px rgba(0,0,0,0.8);   
-}
-
 .order_by_container {
+    width: 20%;
     display: flex;
-    width: 19%;
 }
 
 .order_by_container_closed {
@@ -84,6 +75,7 @@
     
     width: 53%;
 
+    position: relative;
     margin: 0 0 0 8%;
     padding: 0;
 
@@ -94,10 +86,10 @@
     font-family: "Source Sans 3", sans-serif;
     font-size: 16px;
     content: "⏷";
-
+    line-height: 35px;
     position: absolute;
     
-    top: 8%;
+    top: 0;
     left: 80%;    
 }
 
@@ -125,22 +117,12 @@
 
     display: flex; 
     flex-direction: column;
+
     position: relative;
-    
+    z-index: 3;
+
     padding: 0;
     margin: 0 0 0 8%;
-
-    z-index: 3;
-}
-
-.order_by_container_open::after {
-    font-family: "Source Sans 3", sans-serif;
-    font-size: 16px;
-    content: "⏷";
-
-    position: absolute;
-    top: 3%;
-    left: 80%;    
 }
 
 .order_by_item{
@@ -155,23 +137,51 @@
     cursor: pointer;
 }
 
+.error_main_container {
+    width: 100%;
+    height: 100%;
+
+    display: flex;
+    flex-direction: column;
+
+    margin-top: 2%;
+}
+
+.pr_error_format {
+    font-family: "Source Sans 3", sans-serif;
+    font-size: 26px;
+    color: #C00000;
+    font-weight: 390;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.8);   
+    margin: 1% 0 0 0;
+    
+    width: 100%;
+    text-align: center;
+}
+
+.server_error_photo{
+    width: 25%;
+    height: 40%;
+    margin: 3% 0 0 37%;
+}
+
 .property_main_container {
     display: flex;
     flex-direction: column;
-    row-gap: 70px;
+    row-gap: 60px;
     
-    width: 92%;
-    margin: 2% 0 0 2%;
+    width: 100%;
+    margin: 2% 0 0 0;
 }
 
 .property_card_container {
     background-color: #125370;
     border: solid 2px #002461; 
-    border-radius: 40px;    
+    border-radius: 25px;    
 }
 
-.property_card_first_row {
-    width: 95%;
+.property_card_first_row {    
+    width: 96%;
     
     display: flex;
     margin: 1% 0 1% 2%;
@@ -193,7 +203,7 @@
 
 .property_card_second_row {
     height: 200px;
-    width: 95%;
+    width: 96%;
 
     display: grid;
     grid-template-columns: 35% 65%;
@@ -201,15 +211,15 @@
     grid-template-areas: "image property_summary_title"
                          "image property_summary_content"
     ;
-    
-    margin: 0 0 0 2%;
+
     position: relative;
+    margin: 0 0 0 2%;
 }
 
 .fp_error_format {
+    color: #F2EFE2;
     font-family: "Source Sans 3", sans-serif;
     font-size: 21px;
-    color: #F2EFE2;
     font-weight: 390;
     text-shadow: 1px 1px 2px rgba(0,0,0,0.8);   
 
@@ -221,7 +231,7 @@
     width: 15%;
     
     text-align: center;
-    line-height: 50px;
+    line-height: 49px;
 
     position: absolute; 
     top: 22%;
@@ -231,16 +241,15 @@
 .image_format {
     grid-area: image;
 
+    border: solid 2px #002461;
+    border-radius: 40px; 
+    box-shadow: 0px 5px 2px rgba(0,0,0,0.2);
+
     height: 100%;
     width: 100%;
 
     object-position: center;
     object-fit: cover;
-
-    box-shadow: 0px 5px 2px rgba(0,0,0,0.2);
-    
-    border: solid 2px #002461;
-    border-radius: 40px; 
 
     cursor: pointer;
 }
@@ -258,13 +267,13 @@
 
 .summary_title_format {
     grid-area: property_summary_title;
-
+    
+    color: #F2EFE2;
     font-family: "Source Sans 3", sans-serif;
     font-size: 24px;
-    color: #F2EFE2;
     font-weight: 390;
-
     text-shadow: 1px 1px 2px rgba(0,0,0,0.8);    
+    
     margin: 0 0 0 4%;
 }
 
@@ -279,12 +288,12 @@
 }
 
 .property_card_third_row {
+    width: 96%;    
+    height: 42px;
+    
     display: flex;
 
     margin: 1% 0 0 2%;
-
-    width: 95%;    
-    height: 45px;
 }
 
 .date_listed_position {
@@ -292,25 +301,29 @@
 }
 
 .quick_data_container {
+    width: 65%;
+
     display: flex;
     justify-content: space-between;
-    width: 65%;
     margin-left: 4%;
 }
 
 .property_type_container {
-    display: flex;
     width: 30%;
+    
+    display: flex;
 }
 
 .bedrooms_container {
-    display: flex;
     width: 20%;
+
+    display: flex;    
 }
 
 .bathrooms_container {
-    display: flex;
     width: 20%;
+
+    display: flex;
 }
 
 .quick_data_position {
@@ -320,6 +333,7 @@
 .react_icon {
     color: #ECE7D4;
     font-size: 18px;
+
     margin-top: 30%;
 }
 
