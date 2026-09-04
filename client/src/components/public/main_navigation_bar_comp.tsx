@@ -94,7 +94,7 @@ function MainNavigationBar (){
                                 aria-label="Dashboard navigation."
                                 className={styles.dropdown_container_closed}
                             >
-                                <li className={`${styles.dropdown_item_username} ${styles.font_format}`}> {user.name} </li>
+                                <li className={`${styles.dropdown_item_username} ${styles.closed_position} ${styles.font_format}`}> {user.name} </li>
                             </ul>
                         </div>
                     :                            
@@ -103,7 +103,7 @@ function MainNavigationBar (){
                                 aria-label="Dashboard navigation."
                                 className={styles.dropdown_container_open_user}
                             >   
-                                <li onClick = {dashDropdown} className={`${styles.dropdown_item_username} ${styles.font_format}`}> {user.name} </li>
+                                <li onClick = {dashDropdown} className={`${styles.dropdown_item_username} ${styles.open_position} ${styles.font_format}`}> {user.name} </li>
                                 <li 
                                     onClick = {(e) => userNavigation(e.currentTarget.dataset.value!)} 
                                     data-value="My Properties"
