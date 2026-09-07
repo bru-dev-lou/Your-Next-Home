@@ -207,7 +207,7 @@ function PropertySearchPage () {
   return (
     <div className={styles.main_container}>
       <PropertySearchPageSearchBar sortBy={sortByValue} />
-      {introMessage ?
+      {introMessage &&
         <div className={styles.intro_main_container}>
           <div className={styles.intro_title_container}>          
             <h2 className={styles.main_container_font}>{introMessage}</h2>
@@ -260,7 +260,8 @@ function PropertySearchPage () {
             <span id="sort_by_hint" className={styles.sr_content}>Choose in what order your properties are shown. Most recently listed is the default setting.</span>
           </div>
         </div>
-      :
+      }
+      {errorMessagePR && 
         <div className={styles.error_main_container}>
           <h2 role="alert" className={styles.pr_error_format}>{errorMessagePR}</h2>
           <img src={serverErrorPhoto} className={styles.server_error_photo}/>       

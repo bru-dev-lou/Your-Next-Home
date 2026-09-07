@@ -12,45 +12,45 @@
 /* Generic font styling code */
 
 .h2_font {
+    color: #F2EFE2;
     font-family: "Source Sans 3", sans-serif;
     font-size: 26px;
-    color: #F2EFE2;
     font-weight: 390;
     text-shadow: 1px 1px 2px rgba(0,0,0,0.8);    
     margin: 0px;
 }
 
 .h2_font_custom {
+    color: #156082;
     font-family: "Source Sans 3", sans-serif;
     font-size: 28px;
-    color: #156082;
     font-weight: 390;
     text-shadow: 1px 1px 2px rgba(0,0,0,0.8);    
     margin: 0px;
 }
 
 .h3_font {
+    color: #F2EFE2;    
     font-family: "Source Sans 3", sans-serif;
     font-size: 24px;
-    color: #F2EFE2;
     font-weight: 390;
     text-shadow: 1px 1px 2px rgba(0,0,0,0.8);    
     margin: 0px;
 }
 
 .h4_font {
+    color: #F2EFE2;
     font-family: "Source Sans 3", sans-serif;
     font-size: 21px;
-    color: #F2EFE2;
     font-weight: 390;
     text-shadow: 1px 1px 2px rgba(0,0,0,0.8);    
     margin: 0px;
 }
 
 .h5_font {
+    color: #F2EFE2;    
     font-family: "Source Sans 3", sans-serif;
     font-size: 18px;
-    color: #F2EFE2;
     font-weight: 390;
     text-shadow: 1px 1px 2px rgba(0,0,0,0.8);    
     margin: 0px;
@@ -58,10 +58,15 @@
 
 /* Styling code in the order it appears on the JSX */
 
-.main_container {
-    margin: 1% 0 0 2%;
+.main_container_for_errors {
+    width: 94%;
+    height: 97%;
 
-    width: 92%;
+    margin: 1% 0 0 3%;
+}
+
+.error_container {
+    width: 100%;
     height: 100%;
 }
 
@@ -70,49 +75,59 @@
     border: solid 2px #042433;
     border-radius: 5px;
 
-    height: 40px;
+    height: 50px;
     width: 100%;
+
+    display: flex; 
+    justify-content: center;
 }
 
 .main_title {
+    color: #F2EFE2;
     font-family: "Source Sans 3", sans-serif;
     font-size: 26px;
-    color: #F2EFE2;
     font-weight: 390;
     text-shadow: 1px 1px 2px rgba(0,0,0,0.8);    
 
-    margin: 0 0 0 44%;
-    line-height: 40px;
+    margin: 0 3% 0 0;
+    line-height: 50px;
 }
 
 .error_image {
     width: 30%;
-    height: 30%;
+    height: 46%;
 
-    margin: 4% 0 0 35%; 
+    margin: 6% 0 0 34%; 
 }
 
 .error_message {
+    color: #C00000;
     font-family: "Source Sans 3", sans-serif;
     font-size: 30px;
-    color: #C00000;
     font-weight: 390;
     text-shadow: 1px 1px 2px rgba(0,0,0,0.8);    
     text-align: center;
     
-    margin-top: 5%;
+    margin: 3% 1% 0 0;
 }
 
 .loading_message {
+    color: #F2EFE2;
     font-family: "Source Sans 3", sans-serif;
     font-size: 30px;
-    color: #F2EFE2;
     font-weight: 390;
     text-shadow: 1px 1px 2px rgba(0,0,0,0.8);    
 
-    margin: 0 0 0 45%;
+    margin: 0 2% 0 0;
     
     line-height: 50px;
+}
+
+.main_container {
+    height: 100%; 
+    width: 94%;
+    
+    margin: 1% 0 0 3%;
 }
 
 .first_row {
@@ -123,23 +138,23 @@
 }
 
 .delete_property_message {
+    color: #3B7D23;
     font-family: "Source Sans 3", sans-serif;
     font-size: 26px;
-    color: #3B7D23;
     font-weight: 390;
     text-shadow: 1px 1px 2px rgba(0,0,0,0.8);    
-    
+
     width: 75%;
     margin: 0;
 }
 
 .delete_property_error {
+    color: #C00000;    
     font-family: "Source Sans 3", sans-serif;
     font-size: 26px;
-    color: #C00000;
     font-weight: 390;
     text-shadow: 1px 1px 2px rgba(0,0,0,0.8);    
-    
+
     width: 75%;
     margin: 0;
 }
@@ -153,17 +168,18 @@
 }
 
 .no_property_message {
+    color: #C00000;
     font-family: "Source Sans 3", sans-serif;
     font-size: 32px;
-    color: #C00000;
     font-weight: 390;
     text-shadow: 1px 1px 2px rgba(0,0,0,0.8);    
-    text-align: center;    
     
-    width: 92%;
+    width: 94%;
+
+    text-align: center;    
 
     position: absolute; 
-    margin-top: 12%;
+    top:55%;
 }
 
 .add_property_button {
@@ -181,23 +197,23 @@
 
 .property_main_container {
     width: 100%;
-    height: 20%;
+    height: 46%;
 
     display: flex;
     flex-direction: column;
-    row-gap: 50px;
+    row-gap: 15%;
     
     margin-top: 2%;
     padding: 0;
 }
 
 .li_format {
-    display: flex;
-
-    list-style: none;
     width: 100%;
     height: 100%;
+    
+    list-style: none;
 
+    display: flex;
     position: relative;
 }
 
@@ -207,24 +223,23 @@
     border-radius: 25px;
 
     width: 87%;
+    height: 100%;
 
     position: relative;
     z-index: 3;
-
-    flex-shrink: 0;
 }
 
-/* ↓↓↓ Applies to all three rows inside the property card container ↓↓↓ */
-
-.property_row {
+.property_standard_row {
     width: 95%;
+    height: 10%;
     
     display: flex; 
-    margin: 1% 0 1% 2%;
+    margin: 1% 0 0% 2%;
 }
 
 .address_container {
     width: 85%;
+    height: 100%;
 
     display: flex;
     justify-content: flex-start;
@@ -232,9 +247,18 @@
 
 .budget_container {
     width: 15%;
+    height: 100%;
 
     display: flex;
     justify-content:flex-end
+}
+
+.property_image_row {
+    width: 95%;
+    height: 66%;
+
+    display: flex; 
+    margin: 1% 0 1% 2%;
 }
 
 .main_photo {
@@ -242,7 +266,7 @@
     border: solid 2px #002461;
     
     width: 40%;
-    height: 200px;
+    height: 100%;
     
     object-fit: cover;
     cursor: pointer;    
@@ -267,11 +291,13 @@
 
 .date_listed_container {
     width: 40%;
+    height: 100%;
 }
 
 .basic_info_main_container {
     width: 55%;
-    
+    height: 100%;
+
     display: flex;
     justify-content: space-between;
     margin: 0 0 0 5%;
@@ -327,6 +353,7 @@
     border-radius: 30px;
     
     height: 50%;
+    width: 100%;
     cursor: pointer;
 }
 
@@ -350,10 +377,10 @@
     justify-content: center;
     
     position: absolute;
-    z-index: 2;
-
     top: 50%;
     left: 83%;
+
+    z-index: 2;
 }
 
 .delete_property_container_hidden {
@@ -363,6 +390,7 @@
 
 .confirm_delete_message {
     width: 78%;
+
     text-align: center;
     white-space: nowrap; 
     margin: 0 0 0 22%;  
@@ -378,13 +406,13 @@
 }
 
 .delete_button {
+    color: #156082;    
+    font-size: 24px;
+    line-height: 35px;
+
     background-color: #F5F2EB;
     border: none; 
     border-radius: 5px;
-
-    font-size: 24px;
-    color: #156082;
-    line-height: 35px;
 
     width: 35%;
     height: 90%;
