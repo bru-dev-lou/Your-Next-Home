@@ -14,6 +14,8 @@ import { BiCabinet } from "react-icons/bi";
 import { IoMdResize } from "react-icons/io";
 
 
+
+
 type PropertyDetails = {
     id: number;
     type: string;
@@ -149,6 +151,9 @@ function DetailedPropertyPage () {
             if (!res.ok) {
                 const result = await res.json(); 
                 setErrorMessageFavorites(result.error)
+                setTimeout(() => {
+                    setErrorMessageFavorites("");
+                }, 3000)                
             }  
 
             else {
@@ -178,8 +183,8 @@ function DetailedPropertyPage () {
     if (errorMessageFP) {
         return (
             <div className={styles.error_FP_container}>
-                <h3 role="alert" className={styles.error_FP_message}>{errorMessageFP}</h3>
                 <img src={errorPhoto} className={styles.error_FP_img} />
+                <h3 role="alert" className={styles.error_FP_message}>{errorMessageFP}</h3>
             </div>
         )
     }
@@ -196,22 +201,27 @@ function DetailedPropertyPage () {
                 <div className={styles.address_container}>
                     <span className={styles.sr_content}>Address</span>
                     <h3 
-                        className={`${styles.h3_font} ${styles.address_position}`}
+                        className={styles.h3_font}
                     >
                         {property.city}
                     </h3>
                 </div>
-                <span className={styles.sr_content}>Monthly rental rate</span>
-                <h3 
-                    className={`${styles.h3_font} ${styles.price_position}`}
-                >
-                    £{property.price.toLocaleString()} pcm
-                </h3>
-                <h3 
-                    className={`${styles.h3_font} ${styles.date_position}`}
-                >
-                    {new Date(property.date_listed).toLocaleDateString("en-GB").replace(/\//g, ".")}
-                </h3>
+                <div className={styles.monthly_rate_container}>
+                    <span className={styles.sr_content}>Monthly rental rate</span>
+                    <h3 
+                        className={styles.h3_font}
+                    >
+                        £{property.price.toLocaleString()} pcm
+                    </h3>
+                </div>
+                <div className={styles.date_listed_container}>
+                    <span className={styles.sr_content}>Date Property Listed</span>
+                    <h3 
+                        className={`${styles.h3_font} ${styles.date_position}`}
+                    >
+                        {new Date(property.date_listed).toLocaleDateString("en-GB").replace(/\//g, ".")}
+                    </h3>
+                </div>
             </div>
             <div role="group" aria-label="Property photos" className={styles.second_row}>
                 <div className={styles.main_photo_container}>
@@ -220,29 +230,29 @@ function DetailedPropertyPage () {
                         src={property.photos[photoIndex].photo_path}
                         alt={`Main photo of property number ${property.id}`}
                         className={styles.main_photo}
-                    />                                    
-                </div>
-                {propFavorite.has(property.id) ?
-                    <button 
-                        onClick={ () => removeFromFavorites(property.id)}
-                        aria-label="remove"
-                        aria-describedby="remove_fav_button"
-                        className={styles.fav_button}
-                    > 
-                        <IoIosHeart color="#a01313" size={40}/> 
-                    </button>
-                    :
-                    <button 
-                        onClick={ () => addToFavorites(property.id)}
-                        aria-label="add"
-                        aria-describedby="add_fav_button"
-                        className={styles.fav_button}
-                    >
-                        <IoIosHeartEmpty color="#f60101" size={40} /> 
-                    </button>
-                }                     
-                <span id="remove_fav_button" className={styles.sr_content}>If aria-label shows 'remove', it means the property is currently in your favorite properties' list. Clicking the button will remove it from this list.</span>
-                <span id="add_fav_button" className={styles.sr_content}>If aria-label shows 'add', it means the property is not in your favorite properties' list. Clicking the button will add it to this list.</span> 
+                    />
+                    {propFavorite.has(property.id) ?
+                        <button 
+                            onClick={ () => removeFromFavorites(property.id)}
+                            aria-label="remove"
+                            aria-describedby="remove_fav_button"
+                            className={styles.fav_button}
+                        > 
+                            <IoIosHeart color="#a01313" size={40}/> 
+                        </button>
+                        :
+                        <button 
+                            onClick={ () => addToFavorites(property.id)}
+                            aria-label="add"
+                            aria-describedby="add_fav_button"
+                            className={styles.fav_button}
+                        >
+                            <IoIosHeartEmpty color="#f60101" size={40} /> 
+                        </button>
+                    }                                                              
+                    <span id="remove_fav_button" className={styles.sr_content}>If aria-label shows 'remove', it means the property is currently in your favorite properties' list. Clicking the button will remove it from this list.</span>
+                    <span id="add_fav_button" className={styles.sr_content}>If aria-label shows 'add', it means the property is not in your favorite properties' list. Clicking the button will add it to this list.</span> 
+                </div>               
                 <div className={styles.extra_photo_container}>
                     <button 
                         disabled= {galleryIndex === 0}
@@ -325,35 +335,36 @@ function DetailedPropertyPage () {
             </div>
             <div className={styles.third_row}>
                 <div className={styles.property_summary_container}>
-                    <div className={styles.property_summary_item}>
+                    <div className={styles.property_summary_item_property_type}>
                         <span className={styles.sr_content}> Property type:</span>
                         <span> <BsHouse className={styles.react_icon} /> </span>
-                        <h4 className={styles.h4_font}>{property.type}</h4>
+                        <h4 className={`${styles.h4_font} ${styles.property_summary_position}`}>{property.type}</h4>
                     </div>    
-                    <div className={styles.property_summary_item}>            
+                    <div className={styles.property_summary_item_bedrooms_and_bathrooms}>            
                         <span className={styles.sr_content}> Number of bedrooms:</span>
                         <span> <IoBedSharp className={styles.react_icon} /> </span>
                         <h4 className={`${styles.h4_font} ${styles.property_summary_position}`}>{property.no_bedrooms} bedrooms</h4>
                     </div>
-                    <div className={styles.property_summary_item}>
+                    <div className={styles.property_summary_item_bedrooms_and_bathrooms}>
                         <span className={styles.sr_content}> Number of bathrooms:</span>
                         <span> <LuToilet className={styles.react_icon} /> </span>
                         <h4 className={`${styles.h4_font} ${styles.property_summary_position}`}>{property.no_bathrooms} bathrooms</h4>
                     </div>
-                    <div className={styles.property_summary_item}>
+                    <div className={styles.property_summary_item_furnishing}>
                         <span className={styles.sr_content}>Furnishing:</span>
                         <span> <BiCabinet className={styles.react_icon}/></span>
-                        <h4 className={styles.h4_font}>{property.furniture}</h4>
+                        <h4 className={`${styles.h4_font} ${styles.property_summary_position}`}>{property.furniture}</h4>
                     </div>
-                    <div className={styles.property_summary_item}>
+                    <div className={styles.property_summary_item_property_size  }>
                         <span className={styles.sr_content}> Property size: </span>
                         <span> <IoMdResize className={styles.react_icon} /> </span>
-                        <h4 className={`${styles.h4_font} ${styles.property_summary_custom_position}`}>{property.size} m²</h4>
+                        <h4 className={`${styles.h4_font} ${styles.property_summary_position}`}>{property.size} m²</h4>
                     </div>
                 </div>
                 <div className={styles.property_description_container}>
                     <h4 className={`${styles.h4_font} ${styles.property_description_title_position}`}>Description</h4>
-                    <h5 className={`${styles.h5_font} ${styles.property_description_content_position}`}>{property.detail}</h5>          
+                    <h5 className={`${styles.h5_font} ${styles.property_description_content_position}`}>{property.detail}</h5> 
+                    <br></br>         
                 </div>    
                 <br></br>
             </div>      
