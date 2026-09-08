@@ -229,7 +229,7 @@ function DashboardMain() {
                                     className={styles.main_photo}
                                 />
                                 <div className={styles.property_summary_container}> 
-                                    <h4 className={`${styles.property_summary_title} ${styles.h3_font}`}>Summary</h4>
+                                    <h3 className={`${styles.property_summary_title} ${styles.h3_font}`}>Summary</h3>
                                     <h5 className={`${styles.property_summary_content} ${styles.h5_font}`}>{property.summary}</h5>
                                 </div>
                             </div>
@@ -309,9 +309,9 @@ function DashboardMain() {
                         </div>
                     </li>
                 ))}
-            </ul>
-            }
-        </div>
+            </ul>            
+            }      
+        </div>    
     )
 }
 
