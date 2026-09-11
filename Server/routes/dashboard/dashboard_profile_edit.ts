@@ -17,7 +17,7 @@ router.route("/")
         const userData = db.prepare(`SELECT name, address, phone_number, email FROM property_owners WHERE id = ?`).get(ownerID);
 
         if (!userData) {
-            return res.status(404).json({ noUserError: "User data not found." });
+            return res.status(404).json({ noUserError: "User data not found. \n Please check your internet connection and try again." });
         }   
 
         res.status(200).json({userData});

@@ -100,18 +100,19 @@
 }
 
 .monthly_rate_container{
-    width: 24%;
+    width: 10%;
 
     display: flex;
-    justify-content: flex-start;
+    justify-content: center;
     margin-left: 3%;
 }
 
 .date_listed_container {
     width: 18%;
-
+    
     display: flex;
     justify-content: flex-end;
+    margin-left: 14%;
 }
 
 .second_row {

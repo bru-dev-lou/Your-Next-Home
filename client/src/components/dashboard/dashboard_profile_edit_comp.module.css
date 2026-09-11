@@ -9,169 +9,211 @@
     white-space: nowrap;
 }
 
-/*  General styling starts here - 3+ elements will use these. */
-
+/*  General font styling */
 
 .h2_font {
+    color: #F2EFE2;
     font-family: "Source Sans 3", sans-serif;
     font-size: 26px;
-    color: #F2EFE2;
     font-weight: 390;
     text-shadow: 1px 1px 2px rgba(0,0,0,0.8);    
 }
 
 .h3_font {
+    color: #F2EFE2;
     font-family: "Source Sans 3", sans-serif;
     font-size: 23px;
-    color: #F2EFE2;
     font-weight: 390;
     text-shadow: 1px 1px 2px rgba(0,0,0,0.8);    
-    margin: 0px;
+    margin: 0;
 }
 
 .h4_font {
+    color: #156082;    
     font-family: "Source Sans 3", sans-serif;
     font-size: 20px;
-    color: #156082;
     font-weight: 600;
-    margin: 0px;
+    margin: 0;
 }
 
-/* Styling classes in the order they appear in the return */
+/* Styling classes in the order they appear in the JSX return */
 
-.main_container {
-    width: calc(100% - 87px);
-    margin-left: 41px;
+.error_container {
+    height: 97%;
+    width: 94%;
+
+    margin: 1% 0 0 3%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.main_title_container {
+    background-color: #156082;
+    border: solid 2px #042433;
+    border-radius: 10px;
+
+    height: 50px;
+    width: 100%;
+
+    display: flex;
+    justify-content: center;
 }
 
 .main_title {
-    background-color: #156082;
-    border: solid 2px #042433;
-    border-radius: 5px;
-}
-
-.main_title_format{
-    margin: 0 0 0 44%;
-}
-
-.retrieving_data_message {
-    font-family: "Source Sans 3", sans-serif;
-    font-size: 26px;
-    color: #156082;
-    font-weight: 390;
-    text-shadow: 1px 1px 2px rgba(0,0,0,0.8);    
-    margin: 5% 0 0 41%;
+    margin: 0 3% 0 0;
+    line-height: 50px;
 }
 
 .server_error_image {
-    width: 400px;
-    height: 300px;
+    width: 35%;
+    height: 55%;
 
-    margin-top: 4%;
-    margin-left: 34%; 
+    margin: 4% 2% 0 0;
 }
 
 .server_error_message {
+    color: #C00000;
     font-family: "Source Sans 3", sans-serif;
     font-size: 30px;
-    color: #C00000;
     font-weight: 390;
     text-shadow: 1px 1px 2px rgba(0,0,0,0.8);    
-    
-    margin-left: 31%;
-    margin-top: 3%; 
+
+    margin: 4% 0 0 0;
+}
+
+.error_message_container {
+    height: 50%;
+    width: 100%;
+
+    display: flex;
+    flex-direction: column;
 }
 
 .no_internet_react_icon {
     color: #8e0505;
-    width: 300px;
-    height: 300px; 
 
-    margin-left: 38%;
-    margin-top: 2%;
+    width: 15rem;
+    height: 15rem;
+
+    margin: 3% 0 0 40%;
 }
 
 .no_user_data_error {
+    color: #C00000;
     font-family: "Source Sans 3", sans-serif;
     font-size: 30px;
-    color: #C00000;
     font-weight: 390;
     text-shadow: 1px 1px 2px rgba(0,0,0,0.8);    
+
+    text-align: center;
+    white-space: pre-line;
     
-    margin-left: 17%;
-    margin-top: 1%; 
+    margin: 2% 3% 0 0;
 }
 
-.main_container{
-    height: 1100px;
+.main_container {
+    height: 150%;
+    width: 94%;
+    
+    margin: 1% 0 0 3%;
 }
 
-.subtitle_1_container {
-    display: flex;
-    flex-direction: column;
-    height: 40%;
+.edit_profile_container {
+    height: 42%;
     width: 50%;
 }
 
-.subtitle_1_item {
+.subtitle_1_container {
+    height: 22%;
+    width: 100%;
+        
+    display: flex;
+    flex-direction: column;
+
+    margin-top: 5%;
+}
+
+.subtitle_1 {
     background-color: #156082;
     border: solid 2px #042433;
     border-radius: 5px;
 
+    height: 42%;
     width: 25%;
 
-    text-align :center;
-    margin-top: 5%;
+    text-align: center;
+    line-height: 41px;
+}
+
+.profile_error_message {
+    color: #C00000;    
+    font-family: "Source Sans 3", sans-serif;
+    font-size: 20px;
+    font-weight: 390;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.8);    
+    margin-top: 4%;
+}
+
+.profile_success_message {
+    color: #3B7D23;    
+    font-family: "Source Sans 3", sans-serif;
+    font-size: 20px;       
+    font-weight: 390;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.8);
+    margin-top: 4%;
 }
 
 .subtitle_1_info {
     text-shadow: 1px 1px 2px rgba(0,0,0,0.8);    
     font-weight: 390;
-
-    margin-top: 4%;    
+    margin-top: 4%;
 }
 
-.profile_error_message {
-    font-family: "Source Sans 3", sans-serif;
-    font-size: 20px;
-    color: #C00000;
-    font-weight: 390;
-    text-shadow: 1px 1px 2px rgba(0,0,0,0.8);    
-    margin: 4% 0 0 0;
-}
-
-.profile_success_message {
-    font-family: "Source Sans 3", sans-serif;
-    font-size: 20px;
-    color: #3B7D23;    
-    font-weight: 390;
-    text-shadow: 1px 1px 2px rgba(0,0,0,0.8);
-    margin: 4% 0 0 0;    
-}
-
-.edit_profile_container {
-    display: grid;
-    grid-template: repeat(6, 40px) / 35% 60% ;
-    align-items: center;
-    row-gap: 8px;
+.edit_profile_user_data_container {
+    height: 76%;
+    width: 100%;
+    
+    display: flex;
+    flex-direction: column;
+    row-gap: 5%;
     
     margin-top: 3%; 
 }
 
-.input_format {
-    font-family: "Source Sans 3", sans-serif;
+.container_format_edit_profile {
+    height: 11%;
+
+    display: flex;
+    align-items: center;
+}
+
+.label_format_edit_profile {
+    height: 100%;
+    width: 30%;
+
+    line-height: 36px;
+}
+
+.input_format_edit_profile {
     color: #125370;
+    font-family: "Source Sans 3", sans-serif;
     font-size: 16px;
-    height: 25px;
 
     background-color: #D9E4F3;
     border: solid 2px #125370;  
-    border-radius: 5px; 
+    border-radius: 5px;
+    
+    height: 100%; 
+    width: 60%;
+
+    margin-left: 5%;
+    padding-left: 1%;
 }
 
-.save_profile_changes_button{
-    font-family: "Source Sans 3", sans-serif;
+.save_profile_changes_button {
     color: #125370;
+    font-family: "Source Sans 3", sans-serif;
     font-size: 16px;
     font-weight: 600;
 
@@ -180,33 +222,48 @@
     border-radius: 5px;
 
     height: 100%;
-    width: 50%;
+    width: 40%;
 
-    margin-top: 2%;   
-    
-    justify-self: end;
-    grid-column: span 2;     
+    margin-left: 55%     
 }
 
+.password_container {
+    height: 36%;
+    width: 100%;
+    
+    display: flex;
+    flex-direction: column;
+
+    position: relative;
+}
+
+.container_format_edit_profile_custom {
+    height: 30%;
+    width: 100%;
+
+    display: flex;
+    align-items: center;
+}
 
 .show_hide_password_button_MP {
     color: #125370;
-    background-color: #BFBFBF;
-    
-    height: 27px;
-    line-height: 27px;    
+    background-color: transparent;
     border: none;
-    border-radius: 0 5px 5px 0;
     
-    position: absolute;
-    margin-top: 144px;
-    margin-left: calc(42% + 8px);
+    height: 90%;
+    width: 4%;
+    
+    line-height: 11%;    
 
+    position: relative; 
+    margin-left: -4%;
+
+    cursor: pointer; 
 }
 
 .confirm_profile_changes_button {
-    font-family: "Source Sans 3", sans-serif;
     color: #125370;
+    font-family: "Source Sans 3", sans-serif;
     font-size: 16px;
     font-weight: 600;
 
@@ -214,34 +271,56 @@
     border: solid 2px #042433;
     border-radius: 5px;
 
-    height: 100%;
-    width: 50%;
+    height: 30%;
+    width: 40%;
 
-    grid-column: span 2;
-    justify-self: end;
-    margin-top: 2%;
+    margin: 3% 0 0 55%;
 }
 
-
-.subtitle_2_container { 
+.account_management_container { 
     display: flex; 
     flex-direction: column; 
     
-    height: 30%;
+    height: 35%;
     width: 50%;
 
-    margin-top: 4%;    
+    margin-top: 2%;    
 }
 
-.subtitle_2_item {
+.subtitle_2_container {
+    height: 27%;
+    width: 100%;
+}
+
+.subtitle_2 {
     background-color: #156082;
     border: solid 2px #042433;
     border-radius: 5px;
 
+    height: 43%;
     width: 40%;
-    height: 11%;
+    
     text-align :center;
-    line-height: 36px;
+    line-height: 42px;
+}
+
+.account_error_message {
+    color: #C00000;
+    font-family: "Source Sans 3", sans-serif;
+    font-size: 20px;
+    font-weight: 390;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.8);    
+    margin-top: 4%;
+    width: 150%;
+}
+
+.account_success_message {
+    color: #3B7D23;        
+    font-family: "Source Sans 3", sans-serif;
+    font-size: 20px;
+    font-weight: 390;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.8);
+    margin-top: 4%; 
 }
 
 .subtitle_2_info {
@@ -251,49 +330,63 @@
     margin-top: 4%;    
 }
 
-.account_management_container {
-    display: grid; 
-    grid-template: repeat(4, 40px) / 35% 60% 5%;
-    row-gap: 7px;
-    margin-top: 3%;
+.password_change_container {
+    height: 68%;
+    width: 100%;
+    
+    display: flex;
+    flex-direction: column;
+    row-gap: 9%;
+
+    position: relative;
+    margin-top: 4%;
+}
+
+.container_format_account_management {
+    height: 16%;
+    width: 100%;
+
+    display: flex;
+}
+
+.label_format_account_management {
+    height: 100%;
+    width: 30%;
+
+    line-height: 37px;
+}
+
+.input_format_account_management {
+    color: #125370;
+    font-family: "Source Sans 3", sans-serif;
+    font-size: 16px;
+
+    background-color: #D9E4F3;
+    border: solid 2px #125370;  
+    border-radius: 5px;
+    
+    height: 100%; 
+    width: 60%;
+
+    margin-left: 5%;
+    padding-left: 1%;
 }
 
 .show_hide_password_button_AM {
     color: #125370;
-    background-color: #BFBFBF;
-
+    background-color: transparent;
     border: none;
-    border-radius: 0 5px 5px 0;    
 
-    height: 26px;
-    line-height: 27px;  
-    width: 71%;  
-
-    margin-left: -27px;
-    margin-top: 2px;    
-}
-
-.account_error_message {
-    font-family: "Source Sans 3", sans-serif;
-    font-size: 20px;
-    color: #C00000;
-    font-weight: 390;
-    text-shadow: 1px 1px 2px rgba(0,0,0,0.8);    
-    margin: 4% 0 0 0;
-}
-
-.account_success_message {
-    font-family: "Source Sans 3", sans-serif;
-    font-size: 20px;
-    color: #3B7D23;    
-    font-weight: 390;
-    text-shadow: 1px 1px 2px rgba(0,0,0,0.8);
-    margin: 4% 0 0 0;    
+    height: 100%;
+    width: 4%;  
+    
+    margin: 0 0 0 -4%;
+    cursor: pointer; 
 }
 
 .change_password_confirm_button {
-    font-family: "Source Sans 3", sans-serif;
     color: #125370;
+    font-family: "Source Sans 3", sans-serif;
     font-size: 16px;
     font-weight: 600;
 
@@ -301,35 +394,42 @@
     border: solid 2px #042433;
     border-radius: 5px;
 
-    height: 100%;
-    width: 50%;
+    height: 15%;
+    width: 40%;
 
-    grid-column: span 2;
-    justify-self: end;
-    margin-top: 1%;
-}
-
-.subtitle_3_container {
-    height: 10%;
-    width: 50%;
+    margin: 1% 0 0 55%;
 }
 
 .delete_account_container {
-    display: grid;
-    grid-template: repeat(2, 40px)/ 35% 60% 5%;
-    row-gap: 10px;
+    height: 21%;
+    width: 50%;
+
+    margin-top: 1%;
+}
+
+.delete_account_error_message {
+    color: #C00000;
+    font-family: "Source Sans 3", sans-serif;
+    font-size: 20px;
+    font-weight: 390;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.5);    
+    margin: 0;
+
+    height: 15%;
+    width: 100%;
 }
 
 .delete_account_title {
-    grid-column: span 3;
     text-shadow: 1px 1px 2px rgba(0,0,0,0.8);    
     font-weight: 390;
 
+    height: 15%;
+    width: 100%;   
 }
 
-.delete_account_buttons {
-    font-family: "Source Sans 3", sans-serif;
+.delete_account_request_button {
     color: #125370;
+    font-family: "Source Sans 3", sans-serif;
     font-size: 16px;
     font-weight: 600;
 
@@ -337,64 +437,90 @@
     border: solid 2px #042433;
     border-radius: 5px;
 
-    width: 50%;
+    height: 17%;   
+    width: 40%;
+
+    margin: 3% 0 0 55%;
 }
 
-.delete_account_button_custom_format{
-    grid-column: span 2;
-    justify-self: end;
-    height: 100%;   
+.container_format_account_deletion {
+    height: 18%;
+    width: 100%;
+
+    display: flex;
+    margin-top: 3%;
+}
+
+.label_format_account_deletion {
+    height: 100%;
+    width: 30%;
+
+    line-height: 38px;
+}
+
+.input_format_account_deletion {
+    color: #125370;
+    font-family: "Source Sans 3", sans-serif;
+    font-size: 16px;
+
+    background-color: #D9E4F3;
+    border: solid 2px #125370;  
+    border-radius: 5px;
+    
+    height: 100%; 
+    width: 60%;
+
+    margin-left: 5%;
+    padding-left: 1%;
 }
 
 .show_hide_password_button_DA {
     color: #125370;
-    background-color: #BFBFBF;
-
+    background-color: transparent;
     border: none;
-    border-radius: 0 5px 5px 0;    
 
-    height: 26px;
-    line-height: 27px;  
-    width: 71%;  
-
-    margin-left: -27px;
-    margin-top: 2px;    
-}
-
-.delete_account_error_message {
-    font-family: "Source Sans 3", sans-serif;
-    font-size: 20px;
-    color: #C00000;
-    font-weight: 390;
-    text-shadow: 1px 1px 2px rgba(0,0,0,0.8);    
-    margin: 0;
-    grid-column: span 3;
-}
-
-.subtitle_4_container{
-    height: 10%;
-    width: 50%;
+    height: 100%;
+    width: 4%;  
+    
+    margin: 0 0 0 -4%;
+    cursor: pointer; 
 }
 
 .account_deleted_container {
-    display: grid;
-    grid-template: 30px / 35% 60% 5%;
+    height: 47%;
+    width: 100%;
+
+    margin-top: 3%;
 }
 
-.confirm_account_deletion_button_custom_format {
-    grid-column: span 2;
-    justify-self: end;
-    height: 140%;
+.delete_account_confirm_button {
+    color: #125370;
+    font-family: "Source Sans 3", sans-serif;
+    font-size: 16px;
+    font-weight: 600;
+
+    background-color: #BFBFBF;
+    border: solid 2px #042433;
+    border-radius: 5px;
+
+    height: 35%;   
+    width: 40%;
+
+    margin: 1% 0 0 55%;
 }
 
 .account_deleted_feedback {
+    padding-top: 3%;
+}
+
+.account_deleted_message {
+    color: #3B7D23;    
     font-family: "Source Sans 3", sans-serif;
     font-size: 20px;
-    color: #3B7D23;    
     font-weight: 390;
     text-shadow: 1px 1px 2px rgba(0,0,0,0.8);
 
-    grid-column: span 2;
     text-align: center;
     margin: 0;
 }
+
