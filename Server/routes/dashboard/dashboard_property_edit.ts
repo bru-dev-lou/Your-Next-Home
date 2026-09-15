@@ -33,6 +33,7 @@ router.route("/:propID")
     const ownerID = req.user?.id;
 
     try {     
+        
         const SQLPropertyData = db.prepare(`SELECT * FROM property_list WHERE owner_id = ? AND id = ?`).get(ownerID, propID) as PropertyData;
 
         if (!SQLPropertyData) {
@@ -87,27 +88,55 @@ router.route("/:propID")
     
     // City validation 
 
-    const validCity = /^[a-zA-Z\-]+$/.test(city); 
+    const validCity = /^[a-zA-Z\ -]+$/.test(city); 
 
     if (!validCity) {
-        return res.status(400).json({ error: "City name must only include letters and hyphens."})
+        return res.status(400).json({ error: "City must only include letters and hyphens." })
+    }
+
+    if (city.length > 50) {
+        return  res.status(400).json({ error: "City must not exceed 50 characters." })
     }
     
+    //  Price validation 
+    
+    if (price > 99999) {
+        res.status(400).json({ error: "Listing's monthly rate must be less than £100,000." })
+    }
+
+    //  Bedrooms validation 
+
+    if (no_bedrooms > 99) {
+        res.status(400).json({ error: "Listing must have less than 100 bedrooms." })
+    }
+
+    // Bathrooms validation
+
+    if (no_bathrooms > 99) {
+        res.status(400).json({ error: "Listing must have less than 100 bathrooms." })
+    }
+
+    // Size validatiob 
+
+    if (size > 10000) {
+        res.status(400).json({ error: "Listing's size must be less than 10,000m²." })
+    }
+
     //  Property summary & description validations
 
     if (summary.split(/\s+/).filter(Boolean).length > 50) {
-        return res.status(400).json({ error: "Property summary cannot exceed 50 words." });
+        return res.status(400).json({ error: "Listing's summary cannot exceed 50 words." });
     }
 
     if (detail.split(/\s+/).filter(Boolean).length > 250) {
-        return res.status(400).json({ error: "Property description cannot exceed 250 words." });
+        return res.status(400).json({ error: "Listing's description cannot exceed 250 words." });
     }   
 
     try {
         db.prepare(`UPDATE property_list SET type = ?, city = ?, price = ?, no_bedrooms = ?, no_bathrooms = ?, size = ?, furniture = ?, summary = ?, detail = ? WHERE id = ? AND owner_id = ?`)
         .run(type, city, price, no_bedrooms, no_bathrooms, size, furniture, summary, detail, propID, ownerID);
         
-        return res.status(200).json({ message: "*** Listing Updated ***" });
+        return res.status(200).json({ message: " ∗∗∗ Listing Updated ∗∗∗" });
     }
     
     catch (error) {

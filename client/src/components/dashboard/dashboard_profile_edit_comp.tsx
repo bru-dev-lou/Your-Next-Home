@@ -371,7 +371,7 @@ function DashboardProfileEdit () {
                     </h2>
                 </div> 
                 <div className={styles.error_message_container}>
-                    <span><BsWifiOff className={styles.no_internet_react_icon}/></span>
+                    <BsWifiOff className={styles.no_internet_react_icon}/>
                     <h3 role="alert" className={styles.no_user_data_error}>{errorGeneralMessage}</h3>
                 </div>
             </div>

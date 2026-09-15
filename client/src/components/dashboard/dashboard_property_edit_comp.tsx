@@ -2,6 +2,7 @@ import { useEffect, useState, useRef} from "react";
 import { useParams, useNavigate } from "react-router-dom";
 
 import styles from "../dashboard/dashboard_property_edit_comp.module.css";
+import noPropertyPhoto from "../../assets/missing_property_photo.png";
 import serverErrorPhoto from "../../assets/server_error_photo.png";
 
 import { LuPlus } from "react-icons/lu";
@@ -134,7 +135,7 @@ function DashboardPropertyEdit() {
                     setErrorMessageAC(result.error);
                     setTimeout(() => {
                         setErrorMessageAC("");
-                    }, 750) 
+                    }, 2000);
                 }
 
                 else if(propertyDetails?.city?.length === 0) {
@@ -183,14 +184,47 @@ function DashboardPropertyEdit() {
 
         //  City validation
 
-        const validCity = /^[a-zA-Z\-]+$/.test(propertyDetails?.city ?? ""); 
+        const validCity = /^[a-zA-Z\- ]+$/.test(propertyDetails?.city ?? ""); 
 
         if (!validCity) {
-            setErrorMessagePE("City name must only include letters and hyphens.");
+            setErrorMessagePE("City must only include letters and hyphens.");
             return; 
         }
 
-        // Property summary & description validations are inline in the JSX (onChange handlers) 
+        if ((propertyDetails?.city?.length ?? 0) > 50) {
+            setErrorMessagePE("City name must not exceed 50 characters.");
+            return;
+        }
+
+        //  Price validation 
+
+        if ((propertyDetails?.price ?? 0) > 99999) {
+            setErrorMessagePE("Listing's monthly rate must be less than £100,000.");
+            return;
+        } 
+
+        //  Bedrooms validation 
+
+        if ((propertyDetails?.no_bedrooms ?? 0) > 100) {
+            setErrorMessagePE("Listing must have less than 100 bedrooms.");
+            return;
+        }
+
+        //  Bathrooms validation
+
+        if ((propertyDetails?.no_bathrooms ?? 0) > 100) {
+            setErrorMessagePE("Listing must have less than 100 bathrooms.");
+            return;
+        }        
+
+        // Size validation 
+
+        if ((propertyDetails?.size ?? 0) > 10000) {
+            setErrorMessagePE("Listing's size must be less than 10,000m².");
+            return;
+        }
+
+        //  Property summary & description validations are inline in the JSX (onChange handlers) 
         
         try {
             const res = await fetch(`/api/dashboard/property/edit/${propID}`, {
@@ -382,6 +416,16 @@ function DashboardPropertyEdit() {
         setDropdown(prev => !prev)
     } 
 
+// ↓↓↓ Customising dropdown behaviour so it scrolls to the top whenever a ul container opens.
+
+    const listRef = useRef<HTMLUListElement>(null);
+
+    useEffect(() => {
+    if (propertyTypeDropdown && listRef.current) {
+        listRef.current.scrollTop = 0;
+    }
+    }, [propertyTypeDropdown]);
+
     const setValue = (e:React.MouseEvent<HTMLLIElement>, property: keyof PropertyDetails) => {
         setPropertyDetails({...propertyDetails, [property]: e.currentTarget.dataset.value });
     }
@@ -407,51 +451,54 @@ function DashboardPropertyEdit() {
         return (
             <div className={styles.no_property_error_container}>
                 <div className={styles.main_title_container}>
-                    <h2 className={`${styles.main_title} ${styles.h2_font}`}> Edit Property </h2>
-                </div>        
-                {errorMessagePF && 
-                    <h2 
-                        role="alert"
-                        className={styles.PF_error_message}
-                    > 
-                        {errorMessagePF} 
-                    </h2>
-                }
-                {errorMessageServer && !errorMessagePF &&
-                    <div>                
-                        <img 
-                            src={serverErrorPhoto} 
-                            className={styles.server_error_image} 
-                            alt="Server error illustration."
-                        />
-                        <h2
-                            role="alert"
-                            className={styles.server_error_message}
-                        >
-                            {errorMessageServer}
+                        <h2 className={`${styles.main_title} ${styles.h2_font}`}>
+                            {!errorMessagePF && !errorMessageServer ? "Loading..." : "Edit Property"}
                         </h2>
-                    </div>
-                }
-                {!errorMessagePF && !errorMessageServer && 
-                    <h2
-                        role="status"
-                        className={styles.loading_message}
-                    >
-                        Loading...
-                    </h2>
-                }
+                </div>
+                <div className={styles.error_messages_container}>        
+                    {errorMessagePF && 
+                        <div className={styles.no_property_found_container}>
+                            <img 
+                                src={noPropertyPhoto}
+                                className={styles.no_property_found_image}
+                                alt="No property found illustration"
+                            />
+                            <h2 
+                                role="alert"
+                                className={styles.PF_error_message}
+                            > 
+                                {errorMessagePF} 
+                            </h2>
+                        </div>
+                    }
+                    {errorMessageServer && !errorMessagePF &&
+                        <div className={styles.server_error_container}>                
+                            <img 
+                                src={serverErrorPhoto} 
+                                className={styles.server_error_image} 
+                                alt="Server error illustration."
+                            />
+                            <h2
+                                role="alert"
+                                className={styles.server_error_message}
+                            >
+                                {errorMessageServer}
+                            </h2>
+                        </div>
+                    }
+                </div>
             </div>
         );
     }   
 
     return (
-        <div>
+        <div className={styles.main_container}>
             <div className={styles.main_title_container}>
                 <h2 className={`${styles.main_title} ${styles.h2_font}`}> Edit Property </h2>
             </div>
             <div className={styles.property_edit_container}>
                 <div className={styles.property_data_container}>
-                    <div className={styles.subtitle_container}>
+                    <div className={styles.data_subtitle_container}>
                         {errorMessagePE ?
                             <h3 
                                 role="alert"
@@ -462,11 +509,11 @@ function DashboardPropertyEdit() {
                             :
                             <h3 className={styles.h3_font}> Update your property details:</h3>
                         }
-                    </div>                    
-                    <div className={styles.city_container}>
+                    </div>               
+                    <div className={styles.city_container}>     
                         <label 
                             htmlFor="location"
-                            className={styles.h4_font}
+                            className={`${styles.h4_font} ${styles.city_label}`}
                         > 
                             City: 
                         </label>
@@ -487,7 +534,8 @@ function DashboardPropertyEdit() {
                         <ul 
                             aria-live="polite" 
                             aria-label="City autocomplete suggestions"
-                            className={styles.autocomplete_container}> 
+                            className={styles.autocomplete_container}
+                        > 
                             {cities.map((query, index) => (
                                 <li 
                                     key={index}
@@ -518,13 +566,27 @@ function DashboardPropertyEdit() {
                     </div>
                     <label 
                         htmlFor="property_type"
-                        className={styles.h4_font}
+                        className={`${styles.h4_font} ${styles.standard_label_format}`}
                     >
                         Property Type: 
                     </label>
-                    {propertyTypeDropdown ?
+                    {!propertyTypeDropdown ?
                         <ul 
                             id="propert_type"
+                            onClick={ () => toggleDropdown(setPropertyTypeDropdown)}
+                            className={styles.ul_container_closed}
+                        >
+                            <li
+                                data-value={propertyDetails.type}
+                                className={styles.list_item_closed}
+                            >
+                                {propertyDetails.type}
+                            </li>                        
+                        </ul>
+                    :                    
+                        <ul 
+                            id="propert_type"
+                            ref={listRef}
                             onClick={ () => toggleDropdown(setPropertyTypeDropdown)}
                             className={styles.ul_container_open}
                         >
@@ -549,29 +611,16 @@ function DashboardPropertyEdit() {
                                 </li>
                             ))}
                         </ul>
-                    :
-                        <ul 
-                            id="propert_type"
-                            onClick={ () => toggleDropdown(setPropertyTypeDropdown)}
-                            className={styles.ul_container_closed}
-                        >
-                            <li
-                                data-value={propertyDetails.type}
-                                className={styles.list_item_closed}
-                            >
-                                {propertyDetails.type}
-                            </li>                        
-                        </ul>
                     }
                     <label 
                         htmlFor="rental_rate"
-                        className={styles.h4_font}
+                        className={`${styles.h4_font} ${styles.standard_label_format}`}
                     > 
-                        Monthly Rate: 
+                        Monthly Rate (£): 
                     </label>
                     <input 
                         id="rental_rate"
-                        type="number" 
+                        type="number"
                         value={propertyDetails.price ?? ""}
                         onChange={(e) => {
                             setPropertyDetails({...propertyDetails, price: e.target.value === "" ? undefined : parseFloat(e.target.value)});
@@ -580,11 +629,11 @@ function DashboardPropertyEdit() {
                         }}
                         required
                         aria-invalid={propertyMissingField === "price"} 
-                        className={styles.standard_input_format}
+                        className={`${styles.standard_input_format} ${styles.input_custom}`}
                     />
                     <label 
                         htmlFor="bedrooms"
-                        className={styles.h4_font}
+                        className={`${styles.h4_font} ${styles.standard_label_format}`}
                     > 
                         Bedrooms: 
                     </label>
@@ -603,7 +652,7 @@ function DashboardPropertyEdit() {
                     />
                     <label 
                         htmlFor="bathrooms"
-                        className={styles.h4_font}
+                        className={`${styles.h4_font} ${styles.standard_label_format}`}
                     > 
                         Bathrooms: 
                     </label>
@@ -622,7 +671,7 @@ function DashboardPropertyEdit() {
                     />
                     <label 
                         htmlFor="property_size"
-                        className={styles.h4_font}
+                        className={`${styles.h4_font} ${styles.standard_label_format}`}
                     > 
                         Size (m²): 
                     </label>
@@ -641,13 +690,27 @@ function DashboardPropertyEdit() {
                     />
                     <label 
                         htmlFor="furniture"
-                        className={styles.h4_font}
+                        className={`${styles.h4_font} ${styles.standard_label_format}`}
                     > 
                         Furniture: 
                     </label>
-                    {furnitureDropdown ?
+                    {!furnitureDropdown ?
                         <ul
                             id="furniture"
+                            onClick={()=> toggleDropdown(setFurnitureDropdown)}
+                            className={styles.ul_container_closed}
+                        >
+                            <li
+                                data-value={propertyDetails.furniture}
+                                className={styles.list_item_closed}
+                            >
+                                {propertyDetails.furniture}
+                            </li>
+                        </ul>
+                    :
+                        <ul
+                            id="furniture"
+                            ref={listRef}                            
                             onClick={() => toggleDropdown(setFurnitureDropdown)}
                             className={styles.ul_container_open}
                         >
@@ -671,25 +734,12 @@ function DashboardPropertyEdit() {
                                     {type}
                                 </li>
                             ))}
-                        </ul>
-                    :
-                        <ul
-                            id="furniture"
-                            onClick={()=> toggleDropdown(setFurnitureDropdown)}
-                            className={styles.ul_container_closed}
-                        >
-                            <li
-                                data-value={propertyDetails.furniture}
-                                className={styles.list_item}
-                            >
-                                {propertyDetails.furniture}
-                            </li>
-                        </ul>
+                        </ul>                    
                     }                        
                     <div className={styles.summary_container}>
                         <label 
                             htmlFor="summary"
-                            className={styles.h4_font}
+                            className={`${styles.h4_font} ${styles.summary_description_label_format}`}
                         > 
                             Summary: 
                         </label>
@@ -706,7 +756,7 @@ function DashboardPropertyEdit() {
                             }}
                             required
                             aria-invalid={propertyMissingField === "summary"}
-                            className={`${styles.textarea_format} ${styles.textarea_summary_custom}`}
+                            className={styles.textarea_format}
                         />
                         <div className={styles.summary_word_count_container}>
                             <span className={styles.word_count_item}>{summaryWordCount} / 50</span>
@@ -721,7 +771,7 @@ function DashboardPropertyEdit() {
                     <div className={styles.description_container}>
                         <label 
                             htmlFor="description"
-                            className={styles.h4_font}
+                            className={`${styles.h4_font} ${styles.summary_description_label_format}`}
                         > 
                             Description: 
                         </label>
@@ -737,7 +787,7 @@ function DashboardPropertyEdit() {
                             }}}
                             required
                             aria-invalid={propertyMissingField === "description"}
-                            className={`${styles.textarea_format} ${styles.textarea_description_custom}`}
+                            className={styles.textarea_format}
                         />
                         <div className={styles.description_word_count_container}>
                             <span className={styles.word_count_item}>{descriptionWordCount} / 250</span>
@@ -750,8 +800,8 @@ function DashboardPropertyEdit() {
                         </div>
                     </div>
                 </div>
-                <div>
-                    <div>
+                <div className={styles.property_image_container}>
+                    <div className={styles.image_subtitle_container}>
                         {errorMessagePD &&
                             <h3 role="alert" className={styles.PD_PU_error_message}> {errorMessagePD} </h3>
                         }
@@ -780,7 +830,7 @@ function DashboardPropertyEdit() {
                         <button 
                             disabled={galleryIndex === 0}
                             onClick={ () => previousPhotos()}
-                            className={styles.left_arrow_format}
+                            className={styles.left_arrow_container}
                             aria-describedby="previous_photos_button"
                         >
                             <IoMdArrowRoundBack className={styles.react_arrow_format}/>
@@ -860,21 +910,21 @@ function DashboardPropertyEdit() {
                         {uploadMessage && photoUploading && 
                             <h3 
                                 role="status"
-                                className={`${styles.h3_font} ${styles.upload_message}`}
+                                className={styles.h3_font}
                             >
                                 {uploadMessage}
                             </h3>
-                        }
+                        }                                            
                     </div>
                     <div className={styles.property_update_final_container}>
-                        {!uploadMessage && !photoUploading && !successMessagePE &&
+                        {!uploadMessage && !photoUploading && !successMessagePE && 
                             <button 
                                 onClick={propertyDetailsUpdate}
                                 className={styles.update_property_button}
                             > 
                                 Update Property 
                             </button>
-                        }
+                        }                             
                         {propertyUpdated && successMessagePE &&
                             <div className={styles.property_update_success_container}>
                                 <h3
@@ -888,11 +938,11 @@ function DashboardPropertyEdit() {
                                     aria-describedby="navigation_hint_2"
                                     className={styles.navigation_button}
                                 >
-                                    Check your property out!
+                                    See Listing
                                 </button>
                                 <span id="navigation_hint_2" className={styles.sr_content}>Clicking this button will navigate you to the detailed property page.</span>
                             </div>
-                        }
+                        }                        
                     </div>
                 </div>
             </div>

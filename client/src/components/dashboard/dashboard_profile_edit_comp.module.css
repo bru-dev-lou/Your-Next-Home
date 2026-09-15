@@ -96,7 +96,8 @@
     width: 15rem;
     height: 15rem;
 
-    margin: 3% 0 0 40%;
+    align-self: center;
+    margin: 3% 3% 0 0;
 }
 
 .no_user_data_error {
@@ -233,8 +234,6 @@
     
     display: flex;
     flex-direction: column;
-
-    position: relative;
 }
 
 .container_format_edit_profile_custom {
@@ -338,7 +337,6 @@
     flex-direction: column;
     row-gap: 9%;
 
-    position: relative;
     margin-top: 4%;
 }
 
