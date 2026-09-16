@@ -367,6 +367,7 @@
     width: 100%;
 
     grid-column: span 2;
+
     display: flex;
     align-items: flex-start;
     
@@ -599,16 +600,18 @@
     cursor: pointer;
 }
 
-.no_extra_photo_div {
+.no_extra_photo_li   {
     background-color: rgba(217, 228, 243, 0.6);
     border: solid 2px #125370;
     border-radius: 20px;
 
     height: 100%;
     width: 27%; 
+
+    list-style: none;
 }
 
-.right_arrow_format {
+.right_arrow_container {
     background-color: rgba(191, 191, 191, 0.75);
     border: 2px solid rgba(120, 120, 120, 0.75);
     border-radius: 0 19px 19px 0px;
@@ -622,7 +625,7 @@
     cursor: pointer;     
 }
 
-.right_arrow_format:hover {
+.right_arrow_container:hover {
     background-color: rgba(210, 210, 218, 0.95);
 }
 

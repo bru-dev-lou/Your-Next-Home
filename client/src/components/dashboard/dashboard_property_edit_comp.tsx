@@ -155,7 +155,10 @@ function DashboardPropertyEdit() {
             }
   
             catch(error) {
-                setErrorMessageAC("AutoComplete feature currently unavailable.")
+                setErrorMessageAC("Please check your internet!");
+                setTimeout(() => {
+                    setErrorMessageAC("");
+                }, 2000);
             }
         }
           
@@ -165,7 +168,7 @@ function DashboardPropertyEdit() {
   
         const timeout = setTimeout (() => {
             fetchAutoComplete();
-        }, 100);
+        }, 300);
 
         return () => clearTimeout(timeout);
         
@@ -181,6 +184,27 @@ function DashboardPropertyEdit() {
             setErrorMessagePE("Please update at least one field.");
             return;
         } 
+
+        // Empty field checks
+
+        const fieldCheck = [
+            { field: propertyDetails?.city, error: "Please state where your property is located." },
+            { field: propertyDetails?.type, error: "Please choose a property type." },
+            { field: propertyDetails?.price, error: "Please state the property's monthly rental rate." },
+            { field: propertyDetails?.no_bedrooms, error: "Please state how many bedrooms your property has." },
+            { field: propertyDetails?.no_bathrooms, error: "Please state how many bathrooms your property has." },
+            { field: propertyDetails?.size, error: "Please state the size of your property in m²." },
+            { field: propertyDetails?.furniture, error: "Please choose your property's type of furnishing." },
+            { field: propertyDetails?.summary, error: "Please provide a summary of your property." },
+            { field: propertyDetails?.detail, error: "Please provide a detailed description of your property." } 
+        ];
+
+        for (const {field, error} of fieldCheck) {
+            if (!field || field === "0" ) {
+                setErrorMessagePE(error);
+                return;
+            }
+        }
 
         //  City validation
 
@@ -205,21 +229,21 @@ function DashboardPropertyEdit() {
 
         //  Bedrooms validation 
 
-        if ((propertyDetails?.no_bedrooms ?? 0) > 100) {
+        if ((propertyDetails?.no_bedrooms ?? 0) > 99) {
             setErrorMessagePE("Listing must have less than 100 bedrooms.");
             return;
         }
 
         //  Bathrooms validation
 
-        if ((propertyDetails?.no_bathrooms ?? 0) > 100) {
+        if ((propertyDetails?.no_bathrooms ?? 0) > 99) {
             setErrorMessagePE("Listing must have less than 100 bathrooms.");
             return;
         }        
 
         // Size validation 
 
-        if ((propertyDetails?.size ?? 0) > 10000) {
+        if ((propertyDetails?.size ?? 0) > 9999) {
             setErrorMessagePE("Listing's size must be less than 10,000m².");
             return;
         }
@@ -818,9 +842,9 @@ function DashboardPropertyEdit() {
                     <div className={styles.main_photo_container}>
                         {!errorMessagePD ?
                             <img 
-                            src={propertyPhotos[mainPhotoIndex].photo_path}
-                            className={styles.main_photo}
-                            alt={`Main photo for propert number ${propID}`}
+                                src={propertyPhotos[mainPhotoIndex].photo_path}
+                                className={styles.main_photo}
+                                alt={`Main photo for propert number ${propID}`}
                             />
                         :
                             <div className={styles.no_main_photo_div}></div>
@@ -861,33 +885,34 @@ function DashboardPropertyEdit() {
                             {visibleExtraPhotos.map((photo, index) => {
                                 const realIndex = galleryIndex + index;
                                 return (
-                                <li 
-                                    key={photo.id}
-                                    className={styles.extra_photos_list}
-                                >
-                                    <img 
-                                        src={photo.photo_path} 
-                                        onClick={ () => {setMainPhotoIndex(realIndex)}}
-                                        className={styles.extra_photos}
-                                        alt={`Photo number ${realIndex + 1} of property number ${propID}`} 
-                                    />
-                                    <button 
-                                        onClick={(e) => photoDelete(photo.id, photo.photo_path, e)}
-                                        className={styles.delete_photo_button}
-                                        aria-label={`Delete photo number ${realIndex + 1}`}                                        
-                                    > 
-                                        <TiDelete className={styles.delete_photo_react_icon} />
-                                    </button>
-                                </li>
-                            )})}
+                                    <li 
+                                        key={photo.id}
+                                        className={styles.extra_photos_list}
+                                    >
+                                        <img 
+                                            src={photo.photo_path} 
+                                            onClick={ () => {setMainPhotoIndex(realIndex)}}
+                                            className={styles.extra_photos}
+                                            alt={`Photo number ${realIndex + 1} of property number ${propID}`} 
+                                        />
+                                        <button 
+                                            onClick={(e) => photoDelete(photo.id, photo.photo_path, e)}
+                                            className={styles.delete_photo_button}
+                                            aria-label={`Delete photo number ${realIndex + 1}`}                                        
+                                        > 
+                                            <TiDelete className={styles.delete_photo_react_icon} />
+                                        </button>
+                                    </li>
+                                )
+                            })}
                             {Array.from({length: 3 - visibleExtraPhotos.length}).map((_, index) => (
-                                <div key={index} className={styles.no_extra_photo_div}></div>
+                                <li key={index} className={styles.no_extra_photo_li}></li>
                             ))}
                         </ul>
                         <button 
                             disabled={galleryIndex + 3 >= propertyPhotos.length}
                             onClick={() => {nextPhotos()}}
-                            className={styles.right_arrow_format}
+                            className={styles.right_arrow_container}
                             aria-describedby="next_photos_button"
                         >
                             <IoMdArrowRoundForward className={styles.react_arrow_format} />

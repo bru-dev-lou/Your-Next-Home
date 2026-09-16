@@ -33,7 +33,6 @@ router.route("/:propID")
     const ownerID = req.user?.id;
 
     try {     
-        
         const SQLPropertyData = db.prepare(`SELECT * FROM property_list WHERE owner_id = ? AND id = ?`).get(ownerID, propID) as PropertyData;
 
         if (!SQLPropertyData) {
@@ -81,11 +80,17 @@ router.route("/:propID")
     ];
     
     for (const {field, name, error} of fieldCheck) {
-        if (!field) {
+        if (!field || field === 0) {
             return res.status(400).json({name, error});
         }
     }
     
+    // Number validations for property price, bedrooms, bathrooms and size 
+
+    if (isNaN(Number(price)) || isNaN(Number(no_bedrooms)) || isNaN(Number(no_bathrooms)) || isNaN(Number(size))) {
+        return res.status(400).json({ error: "Property monthly rate, number of bedrooms, number of bathrooms and size must all be valid numbers."})
+    } 
+
     // City validation 
 
     const validCity = /^[a-zA-Z\ -]+$/.test(city); 
@@ -95,31 +100,31 @@ router.route("/:propID")
     }
 
     if (city.length > 50) {
-        return  res.status(400).json({ error: "City must not exceed 50 characters." })
+        return res.status(400).json({ error: "City must not exceed 50 characters." })
     }
     
     //  Price validation 
     
     if (price > 99999) {
-        res.status(400).json({ error: "Listing's monthly rate must be less than £100,000." })
+        return res.status(400).json({ error: "Listing's monthly rate must be less than £100,000." })
     }
 
     //  Bedrooms validation 
 
     if (no_bedrooms > 99) {
-        res.status(400).json({ error: "Listing must have less than 100 bedrooms." })
+        return res.status(400).json({ error: "Listing must have less than 100 bedrooms." })
     }
 
     // Bathrooms validation
 
     if (no_bathrooms > 99) {
-        res.status(400).json({ error: "Listing must have less than 100 bathrooms." })
+        return res.status(400).json({ error: "Listing must have less than 100 bathrooms." })
     }
 
     // Size validatiob 
 
-    if (size > 10000) {
-        res.status(400).json({ error: "Listing's size must be less than 10,000m²." })
+    if (size > 9999) {
+        return res.status(400).json({ error: "Listing's size must be less than 10,000m²." })
     }
 
     //  Property summary & description validations
@@ -146,6 +151,7 @@ router.route("/:propID")
 })
 
 .post (upload.array('photos', 10), async (req, res) => {
+    const ownerID = req.user?.id;
     const propID  = req.params.propID;
     const photos = req.files as Express.Multer.File[]; 
     
@@ -154,6 +160,14 @@ router.route("/:propID")
     }
 
     try {
+        //  404 over 403 error to avoid leaking propIDs validity 
+
+        const propertyCheck = db.prepare(`SELECT id from property_list WHERE id = ? AND owner_id = ?`).get(propID, ownerID);
+
+        if (!propertyCheck) {
+            return res.status(404).json({ error: "Property not found" });
+        }
+
         const SQLPhotosLengthCheck = db.prepare(`SELECT * FROM property_photos WHERE property_id = ?`).all(propID);
         const remainingPhotoLength = 10 - SQLPhotosLengthCheck.length; 
 
@@ -193,10 +207,19 @@ router.route("/:propID")
 })
 
 .delete((req, res) => {
+    const ownerID = req.user?.id;
     const propID = req.params.propID;
     const {photoID, photo_path} = req.body;
     
     try {
+        //  404 over 403 error to avoid leaking propIDs validity 
+
+        const propertyCheck = db.prepare(`SELECT id from property_list WHERE id = ? AND owner_id = ?`).get(propID, ownerID);
+
+        if (!propertyCheck) {
+            return res.status(404).json({ error: "Property not found" });
+        }
+
         const SQLPhotoCheck = db.prepare(`SELECT * FROM property_photos WHERE property_id = ?`).all(propID);
 
         if (SQLPhotoCheck.length <= 5) {
