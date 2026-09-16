@@ -87,7 +87,7 @@ function DashboardPropertyAdd () {
                     setErrorMessageAC(result.error); 
                     setTimeout(() => {
                         setErrorMessageAC("");
-                    },750);
+                    },2000);
                 }
   
                 else if(propertyDetails.city.length === 0) {
@@ -106,10 +106,10 @@ function DashboardPropertyAdd () {
             }
   
             catch(error) {
-                setErrorMessageAC("Autocomplete currently unavailable.")
-                setTimeout(function(){
-                    setErrorMessageAC("")} 
-                    ,5000)
+                setErrorMessageAC("Please check your internet!");
+                setTimeout(() => {
+                    setErrorMessageAC("");
+                }, 2000);
             }
         }
           
@@ -119,7 +119,7 @@ function DashboardPropertyAdd () {
   
         const timeout = setTimeout (() => {
             fetchAutoComplete();
-        }, 100);
+        }, 300);
 
         return () => clearTimeout(timeout);
         
@@ -129,15 +129,71 @@ function DashboardPropertyAdd () {
         e.preventDefault();
         setMissingField("");
 
-        // City validation
+        // Empty field checks
 
-        const validCity = /^[a-zA-Z\-]+$/.test(propertyDetails?.city ?? ""); 
+        const fieldCheck = [
+            { field: propertyDetails.city, error: "Please state where your property is located." },
+            { field: propertyDetails.type, error: "Please choose a property type." },
+            { field: propertyDetails.price, error: "Please state the property's monthly rental rate." },
+            { field: propertyDetails.bedrooms, error: "Please state how many bedrooms your property has." },
+            { field: propertyDetails.bathrooms, error: "Please state how many bathrooms your property has." },
+            { field: propertyDetails.size, error: "Please state the size of your property in m²." },
+            { field: propertyDetails.furniture, error: "Please choose your property's type of furnishing." },
+            { field: propertyDetails.summary, error: "Please provide a summary of your property." },
+            { field: propertyDetails.detail, error: "Please provide a detailed description of your property." } 
+        ];
+
+        for (const {field, error} of fieldCheck) {
+            if (!field || field === "0" ) {
+                setDataErrorMessage(error); 
+                return;
+            }
+        }
+
+        //  City validation
+
+        const validCity = /^[a-zA-Z\- ]+$/.test(propertyDetails?.city); 
 
         if (!validCity) {
-            setDataErrorMessage("City name must only include letters and hyphens.");
+            setDataErrorMessage("City must only include letters and hyphens.");
+            return; 
+        }
+
+        if ((propertyDetails?.city?.length ?? 0) > 50) {
+            setDataErrorMessage("City name must not exceed 50 characters.");
             return;
         }
 
+        //  Price validation 
+
+        if ((propertyDetails?.price ?? 0) > 99999) {
+            setDataErrorMessage("Listing's monthly rate must be less than £100,000.");
+            return;
+        } 
+
+        //  Bedrooms validation 
+
+        if ((propertyDetails?.bedrooms ?? 0) > 99) {
+            setDataErrorMessage("Listing must have less than 100 bedrooms.");
+            return;
+        }
+
+        //  Bathrooms validation
+
+        if ((propertyDetails?.bathrooms ?? 0) > 99) {
+            setDataErrorMessage("Listing must have less than 100 bathrooms.");
+            return;
+        }        
+
+        // Size validation 
+
+        if ((propertyDetails?.size ?? 0) > 9999) {
+            setDataErrorMessage("Listing's size must be less than 10,000m².");
+            return;
+        }
+
+        //  Property summary & description validations are inline in the JSX (onChange handlers) 
+        
         //  Min photos check 
 
         if (tempURLs.length < 5) {
@@ -174,16 +230,16 @@ function DashboardPropertyAdd () {
             });
             
             clearTimeout(uploadTimeout);
-            
+                
             const result = await res.json();
             
             if (res.ok) {
                 setDataSuccessMessage(result.message);
                 setDataErrorMessage("");
                 setPhotoErrorMessage("");
-                setTimeout(function(){
-                    navigate(`/dashboard`)},
-                5000);
+                setTimeout(() =>{
+                    navigate(`/dashboard`)
+                },5000);
             }
 
             else if (result.photosError) {
@@ -318,21 +374,27 @@ function DashboardPropertyAdd () {
     }
     
     return (
-        <div>
-            <div className={styles.title_container}>
-                <h2 className={`${styles.title_format} ${styles.h2_font}`}>New Property</h2>
+        <div className={styles.main_container}>
+            <div className={styles.main_title_container}>
+                <h2 className={`${styles.main_title} ${styles.h2_font}`}>New Property</h2>
             </div>
-            <div className={styles.main_container}>
-                <div className={styles.data_fields_container}>
-                    {dataErrorMessage ?
-                        <h3 role="alert" className={styles.data_error_message}>{dataErrorMessage}</h3>
-                    :
-                        <h3 className={`${styles.h3_font} ${styles.step1_format}`}>Step 1: Complete the fields below.</h3>
-                    }
+            <div className={styles.add_property_container}>
+                <div className={styles.property_data_container}>
+                    <div className={styles.data_subtitle_container}>
+                        {dataErrorMessage ?
+                            <h3 role="alert" 
+                            className={styles.data_error_message}
+                        >
+                            {dataErrorMessage}
+                        </h3>
+                        :
+                            <h3 className={styles.h3_font}>Step 1: Complete the fields below.</h3>
+                        }
+                    </div>
                     <div className={styles.city_container}>
                         <label 
                             htmlFor="location"
-                            className={styles.h4_font}
+                            className={`${styles.h4_font} ${styles.city_label}`}
                         >
                             City: 
                         </label>
@@ -386,11 +448,24 @@ function DashboardPropertyAdd () {
                     </div>
                     <label 
                         htmlFor="property_type"
-                        className={styles.h4_font}
+                        className={`${styles.h4_font} ${styles.standard_label_format}`}
                     > 
                         Property Type: 
                     </label>
-                    {propertyTypeDropdown ?
+                    {!propertyTypeDropdown ?
+                        <ul
+                            id="property_type"
+                            onClick ={() => showDropdown(setPropertyTypeDropdown)}
+                            className={styles.ul_container_closed}
+                        >
+                            <li 
+                                data-value={propertyTypeLabel} 
+                                className={styles.list_item_closed}
+                            >
+                                {propertyTypeLabel}
+                            </li>
+                        </ul>
+                        :                    
                         <ul  
                             id="property_type"
                             onClick={() => {showDropdown(setPropertyTypeDropdown)}}    
@@ -426,23 +501,10 @@ function DashboardPropertyAdd () {
                                 </li>
                             ))}
                         </ul>    
-                    :    
-                        <ul
-                            id="property_type"
-                            onClick ={() => showDropdown(setPropertyTypeDropdown)}
-                            className={styles.ul_container_closed}
-                        >
-                            <li 
-                                data-value={propertyTypeLabel} 
-                                className={styles.list_item_closed}
-                            >
-                                {propertyTypeLabel}
-                            </li>
-                        </ul>
                     }
                     <label 
                         htmlFor="rental_rate"
-                        className={styles.h4_font}
+                        className={`${styles.h4_font} ${styles.standard_label_format}`}
                     > 
                         Monthly Rate: 
                     </label>
@@ -456,11 +518,11 @@ function DashboardPropertyAdd () {
                             }} 
                             required 
                             aria-invalid={missingField === "price"}
-                            className={styles.standard_input_format}
+                            className={`${styles.standard_input_format} ${styles.input_custom}`}
                         />
                     <label 
                         htmlFor="bedrooms"
-                        className={styles.h4_font}
+                        className={`${styles.h4_font} ${styles.standard_label_format}`}
                     > 
                         Bedrooms: 
                     </label>
@@ -478,7 +540,7 @@ function DashboardPropertyAdd () {
                         />
                     <label 
                         htmlFor="bathrooms"
-                        className={styles.h4_font}
+                        className={`${styles.h4_font} ${styles.standard_label_format}`}
                     > 
                         Bathrooms: 
                     </label>
@@ -496,7 +558,7 @@ function DashboardPropertyAdd () {
                         />
                     <label 
                         htmlFor="property_size"
-                        className={styles.h4_font}
+                        className={`${styles.h4_font} ${styles.standard_label_format}`}
                     > 
                         Size (m²): 
                     </label> 
@@ -516,11 +578,25 @@ function DashboardPropertyAdd () {
                     <span id="size_hint" className={styles.sr_content}>State the overall size of your property in m².</span>
                     <label 
                         htmlFor="furniture"
-                        className={styles.h4_font}
+                        className={`${styles.h4_font} ${styles.standard_label_format}`}
                     > 
                         Furniture: 
                     </label> 
-                    {furnitureDropdown ?
+                    {!furnitureDropdown ?
+                        <ul
+                            id="furniture"
+                            onClick={() => showDropdown(setFurnitureDropdown)}
+                            aria-invalid={missingField === "furniture"}
+                            className={styles.ul_container_closed}
+                        >
+                            <li
+                                data-value={furnitureLabel}
+                                className={styles.list_item_closed}
+                            >
+                                {furnitureLabel}
+                            </li>
+                        </ul>
+                        :                    
                         <ul 
                             id="furniture"
                             onClick={() => {showDropdown(setFurnitureDropdown)}}
@@ -556,25 +632,11 @@ function DashboardPropertyAdd () {
                                 </li>
                             ))}
                         </ul>
-                    :           
-                        <ul
-                            id="furniture"
-                            onClick={() => showDropdown(setFurnitureDropdown)}
-                            aria-invalid={missingField === "furniture"}
-                            className={styles.ul_container_closed}
-                        >
-                            <li
-                                data-value={furnitureLabel}
-                                className={styles.list_item_closed}
-                            >
-                                {furnitureLabel}
-                            </li>
-                        </ul>
                     }                                
                     <div className={styles.summary_container}>
                         <label 
                             htmlFor="property_summary"
-                            className={styles.h4_font}
+                            className={`${styles.h4_font} ${styles.summary_description_label_format}`}
                         > 
                             Summary: 
                         </label>
@@ -591,22 +653,22 @@ function DashboardPropertyAdd () {
                             placeholder="Add a short summary about your property."
                             required
                             aria-invalid={missingField === "summary"}
-                            className={`${styles.textarea_format} ${styles.textarea_summary_custom}`}
+                            className={styles.textarea_format}
                         />                            
-                        <div className={styles.word_count_container}>
+                        <div className={styles.summary_word_count_container}>
                             <span className={styles.word_count_item}>{summaryWordCount} / 50 </span>
+                            <span
+                                aria-live="polite"
+                                className={styles.sr_content}
+                            >
+                                {announceSummaryWordCount > 0 && `${announceSummaryWordCount} out of 50 words used.`}
+                            </span>                        
                         </div>
-                        <span
-                            aria-live="polite"
-                            className={styles.sr_content}
-                        >
-                            {announceSummaryWordCount > 0 && `${announceSummaryWordCount} out of 50 words used.`}
-                        </span>
                     </div>
                     <div className={styles.description_container}>
                         <label 
                             htmlFor="property_description"
-                            className={styles.h4_font}
+                            className={`${styles.h4_font} ${styles.summary_description_label_format}`}
                         > 
                             Description: 
                         </label>
@@ -620,47 +682,54 @@ function DashboardPropertyAdd () {
                                     }
                                     clearDataErrorMessage(); 
                                 }}
-                                placeholder="Add a description of your property."
+                                placeholder="Add a description of your property. Finish off by add an empty paragraph so your description has a space at the end."
                                 required
                                 aria-invalid={missingField === "detail"}
-                                className={`${styles.textarea_format} ${styles.textarea_description_custom}`}
+                                className={styles.textarea_format}
                             />
-                        <div className={styles.word_count_container}>
+                        <div className={styles.description_word_count_container}>
                             <span className={styles.word_count_item}>{descriptionWordCount} / 250</span>
+                            <span 
+                                aria-live="polite" 
+                                className={styles.sr_content}
+                            >
+                                {announceDescriptionWordCount > 0 && `${announceDescriptionWordCount} out of 250 words used.`}
+                            </span>                        
                         </div>
-                        <span 
-                            aria-live="polite" 
-                            className={styles.sr_content}
-                        >
-                            {announceDescriptionWordCount > 0 && `${announceDescriptionWordCount} out of 250 words used.`}
-                        </span>
                     </div>
                 </div>
-                <div>
-                    {photoErrorMessage ?
-                        <h3 role="alert" className={styles.photo_error_message}>{photoErrorMessage}</h3>
-                    :
-                        <h3 className={`${styles.h3_font} ${styles.step2_format}`}>Step 2: Upload between 5 to 10 photos.</h3>
-                    }
-                    <div className={styles.photo_gallery_container}>
+                <div className={styles.property_image_container}>
+                    <div className={styles.image_subtitle_container}>
+                        {photoErrorMessage ?
+                            <h3 
+                                role="alert" 
+                                className={styles.photo_error_message}
+                            >
+                                {photoErrorMessage}
+                            </h3>
+                        :
+                            <h3 className={styles.h3_font}>Step 2: Upload between 5 to 10 photos.</h3>
+                        }
+                    </div>
+                    <div className={styles.main_photo_container}>
                         {tempURLs.length > 0 ?                        
                             <img 
                                 src={tempURLs[mainPhotoIndex].url}
-                                alt="Main property photo"
                                 className={styles.main_photo}
-                            />
+                                alt="Main property photo"                                
+                                />
                         :
                             <div className={styles.no_main_photo_div}></div>
                         }
                     </div>
-                    <div className={styles.photo_gallery_row}>
+                    <div className={styles.extra_photos_row}>
                         <button
                             disabled = {galleryIndex === 0}
                             onClick={() => previousPhotos()}
+                            className={styles.left_arrow_container}
                             aria-describedby="previous_photos_button"
-                            className={styles.left_arrow_format}
                         >
-                        <IoMdArrowRoundBack className={styles.react_arrow_format} />                           
+                            <IoMdArrowRoundBack className={styles.react_arrow_format} />                           
                         </button>
                         <span id="previous_photos_button" className={styles.sr_content}>
                             Display previous 3 uploaded photos. If these are the first 3 uploaded photos, this button will be disabled. 
@@ -690,35 +759,33 @@ function DashboardPropertyAdd () {
                                 return (
                                     <li 
                                         key={tempURL.url}
-                                        className={styles.li_element}
+                                        className={styles.extra_photos_list}
                                     >
                                         <img 
                                             src={tempURL.url} 
                                             onClick={ () => setMainPhotoIndex(realIndex)}
-                                            alt={`Photo preview of photo number ${realIndex + 1}`} 
                                             className={styles.extra_photos}
+                                            alt={`Photo preview of photo number ${realIndex + 1}`} 
                                         />
                                         <button 
                                             onClick={() => deletePhotos(realIndex)}
+                                            className={styles.delete_photo_button}
                                             aria-label="Remove photo"
-                                            className={styles.photo_delete_button}
                                         >
-                                            <TiDelete className={styles.photo_delete_react_icon} />
+                                            <TiDelete className={styles.delete_photo_react_icon} />
                                         </button>                       
                                     </li>
                                 )
                             })}  
                             {Array.from({ length: 3 - visiblePhotos.length }).map((_, index) => (
-                                <li key={index} className={styles.li_element}>
-                                    <div className={styles.no_extra_photo_div}></div>
-                                </li>
+                                <li key={index} className={styles.no_extra_photo_li}></li>
                             ))}       
                         </ul>   
                         <button 
                             disabled={galleryIndex + 3 >= tempURLs.length}
                             onClick={() => nextPhotos()}
                             aria-labelledby="next_photos_button"
-                            className={styles.right_arrow_format}
+                            className={styles.right_arrow_container}
                         >
                             <IoMdArrowRoundForward className={styles.react_arrow_format} />
                         </button>
@@ -727,7 +794,7 @@ function DashboardPropertyAdd () {
                         </span>
                     </div>                
                     <div className={styles.feedback_messages_container}>    
-                        {tempURLs.length < 10 && !excessPhotosMessage && !uploading && !dataSuccessMessage && !photoErrorMessage &&
+                        {tempURLs.length < 10 && !excessPhotosMessage && !uploading && !dataSuccessMessage &&
                         <h3 
                             role="status" 
                             className={styles.h3_font}
@@ -743,7 +810,7 @@ function DashboardPropertyAdd () {
                                 {excessPhotosMessage}
                             </h3>
                         }
-                        {!uploading && !dataSuccessMessage && !photoErrorMessage && 
+                        {!uploading && !dataSuccessMessage && 
                             <button 
                                 onClick={addPropertyData}
                                 className={styles.create_listing_button}
@@ -762,8 +829,8 @@ function DashboardPropertyAdd () {
                         {dataSuccessMessage &&                         
                             <div role="alert" className={styles.success_message_container}>
                                 <h3 className={styles.success_message_1}>{dataSuccessMessage}</h3>
-                                <h3 className={`${styles.success_message_2} ${styles.h3_font}`}>
-                                    Redirecting you to your properties.
+                                <h3 className={styles.success_message_2}>
+                                    Redirecting you to your properties...
                                 </h3>
                             </div>
                         }                   
