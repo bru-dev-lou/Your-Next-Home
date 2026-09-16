@@ -1,4 +1,4 @@
-/* sr = screen reader */
+    /* sr = screen reader */
 
 .sr_content {
     position: absolute;
@@ -11,13 +11,14 @@
 
 /*  General styling starts here - 3+ elements will use these. */
 
-
 .h2_font {
     font-family: "Source Sans 3", sans-serif;
     font-size: 26px;
     color: #F2EFE2;
     font-weight: 390;
     text-shadow: 1px 1px 2px rgba(0,0,0,0.8);    
+
+    margin: 0;
 }
 
 .h3_font {
@@ -26,7 +27,7 @@
     color: #F2EFE2;
     font-weight: 390;
     text-shadow: 1px 1px 2px rgba(0,0,0,0.8);    
-    margin: 0px;
+    margin: 0;
 }
 
 .h4_font {
@@ -34,107 +35,182 @@
     font-size: 20px;
     color: #F2EFE2;
     font-weight: 390;
-    margin: 0px;
+    margin: 0;
 }
 
+/* Style code in the order it appears in the JSX return */
 
-.main_container {
-    width: calc(100% - 87px);
-    margin-left: 41px;
+.error_container {
+    height: 97%;
+    width: 94%;
+
+    margin: 1% 0 0 3%;
+}
+
+.main_title_container {
+    background-color: #156082;
+    border: solid 2px #042433;
+    border-radius: 10px;
+    height: 50px;
+    width: 100%;
+
+    display: flex;
+    justify-content: center;
 }
 
 .main_title {
-    background-color: #156082;
-    border: solid 2px #042433;
-    border-radius: 5px;
-    height: 40px;
-    line-height: 40px;
+    color: #F2EFE2;
+    font-family: "Source Sans 3", sans-serif;
+    font-size: 26px;
+    font-weight: 390;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.8);    
+
+    margin: 0 3% 0 0;
+    line-height: 50px;
 }
 
-.main_title_message {
-    margin: 0 0 0 41%;
+.server_error_image {
+    width: 30%;
+    height: 46%;
+
+    margin: 6% 0 0 34%; 
 }
 
-.property_main_container {
-    display: flex;
-    flex-direction: column; 
-    row-gap: 40px;
+.error_message_FP {
+    color: #C00000;
+    font-family: "Source Sans 3", sans-serif;
+    font-size: 30px;
+    font-weight: 390;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.8);    
+    text-align: center;
     
-    margin-top: 40px;
+    margin: 3% 1% 0 0;
 }
 
-.property_card_and_favorites_container {
-    display: flex; 
+.no_props_image {
+    width: 30%;
+    height: 45%;
+
+    margin: 5% 0 0 33%;
 }
 
-.property_card_container {
-    width: 82%;
-    z-index: 1;
+.no_properties_message {
+    color: #8E0100;
+    font-family: "Source Sans 3", sans-serif;
+    font-size: 30px;
+    font-weight: 490;
+    text-shadow: 1px 1px 1px rgba(0,0,0,0.2);    
+    text-align: center;
+    
+    margin: 4% 1% 0 0;
+}
+
+.main_container {
+    height: 100%;
+    width: 94%;
+    
+    margin: 1% 0 0 3%;
 }
 
 .remove_from_favorites_error_message {
+    color: #fb0202;
     font-family: "Source Sans 3", sans-serif;
     font-size: 23px;
-    color: #C00000;
-    font-weight: 390;
-    text-shadow: 1px 1px 2px rgba(0,0,0,0.8);    
+    font-weight: 500;
+    text-shadow: 1px 1px 5px rgba(144, 36, 36, 0.5);    
     
-    margin: 2% 0 0 0;
+    margin: 0 3% 0 0;
+    line-height: 50px;
 }
 
-.property_card {
+.property_and_favorite_container {
+    height: 47%;
+    width: 100%;
+
+    display: flex;
+    row-gap: 12%;
+    
+    margin-top: 3%;
+}
+
+.property_card_container {
     background-color: #125370;
-    border: solid 3px #042433;
+    border: solid 2px #042433;
     border-radius: 35px;
+    
+    width: 82%;
+    height: 100%;
+
+    display: flex; 
+    flex-direction: column;
+    
+    z-index: 2;
 }
 
 .property_card_row_1 {
-    display: flex; 
-    margin: 2% 0 0 3%;
-}
+    height: 10%;
+    width: 94%;
 
-.location_format {
-    width: 80%;
-}
-
-.rental_rate_format {
-    margin-left: 5%;
-}
-
-.property_card_row_2 {
     display: flex; 
     margin: 1% 0 0 3%;
 }
 
-.photo_container {
-    height: 200px;
-    width: 400px; 
+.location_container {
+    width: 80%;
+
+    display: flex; 
+    justify-content: flex-start;
+}
+
+.rental_rate_container {
+    width: 20%;
+
+    display: flex;
+    justify-content: flex-end;
+}
+
+.property_card_row_2 {
+    width: 94%;
+    height: 66%;
+
+    display: flex; 
+    margin: 1% 0 0 3%;
 }
 
 .property_photo {
-    border: solid 3px #002461;
-    border-radius: 45px;
+    border-radius: 20px;    
+    border: solid 2px #002461;
+
 
     box-shadow: 
     0px 5px 2px rgba(0,0,0,0.2);
 
-    height: 200px;     
-    width: 400px;
+    height: 100%;     
+    width: 40%;
 
+    object-fit: cover;
     cursor: pointer; 
 }
 
 .summary_container {
-    margin-left: 5%; 
-    margin-right: 5%;
+    height: 100%;
+    width: 55%;
+    
+    margin-left: 5%;
 }
 
-.summary_description_position {    
-    height: 85%;
-    margin-top: 2%; 
+.summary_title {
+    line-height: 20px;
 }
 
-.summary_description_format {
+.summary_content {
+    color: #F2EFE2;    
+    font-family: "Source Sans 3", sans-serif;
+    font-size: 18px;
+    font-weight: 390;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.8);    
+
+    margin-top: 3%;
     overflow-wrap: break-word;
     hyphens: auto;
 
@@ -142,29 +218,39 @@
 }
 
 .property_card_row_3 {
+    width: 94%;
+    height: 10%;
+
     display: flex; 
-    margin: 2% 5% 1% 3%;
-    width: 100%;
+    margin: 1% 0 0 3%;
 }
 
 .date_listed_container {
-    width: calc(39% + 4px);
+    width: 40%;
 }
 
 .remaining_info_container {
+    width: 55%;
+
     display: flex; 
     justify-content: space-between;
-    width: calc(53% + 1px);
+    
+    margin-left: 5%;
 }
 
-.remaining_info_position {
+.property_type_container {
+    width: 26%;
     display: flex;
-    width: 30%;
 }
 
-.remaining_info_position_custom {
+.bedrooms_container {
+    width: 23%;
     display: flex;
-    width: 22%;
+}
+
+.bathrooms_container {
+    width: 24%;
+    display: flex;
 }
 
 .react_icon {
@@ -178,26 +264,29 @@
 
 .favorites_div {
     background-color: #156082;
-    border: solid 3px #042433;
+    border: solid 2px #042433;
     border-radius: 35px;
 
-    height: 331px;
-    width: 15%;
+    height: 100%;
+    width: 19%;
 
-    margin-left: 70%;
-
-    position: absolute;
+    position: relative;
     z-index: 0;
 
     display: flex;
     flex-direction: column;
+    justify-content: center;    
 
-    justify-content: center;
-    align-items: center; 
+    margin-left: -10%;
 }
 
-.remove_request {
-    margin-left: 35%;
+.favorite_button_container {
+    width: 100%;
+
+    display: flex;
+    justify-content: center;
+    
+    margin-left: 27%;
 }
 
 .favorites_button {
@@ -213,60 +302,49 @@
 
     stroke: #D8CEA8;
     stroke-width: 45px;
+
+    cursor: pointer;
 }
 
-.fav_button_react_icon:hover {
-    cursor: pointer; 
-}
 
-.confirm_removal_container {
+.favorites_div_confirm_removal {
     background-color: #156082;
-    border: solid 3px #042433;
+    border: solid 2px #042433;
     border-radius: 35px;
 
-    height: 331px;
-    width: 160%;
+    height: 100%;
+    width: 23%;
 
-    margin-left: 45%;
-
-    position: absolute;
+    position: relative;
     z-index: 1;
 
     display: flex;
     flex-direction: column;
+    justify-content: center;    
 
-    justify-content: center;
-    align-items: center; 
+    margin-left: -5%;
 }
 
 .confirm_removal_message {
+    width: 78%;    
     text-shadow: 1px 1px 2px rgba(0,0,0,0.8);
-    margin-left: 28%;   
+    
+    margin-left: 22%;   
+    text-align: center;
 }
 
 .removal_buttons_container {
-    display: flex; 
-    column-gap: 20px;
-    margin-left: 25%;
-    margin-top: 5%; 
-}
+    width: 78%;
+    height: 11%;
 
-.confirm_removal_button {
-    background-color: #F5F2EB;
-    border: none; 
-    border-radius: 5px;
-
-    font-size: 20px;
-    color: #156082;
-    line-height: 50%;
-
-    width: 75px;
-    height: 30px;
+    display: flex;
+    justify-content: center; 
+    column-gap: 11%;
     
-    cursor: pointer;
+    margin: 5% 0 0 22%;
 }
 
-.cancel_removal_button {
+.confirm_cancel_removal_button {
     background-color: #F5F2EB;
     border: none; 
     border-radius: 5px;
@@ -275,8 +353,8 @@
     color: #156082;
     line-height: 50%;
 
-    width: 75px;
-    height: 30px;
-
+    width: 32%;
+    height: 100%;
+    
     cursor: pointer;
 }

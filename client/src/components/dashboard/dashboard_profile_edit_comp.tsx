@@ -338,22 +338,21 @@ function DashboardProfileEdit () {
 
     if (dataLoading) {
         return (
-            <div className={styles.main_container}>
-                <div className={styles.main_title}>
-                    <h2 className={`${styles.h2_font} ${styles.main_title_format}`}>
-                        My Profile
+            <div className={styles.error_container}>
+                <div className={styles.main_title_container}>
+                    <h2 className={`${styles.h2_font} ${styles.main_title}`}>
+                        Fetching user data...
                     </h2>
                 </div>
-                <h3 role="status" className={styles.retrieving_data_message}>Fetching user data...</h3>
             </div>
         )    
     };
 
     if (errorMessageServer) {
         return (
-            <div className={styles.main_container}>
-                <div className={styles.main_title}>
-                    <h2 className={`${styles.h2_font} ${styles.main_title_format}`}>
+            <div className={styles.error_container}>
+                <div className={styles.main_title_container}>
+                    <h2 className={`${styles.h2_font} ${styles.main_title}`}>
                         My Profile
                     </h2>
                 </div>
@@ -365,223 +364,247 @@ function DashboardProfileEdit () {
 
     if (errorGeneralMessage){
         return (
-            <div className={styles.main_container}>
-                <div className={styles.main_title}>
-                    <h2 className={`${styles.h2_font} ${styles.main_title_format}`}>
+            <div className={styles.error_container}>
+                <div className={styles.main_title_container}>
+                    <h2 className={`${styles.h2_font} ${styles.main_title}`}>
                         My Profile
                     </h2>
                 </div> 
-            <span><BsWifiOff className={styles.no_internet_react_icon}/></span>
-            <h3 role="alert" className={styles.no_user_data_error}>{errorGeneralMessage}</h3>
+                <div className={styles.error_message_container}>
+                    <BsWifiOff className={styles.no_internet_react_icon}/>
+                    <h3 role="alert" className={styles.no_user_data_error}>{errorGeneralMessage}</h3>
+                </div>
             </div>
         )    
     };
 
     return (
         <div className={styles.main_container}>
-            <div className={styles.main_title}>
-                <h2 className={`${styles.h2_font} ${styles.main_title_format}`}>
+            <div className={styles.main_title_container}>
+                <h2 className={`${styles.h2_font} ${styles.main_title}`}>
                     My Profile
                 </h2>
             </div>
-            <div className={styles.subtitle_1_container}>
-                <h3 className={`${styles.h3_font} ${styles.subtitle_1_item}`}>Edit Profile</h3>
-                {errorMessageMP && <h4 role="alert" className={styles.profile_error_message}>{errorMessageMP}</h4>}         
-                {successMessageMP && <h4 role="status" className ={styles.profile_success_message}>{successMessageMP}</h4>}   
-                {!errorMessageMP && !successMessageMP && 
-                    <h4 className={`${styles.h4_font} ${styles.subtitle_1_info}`}>
-                        Profile Information - This is what others can see about you.
-                    </h4>
-                }
-                <div className={styles.edit_profile_container}>
-                    <label htmlFor="name" className={styles.h4_font}> Name: </label>
-                    <input 
-                        id="name"
-                        type="text"
-                        value= {userPublicDetails.name}
-                        onChange={(e) => {
-                            publicDetailsUIreset();
-                            setUserPublicDetails({...userPublicDetails, name: e.target.value});
-                        }} 
-                        required
-                        className={styles.input_format}
-                        aria-invalid={missingField === "name"}
-                    />
-                    <label htmlFor="address" className={styles.h4_font}> Address: </label>
-                    <input 
-                        id="address"
-                        type="text"
-                        value= {userPublicDetails.address}
-                        onChange={(e) => {
-                            publicDetailsUIreset();
-                            setUserPublicDetails({...userPublicDetails, address: e.target.value});
-                        }} 
-                        required
-                        aria-invalid={missingField === "address"}
-                        className={styles.input_format}
-                    />
-                    <label htmlFor="phone_number" className={styles.h4_font}> Phone Number: </label> 
-                    <input 
-                        id="phone_number"
-                        type="tel"
-                        value= {userPublicDetails.phone_number}
-                        onChange={(e) => {
-                            publicDetailsUIreset();
-                        
-                            const numbersOnly = e.target.value.replace(/[^0-9]/g, "");
-                            setUserPublicDetails({...userPublicDetails, phone_number: numbersOnly});
-                        }} 
-                        required
-                        aria-invalid={missingField === "number"}
-                        className={styles.input_format}
-                    />
-                    <label htmlFor="email" className={styles.h4_font}> Email: </label> 
-                    <input 
-                        id="email"
-                        type="email"
-                        value= {userPublicDetails.email}
-                        onChange={(e) => {
-                            publicDetailsUIreset();
-                            setUserPublicDetails({...userPublicDetails, email: e.target.value});
-                        }} 
-                        required
-                        aria-invalid={missingField === "email"}
-                        className={styles.input_format}
-                    />
+            <div className={styles.edit_profile_container}>
+                <div className={styles.subtitle_1_container}>
+                    <h3 className={`${styles.h3_font} ${styles.subtitle_1}`}>Edit Profile</h3>
+                    {errorMessageMP && <h4 role="alert" className={styles.profile_error_message}>{errorMessageMP}</h4>}         
+                    {successMessageMP && <h4 role="status" className ={styles.profile_success_message}>{successMessageMP}</h4>}   
+                    {!errorMessageMP && !successMessageMP && 
+                        <h4 className={`${styles.h4_font} ${styles.subtitle_1_info}`}>
+                            Profile Information - This is what others can see about you.
+                        </h4>
+                    }
+                </div>
+                <div className={styles.edit_profile_user_data_container}>
+                    <div className={styles.container_format_edit_profile}>
+                        <label htmlFor="name" className={`${styles.h4_font} ${styles.label_format_edit_profile}`}> Name: </label>
+                        <input 
+                            id="name"
+                            type="text"
+                            value= {userPublicDetails.name}
+                            onChange={(e) => {
+                                publicDetailsUIreset();
+                                setUserPublicDetails({...userPublicDetails, name: e.target.value});
+                            }} 
+                            required
+                            className={styles.input_format_edit_profile}
+                            aria-invalid={missingField === "name"}
+                        />
+                    </div>
+                    <div className={styles.container_format_edit_profile}>
+                        <label htmlFor="address" className={`${styles.h4_font} ${styles.label_format_edit_profile}`}> Address: </label>
+                        <input 
+                            id="address"
+                            type="text"
+                            value= {userPublicDetails.address}
+                            onChange={(e) => {
+                                publicDetailsUIreset();
+                                setUserPublicDetails({...userPublicDetails, address: e.target.value});
+                            }} 
+                            required
+                            aria-invalid={missingField === "address"}
+                            className={styles.input_format_edit_profile}
+                        />
+                    </div>
+                    <div className={styles.container_format_edit_profile}>
+                        <label htmlFor="phone_number" className={`${styles.h4_font} ${styles.label_format_edit_profile}`}> Phone Number: </label> 
+                        <input 
+                            id="phone_number"
+                            type="tel"
+                            value= {userPublicDetails.phone_number}
+                            onChange={(e) => {
+                                publicDetailsUIreset();
+                            
+                                const numbersOnly = e.target.value.replace(/[^0-9]/g, "");
+                                setUserPublicDetails({...userPublicDetails, phone_number: numbersOnly});
+                            }} 
+                            required
+                            aria-invalid={missingField === "number"}
+                            className={styles.input_format_edit_profile}
+                        />
+                    </div>
+                    <div className={styles.container_format_edit_profile}>
+                        <label htmlFor="email" className={`${styles.h4_font} ${styles.label_format_edit_profile}`}> Email: </label> 
+                        <input 
+                            id="email"
+                            type="email"
+                            value= {userPublicDetails.email}
+                            onChange={(e) => {
+                                publicDetailsUIreset();
+                                setUserPublicDetails({...userPublicDetails, email: e.target.value});
+                            }} 
+                            required
+                            aria-invalid={missingField === "email"}
+                            className={styles.input_format_edit_profile}
+                        />
+                    </div>
                     {!changeRequest ? 
-                        <button 
-                            onClick={() => setChangeRequest(true)}
-                            className={styles.save_profile_changes_button}    
-                        >
-                            Save Changes
-                        </button>
-                    :
-                        <>
-                            <label htmlFor="password_request1" className={styles.h4_font}> Provide password: </label>
-                            <input 
-                                id="password_request1"
-                                type= {showCurrentPasswordMP ? "text" : "password"} 
-                                value = {userPublicDetails.password}
-                                onChange= {(e) => {
-                                    setErrorMessageMP(""); 
-                                    setSuccessMessageMP(""); 
-                                    setPassErrorCodeMP("");
-                                    setUserPublicDetails({...userPublicDetails, password: e.target.value});
-                                }}
-                                required
-                                aria-invalid={passErrorCodeMP === "missing_password" || passErrorCodeMP === "incorrect_password"}
-                                className={styles.input_format}
-                            />                                                      
+                        <div className={styles.container_format_edit_profile}>
                             <button 
-                                type="button"
-                                onClick= {() => setShowCurrentPasswordMP(!showCurrentPasswordMP)}
-                                aria-describedby="button_hint1"
-                                aria-pressed={showCurrentPasswordMP}
-                                className={styles.show_hide_password_button_MP}
+                                onClick={() => setChangeRequest(true)}
+                                className={styles.save_profile_changes_button}    
                             >
-                                {showCurrentPasswordMP ? <LuEye/> : <LuEyeClosed/>}
-                            </button>  
-                            <span id="button_hint1" className={styles.sr_content}>
-                                Clicking this button allows your screen reader to read the password you have inserted
-                            </span>                            
+                                Save Changes
+                            </button>
+                        </div>
+                    :
+                        <div className={styles.password_container}>
+                            <div className={styles.container_format_edit_profile_custom}>
+                                <label htmlFor="password_request1" className={`${styles.h4_font} ${styles.label_format_edit_profile}`}> Provide password: </label>
+                                <input 
+                                    id="password_request1"
+                                    type= {showCurrentPasswordMP ? "text" : "password"} 
+                                    value = {userPublicDetails.password}
+                                    onChange= {(e) => {
+                                        setErrorMessageMP(""); 
+                                        setSuccessMessageMP(""); 
+                                        setPassErrorCodeMP("");
+                                        setUserPublicDetails({...userPublicDetails, password: e.target.value});
+                                    }}
+                                    required
+                                    aria-invalid={passErrorCodeMP === "missing_password" || passErrorCodeMP === "incorrect_password"}
+                                    className={styles.input_format_edit_profile}
+                                />                                                      
+                                <button 
+                                    type="button"
+                                    onClick= {() => setShowCurrentPasswordMP(!showCurrentPasswordMP)}
+                                    aria-describedby="button_hint1"
+                                    aria-pressed={showCurrentPasswordMP}
+                                    className={styles.show_hide_password_button_MP}
+                                >
+                                    {showCurrentPasswordMP ? <LuEye/> : <LuEyeClosed/>}
+                                </button>  
+                                <span id="button_hint1" className={styles.sr_content}>
+                                    Clicking this button allows your screen reader to read the password you have inserted
+                                </span>  
+                            </div>                          
                             <button 
                                 onClick= {updateUserPublicDetails}
                                 className={styles.confirm_profile_changes_button}
                             >
                                 Confirm Changes
-                            </button>         
-                        </>          
-                    }               
-                </div>                    
-            </div>
-            <div className={styles.subtitle_2_container}>
-                <h3 className={`${styles.h3_font} ${styles.subtitle_2_item}`}>Account Management</h3>
-                {errorMessageAM && <h4 role="alert" className={styles.account_error_message}>{errorMessageAM}</h4>}
-                {successMessageAM && <h4 role="status" className={styles.account_success_message}>{successMessageAM}</h4>}
-                {!errorMessageAM && !successMessageAM &&
-                    <h4 className={`${styles.h4_font} ${styles.subtitle_2_info}`}>Password Change</h4>
-                }
-                <div className={styles.account_management_container}>
-                    <label htmlFor="current_password" className={styles.h4_font}> Current password: </label>
-                    <input 
-                        id="current_password"
-                        type= {showCurrentPasswordAM ? "text" : "password"}
-                        value={userPrivateDetails.password}
-                        onChange= {(e) => {
-                            privateDetailsUIreset();
-                            setUserPrivateDetails({...userPrivateDetails, password: e.target.value});
-                        }}
-                        required
-                        aria-invalid={passErrorCodeAM === "missing_current_pass" || passErrorCodeAM === "incorrect_current_pass"}
-                        className={styles.input_format}
-                    />
-                    <button 
-                        type="button"
-                        onClick= {() => setShowCurrentPasswordAM(!showCurrentPasswordAM)}
-                        aria-describedby="button_hint2"
-                        aria-pressed={showCurrentPasswordAM}
-                        className={styles.show_hide_password_button_AM}
-                    >
-                        {showCurrentPasswordAM ? <LuEye/> : <LuEyeClosed/>}                              
-                    </button>  
-                    <span id="button_hint2" className={styles.sr_content}>
-                        Clicking this button allows your screen reader to read the password you have inserted
-                    </span>
-                    <label htmlFor="new_password" className={styles.h4_font}> New password: </label>
-                    <input 
-                        id="new_password"
-                        type= {showNewPassword ? "text" : "password"}
-                        value={userPrivateDetails.newPassword}
-                        onChange= {(e) => {
-                            privateDetailsUIreset();
-                            setUserPrivateDetails({...userPrivateDetails, newPassword: e.target.value});
-                        }}
-                        required
-                        aria-invalid={
-                            passErrorCodeAM === "missing_new_pass" ||
-                            passErrorCodeAM === "new_pass_wrong_format" ||
-                            passErrorCodeAM === "no_match_passwords"    ||
-                            passErrorCodeAM === "new_pass_same_old_pass"
-                        }
-                        className={styles.input_format}
-                    />
-                    <button 
-                        type="button"
-                        onClick= {() => setShowNewPassword(!showNewPassword)}
-                        aria-describedby="button_hint3"
-                        aria-pressed={showNewPassword}
-                        className={styles.show_hide_password_button_AM}
-                    >
-                        {showNewPassword ? <LuEye/> : <LuEyeClosed/>}                                                               
-                    </button>
-                    <span id="button_hint3" className={styles.sr_content}>
-                        Clicking this button allows your screen reader to read the password you have inserted
-                    </span>
-                    <label htmlFor="password_confirmation" className={styles.h4_font}> Confirm new password: </label>
-                    <input 
-                        id="password_confirmation"
-                        type= {showConfirmPassword ? "text" : "password"}
-                        value={userPrivateDetails.passwordConfirmation}
-                        onChange= {(e) => {
-                            privateDetailsUIreset();
-                            setUserPrivateDetails({...userPrivateDetails, passwordConfirmation: e.target.value});
-                        }}
-                        required
-                        aria-invalid={passErrorCodeAM === "no_match_passwords"}
-                        className={styles.input_format}
-                    />
-                    <button 
-                        type="button"
-                        onClick= {() => setShowConfirmPassword(!showConfirmPassword)}
-                        aria-describedby="button_hint4"
-                        aria-pressed={showConfirmPassword}
-                        className={styles.show_hide_password_button_AM}
-                    >
-                        {showConfirmPassword ? <LuEye/> : <LuEyeClosed/>}                                                                    
-                    </button> 
-                    <span id="button_hint4" className={styles.sr_content}>
-                        Clicking this button allows your screen reader to read the password you have inserted
-                    </span>
+                            </button>      
+                        </div>                             
+                    }
+                </div>               
+            </div>          
+            <div className={styles.account_management_container}>
+                <div className={styles.subtitle_2_container}>
+                    <h3 className={`${styles.h3_font} ${styles.subtitle_2}`}>Account Management</h3>
+                    {errorMessageAM && <h4 role="alert" className={styles.account_error_message}>{errorMessageAM}</h4>}
+                    {successMessageAM && <h4 role="status" className={styles.account_success_message}>{successMessageAM}</h4>}
+                    {!errorMessageAM && !successMessageAM &&
+                        <h4 className={`${styles.h4_font} ${styles.subtitle_2_info}`}>Password Change</h4>
+                    }
+                </div>
+                <div className={styles.password_change_container}>
+                    <div className={styles.container_format_account_management}>
+                        <label htmlFor="current_password" className={`${styles.h4_font} ${styles.label_format_account_management}`}> Current password: </label>
+                        <input 
+                            id="current_password"
+                            type= {showCurrentPasswordAM ? "text" : "password"}
+                            value={userPrivateDetails.password}
+                            onChange= {(e) => {
+                                privateDetailsUIreset();
+                                setUserPrivateDetails({...userPrivateDetails, password: e.target.value});
+                            }}
+                            required
+                            aria-invalid={passErrorCodeAM === "missing_current_pass" || passErrorCodeAM === "incorrect_current_pass"}
+                            className={styles.input_format_account_management}
+                        />
+                        <button 
+                            type="button"
+                            onClick= {() => setShowCurrentPasswordAM(!showCurrentPasswordAM)}
+                            aria-describedby="button_hint2"
+                            aria-pressed={showCurrentPasswordAM}
+                            className={styles.show_hide_password_button_AM}
+                        >
+                            {showCurrentPasswordAM ? <LuEye/> : <LuEyeClosed/>}                              
+                        </button>  
+                        <span id="button_hint2" className={styles.sr_content}>
+                            Clicking this button allows your screen reader to read the password you have inserted
+                        </span>
+                    </div>
+                    <div className={styles.container_format_account_management}>
+                        <label htmlFor="new_password" className={`${styles.h4_font} ${styles.label_format_account_management}`}> New password: </label>
+                        <input 
+                            id="new_password"
+                            type= {showNewPassword ? "text" : "password"}
+                            value={userPrivateDetails.newPassword}
+                            onChange= {(e) => {
+                                privateDetailsUIreset();
+                                setUserPrivateDetails({...userPrivateDetails, newPassword: e.target.value});
+                            }}
+                            required
+                            aria-invalid={
+                                passErrorCodeAM === "missing_new_pass" ||
+                                passErrorCodeAM === "new_pass_wrong_format" ||
+                                passErrorCodeAM === "no_match_passwords"    ||
+                                passErrorCodeAM === "new_pass_same_old_pass"
+                            }
+                            className={styles.input_format_account_management}
+                        />
+                        <button 
+                            type="button"
+                            onClick= {() => setShowNewPassword(!showNewPassword)}
+                            aria-describedby="button_hint3"
+                            aria-pressed={showNewPassword}
+                            className={styles.show_hide_password_button_AM}
+                        >
+                            {showNewPassword ? <LuEye/> : <LuEyeClosed/>}                                                               
+                        </button>
+                        <span id="button_hint3" className={styles.sr_content}>
+                            Clicking this button allows your screen reader to read the password you have inserted
+                        </span>
+                    </div>
+                    <div className={styles.container_format_account_management}>
+                        <label htmlFor="password_confirmation" className={`${styles.h4_font} ${styles.label_format_account_management}`}> Confirm new password: </label>
+                        <input 
+                            id="password_confirmation"
+                            type= {showConfirmPassword ? "text" : "password"}
+                            value={userPrivateDetails.passwordConfirmation}
+                            onChange= {(e) => {
+                                privateDetailsUIreset();
+                                setUserPrivateDetails({...userPrivateDetails, passwordConfirmation: e.target.value});
+                            }}
+                            required
+                            aria-invalid={passErrorCodeAM === "no_match_passwords"}
+                            className={styles.input_format_account_management}
+                        />
+                        <button 
+                            type="button"
+                            onClick= {() => setShowConfirmPassword(!showConfirmPassword)}
+                            aria-describedby="button_hint4"
+                            aria-pressed={showConfirmPassword}
+                            className={styles.show_hide_password_button_AM}
+                        >
+                            {showConfirmPassword ? <LuEye/> : <LuEyeClosed/>}                                                                    
+                        </button> 
+                        <span id="button_hint4" className={styles.sr_content}>
+                            Clicking this button allows your screen reader to read the password you have inserted
+                        </span>
+                    </div>
                     <button 
                         onClick= {updateUserPrivateDetails}
                         className={styles.change_password_confirm_button}
@@ -590,63 +613,59 @@ function DashboardProfileEdit () {
                     </button>
                 </div>
             </div>
-            <div className={styles.subtitle_3_container}>
-                <div className={styles.delete_account_container}>   
-                    {errorMessageDA ? 
-                        <h3 role="alert" className={styles.delete_account_error_message}>{errorMessageDA}</h3>
-                    :
-                        <h4 className={`${styles.h4_font} ${styles.delete_account_title}`}>Delete Account</h4>
-                    }
-                    {!accountDeleteRequest ? 
+            <div className={styles.delete_account_container}>
+                {errorMessageDA ? 
+                    <h3 role="alert" className={styles.delete_account_error_message}>{errorMessageDA}</h3>
+                :
+                    <h4 className={`${styles.h4_font} ${styles.delete_account_title}`}>Delete Account</h4>
+                }
+                {!accountDeleteRequest ? 
+                    <button 
+                        onClick={() => setAccountDeleteRequest(true)}
+                        className={styles.delete_account_request_button}    
+                    >
+                        Delete Account
+                    </button>
+                :
+                    <div className={styles.container_format_account_deletion}>
+                        <label htmlFor="password_request2" className={`${styles.h4_font} ${styles.label_format_account_deletion}`}> Provide Password: </label>
+                        <input
+                            id="password_request2" 
+                            type= {showCurrentPasswordDA ? "text" : "password"} 
+                            value={userAccountDeleteDetails.password}
+                            onChange= {(e) => {
+                                setErrorMessageDA("");
+                                setPassErrorCodeDA("");
+                                setUserAccountDeleteDetails({...userAccountDeleteDetails, password: e.target.value})
+                            }}
+                            required
+                            aria-invalid={passErrorCodeDA === "missing_password" || passErrorCodeDA === "incorrect_password"}
+                            className={styles.input_format_account_deletion}
+                        />
                         <button 
-                            onClick={() => setAccountDeleteRequest(true)}
-                            className={`${styles.delete_account_buttons} ${styles.delete_account_button_custom_format}`}
+                            type="button"
+                            onClick= {() => setShowCurrentPasswordDA(!showCurrentPasswordDA)}
+                            aria-describedby="button_hint5"
+                            aria-pressed={showCurrentPasswordDA}
+                            className={styles.show_hide_password_button_DA}
                         >
-                            Delete Account
-                        </button>
-                    :
-                        <>
-                            <label htmlFor="password_request2" className={styles.h4_font}> Provide Password: </label>
-                            <input
-                                id="password_request2" 
-                                type= {showCurrentPasswordDA ? "text" : "password"} 
-                                value={userAccountDeleteDetails.password}
-                                onChange= {(e) => {
-                                    setErrorMessageDA("");
-                                    setPassErrorCodeDA("");
-                                    setUserAccountDeleteDetails({...userAccountDeleteDetails, password: e.target.value})
-                                }}
-                                required
-                                aria-invalid={passErrorCodeDA === "missing_password" || passErrorCodeDA === "incorrect_password"}
-                                className={styles.input_format}
-                            />
-                            <button 
-                                type="button"
-                                onClick= {() => setShowCurrentPasswordDA(!showCurrentPasswordDA)}
-                                aria-describedby="button_hint5"
-                                aria-pressed={showCurrentPasswordDA}
-                                className={styles.show_hide_password_button_DA}
-                            >
-                                {showCurrentPasswordDA ? <LuEye/> : <LuEyeClosed/>}                                                                  
-                            </button>   
-                            <span id="button_hint5" className={styles.sr_content}>
-                                Clicking this button allows your screen reader to read the password you have inserted
-                            </span>
-                        </>
-                    }                                 
-                </div>            
-            </div>
-            <div className={styles.subtitle_4_container}>        
+                            {showCurrentPasswordDA ? <LuEye/> : <LuEyeClosed/>}                                                                  
+                        </button>   
+                        <span id="button_hint5" className={styles.sr_content}>
+                            Clicking this button allows your screen reader to read the password you have inserted
+                        </span>
+                    </div>
+                }                                 
                 <div className={styles.account_deleted_container}>
-                    {accountDeleted && accountDeleteRequest &&
-                        <>
-                            <h3 className={styles.account_deleted_feedback}> Your account is being deleted, please wait.</h3>
-                            <h3 className={styles.account_deleted_feedback}> Thank you for using our services!</h3>
-                        </>
-                    }                                    
                     {!accountDeleted && accountDeleteRequest &&
-                        <button onClick= {deleteAccount} className={`${styles.delete_account_buttons} ${styles.confirm_account_deletion_button_custom_format}`}> Confirm Account Deletion</button>
-                    }                       
+                        <button onClick= {deleteAccount} className={styles.delete_account_confirm_button}> Confirm Account Deletion</button>
+                    }                          
+                    {accountDeleted && accountDeleteRequest &&
+                        <div className={styles.account_deleted_feedback}>
+                            <h3 className={styles.account_deleted_message}> Your account is being deleted, please wait.</h3>
+                            <h3 className={styles.account_deleted_message}> Thank you for using our services!</h3>
+                        </div>
+                    }                                                     
                 </div>
             </div>
         </div>

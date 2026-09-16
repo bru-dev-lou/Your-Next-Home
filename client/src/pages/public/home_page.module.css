@@ -1,44 +1,50 @@
+/* Fonts first */
+
+.h2_font {
+    font-family: "Source Sans 3", sans-serif;
+    font-size: 28px;
+    color: #F2EFE2;
+    font-weight: 390;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+    justify-self: center;
+    margin: 4% 0 0 0;
+}
+
+/* Styling in the order it appears */
+
 .main_page_container {
+    height: 89%;
+    width: 94%;
+
+    display: flex;
+    margin: 0 0 0 3%;
+
     position: relative;
-    height: 100vh; 
 }
 
 .search_box_container {
     background-color: #125370;
-    border: solid 3px #002461;
+    border: solid 2px #002461;
     border-radius: 40px;
-    width: 550px;
-    height: 160px;
-    padding: 20px;
 
-    position: absolute;
-    top: 27%;
-    left: 10%;
-    z-index: 1;
+    width: 40%;
+    height: 36%;
+
+    position: relative; 
+    margin: 14% 0 0 9%;
+    z-index: 2;
 }
-
-.h2_font {
-    font-family: "Source Sans 3", sans-serif;
-    font-size: 29px;
-    color: #F2EFE2;
-    font-weight: 390;
-    text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
-    margin: 0px 0px 20px 0px;
-    justify-self: center;
-}
-
 
 .home_page_photo {
+    box-shadow: 0px 0px 20px rgba(0,0,0,0.9);
     border-radius: 50px;
         
-    width: 950px;
-    height: 550px;
+    width: 70%;
+    height: 90%;
     
     position: absolute;
-    top: 1%;
-    left: 31%;
+    top: 5%; 
+    left: 30%;
 
-    z-index: -1;
-
-    box-shadow: 0px 0px 20px rgba(0,0,0,0.6);
+    z-index: 1;
 }

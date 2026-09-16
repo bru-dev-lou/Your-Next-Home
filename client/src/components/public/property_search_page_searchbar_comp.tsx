@@ -35,15 +35,15 @@ function PropertySearchPageSearchBar ({sortBy} : FilterValue) {
 
 
     const [ budgetDropdown, setBudgetDropdown ] = useState<boolean>(false); 
-    const [ maxPriceLabel, setMaxPriceLabel ] = useState("No Max");
+    const [ maxPriceLabel, setMaxPriceLabel ] = useState("No Maximum");
 
 
     const [ bedroomsDropdown, setBedroomsDropdown ] = useState<boolean>(false); 
-    const [ bedroomsLabel, setBedroomsLabel ] = useState("No Min"); 
+    const [ bedroomsLabel, setBedroomsLabel ] = useState("No Minimum"); 
 
 
     const [ bathroomsDropdown, setBathroomsDropdown ] = useState<boolean>(false); 
-    const [ bathroomsLabel, setBathroomsLabel ] = useState("No Min");
+    const [ bathroomsLabel, setBathroomsLabel ] = useState("No Minimum");
 
 
     const [ furnitureDropdown, setFurnitureDropdown ] = useState<boolean>(false);
@@ -132,9 +132,12 @@ function PropertySearchPageSearchBar ({sortBy} : FilterValue) {
     };
 
     return (
-        <div className={styles.main_container}>
-            <form onSubmit={buttonSearch}>
-                <div className={styles.first_row_container}>
+        <form 
+            onSubmit={buttonSearch}
+            className={styles.main_container}
+        >
+            <div className={styles.first_row_container}>
+                <div className={styles.location_container}>
                     <label htmlFor ="location" className={`${styles.h2_font} ${styles.location_label}`}> Location: </label>
                     <input 
                         id="location"
@@ -179,8 +182,23 @@ function PropertySearchPageSearchBar ({sortBy} : FilterValue) {
                             </li>
                         }                        
                     </ul>
+                </div> 
+                <div className={styles.property_type_container}>
                     <label htmlFor ="property_type" className={` ${styles.h2_font} ${styles.property_type_label}`}> Property Type: </label>
-                    {propertyTypeDropdown ? 
+                    {!propertyTypeDropdown ? 
+                        <ul
+                            id="property_type"
+                            onClick ={() => showDropdown(setPropertyTypeDropdown)}
+                            className={styles.property_type_container_closed}
+                        >
+                            <li 
+                                data-value={propertyTypeLabel} 
+                                className={styles.generic_list_item_format}
+                            >
+                                {propertyTypeLabel}
+                            </li>
+                        </ul>
+                    :                        
                         <ul 
                             id="property_type"
                             onClick ={() => showDropdown(setPropertyTypeDropdown)}
@@ -188,7 +206,7 @@ function PropertySearchPageSearchBar ({sortBy} : FilterValue) {
                         >
                             <li 
                                 data-value={propData.type} 
-                                className={styles.item_format}
+                                className={styles.generic_list_item_format}
                             >
                                 {propertyTypeLabel}
                             </li>
@@ -196,7 +214,7 @@ function PropertySearchPageSearchBar ({sortBy} : FilterValue) {
                                 <li 
                                     data-value="" 
                                     onClick={(e) => {setValue(e, "type", setPropertyTypeLabel, "Show all" )}} 
-                                    className={styles.item_format}
+                                    className={styles.generic_list_item_format}
                                 >
                                     Show all
                                 </li>
@@ -206,60 +224,17 @@ function PropertySearchPageSearchBar ({sortBy} : FilterValue) {
                                     key={value} 
                                     data-value={value} 
                                     onClick={(e) => {setValue(e, "type", setPropertyTypeLabel, "Show all" )}} 
-                                    className={styles.item_format}
+                                    className={styles.generic_list_item_format}
                                 >
                                     {value}
                                 </li>
                             ))}
                         </ul>            
-                    :
-                        <ul
-                            id="property_type"
-                            onClick ={() => showDropdown(setPropertyTypeDropdown)}
-                            className={styles.property_type_container_closed}
-                        >
-                            <li 
-                                data-value={propertyTypeLabel} 
-                                className={styles.item_format}
-                            >
-                                {propertyTypeLabel}
-                            </li>
-                        </ul>
                     }
+                </div>
+                <div className={styles.budget_container}>
                     <label htmlFor= "max_price" className={`${styles.budget_label} ${styles.h2_font}`}> Budget: </label>
-                    {budgetDropdown ?
-                        <ul 
-                            id="max_price" 
-                            onClick = {() => showDropdown(setBudgetDropdown)} 
-                            className={styles.budget_container_open}
-                        >
-                            <li 
-                                data-value= {propData.maxPrice} 
-                                className={styles.item_format}
-                            >
-                                {maxPriceLabel}
-                            </li>
-                            {maxPriceLabel !== "No Max" && 
-                                <li 
-                                    data-value={10000} 
-                                    onClick={(e) => {setValue(e, "maxPrice", setMaxPriceLabel, "No Max")}} 
-                                    className={styles.item_format}
-                                > 
-                                    No Max 
-                                </li>
-                            }
-                            {budgetValues.map(value => (
-                                <li 
-                                    key={value} 
-                                    data-value={value} 
-                                    onClick={(e) => {setValue(e, "maxPrice", setMaxPriceLabel, "No Max")}} 
-                                    className={styles.item_format}
-                                > 
-                                    £{value.toLocaleString()}PCM
-                                </li>
-                            ))}
-                        </ul>                              
-                    :
+                    {!budgetDropdown ?
                         <ul 
                             id="max_price"
                             onClick = {() => showDropdown(setBudgetDropdown)} 
@@ -267,16 +242,65 @@ function PropertySearchPageSearchBar ({sortBy} : FilterValue) {
                         >
                             <li 
                                 data-value={propData.maxPrice} 
-                                className={styles.item_format}
+                                className={styles.generic_list_item_format}
                             >
                                 {maxPriceLabel}
                             </li>
                         </ul>  
+                    :                    
+                        <ul 
+                            id="max_price" 
+                            onClick = {() => showDropdown(setBudgetDropdown)} 
+                            className={styles.budget_container_open}
+                        >
+                            <li 
+                                data-value= {propData.maxPrice} 
+                                className={styles.generic_list_item_format}
+                            >
+                                {maxPriceLabel}
+                            </li>
+                            {maxPriceLabel !== "No Maximum" && 
+                                <li 
+                                    data-value={10000} 
+                                    onClick={(e) => {setValue(e, "maxPrice", setMaxPriceLabel, "No Maximum")}} 
+                                    className={styles.generic_list_item_format}
+                                > 
+                                    No Maximum 
+                                </li>
+                            }
+                            {budgetValues.map(value => (
+                                <li 
+                                    key={value} 
+                                    data-value={value} 
+                                    onClick={(e) => {setValue(e, "maxPrice", setMaxPriceLabel, "No Maximum")}} 
+                                    className={styles.generic_list_item_format}
+                                > 
+                                    £{value.toLocaleString()}PCM
+                                </li>
+                            ))}
+                        </ul>                              
                     }
                 </div>
-                <div className={styles.second_row_container}>
+            </div>
+            <div className={styles.second_row_container}>
+                <div className={styles.bedrooms_container}>
                     <label htmlFor ="min_bedrooms" className={`${styles.h2_font} ${styles.bedrooms_label}`}> Bedrooms: </label>
-                    {bedroomsDropdown ? 
+                    <span id="bedroom_hint" className={styles.sr_content}>Minimum number of bedrooms you require.</span>
+                    {!bedroomsDropdown ? 
+                        <ul 
+                            id="min_bedrooms"
+                            onClick = {() => showDropdown(setBedroomsDropdown)}
+                            aria-describedby="bedroom_hint"
+                            className={styles.bedrooms_container_closed}
+                        >
+                            <li 
+                                data-value= {propData.minBeds} 
+                                className={styles.generic_list_item_format}
+                            >
+                                {bedroomsLabel}
+                            </li>      
+                        </ul>
+                    :                        
                         <ul
                             id="min_bedrooms"
                             onClick = {() => showDropdown(setBedroomsDropdown)} 
@@ -285,47 +309,35 @@ function PropertySearchPageSearchBar ({sortBy} : FilterValue) {
                         >
                             <li 
                                 data-value={propData.minBeds} 
-                                className={styles.item_format}
+                                className={styles.generic_list_item_format}
                             >
                                 {bedroomsLabel}
                             </li>
-                            {bedroomsLabel !== "No Min" && 
+                            {bedroomsLabel !== "No Minimum" && 
                                 <li 
                                     data-value={0} 
-                                    onClick={(e) => {setValue(e, "minBeds", setBedroomsLabel, "No Min")}}                                     
-                                    className={styles.item_format}
+                                    onClick={(e) => {setValue(e, "minBeds", setBedroomsLabel, "No Minimum")}}                                     
+                                    className={styles.generic_list_item_format}
                                 >
-                                    No Min
+                                    No Minimum
                                 </li>
                             }
                             {bedroomValues.map(value => (
                                 <li 
                                     key={value} 
                                     data-value={value} 
-                                    onClick={(e) => {setValue(e, "minBeds", setBedroomsLabel, "No Min")}}  
-                                    className={styles.item_format}
+                                    onClick={(e) => {setValue(e, "minBeds", setBedroomsLabel, "No Minimum")}}  
+                                    className={styles.generic_list_item_format}
                                 >
                                     {value}
                                 </li>
                             ))}
                         </ul>
-                    :
-                        <ul
-                            id="min_bedrooms"
-                            onClick = {() => showDropdown(setBedroomsDropdown)}
-                            aria-describedby="bedroom_hint"
-                            className={styles.bedrooms_container_closed}
-                        >
-                            <li 
-                                data-value= {propData.minBeds} 
-                                className={styles.item_format}
-                            >
-                                {bedroomsLabel}
-                            </li>      
-                        </ul>
-                    }              
-                        <span id="bedroom_hint" className={styles.sr_content}>Minimum number of bedrooms you require.</span>
-                        <label htmlFor = "min_bathrooms" className={`${styles.h2_font} ${styles.bathroom_label}`}> Bathrooms: </label>
+                    }                
+                </div>
+                <div className={styles.bathrooms_container}>
+                    <label htmlFor = "min_bathrooms" className={`${styles.h2_font} ${styles.bathroom_label}`}> Bathrooms: </label>
+                    <span id="bathroom_hint" className={styles.sr_content}>Minimum number of bathrooms you require.</span>
                     {bathroomsDropdown ? 
                         <ul
                             id="min_bathrooms"
@@ -335,25 +347,25 @@ function PropertySearchPageSearchBar ({sortBy} : FilterValue) {
                         >
                             <li 
                                 data-value={propData.minBaths} 
-                                className={styles.item_format}
+                                className={styles.generic_list_item_format}
                             >
                                 {bathroomsLabel}
                             </li>
-                            {bathroomsLabel !== "No Min" &&
+                            {bathroomsLabel !== "No Minimum" &&
                                 <li 
                                     data-value={0} 
-                                    onClick={(e) => {setValue(e, "minBaths", setBathroomsLabel, "No Min")}}
-                                    className={styles.item_format}
+                                    onClick={(e) => {setValue(e, "minBaths", setBathroomsLabel, "No Minimum")}}
+                                    className={styles.generic_list_item_format}
                                 >
-                                    No Min
+                                    No Minimum
                                 </li>
                             }
                             {bathroomValues.map(value => (
                                 <li 
                                     key={value} 
                                     data-value={value}
-                                    onClick={(e) => {setValue(e, "minBaths", setBathroomsLabel, "No Min")}}
-                                    className={styles.item_format}
+                                    onClick={(e) => {setValue(e, "minBaths", setBathroomsLabel, "No Minimum")}}
+                                    className={styles.generic_list_item_format}
                                 >
                                     {value}
                                 </li>
@@ -368,14 +380,15 @@ function PropertySearchPageSearchBar ({sortBy} : FilterValue) {
                         >
                             <li 
                                 data-value={propData.minBaths} 
-                                className={styles.item_format}
+                                className={styles.generic_list_item_format}
                             >
                                 {bathroomsLabel}
                             </li>
                         </ul>
                     }
-                        <span id="bathroom_hint" className={styles.sr_content}>Minimum number of bathrooms you require.</span>
-                        <label htmlFor = "furniture" className={`${styles.h2_font} ${styles.furniture_label}`}> Furnishing: </label>
+                </div>
+                <div className={styles.furniture_container}>
+                    <label htmlFor = "furniture" className={`${styles.h2_font} ${styles.furniture_label}`}> Furnishing: </label>
                     { furnitureDropdown ?
                         <ul 
                             id="furniture"
@@ -384,7 +397,7 @@ function PropertySearchPageSearchBar ({sortBy} : FilterValue) {
                         >
                             <li 
                                 data-value = {propData.furniture}
-                                className={styles.item_format}
+                                className={styles.generic_list_item_format}
                             >
                                 {furnitureLabel}
                             </li>
@@ -392,7 +405,7 @@ function PropertySearchPageSearchBar ({sortBy} : FilterValue) {
                                 <li 
                                     data-value = {""} 
                                     onClick={(e) => {setValue(e, "furniture", setFurnitureLabel, "Any")}} 
-                                    className={styles.item_format}
+                                    className={styles.generic_list_item_format}
                                 >
                                     Any
                                 </li>
@@ -402,7 +415,7 @@ function PropertySearchPageSearchBar ({sortBy} : FilterValue) {
                                     key={value} 
                                     data-value={value}
                                     onClick={(e) => {setValue(e, "furniture", setFurnitureLabel, "Any")}} 
-                                    className={styles.item_format}
+                                    className={styles.generic_list_item_format}
                                 >
                                     {value}
                                 </li>
@@ -416,16 +429,16 @@ function PropertySearchPageSearchBar ({sortBy} : FilterValue) {
                         >
                             <li 
                                 data-value = {propData.furniture} 
-                                className={styles.item_format}
+                                className={styles.generic_list_item_format}
                             >
                                 {furnitureLabel}
                             </li>    
                         </ul>
                     }                    
-                    <button type="submit" className={styles.search_button}>Search</button>
                 </div>
-            </form>
-        </div>
+                <button type="submit" className={styles.search_button}>Search</button>
+            </div>
+        </form>
     )
 }
 

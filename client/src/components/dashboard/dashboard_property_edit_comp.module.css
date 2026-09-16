@@ -9,7 +9,7 @@
     white-space: nowrap;
 }
 
-/*  General styling starts here - 3+ elements will use these. */
+/*  Generic font styling */
 
 .h2_font {
     font-family: "Source Sans 3", sans-serif;
@@ -38,180 +38,201 @@
     margin: 0px;
 }
 
-.standard_input_format {
-    font-family: "Source Sans 3", sans-serif;
-    color: #125370;
-    font-size: 16px;
-    height: 25px;
+/* Styling code in the order it appears in the JSX return */
 
-    background-color: #D9E4F3;
-    border: solid 2px #125370; 
-    border-radius: 5px; 
-    padding-left: 5px;
-    line-height: 20px;
-    width: 275px;    
+.no_property_error_container {
+    height: 97%;
+    width: 94%;
+
+    margin: 1% 0 0 3%;
 }
-
-/* Styling for error messages */
-
-.server_error_image {
-    width: 400px;
-    height: 300px;
-
-    margin-top: 60px; 
-    margin-left: 530px; 
-}
-
-.server_error_message {
-    font-family: "Source Sans 3", sans-serif;
-    font-size: 30px;
-    color: #C00000;
-    font-weight: 390;
-    text-shadow: 1px 1px 2px rgba(0,0,0,0.8);    
-    text-align: center;
-    
-    margin-top: 50px; 
-}
-
-.PF_error_message {
-    font-family: "Source Sans 3", sans-serif;
-    font-size: 30px;
-    color: #C00000;
-    font-weight: 390;
-    text-shadow: 1px 1px 2px rgba(0,0,0,0.8);    
-    margin-left: 620px;
-    margin-top: 50px;
-}
-
-.autocomplete_error_message {
-    font-family: "Source Sans 3", sans-serif;
-    font-size: 20px;
-    color: #C00000;
-    font-weight: 390;
-    text-shadow: 1px 1px 2px rgba(0,0,0,0.8);    
-    position: absolute; 
-    margin: 75px 0px 0px 450px;
-}
-
-.PE_error_message {
-    font-family: "Source Sans 3", sans-serif;
-    font-size: 23px;
-    color: #C00000;
-    font-weight: 390;
-    text-shadow: 1px 1px 2px rgba(0,0,0,0.8);
-    width: 600px;    
-    grid-column: span 2; 
-    margin: 0;    
-}
-
-.PD_PU_error_message {
-    font-family: "Source Sans 3", sans-serif;
-    font-size: 23px;
-    color: #C00000;
-    font-weight: 390;
-    text-shadow: 1px 1px 2px rgba(0,0,0,0.8);
-    width: 600px;    
-    margin: 0;    
-}
-
-/* Styling for success messages */
-
-.PU_success_message {
-    font-family: "Source Sans 3", sans-serif;
-    font-size: 23px;
-    color: #3B7D23;    
-    font-weight: 390;
-    text-shadow: 1px 1px 2px rgba(0,0,0,0.8);
-    margin: 0px;    
-}
-
-.PE_success_message {
-    font-family: "Source Sans 3", sans-serif;
-    font-size: 23px;
-    color: #3B7D23;    
-    font-weight: 390;
-    text-shadow: 1px 1px 2px rgba(0,0,0,0.8);
-    margin-top: 13px;
-    margin-bottom: 12px;
-}
-
-/* Custom styling starts here, in the order it is applied on the tsx file. */
 
 .main_title_container {
     background-color: #156082;
     border: solid 2px #042433;
     border-radius: 5px;
-    margin-left: 30px;
-    width: 96%;
+
+    height: 45px;
+    width: 100%;
+
+    display: flex;
+    justify-content: center;
 }
 
-.main_title{
-    text-align: center;
-    margin-right: 60px;
+.main_title {
+   line-height: 42px;
+    
+   margin-right: 3%;
+}
+
+.error_messages_container {
+    height: 92%;
+    width: 100%;
+
+    display: flex;
+    justify-content: center;
+}
+
+.no_property_found_container {
+    height: 100%;
+    width: 100%;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.no_property_found_image {
+    height: 45%;
+    width: 30%;
+
+    margin: 5% 3% 0 0;
+}
+
+.PF_error_message {
+    color: #C00000;
+    font-family: "Source Sans 3", sans-serif;
+    font-size: 30px;
+    font-weight: 390;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.8);    
+
+    margin: 3% 3% 0 0;
+}
+
+.server_error_container {
+    height: 100%;
+    width: 100%;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.server_error_image {
+    height: 50%;
+    width: 30%;
+    
+    margin: 5% 3% 0 0;
+}
+
+.server_error_message {
+    color: #C00000;
+    font-family: "Source Sans 3", sans-serif;
+    font-size: 30px;
+    font-weight: 390;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.8);    
+    
+    margin-top: 3%;
+}
+
+.main_container {
+    height: 100%;
+    width: 94%;
+
+    margin: 1% 0 0 3%;
 }
 
 .property_edit_container {
+    height: 98%;
+    width: 100%;
+
     display: grid; 
-    grid-template: 100% / 50% 50%;
-    margin-left: 40px;
-    margin-top: 20px;
+    grid-template: 100% / 48% 48%;
+    margin-top: 1%;
 }
 
 .property_data_container {
+    height: 100%;
+    width: 100%;
+
     display: grid; 
-    grid-template: 40px repeat(7, 25px) repeat(2, 110px) / 25% 75%;
-    row-gap: 20px;
+    grid-template: repeat(8, 5%) repeat(2, 15%) / 25% 75%;
+    row-gap: 2%;
+
+    position: relative;
 }
 
-.subtitle_container {
+.data_subtitle_container {
     grid-column: span 2; 
+}
+
+.PE_error_message {
+    color: #C00000;
+    font-family: "Source Sans 3", sans-serif;
+    font-size: 23px;
+    font-weight: 390;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.8);
+    margin: 0;    
 }
 
 .city_container {
-    grid-column: span 2; 
+    height: 100%;
+    width: 100%;
+    
+    grid-column: span 2;
+    
+    display: flex;
+    align-items: center;
+    
+    position: relative;
+}
+
+.city_label {
+    height: 100%;
+    width: 25%;
+
+    line-height: 35px;
 }
 
 .city_input {
-    font-family: "Source Sans 3", sans-serif;
     color: #125370;
+    font-family: "Source Sans 3", sans-serif;
     font-size: 16px;
-    height: 25px;
 
     background-color: #D9E4F3;
     border: solid 2px #125370; 
     border-radius: 5px; 
 
-    margin-left: 145px;
-    padding-left: 5px;
-    line-height: 20px;
-    width: 275px;    
+    height: 90%;
+    width: 60%;
+
+    position: relative;
+    z-index: 2;
+
+    padding-left: 1%;
+}
+
+.city_input:focus {
+    outline: #125370;
 }
 
 .autocomplete_container {
     background-color: #D9E4F3;
-
+    border: solid 1px #125370; 
     border-radius: 5px;
-    width: 285px;
+    
+    width: 60%;
 
-    position: absolute; 
-    margin-left: 182px;
-    margin-top: 0px; 
+    position: absolute;
+    z-index:1;
+
+    top: 43%;
+    left: 25%;
 
     display: flex; 
     flex-direction: column;
-    
-    list-style: none;
-    padding: 0 0 0 1px;
 
-    z-index: 11;
+    list-style: none;
+    padding: 0;
 }
 
 .autocomplete_item {
     color: #125370;
+    font-family: "Source Sans 3", sans-serif;
     font-size: 16px;
-    height: 27px;
-    line-height: 27px;
-    padding: 2px 0px 2px 5px;
+
+    height: 30px;
+    padding: 1% 0 0 2%;;
 }
 
 .autocomplete_item:hover {
@@ -221,43 +242,96 @@
 }
 
 .error_message_ac {
-    font-family: "Source Sans 3", sans-serif;
-    font-weight: 390;
-
     color: #C00000;
-
+    font-family: "Source Sans 3", sans-serif;
+    font-size: 16px;
+    font-weight: 390;
     text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
 }
 
+.standard_label_format {
+    width: 100%;
+    height: 90%;
+
+    align-self: center;
+}
+
 .ul_container_closed {
-    font-family: "Source Sans 3", sans-serif;
     color: #125370;
+    font-family: "Source Sans 3", sans-serif;
     font-size: 16px;
-    line-height: 25px;
-    list-style: none;
-    padding: 0px;
+
     background-color: #D9E4F3;
     border: solid 2px #125370; 
     border-radius: 5px; 
 
-    height: 25px;
-    width: 280px;
-    margin: 1px 0 0 0;
+    height: 90%;
+    width: 50%;
+
+    align-self: center;
+    
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    
+    position: relative;
+    cursor: pointer;
 }
 
 .ul_container_closed::after {
     font-size: 16px;
     content: "⏷";
+
     position: absolute; 
-    margin-top: -26px;
-    margin-left: 257px;
-    line-height: 25px;
+    bottom: 15%;
+    left: 90%;
+}
+
+.list_item_closed {
+    color: #125370;
+    font-family: "Source Sans 3", sans-serif;
+    font-size: 16px;
+
+    padding-left: 2%;
+}
+
+.ul_container_open {
+    font-family: "Source Sans 3", sans-serif;
+    color: #125370;
+    font-size: 16px;
+    
+    background-color: #D9E4F3;
+    border: solid 2px #125370; 
+    border-radius: 5px; 
+
+    height: 90px;
+    width: 50%;
+
+    display: flex; 
+    flex-direction: column;
+    overflow-y: scroll;
+    
+    position: relative;
+    z-index: 3; 
+
+    margin-top: 1px;
+    padding: 0;
 }
 
 .list_item {
     color: #125370;
+    font-family: "Source Sans 3", sans-serif;
     font-size: 16px;
-    padding: 1px 0 1px 5px;
+
+    height: 30px;
+    flex-shrink: 0;
+    
+    padding: 2% 0 0 2%;
+    margin: 0;
 }
 
 .list_item:hover {
@@ -266,42 +340,43 @@
     cursor: pointer;
 }
 
-.list_item_closed {
+.standard_input_format {
     color: #125370;
-    font-size: 16px;
-    padding-left: 5px;
-    line-height: 25px;  
-    cursor: pointer; 
-}
-
-.ul_container_open {
     font-family: "Source Sans 3", sans-serif;
-    color: #125370;
     font-size: 16px;
-    padding: 0;
-    list-style: none;
-    
+
     background-color: #D9E4F3;
     border: solid 2px #125370; 
     border-radius: 5px; 
 
-    height: 71px;
-    width: 280px;
+    height: 90%;
+    width: 50%;
 
-    display: flex; 
-    flex-direction: column;
-    position: relative;
-    z-index: 10; 
+    padding-left: 1%;
+    align-self: center;
+}
 
+.input_custom::-webkit-outer-spin-button,
+.input_custom::-webkit-inner-spin-button {
+    -webkit-appearance: none;
     margin: 0;
-
-    overflow-y: scroll;
 }
 
 .summary_container {
-    grid-column: span 2; 
+    height: 100%;
+    width: 100%;
+
+    grid-column: span 2;
+
     display: flex;
-    margin-top: 5px;
+    align-items: flex-start;
+    
+    margin-top: 1%;
+}
+
+.summary_description_label_format {
+    height: 100%;
+    width: 25%;
 }
 
 .textarea_format {
@@ -313,102 +388,139 @@
     border: solid 2px #125370; 
     border-radius: 5px; 
 
-    padding-left: 5px;
+    padding-left: 1%;
+
+    height: 100%; 
+    min-height: 100%;
+    max-height: 100%;
+
+    width: 60%;
+    min-width: 60%;
+    max-width: 60%;
 }
 
-.textarea_summary_custom {
-    height: 100px; 
-    min-height: 100px;
-    max-height: 100px;
+.summary_word_count_container {
+    height: 100%;
+    width: 14%;
 
-    width: 400px;
-    min-width: 400px;
-    max-width: 430px;
+    display: flex; 
+    align-items: flex-end;
 
-    margin-left: 98px;
+    margin-left: 1%;
 }
 
 .word_count_item {
-    font-family: "Source Sans 3", sans-serif;
     color: #125370;
+    font-family: "Source Sans 3", sans-serif;
     font-size: 15px;
     font-weight: 620;
 }
 
-.summary_word_count_container {
-    margin-top: 12.4%;
-    margin-left: 3px;
-}
-
 .description_container {
+    height: 130%;
+    width: 100%;
+
     grid-column: span 2;
     display: flex; 
-    height: 160px;
-    margin-top: 5px;
-    padding-bottom: 20px;
-}
 
-.textarea_description_custom {
-    height: 150px; 
-    min-height: 150px;
-    max-height: 150px;
-
-    width: 400px;
-    min-width: 400px;
-    max-width: 430px;
-    
-    margin-left: 84px; 
+    margin-top: 2%;
 }
 
 .description_word_count_container{
     display: flex; 
     align-items: flex-end;
-    margin-left: 3px;
+    width: 14%;
+
+    margin-left: 1%;
 }
 
-.main_photo_container {
-    margin-top: 20px;
+/* ↓↓↓ Image container styling starts here ↓↓↓ */
+
+.property_image_container {
+    height: 100%;
+    width: 100%;
+
+    margin-left: 8%;
+}
+
+.image_subtitle_container {
+    height: 5%;
+    width: 100%;
+}
+
+.PD_PU_error_message {
+    color: #C00000;
+    font-family: "Source Sans 3", sans-serif;
+    font-size: 23px;
+    font-weight: 390;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.8);
+    margin: 0;    
+}
+
+.PU_success_message {
+    color: #3B7D23;    
+    font-family: "Source Sans 3", sans-serif;
+    font-size: 23px;
+    font-weight: 390;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.8);
+    margin: 0;    
+}
+
+.main_photo_container {    
+    height: 47%;
+    width: 100%;
+    
+    margin-top: 2%;
 }
 
 .main_photo {
     border: solid 2px #125370; 
-    border-radius: 30px;
-    width: 620px;
-    height: 325.5px; 
-    object-fit:fill;
+    border-radius: 25px;
+    
+    height: 100%;
+    width: 100%;
+        
+    object-fit: cover;
 }
 
 .no_main_photo_div {
-    background-color: #D9E4F3;
+    background-color: rgba(217, 228, 243, 0.4);
     border: solid 2px #125370; 
-    border-radius: 30px;
-    width: 620px;
-    height: 325.5px; 
+    border-radius: 25px;
+    
+    height: 100%;
+    width: 100%;
 }
 
 .extra_photos_row {
+    background-color: rgba(171, 168, 153, 0.35);
+    border: 1px solid rgba(120, 120, 120, 0.25);
+    border-radius: 19px;
+    
+    height: 15%;
+    width: 100%;
+    
     display: flex;
-    margin-top: 30px;
-    width: 630px;
+    justify-content: space-between;
 
     position: relative;
+    margin-top: 3%;
 }
 
-.left_arrow_format {
-    background-color: rgba(239, 239, 239, 0.75);
+.left_arrow_container {
+    background-color: rgba(191, 191, 191, 0.75);
+    border: 2px solid rgba(120, 120, 120, 0.75);
     border-radius: 19px 0 0 19px;
-    border: rgba(123, 124, 125, 0.6) 2px solid;
 
-    height: 101px;
-    width: 35px; 
+    height: 100%;
+    width: 5%; 
 
     position: absolute;
-    
     cursor: pointer; 
 }
 
-.left_arrow_format:hover {
-    background-color: rgba(210, 210, 218, 0.948);
+.left_arrow_container:hover {
+    background-color: rgba(210, 210, 218, 0.95);
 }
 
 .react_arrow_format {
@@ -417,12 +529,12 @@
 }
 
 .photo_upload_button {   
-    background-color: #D9E4F3;
-    border: solid 2px #125370;
+    background-color: rgba(217, 228, 243, 0.6);
+    border: solid 2px #125370; 
     border-radius: 20px;
 
-    height: 101px;
-    width: 130px;  
+    height: 100%;
+    width: 20%;  
 
     cursor: pointer; 
 }
@@ -433,37 +545,34 @@
 }
 
 .extra_photos_container {
-    width: 463px;
-
-    margin: 0 0 0 30px; 
-    padding: 0px;
+    height: 100%;
+    width: 74%;
 
     display: flex;
-    justify-content: space-between;   
+    justify-content: space-between;
+
+    margin: 0 0 0 1%;
+    padding: 0;
 }
 
 .extra_photos_list {
+    height: 100%;
+    width: 27%;
+
     display: flex;
     list-style: none; 
+
+    position: relative;
 }
 
 .extra_photos {
     border: solid 2px #125370;
     border-radius: 20px;
     
-    height: 97px;
-    width: 130px; 
+    height: 100%;
+    width: 100%; 
     
     cursor:zoom-in;
-}
-
-.no_extra_photo_div {
-    background-color: #D9E4F3;
-    border: solid 2px #125370;
-    border-radius: 20px;
-
-    height: 97px;
-    width: 130px; 
 }
 
 .delete_photo_button {
@@ -471,13 +580,13 @@
     border-radius: 50%;
     border: none; 
     
-    width: 17px;
-    height: 17px;
-
-    margin-top: 6px;
-    margin-left: 10px;     
+    width: 1%;
+    height: 10%;
+     
     position: absolute;
-
+    top: 8%;
+    left: 8%;
+    
     display: flex;
     justify-content: center;
     align-items: center;
@@ -486,69 +595,94 @@
 .delete_photo_react_icon {
     color: #C00000;    
     font-size: 25px;
-    overflow: visible;
 
+    overflow: visible;
     cursor: pointer;
 }
 
-.right_arrow_format {
-    background-color: rgba(239, 239, 239, 0.75);
-    border-radius: 0 19px 19px 0px;
-    border: rgba(123, 124, 125, 0.6) 2px solid;
+.no_extra_photo_li   {
+    background-color: rgba(217, 228, 243, 0.6);
+    border: solid 2px #125370;
+    border-radius: 20px;
 
-    height: 101px;
-    width: 35px; 
+    height: 100%;
+    width: 27%; 
+
+    list-style: none;
+}
+
+.right_arrow_container {
+    background-color: rgba(191, 191, 191, 0.75);
+    border: 2px solid rgba(120, 120, 120, 0.75);
+    border-radius: 0 19px 19px 0px;
+
+    height: 100%;
+    width: 5%;
 
     position: absolute;
-    margin-left: 588px;
+    left: 95%;
 
     cursor: pointer;     
 }
 
-.right_arrow_format:hover {
-    background-color: rgba(210, 210, 218, 0.948);
+.right_arrow_container:hover {
+    background-color: rgba(210, 210, 218, 0.95);
 }
 
 .feedback_message_container {
-    width: 622px; 
+    height: 5%;
+    width: 100%;
 
     display: flex; 
     justify-content: center;
 
-    margin-top: 20px; 
-}
-
-.upload_message {
-    margin-top: 40px;
+    margin-top: 2%; 
 }
 
 .property_update_final_container {
+    height: 15%;
+    width: 100%; 
+
     display: flex;
     justify-content: center; 
-    width: 620px; 
 }
 
 .update_property_button {
-    background-color: #156082;
-    border: solid 2px #042433;
-    border-radius: 5px;
-
     color: #ECE7D4;
     font-family: "Source Sans 3", sans-serif;
     font-size: 20px;
     font-weight: 390;
     text-shadow: 1px 1px 2px rgba(0,0,0,0.8);    
     
-    width: 210px;
-    height: 40px; 
+    background-color: #156082;
+    border: solid 2px #042433;
+    border-radius: 5px;
 
-    margin-top: 50px;
+    height: 40%;        
+    width: 30%;
+    margin-top: 2%;
+
+    cursor: pointer;
 }
 
 .property_update_success_container {
+    height: 104%;
+    width: 100%;
+
     display: flex;
     flex-direction: column;
     align-items: center;
+}
+
+.PE_success_message {
+    color: #3B7D23;    
+    font-family: "Source Sans 3", sans-serif;
+    font-size: 23px;
+    font-weight: 390;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.8);
+    margin: 2% 0 0 0; 
+
+    height: 40%;
 }
 
 .navigation_button {
@@ -561,7 +695,10 @@
     font-size: 20px;
     font-weight: 390;
     text-shadow: 1px 1px 2px rgba(0,0,0,0.8);    
-    
-    width: 250px;
-    height: 40px;
+
+    height: 37%;    
+    width: 20%;
+
+    margin-top: 2%;
+    cursor: pointer; 
 }

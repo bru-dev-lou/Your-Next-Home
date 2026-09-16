@@ -8,9 +8,9 @@ function HomePage() {
       <div className={styles.main_page_container}>
         <div className={styles.search_box_container}>
           <h2 className={styles.h2_font}>Your journey starts here!</h2>
-          <HomePageSearchBar />
+          <HomePageSearchBar />        
         </div>
-        <img className={styles.home_page_photo} src={homePagePhoto}></img>
+        <img className={styles.home_page_photo} src={homePagePhoto}></img>      
       </div>
   )
 }

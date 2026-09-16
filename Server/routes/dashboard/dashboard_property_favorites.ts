@@ -8,28 +8,28 @@ router.get("/", (req, res) => {
 
     try {
         const SQL = `SELECT 
-            property_list.id,
-            property_list.type,
-            property_list.city,
-            property_list.price,
-            property_list.no_bedrooms,
-            property_list.no_bathrooms,
-            property_list.summary, 
-            property_list.date_listed, 
-            property_photos.photo_path
-            FROM property_favorites
-            INNER JOIN property_list
-            ON property_favorites.property_id = property_list.id
-            INNER JOIN property_photos
-            ON property_favorites.property_id = property_photos.property_id 
-            AND property_photos.is_main = 1
-            WHERE property_favorites.owner_id = ?
-            ORDER BY property_favorites.date_added DESC`;
+        property_list.id,
+        property_list.type,
+        property_list.city,
+        property_list.price,
+        property_list.no_bedrooms,
+        property_list.no_bathrooms,
+        property_list.summary, 
+        property_list.date_listed, 
+        property_photos.photo_path
+        FROM property_favorites
+        INNER JOIN property_list
+        ON property_favorites.property_id = property_list.id
+        INNER JOIN property_photos
+        ON property_favorites.property_id = property_photos.property_id 
+        AND property_photos.is_main = 1
+        WHERE property_favorites.owner_id = ?
+        ORDER BY property_favorites.date_added DESC`;
     
         const showFavProperties = db.prepare(SQL).all(ownerID);
         
         if (showFavProperties.length === 0) {
-            return res.status(404).json({error: "No properties found."})
+            return res.status(200).json({noProperties: "You currently have no saved properties."})
         }
 
         else {

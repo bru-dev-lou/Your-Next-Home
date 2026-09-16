@@ -32,29 +32,63 @@ router.route("/")
     ];
 
     for (const {field, name, error} of fieldCheck) {
-        if (!field || field === 0) {
+        if (!field || field === "0") {
             return res.status(400).json ({name, error}); 
         }
     }
 
+    // Number validations for property price, bedrooms, bathrooms and size 
+
+    if (isNaN(Number(price)) || isNaN(Number(bedrooms)) || isNaN(Number(bathrooms)) || isNaN(Number(size))) {
+        return res.status(400).json({ error: "Property monthly rate, number of bedrooms, number of bathrooms and size must all be valid numbers."})
+    } 
+
     // City validation 
 
-    const validCity = /^[a-zA-Z\-]+$/.test(city); 
+    const validCity = /^[a-zA-Z\ -]+$/.test(city); 
 
     if (!validCity) {
-        return res.status(400).json({ error: "City name must only include letters and hyphens."})
-    }    
+        return res.status(400).json({ error: "City must only include letters and hyphens." })
+    }
 
-    // Property summary & description validations
+    if (city.length > 50) {
+        return  res.status(400).json({ error: "City must not exceed 50 characters." })
+    }
+    
+    //  Price validation 
+    
+    if (price > 99999) {
+        return res.status(400).json({ error: "Listing's monthly rate must be less than £100,000." })
+    }
+
+    //  Bedrooms validation 
+
+    if (bedrooms > 99) {
+        return res.status(400).json({ error: "Listing must have less than 100 bedrooms." })
+    }
+
+    // Bathrooms validation
+
+    if (bathrooms > 99) {
+        return res.status(400).json({ error: "Listing must have less than 100 bathrooms." })
+    }
+
+    // Size validatiob 
+
+    if (size > 9999) {
+        return res.status(400).json({ error: "Listing's size must be less than 10,000m²." })
+    }
+
+    //  Property summary & description validations
 
     if (summary.split(/\s+/).filter(Boolean).length > 50) {
-        return res.status(400).json({ error: "Property summary cannot exceed 50 words." });
+        return res.status(400).json({ error: "Listing's summary cannot exceed 50 words." });
     }
 
     if (detail.split(/\s+/).filter(Boolean).length > 250) {
-        return res.status(400).json({ error: "Property description cannot exceed 250 words." });
-    }
-    
+        return res.status(400).json({ error: "Listing's description cannot exceed 250 words." });
+    }   
+
     // Min photos check 
 
     if (photos.length <= 4) {
@@ -87,7 +121,7 @@ router.route("/")
 
         db.prepare(`UPDATE property_photos SET is_main = 1 WHERE property_id = ? ORDER BY id ASC LIMIT 1`).run(newPropertyData.lastInsertRowid);
 
-        res.status(201).json({ message: "*** Listing Created ***", lastInsertRowid: newPropertyData.lastInsertRowid });
+        res.status(201).json({ message: "∗∗∗ Listing Created ∗∗∗", lastInsertRowid: newPropertyData.lastInsertRowid });
     }    
 
     catch (error) {

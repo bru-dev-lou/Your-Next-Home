@@ -16,7 +16,6 @@ import { IoMdResize } from "react-icons/io";
 
 
 
-
 type PropertyDetails = {
     id: number;
     type: string;
@@ -152,6 +151,9 @@ function DetailedPropertyPage () {
             if (!res.ok) {
                 const result = await res.json(); 
                 setErrorMessageFavorites(result.error)
+                setTimeout(() => {
+                    setErrorMessageFavorites("");
+                }, 3000)                
             }  
 
             else {
@@ -165,7 +167,6 @@ function DetailedPropertyPage () {
             setErrorMessageFavorites("Failed to remove from favorites. Please check your internet and try again.")
         }
     }
-
 
     function previousPhotos () {
         if (galleryIndex >= 4) {
@@ -182,8 +183,8 @@ function DetailedPropertyPage () {
     if (errorMessageFP) {
         return (
             <div className={styles.error_FP_container}>
-                <h3 role="alert" className={styles.error_FP_message}>{errorMessageFP}</h3>
                 <img src={errorPhoto} className={styles.error_FP_img} />
+                <h3 role="alert" className={styles.error_FP_message}>{errorMessageFP}</h3>
             </div>
         )
     }
@@ -200,22 +201,27 @@ function DetailedPropertyPage () {
                 <div className={styles.address_container}>
                     <span className={styles.sr_content}>Address</span>
                     <h3 
-                        className={`${styles.h3_font} ${styles.address_position}`}
+                        className={styles.h3_font}
                     >
                         {property.city}
                     </h3>
                 </div>
-                <span className={styles.sr_content}>Monthly rental rate</span>
-                <h3 
-                    className={`${styles.h3_font} ${styles.price_position}`}
-                >
-                    £{property.price.toLocaleString()} pcm
-                </h3>
-                <h3 
-                    className={`${styles.h3_font} ${styles.date_position}`}
-                >
-                    {new Date(property.date_listed).toLocaleDateString("en-GB").replace(/\//g, ".")}
-                </h3>
+                <div className={styles.monthly_rate_container}>
+                    <span className={styles.sr_content}>Monthly rental rate</span>
+                    <h3 
+                        className={styles.h3_font}
+                    >
+                        £{property.price.toLocaleString()} pcm
+                    </h3>
+                </div>
+                <div className={styles.date_listed_container}>
+                    <span className={styles.sr_content}>Date Property Listed</span>
+                    <h3 
+                        className={`${styles.h3_font} ${styles.date_position}`}
+                    >
+                        {new Date(property.date_listed).toLocaleDateString("en-GB").replace(/\//g, ".")}
+                    </h3>
+                </div>
             </div>
             <div role="group" aria-label="Property photos" className={styles.second_row}>
                 <div className={styles.main_photo_container}>
@@ -224,131 +230,143 @@ function DetailedPropertyPage () {
                         src={property.photos[photoIndex].photo_path}
                         alt={`Main photo of property number ${property.id}`}
                         className={styles.main_photo}
-                    />                                    
-                </div>
-                {propFavorite.has(property.id) ?
+                    />
+                    {propFavorite.has(property.id) ?
+                        <button 
+                            onClick={ () => removeFromFavorites(property.id)}
+                            aria-label="remove"
+                            aria-describedby="remove_fav_button"
+                            className={styles.fav_button}
+                        > 
+                            <IoIosHeart color="#a01313" size={40}/> 
+                        </button>
+                        :
+                        <button 
+                            onClick={ () => addToFavorites(property.id)}
+                            aria-label="add"
+                            aria-describedby="add_fav_button"
+                            className={styles.fav_button}
+                        >
+                            <IoIosHeartEmpty color="#f60101" size={40} /> 
+                        </button>
+                    }                                                              
+                    <span id="remove_fav_button" className={styles.sr_content}>If aria-label shows 'remove', it means the property is currently in your favorite properties' list. Clicking the button will remove it from this list.</span>
+                    <span id="add_fav_button" className={styles.sr_content}>If aria-label shows 'add', it means the property is not in your favorite properties' list. Clicking the button will add it to this list.</span> 
+                </div>               
+                <div className={styles.extra_photo_container}>
                     <button 
-                        onClick={ () => removeFromFavorites(property.id)}
-                        aria-label="remove"
-                        aria-describedby="button_hint_1"
-                        className={styles.fav_button}
-                    > 
-                        <IoIosHeart color="#a01313" size={40}/> 
-                    </button>
-                    :
-                    <button 
-                        onClick={ () => addToFavorites(property.id)}
-                        aria-label="add"
-                        aria-describedby="button_hint_2"
-                        className={styles.fav_button}
+                        disabled= {galleryIndex === 0}
+                        onClick= {() => previousPhotos()}
+                        aria-describedby="extra_photo_go_up_button"
+                        className={styles.up_arrow_button}
                     >
-                        <IoIosHeartEmpty color="#f60101" size={40} /> 
+                        <IoMdArrowRoundUp className={styles.arrow_format} />
                     </button>
-                }                     
-                <span id="button_hint_1" className={styles.sr_content}>If aria-label shows 'remove', it means the property is currently in your favorite properties' list. Clicking the button will remove it from this list.</span>
-                <span id="button_hint_2" className={styles.sr_content}>If aria-label shows 'add', it means the property is not in your favorite properties' list. Clicking the button will add it to this list.</span> 
-                <ul className={styles.extra_photo_container}>
-                    {visiblePhotos.map((photo, index) => ( 
-                        <li key={index} className={styles.list_format}> 
-                            <img 
-                                onClick={ () => setPhotoIndex(property.photos.indexOf(photo))}
-                                src={photo.photo_path}
-                                alt={`Photos number ${index + 1} of property number ${property.id}`}
-                                className={styles.extra_photo} 
-                            />
-                        </li> 
-                    ))}
-                    {Array.from({length: 4 - visiblePhotos.length}).map((_, index) => (
-                        <li key={index} className={styles.li_element}>
-                            <div className={styles.no_extra_photo_div}></div>
-                        </li>
-                    ))}
-                </ul>
-                <button 
-                    disabled= {galleryIndex === 0}
-                    onClick= {() => previousPhotos()}
-                    aria-describedby="button_hint_3"
-                    className={styles.up_arrow_button}
-                >
-                    <IoMdArrowRoundUp className={styles.arrow_format} />
-                </button>
-                <span id="button_hint_3" className={styles.sr_content}>Display previous 4 property photos. If these are the first 4 property photos, this button will be disabled. </span> 
-                <button 
-                    disabled= {galleryIndex + 4 >= property.photos.length} 
-                    onClick= { () => nextPhotos() }
-                    aria-describedby="button_hint_4"
-                    className={styles.down_arrow_button}
-                >
-                    <IoMdArrowRoundDown className={styles.arrow_format} />
-                </button>    
-                <span id="button_hint_4" className={styles.sr_content}>Display next 4 property photos. If there are no more photos, this button will be disabled.</span>             
+                    <span id="extra_photo_go_up_button" className={styles.sr_content}>Display previous 4 property photos. If these are the first 4 property photos, this button will be disabled. </span>                 
+                    <ul className={styles.extra_photo_format}>
+                        {visiblePhotos.map((photo, index) => ( 
+                            <li key={index} className={styles.list_item_format}> 
+                                <img 
+                                    onClick={ () => setPhotoIndex(property.photos.indexOf(photo))}
+                                    src={photo.photo_path}
+                                    alt={`Photos number ${index + 1} of property number ${property.id}`}
+                                    className={styles.extra_photo} 
+                                />
+                            </li> 
+                        ))}
+                        {Array.from({length: 4 - visiblePhotos.length}).map((_, index) => (
+                            <li key={index} className={styles.list_item_format}>
+                                <div className={styles.no_extra_photo_div}></div>
+                            </li>
+                        ))}
+                    </ul>
+                    <button 
+                        disabled= {galleryIndex + 4 >= property.photos.length} 
+                        onClick= { () => nextPhotos() }
+                        aria-describedby="button_hint_4"
+                        className={styles.down_arrow_button}
+                    >
+                        <IoMdArrowRoundDown className={styles.arrow_format} />
+                    </button>    
+                    <span id="button_hint_4" className={styles.sr_content}>Display next 4 property photos. If there are no more photos, this button will be disabled.</span>             
+                </div>
                 {owner && (
                     <div className={styles.owner_and_ad_main_container}>
                         <div className={styles.owner_container}>
-                            <h4 className={`${styles.h3_font} ${styles.owner_title}`}>Owner Details</h4>
-                            <span className={styles.sr_content}>Property owner's name.</span>
-                            <h4 
-                                aria-describedby="owner_name_hint"
-                                className={`${styles.h4_font} ${styles.owner_name_position}`}
-                            >
-                                {owner!.name}
-                            </h4>
-                            <span id="owner_name_hint" className={styles.sr_content}>This could be an individual's name or a company's name, depending on who is letting the property.</span>
-                            <span className={styles.sr_content}>Address where the owner of the property is located</span>
-                            <h4 
-                                aria-describedby="owner_address_hint"
-                                className={styles.h4_font}
-                            >
-                                {owner!.address}
-                            </h4>
-                            <span id="owner_address_hint" className={styles.sr_content}>This could be an individual's address or a company's address, depending on who is letting the property.</span>
-                            <span className={styles.sr_content}>Property owner's phone number</span>
-                            <h4 
-                                aria-describedby="owner_phone_number_hint"
-                                className={styles.h4_font}
-                            >
-                                {owner!.phone_number}
-                            </h4>
-                            <span id="owner_phone_number_hint" className={styles.sr_content}>This could be an individual's phone number or a company's phone number, depending on who is letting the property.</span>
+                            <h4 className={`${styles.h4_font} ${styles.owner_title}`}>Owner Details</h4>
+                            <div className={styles.owner_subtitle_container}>
+                                <div className={styles.information_container}>
+                                    <h5 className={`${styles.owner_font} ${styles.owner_subtitle}`}>Name:</h5>
+                                    <h5 
+                                        aria-describedby="owner_name_hint"
+                                        className={`${styles.owner_font} ${styles.owner_subtitle_info}`}
+                                    >
+                                        {owner!.name}
+                                    </h5>
+                                    <span id="owner_name_hint" className={styles.sr_content}>This could be an individual's name or a company's name, depending on who is letting the property.</span>                            
+                                </div>
+                                <div className={styles.information_container}>
+                                    <h5 className={`${styles.owner_font} ${styles.owner_subtitle}`}>Address:</h5>
+                                    <h5 
+                                        aria-describedby="owner_address_hint"
+                                        className={`${styles.owner_font} ${styles.owner_subtitle_info}`}
+                                    >
+                                        {owner!.address}
+                                    </h5>
+                                    <span id="owner_address_hint" className={styles.sr_content}>This could be an individual's address or a company's address, depending on who is letting the property.</span>
+                                </div>
+                                <div className={styles.information_container}>
+                                    <h5 className={`${styles.owner_font} ${styles.owner_subtitle}`}>Number:</h5>
+                                    <h5 
+                                        aria-describedby="owner_phone_number_hint"
+                                        className={`${styles.owner_font} ${styles.owner_subtitle_info}`}
+                                    >
+                                        {owner!.phone_number}
+                                    </h5>
+                                    <span id="owner_phone_number_hint" className={styles.sr_content}>This could be an individual's phone number or a company's phone number, depending on who is letting the property.</span>
+                                </div>
+                            </div>
                         </div>
                         <div className={styles.ad_container}>
                             <img src={adPhoto} className={styles.ad_photo}></img>
-                        </div>
+                        </div>                        
                     </div>
                 )}
             </div>
             <div className={styles.third_row}>
                 <div className={styles.property_summary_container}>
-                    <div className={styles.property_summary_item}>
+                    <div className={styles.property_summary_item_property_type}>
                         <span className={styles.sr_content}> Property type:</span>
                         <span> <BsHouse className={styles.react_icon} /> </span>
-                        <h4 className={styles.h4_font}>{property.type}</h4>
+                        <h4 className={`${styles.h4_font} ${styles.property_summary_position}`}>{property.type}</h4>
                     </div>    
-                    <div className={styles.property_summary_item}>            
+                    <div className={styles.property_summary_item_bedrooms_and_bathrooms}>            
                         <span className={styles.sr_content}> Number of bedrooms:</span>
                         <span> <IoBedSharp className={styles.react_icon} /> </span>
                         <h4 className={`${styles.h4_font} ${styles.property_summary_position}`}>{property.no_bedrooms} bedrooms</h4>
                     </div>
-                    <div className={styles.property_summary_item}>
+                    <div className={styles.property_summary_item_bedrooms_and_bathrooms}>
                         <span className={styles.sr_content}> Number of bathrooms:</span>
                         <span> <LuToilet className={styles.react_icon} /> </span>
                         <h4 className={`${styles.h4_font} ${styles.property_summary_position}`}>{property.no_bathrooms} bathrooms</h4>
                     </div>
-                    <div className={styles.property_summary_item}>
+                    <div className={styles.property_summary_item_furnishing}>
                         <span className={styles.sr_content}>Furnishing:</span>
                         <span> <BiCabinet className={styles.react_icon}/></span>
-                        <h4 className={styles.h4_font}>{property.furniture}</h4>
+                        <h4 className={`${styles.h4_font} ${styles.property_summary_position}`}>{property.furniture}</h4>
                     </div>
-                    <div className={styles.property_summary_item}>
+                    <div className={styles.property_summary_item_property_size  }>
                         <span className={styles.sr_content}> Property size: </span>
                         <span> <IoMdResize className={styles.react_icon} /> </span>
-                        <h4 className={`${styles.h4_font} ${styles.property_summary_custom_position}`}>{property.size} m²</h4>
+                        <h4 className={`${styles.h4_font} ${styles.property_summary_position}`}>{property.size} m²</h4>
                     </div>
                 </div>
                 <div className={styles.property_description_container}>
                     <h4 className={`${styles.h4_font} ${styles.property_description_title_position}`}>Description</h4>
-                    <h5 className={`${styles.h5_font} ${styles.property_description_content_position}`}>{property.detail}</h5>          
+                    <h5 className={`${styles.h5_font} ${styles.property_description_content_position}`}>{property.detail}</h5> 
+                    <br></br>         
                 </div>    
+                <br></br>
             </div>      
         </div>
     )
