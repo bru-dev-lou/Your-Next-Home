@@ -24,12 +24,12 @@ router.post("/", (req, res) => {
 
     //  Name validation  
 
+    const nameHasLetters = /\p{L}/u.test(name);
+    const nameIsValidFormat = /^[\p{L}\s'-]+$/u.test(name);
+
     if (name.length < 5 || name.length > 25 ) {
         return res.status(400).json({error: "Please include a name between 5 and 25 characters long."})
     }
-
-    const nameHasLetters = /\p{L}/u.test(name);
-    const nameIsValidFormat = /^[\p{L}\s'-]+$/u.test(name);
 
     if (!nameHasLetters || !nameIsValidFormat) {
         return res.status(400).json({error: "Please include a name with no numbers."})
@@ -43,10 +43,13 @@ router.post("/", (req, res) => {
         return res.status(400).json({ error: "Please include a valid email address."})
     }
 
+    if (email.length > 50) {
+        return res.status(400).json({ error: "Email should be less than 50 characters."})
+    }
+
 /*  
     For the next two if statements, do not change the error messages. 
     Changing these will affect aria-invalid for the relevant fields in the frontend. 
-    Will add codes to the error responses in the future to avoid inference based on error message.
 */        
 
     if (messageTopic.split(/\s+/).filter(Boolean).length < 5 || messageTopic.split(/\s+/).filter(Boolean).length > 25 ) {
@@ -58,10 +61,16 @@ router.post("/", (req, res) => {
     }
 
     //  PROPID validation and fallback value 
-
+    
     if (!propID) {
         propID =  "PROP0000";
     }
+
+    const validPropID = /^[a-zA-Z0-9]+$/.test(propID);
+
+    if (propID.length > 11 || !validPropID) {
+        return res.status(400).json({error: "Invalid Prop ID."})
+    } 
 
     try {        
         const sendInquiry = `

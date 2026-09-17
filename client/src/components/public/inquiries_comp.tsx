@@ -4,13 +4,13 @@ import styles from "../../components/public/inquiries_comp.module.css";
 type InquiryData = {
     name: string;
     email: string;
-    propID?: string;
     messageTopic: string;
     message: string;
+    propID?: string;
 }
 
 function Inquiries () {
-    const [ data, setData ] = useState<InquiryData>({name: "", email: "", propID: undefined, messageTopic: "", message: ""}); 
+    const [ data, setData ] = useState<InquiryData>({name: "", email: "", messageTopic: "", message: "", propID: undefined}); 
 
     const [ errorMessage, setErrorMessage ] = useState(""); 
     const [ errorMessageSE, setErrorMessageSE ] = useState("");    
@@ -30,15 +30,31 @@ function Inquiries () {
         setErrorMessage("");
         setMissingField("");
 
+        // Empty field checks 
+
+        const fieldCheck = [
+            {field: data.name, error: "Please include your name."},
+            {field: data.email, error: "Please include your email so we can get back to you."},
+            {field: data.messageTopic, error: "Please include a message topic."},
+            {field: data.message, error: "Please include a message describing your inquiry."}
+        ]
+
+        for (const{field, error} of fieldCheck) {
+            if(!field) {
+                setErrorMessage(error);
+                return;
+            }
+        }
+
         // Name validation 
+        
+        const nameHasLetters = /\p{L}/u.test(data.name);
+        const nameIsValidFormat = /^[\p{L}\s'-]+$/u.test(data.name);
 
         if (data.name.length < 5 || data.name.length > 25) {
             setErrorMessage("Please include a name between 5 and 25 characters long.");
             return;
         }
-
-        const nameHasLetters = /\p{L}/u.test(data.name);
-        const nameIsValidFormat = /^[\p{L}\s'-]+$/u.test(data.name);
 
         if (!nameHasLetters || !nameIsValidFormat) {
             setErrorMessage("Please include a name with no numbers.");
@@ -49,6 +65,11 @@ function Inquiries () {
 
         const isValidEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(data.email);
 
+        if (data.email.length > 50) {
+            setErrorMessage("Email should be less than 50 characters.");
+            return;
+        }        
+
         if (!isValidEmail) {
             setErrorMessage("Please include a valid email address.");
             return;
@@ -57,7 +78,6 @@ function Inquiries () {
         /*  
             For the next two if statements, do not change the error messages. 
             Changing these will affect aria-invalid for the relevant fields in the frontend. 
-            Will add codes to the error responses in the future to avoid inference based on error message.
         */        
 
         if (topicWordCount < 5 || topicWordCount > 25) {
@@ -75,6 +95,12 @@ function Inquiries () {
         if (!data.propID) {
             data.propID =  "PROP0000";
         }        
+        
+        const validPropID = /^[a-zA-Z0-9]+$/.test(data.propID);
+
+        if (data.propID.length > 11 || !validPropID)  {
+            setErrorMessage("Invalid Prop ID.")
+        }
 
         try {
             const res = await fetch("/api/inquiries", {
@@ -246,7 +272,7 @@ function Inquiries () {
                             setErrorMessage("");
                             setSuccessMessage("");
                         }}
-                        placeholder="PROP0000"
+                        placeholder="Add property ID here."
                         aria-describedby="property_id_hint"
                         className={styles.input_format}
                     />
