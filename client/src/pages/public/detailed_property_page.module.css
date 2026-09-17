@@ -40,7 +40,6 @@
     white-space: pre-wrap;
 }
 
-
 /* Styling code in the order it appears in the JSX  */
 
 .error_FP_container {
@@ -418,11 +417,21 @@
 
     margin-top: 3%;
     padding: 2% 2% 0 2%; 
+}
 
+.description_title_container {
+    display: flex;
+    width: 100%;
 }
 
 .property_description_title_position {
     font-weight: 500;
+    width: 80%;
+}
+
+.propID_position {
+    font-weight: 400;
+    margin-left: auto;
 }
 
 .property_description_content_position {

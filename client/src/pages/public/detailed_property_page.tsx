@@ -38,6 +38,7 @@ type OwnerDetails = {
 
 function DetailedPropertyPage () {
     const {propID} = useParams();
+    const propID_Formatted = String(propID).padStart(4, "0");
 
     const [ property, setProperty ] = useState<PropertyDetails | null>(null);
     const [ owner, setOwner ] = useState<OwnerDetails | null>(null);
@@ -362,7 +363,10 @@ function DetailedPropertyPage () {
                     </div>
                 </div>
                 <div className={styles.property_description_container}>
-                    <h4 className={`${styles.h4_font} ${styles.property_description_title_position}`}>Description</h4>
+                    <div className={styles.description_title_container}>
+                        <h4 className={`${styles.h4_font} ${styles.property_description_title_position}`}>Description</h4>
+                        <h4 className={`${styles.h4_font} ${styles.propID_position}`}> PROP {propID_Formatted} </h4>
+                    </div>
                     <h5 className={`${styles.h5_font} ${styles.property_description_content_position}`}>{property.detail}</h5> 
                     <br></br>         
                 </div>    
