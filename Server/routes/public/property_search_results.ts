@@ -20,10 +20,10 @@ router.get("/", (req, res) => {
         furniture: "",
         minBeds: 1,
         minBaths: 1,
-        maxPrice: 10000
+        maxPrice: 99999
     };
     
-    const city = ((req.query.city || values.city) as string || "").replace(/[^a-zA-Z-]/g, "");    
+    const city = ((req.query.city || values.city) as string || "").replace(/[^a-zA-Z- ]/g, "");    
     const type = req.query.type || values.type;
     const furniture = req.query.furniture || values.furniture;
     const minBeds = Number(req.query.minBeds) || values.minBeds;    
@@ -35,7 +35,11 @@ router.get("/", (req, res) => {
     if (!(sortBy in options)) {
         sortBy = "date";
     } 
-    
+
+    if (city.length > 50) {
+        return res.status(400).json({locationInputError: "Location must be less than 50 characters."})
+    }
+
     try {
         const data = db.prepare(`
             SELECT property_list.id,
@@ -68,7 +72,7 @@ router.get("/", (req, res) => {
             )
             
         if (data.length === 0) {
-            return  res.status(200).json({message: "No properties found matching your search criteria, please try adjusting your filters."});
+            return  res.status(200).json({noProperties: "No properties found matching your search criteria, please try adjusting your filters."});
         }
 
         else {

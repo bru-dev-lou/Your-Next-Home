@@ -2,12 +2,16 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styles from "../public/homepage_searchbar_comp.module.css";
 
-function HomePageSearchBar() {
+type HomePageErrorMessageFunctino = {
+    setLocationErrorMessage: (message: string) => void;
+} 
+
+function HomePageSearchBar( {setLocationErrorMessage} : HomePageErrorMessageFunctino ) {
     const [ autoCompleteQuery, setAutoCompleteQuery ] = useState("");
     const [ autoCompleteQueryClicked, setAutoCompleteQueryClicked ] = useState(true); 
 
     const [ citySuggestions, setCitySuggestions ] = useState<{ city: string }[]>([]);
-    const [ maxPrice, setMaxPrice ] = useState(10000);
+    const [ maxPrice, setMaxPrice ] = useState(99999);
     const [ maxPriceLabel, setMaxPriceLabel ] = useState(" No Maximum ");
     const [ budgetDropdown, setBudgetDropdown ] = useState<boolean>(false); 
     
@@ -19,6 +23,10 @@ function HomePageSearchBar() {
 
     useEffect(() => {
         const fetchCity = async () => {
+            if (autoCompleteQuery.length > 50) {
+                setErrorMessageAC("Maximum length exceeded!")
+            };
+
             try {
                 const res = await fetch(`/api/cities?city=${autoCompleteQuery}`);
                 const result = await res.json();
@@ -28,7 +36,7 @@ function HomePageSearchBar() {
                     setErrorMessageAC(result.error);
                     setTimeout(() => {
                         setErrorMessageAC("");
-                    }, 750)
+                    }, 2000)
                 }
 
                 else if(autoCompleteQuery.length === 0) {
@@ -74,6 +82,21 @@ function HomePageSearchBar() {
 
     const propertySearch = (e:React.SubmitEvent<HTMLFormElement>) => {
         e.preventDefault();
+        const validCity = autoCompleteQuery === "" || /^[a-zA-Z\- ]+$/.test(autoCompleteQuery); 
+
+        if (autoCompleteQuery.length > 50) {
+            setLocationErrorMessage("Location must be less than 50 characters!");
+            setTimeout(() => setLocationErrorMessage(""), 3000);
+            return;
+        }
+        
+        if (!validCity) {
+            setLocationErrorMessage("Location must only include letters and hyphens.");
+            setTimeout(() => setLocationErrorMessage(""), 3000);            
+            return;
+        }
+
+
         navigate(`/search?city=${autoCompleteQuery}&maxPrice=${maxPrice}`);
     };
 
@@ -88,7 +111,7 @@ function HomePageSearchBar() {
                             type="text"
                             value={autoCompleteQuery}
                             onChange={(e) => {
-                                const validCity = e.target.value.replace(/[^a-zA-Z-]/g, "");
+                                const validCity = e.target.value.replace(/[^a-zA-Z- ]/g, "");
                                 setAutoCompleteQuery(validCity);
                                 setAutoCompleteQueryClicked(false); 
                             }}

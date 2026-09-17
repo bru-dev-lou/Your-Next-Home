@@ -4,7 +4,15 @@ import db from "../../database/database.js";
 const router = express.Router();
 
 router.get('/cities', (req, res) => {    
-    const {city} = req.query;
+    const city = req.query.city as string;
+
+    if (typeof city !== "string") {
+        return res.status(400).json({ error: "Invalid city parameter." });
+    }
+    
+    if (city?.length  > 50) {
+        return res.status(400).json({ error: "Maximum length exceeded!"});
+    }
 
     if (!city) { 
         return res.status(200).json([]);

@@ -50,6 +50,7 @@ function PropertySearchPage () {
   const [ errorMessageFP, setErrorMessageFP ] = useState<ErrorResponse>({id: null, error: ""});
   const [ errorMessagePR, setErrorMessagePR ] = useState("");
   const [ introMessage, setIntroMessage ] = useState("");
+  const [ locationErrorMessage, setLocationErrorMessage ] = useState(""); 
 
 
   useEffect(() => {
@@ -57,22 +58,30 @@ function PropertySearchPage () {
       
       try{
         const res = await fetch(`/api/search?city=${city}&type=${type}&furniture=${furniture}&minBeds=${minBeds}&minBaths=${minBaths}&maxPrice=${maxPrice}&sortBy=${sortByValue}`);
+        const result = await res.json();
 
-        const data = await res.json();
-
-        if (!res.ok) {
-          setErrorMessagePR(data.error);
+        if (result.error) {
+          setErrorMessagePR(result.error);
+          setLocationErrorMessage("");
           setIntroMessage("");
         }
       
-        else if (data.message) {
-          setErrorMessagePR(data.message);
+        else if (result.locationInputError) {
+          setLocationErrorMessage(result.locationInputError); 
+          setTimeout(() => setLocationErrorMessage(""), 2000);
+        }
+
+        else if (result.noProperties) {
+          setErrorMessagePR(result.noProperties);
           setIntroMessage("");
           setPropertyResults([]);
+          setLocationErrorMessage("");
         }
 
         else {
           setErrorMessagePR("");
+          setLocationErrorMessage("");
+
           if (!city) {
             setIntroMessage(`Properties available for rent in England`);
           }
@@ -81,7 +90,7 @@ function PropertySearchPage () {
             setIntroMessage(`Properties available for rent in ${city}`);
           }
 
-          setPropertyResults(data); 
+          setPropertyResults(result); 
         }
       }
 
@@ -206,11 +215,15 @@ function PropertySearchPage () {
 
   return (
     <div className={styles.main_container}>
-      <PropertySearchPageSearchBar sortBy={sortByValue} />
-      {introMessage &&
+      <PropertySearchPageSearchBar 
+        sortBy={sortByValue} 
+        setLocationErrorMessage={setLocationErrorMessage} 
+      />
+      {(introMessage || locationErrorMessage) && 
         <div className={styles.intro_main_container}>
-          <div className={styles.intro_title_container}>          
-            <h2 className={styles.main_container_font}>{introMessage}</h2>
+          <div className={styles.intro_title_container}>
+                  {introMessage && <h2 style={{display: locationErrorMessage ? "none": "block" }} className={styles.main_container_font}>{introMessage}</h2>}
+                  {locationErrorMessage && <h2 className={styles.location_error_message}> {locationErrorMessage}</h2>}
           </div>
           <div className={styles.order_by_container}>
             <h2 className={styles.main_container_font}>Order by:</h2>
