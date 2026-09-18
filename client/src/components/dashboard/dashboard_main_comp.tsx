@@ -155,7 +155,7 @@ function DashboardMain() {
                 :
                     <div>
                         <div className={styles.title_container}>
-                            <h2 className={styles.loading_message}>Loading...</h2>
+                            <h2 className={styles.main_title}>Loading...</h2>
                         </div>
                     </div>
                 }
