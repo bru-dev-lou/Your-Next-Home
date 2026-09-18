@@ -39,8 +39,12 @@ router.post("/", async (req, res) => {
 
     // Name validation 
 
-    if (name.length < 5 || name.length > 50) {
-        return res.status(400).json({ shortError: "Name must be between 5 and 50 characters." })
+    if (name.length < 5 ) {
+        return res.status(400).json({ shortError: "Please include a name at least 5 characters long." })
+    }
+
+    if (name.length > 39) {
+        return res.status(400).json({ shortError: "Please include a name shorter than 40 characters"});
     }
 
     const nameHasLetters = /\p{L}/u.test(name);
@@ -52,11 +56,19 @@ router.post("/", async (req, res) => {
 
     // Address validation 
 
-    if (address.split(/\s+/).filter(Boolean).length < 5 || address.split(/\s+/).filter(Boolean).length > 25) {
-        return res.status(400).json({shortError: "Address must be between 5 and 25 words."})
+    if (address.length < 5) {
+        return res.status(400).json({ shortError: "Please include an address at least 5 characters long."})
+    }
+
+    if (address.length > 40) {
+        return res.status(400).json({ shortError: "Please include an address shorter than 40 characters"});
     }
 
     // Phone number validation 
+
+    if (number.length > 20) {
+        return res.status(400).json({ shortError: "Phone number must be shorter than 20 digits."});
+    }
 
     const validNumber = /^[0-9]{10,}$/.test(number);
     
@@ -65,6 +77,10 @@ router.post("/", async (req, res) => {
     }
 
     // Email validation 
+
+    if (email.length > 50) {
+        return res.status(400).json({ shortError: "Please include an email shorter than 50 characters."});
+    }
 
     const isValidEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 
