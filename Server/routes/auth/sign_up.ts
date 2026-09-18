@@ -51,7 +51,7 @@ router.post("/", async (req, res) => {
     const nameIsValidFormat = /^[\p{L}\s'-]+$/u.test(name);
 
     if (!nameHasLetters || !nameIsValidFormat) {
-        return res.status(400).json({shortError: "Please include a name with no numbers."})
+        return res.status(400).json({shortError: "Please include a name with no special characters."})
     }
 
     // Address validation 

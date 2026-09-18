@@ -40,6 +40,8 @@ router.route("/")
     const email = req.body.userPublicDetails.email?.trim().toLowerCase();
     const password = req.body.userPublicDetails.password?.trim();
 
+    // Empty field check 
+
     const fieldCheck = [
         {field: name, name: "name", error: "Please provide your name to update your profile."},
         {field: address, name: "address", error: "Please provide your address to update your profile."},
@@ -55,24 +57,36 @@ router.route("/")
 
     // Name validation 
 
-    if (name.length < 5 || name.length > 50) {
-        return res.status(400).json({ error: "Name must be between 5 and 50 characters." })
+    if (name.length < 5 ) {
+        return res.status(400).json({ error: "Please include a name at least 5 characters long." })
+    }
+
+    if (name.length > 39) {
+        return res.status(400).json({ error: "Please include a name shorter than 40 characters"});
     }
 
     const nameHasLetters = /\p{L}/u.test(name);
     const nameIsValidFormat = /^[\p{L}\s'-]+$/u.test(name);
 
     if (!nameHasLetters || !nameIsValidFormat) {
-        return res.status(400).json({error: "Please include a name with no numbers."})
+        return res.status(400).json({error: "Please include a name with no special characters."})
     }
 
     // Address validation 
 
-    if (address.split(/\s+/).filter(Boolean).length < 5) {
-        return res.status(400).json({error: "Address must be longer than 5 words."})
+    if (address.length < 5) {
+        return res.status(400).json({ error: "Please include an address at least 5 characters long."})
+    }
+
+    if (address.length > 40) {
+        return res.status(400).json({ error: "Please include an address shorter than 40 characters"});
     }
 
     // Phone number validation 
+
+    if (number.length > 20) {
+        return res.status(400).json({ error: "Phone number must be shorter than 20 digits."});
+    }
 
     const validNumber = /^[0-9]{10,}$/.test(number);
     
@@ -81,6 +95,10 @@ router.route("/")
     }
 
     // Email validation 
+    
+    if (email.length > 50) {
+        return res.status(400).json({ error: "Please include an email shorter than 50 characters."});
+    }
 
     const isValidEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 
@@ -107,7 +125,7 @@ router.route("/")
         
         db.prepare(SQLPublic).run(name, address, number, email, ownerID); 
         
-        res.status(200).json({ message: "*** Profile Updated ***" });
+        res.status(200).json({ message: "∗∗∗ Profile Updated ∗∗∗" });
     }           
 
     catch(error) {
@@ -192,7 +210,7 @@ router.route("/password_change")
         
         db.prepare(SQLPrivate).run(newPasswordHash, ownerID); 
 
-        res.status(200).json({message: "*** Password Updated ***"});
+        res.status(200).json({message: "∗∗∗ Password Updated ∗∗∗"});
     } 
 
     catch(error) {
