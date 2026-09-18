@@ -12,8 +12,9 @@ type PropertyData = {
     furniture: string;
 }
 
-type FilterValue = {
+type SearchPageProps = {
     sortBy: string;
+    setLocationErrorMessage: (message : string) => void;
 }
 
 const propertyTypeValues = ["Apartment", "Terraced", "Semi-Detached", "Detached", "Bungalow"];
@@ -23,7 +24,7 @@ const bathroomValues = [1, 2, 3, 4, 5];
 const furnitureValues = ["Furnished", "Semi-Furnished", "Unfurnished"];
 
 
-function PropertySearchPageSearchBar ({sortBy} : FilterValue) {
+function PropertySearchPageSearchBar ({sortBy, setLocationErrorMessage} : SearchPageProps ) {
     const navigate = useNavigate();     
     const [ params ] = useSearchParams();
     
@@ -68,7 +69,7 @@ function PropertySearchPageSearchBar ({sortBy} : FilterValue) {
                     setErrorMessageAC(result.error); 
                     setTimeout(() => {
                         setErrorMessageAC("");
-                    }, 750)
+                    }, 2000)
                 }
   
                 else if(propData.city.length === 0) {
@@ -128,6 +129,20 @@ function PropertySearchPageSearchBar ({sortBy} : FilterValue) {
 
     const buttonSearch = (e: React.SubmitEvent<HTMLFormElement>) => {
         e.preventDefault();
+        const validCity = propData.city === "" || /^[a-zA-Z\- ]+$/.test(propData.city); 
+
+        if (propData.city.length > 50) {
+            setLocationErrorMessage("Location must be less than 50 characters.");    
+            setTimeout(() => setLocationErrorMessage(""), 2000);
+            return;
+        }
+
+        if (!validCity) {
+            setLocationErrorMessage("Location must only include letters and hyphens.");
+            setTimeout(() => setLocationErrorMessage(""), 2000);
+            return; 
+        }
+        
         navigate(`/search?city=${propData.city}&type=${propData.type}&furniture=${propData.furniture}&minBeds=${propData.minBeds}&minBaths=${propData.minBaths}&maxPrice=${propData.maxPrice}&sortBy=${sortBy}`);
     };
 
@@ -144,7 +159,7 @@ function PropertySearchPageSearchBar ({sortBy} : FilterValue) {
                         type = "text"
                         value = {propData.city}
                         onChange = {(e) => {
-                            const validCity = e.target.value.replace(/[^a-zA-Z-]/g, "");
+                            const validCity = e.target.value.replace(/[^a-zA-Z- ]/g, "");
                             setPropData({...propData, city: validCity});
                             setAutoCompleteQueryClicked(false);
                         }}   

@@ -34,17 +34,42 @@ function SignUp () {
         setMissingField("");
         setInUseField("");
 
+        
+    // Empty field check
+
+    const blankFieldCheck = [
+        {field: data.username, error:"Please choose a username."},
+        {field: data.name, error: "Please provide your name / company's name."},
+        {field: data.address, error: "Please provide your address / company's address."},
+        {field: data.number, error: "Please provide your phone number / company's phone number."},
+        {field: data.email, error: "Please provide your email address."},
+        {field: data.password, error: "Please choose a password."},
+        {field: data.confirmPass, error: "Please confirm your chosen password."}
+    ];
+
+    for (const {field, error} of blankFieldCheck) {
+        if(!field) {
+            setShortErrorMessage(error);
+            return;
+        }
+    } 
+
         //  Username validation 
 
         if (data.username.length < 5 || data.username.length > 20) {
-            setShortErrorMessage("Username must be between 5 and 20 characters.");
+            setShortErrorMessage("Your username must be between 5 and 20 characters.");
             return; 
         }
 
         //  Name validation 
 
-        if (data.name.length < 5 || data.name.length > 50) {
-            setShortErrorMessage("Name must be between 5 and 50 characters.");
+        if (data.name.length < 5) {
+            setShortErrorMessage("Please include a name at least 5 characters long.");
+            return;
+        }
+
+        if (data.name.length > 39) {
+            setShortErrorMessage("Please include a name shorter than 40 characters.");
             return;
         }
 
@@ -52,18 +77,28 @@ function SignUp () {
         const nameIsValidFormat = /^[\p{L}\s'-]+$/u.test(data.name);
 
         if (!nameHasLetters || !nameIsValidFormat) {
-            setShortErrorMessage("Please include a name with no numbers.");
+            setShortErrorMessage("Please include a name with no special characters");
             return;
         } 
 
-        //  Address validation 
+        // Address validation 
 
-        if (data.address.split(/\s+/).filter(Boolean).length < 5 || data.address.split(/\s+/).filter(Boolean).length > 25) {
-            setShortErrorMessage("Address must be between 5 and 25 words.");
+        if (data.address.length < 5) {
+            setShortErrorMessage("Please include an address at least 5 characters long.");
             return;
-        }        
+        }
+
+        if (data.address.length > 40) {
+            setShortErrorMessage("Please include an address shorter than 40 characters.");
+            return;
+        }
 
         //  Phone number validation 
+
+        if (data.number.length > 20) {
+            setShortErrorMessage("Phone number must be shorter than 20 digits.");
+            return;
+        }
 
         const validNumber = /^[0-9]{10,}$/.test(data.number);
 
@@ -73,6 +108,11 @@ function SignUp () {
         }
 
         //  Email validation 
+
+        if (data.email.length > 50) {
+            setShortErrorMessage("Please include an email shorter than 50 characters.");
+            return; 
+        }
 
         const isValidEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(data.email);
 

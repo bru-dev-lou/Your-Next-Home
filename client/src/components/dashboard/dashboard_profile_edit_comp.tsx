@@ -109,10 +109,31 @@ function DashboardProfileEdit () {
     async function updateUserPublicDetails (e:React.MouseEvent<HTMLButtonElement>) {
         e.preventDefault();
 
+        //  Empty field checks
+
+        const fieldCheck = [
+            {field: userPublicDetails.name, error: "Please provide your name to update your profile."},
+            {field: userPublicDetails.address,  error: "Please provide your address to update your profile."},
+            {field: userPublicDetails.phone_number,  error: "Please provide your phone number to update your profile."},
+            {field: userPublicDetails.email, error: "Please provide your email to update your profile."}
+        ];
+
+        for (const {field, error} of fieldCheck) {
+            if (!field) {
+                setErrorMessageMP(error);
+                return;
+            }
+        }
+
         // Name validation 
 
-        if (userPublicDetails.name.length < 5 || userPublicDetails.name.length > 50) {
-            setErrorMessageMP("Name must be between 5 and 50 characters.");
+        if (userPublicDetails.name.length < 5) {
+            setErrorMessageMP("Please include a name at least 5 characters long.");
+            return;
+        }
+
+        if (userPublicDetails.name.length > 39) {
+            setErrorMessageMP("Please include a name shorter than 40 characters.");
             return;
         }
 
@@ -120,18 +141,28 @@ function DashboardProfileEdit () {
         const nameIsValidFormat = /^[\p{L}\s'-]+$/u.test(userPublicDetails.name);
 
         if (!nameHasLetters || !nameIsValidFormat) {
-            setErrorMessageMP("Please include a name with no numbers.");
+            setErrorMessageMP("Please include a name with no special characters.");
             return;
         }
 
         // Address validation 
 
-        if (userPublicDetails.address.split(/\s+/).filter(Boolean).length < 5) {
-            setErrorMessageMP("Address must be longer than 5 words.");
+        if (userPublicDetails.address.length < 5) {
+            setErrorMessageMP("Please include an address at least 5 characters long.");
+            return;
+        }
+
+        if (userPublicDetails.address.length > 40) {
+            setErrorMessageMP("Please include an address shorter than 40 characters.");
             return;
         }
 
         // Phone number validation 
+
+        if (userPublicDetails.phone_number.length > 20) {
+            setErrorMessageMP("Phone number must be shorter than 20 digits.");
+            return;
+        }
 
         const validNumber = /^[0-9]{10,}$/.test(userPublicDetails.phone_number);
         
@@ -141,6 +172,11 @@ function DashboardProfileEdit () {
         }
 
         // Email validation 
+
+        if (userPublicDetails.email.length > 50) {
+            setErrorMessageMP("Please include an email shorter than 50 characters.");
+            return; 
+        }        
 
         const isValidEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(userPublicDetails.email);
 
@@ -156,18 +192,18 @@ function DashboardProfileEdit () {
             return;
         }        
 
+        const {password: _password1, ...detailsToCompare} = userPublicDetails;
+        const {password: _password2, ...originalDetails} = originalUserPublicDetails;
+
+        if (JSON.stringify(detailsToCompare) === JSON.stringify(originalDetails)) {
+            setErrorMessageMP("Please update at least one field.");
+            setSuccessMessageMP("");
+            setChangeRequest(false);
+            setUserPublicDetails({...userPublicDetails, password: ""});     
+            return;
+        }        
+
         try {
-            const {password: _password1, ...detailsToCompare} = userPublicDetails;
-            const {password: _password2, ...originalDetails} = originalUserPublicDetails;
-
-            if (JSON.stringify(detailsToCompare) === JSON.stringify(originalDetails)) {
-                setErrorMessageMP("Please update at least one field.");
-                setSuccessMessageMP("");
-                setChangeRequest(false);
-                setUserPublicDetails({...userPublicDetails, password: ""});     
-                return;
-            }
-
             const res = await fetch(`/api/dashboard/profile/edit`, {
                 method: "PATCH",
                 headers: {
