@@ -125,7 +125,6 @@
 
     background-color: #D9E4F3;
     border: solid 2px #125370; 
-    border-radius: 5px; 
 
     height: 90%;
     width: 60%;
@@ -171,7 +170,6 @@
 
 .autocomplete_item:hover {
     box-shadow: inset 0px 0px 15px rgba(0,36,97,0.5);
-    border-radius: 5px;
     cursor: pointer;
 }
 
