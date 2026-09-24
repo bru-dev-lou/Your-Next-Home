@@ -27,21 +27,22 @@ function Inquiries () {
 
     const submitInquiry = async (e:React.SubmitEvent<HTMLFormElement>) => {
         e.preventDefault();
-        setErrorMessage("");
-        setMissingField("");
+        clearFeedback();
 
         // Empty field checks 
 
         const fieldCheck = [
-            {field: data.name, error: "Please include your name."},
-            {field: data.email, error: "Please include your email so we can get back to you."},
-            {field: data.messageTopic, error: "Please include a message topic."},
-            {field: data.message, error: "Please include a message describing your inquiry."}
+            {field: data.name, error: "Please include your name.", name: "name"},
+            {field: data.email, error: "Please include your email so we can get back to you.", name: "email"},
+            {field: data.messageTopic, error: "Please include a message topic.", name: "topic"},
+            {field: data.message, error: "Please include a message describing your inquiry.", name: "message"}
         ]
 
-        for (const{field, error} of fieldCheck) {
+        for (const{field, error, name} of fieldCheck) {
             if(!field) {
                 setErrorMessage(error);
+                setMissingField(name);
+                setSuccessMessage("");
                 return;
             }
         }
@@ -99,7 +100,8 @@ function Inquiries () {
         const validPropID = /^[a-zA-Z0-9]+$/.test(data.propID);
 
         if (data.propID.length > 11 || !validPropID)  {
-            setErrorMessage("Invalid Prop ID.")
+            setErrorMessage("Invalid Prop ID.");
+            return; 
         }
 
         try {
@@ -163,6 +165,14 @@ function Inquiries () {
         return () => clearTimeout(messageWordCountTimeout);
     }, [messageWordCount]); 
 
+    // Clear feedback messages function so ARIA-INVALID resets and reduce verbose in JSX return
+
+    const clearFeedback = () => {
+        setSuccessMessage("");
+        setMissingField("");
+        setErrorMessage("");
+    }
+
     return (
         <form 
             onSubmit={submitInquiry}
@@ -179,8 +189,7 @@ function Inquiries () {
                         value={data.name}
                         onChange= {(e) => {
                             setData({...data, name: e.target.value});
-                            setErrorMessage("");
-                            setSuccessMessage("");
+                            clearFeedback();
                         }}
                         required
                         aria-invalid={missingField === "name"}
@@ -195,8 +204,7 @@ function Inquiries () {
                         value={data.email}
                         onChange={(e) => {
                             setData({...data, email: e.target.value});
-                            setErrorMessage("");
-                            setSuccessMessage("");
+                            clearFeedback();
                         }}
                         required
                         aria-invalid={missingField === "email"}
@@ -213,8 +221,7 @@ function Inquiries () {
                             const topicWords = e.target.value.split(/\s+/).filter(Boolean); 
                             if (topicWords.length <= 25) { 
                             setData({...data, messageTopic: e.target.value});
-                            setErrorMessage("");
-                            setSuccessMessage("");
+                            clearFeedback();
                         }}}
                         required
                         aria-describedby="topic_hint"
@@ -244,8 +251,7 @@ function Inquiries () {
                             const messageWords = e.target.value.split(/\s+/).filter(Boolean);
                             if (messageWords.length <= 250) {
                             setData({...data, message: e.target.value});
-                            setErrorMessage("");
-                            setSuccessMessage("");
+                            clearFeedback();
                             }}}
                         required
                         aria-describedby="message_hint"
@@ -269,8 +275,7 @@ function Inquiries () {
                         value= {data.propID || ""}
                         onChange={(e) => {
                             setData({...data, propID: e.target.value});
-                            setErrorMessage("");
-                            setSuccessMessage("");
+                            clearFeedback();
                         }}
                         placeholder="Add property ID here."
                         aria-describedby="property_id_hint"
