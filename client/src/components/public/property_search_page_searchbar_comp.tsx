@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react"; 
+import { useEffect, useRef, useState } from "react"; 
 import { useSearchParams, useNavigate } from "react-router-dom"; 
 import styles from "./property_search_page_searchbar_comp.module.css";
 
@@ -57,9 +57,24 @@ function PropertySearchPageSearchBar ({sortBy, setLocationErrorMessage} : Search
     // Error Message → AC = Auto Complete 
 
     const [ errorMessageAC, setErrorMessageAC ] = useState(""); 
+    const errorTimeoutRef = useRef<ReturnType<typeof setTimeout> | null> (null);
 
     useEffect(() => {
         const fetchAutoComplete = async () => {
+            if (propData.city.length > 50) {
+                setErrorMessageAC("Maximum length exceeded!");
+            
+                if (errorTimeoutRef.current) {
+                    clearTimeout(errorTimeoutRef.current);
+                }
+
+                errorTimeoutRef.current = setTimeout(() => {
+                    setErrorMessageAC("");
+                }, 2000)
+            
+                return; 
+            };
+
             try {
                 const res = await fetch(`/api/cities?city=${propData.city}`);
                 const result = await res.json();
@@ -276,7 +291,7 @@ function PropertySearchPageSearchBar ({sortBy, setLocationErrorMessage} : Search
                             </li>
                             {maxPriceLabel !== "No Maximum" && 
                                 <li 
-                                    data-value={10000} 
+                                    data-value={99999} 
                                     onClick={(e) => {setValue(e, "maxPrice", setMaxPriceLabel, "No Maximum")}} 
                                     className={styles.generic_list_item_format}
                                 > 
