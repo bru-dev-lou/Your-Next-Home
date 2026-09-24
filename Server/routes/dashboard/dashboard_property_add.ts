@@ -133,7 +133,7 @@ router.route("/")
         try {
             for (const photo of photos) {
                 const result = await new Promise<CloudinaryResult>((resolve, reject) => {
-                    cloudinary.uploader.upload_stream({ folder: 'new_property_photos' }, (error, result) => {
+                    cloudinary.uploader.upload_stream({ folder: 'property_photos' }, (error, result) => {
                         if (error || !result) reject(error);
                         else resolve(result);
                     }).end(photo.buffer);
@@ -159,8 +159,8 @@ router.route("/")
 
         const newPropertyPhotos = db.prepare(`
             INSERT INTO property_photos 
-            (property_id, photo_path) 
-            VALUES (?, ?)`)
+            (property_id, photo_path, cloudinary_id) 
+            VALUES (?, ?, ?)`)
         ;
 
         let propertyResult;
@@ -168,7 +168,7 @@ router.route("/")
         const createProperty =  db.transaction(() => {
             propertyResult = newPropertyData.run(type, city, price, bedrooms, bathrooms, size, furniture, summary, ownerID, detail);
             for (const photo of photoData) {
-                newPropertyPhotos.run(propertyResult.lastInsertRowid, photo.secure_url) 
+                newPropertyPhotos.run(propertyResult.lastInsertRowid, photo.secure_url, photo.public_id) 
             }
         });
 
