@@ -33,6 +33,7 @@ router.route("/:propID")
     const ownerID = req.user?.id;
 
     try {     
+        
         const SQLPropertyData = db.prepare(`SELECT * FROM property_list WHERE owner_id = ? AND id = ?`).get(ownerID, propID) as PropertyData;
 
         if (!SQLPropertyData) {
@@ -65,6 +66,9 @@ router.route("/:propID")
     const ownerID = req.user?.id;
     const {type, city, price, no_bedrooms, no_bathrooms, size, furniture, summary, detail} = req.body;
 
+    const validTypes = ["Apartment", "Terraced", "Semi-Detached", "Detached", "Bungalow"];
+    const validFurniture = ["Furnished", "Semi-Furnished", "Unfurnished"];
+    
     // Empty field checks
     
     const fieldCheck = [
@@ -103,16 +107,30 @@ router.route("/:propID")
         return res.status(400).json({ error: "City must not exceed 50 characters." })
     }
     
+    //  Property type validation 
+    
+    if (type && !validTypes.includes(type)) {
+        return res.status(400).json({error: "Please choose a valid property type."})
+    }
+    
     //  Price validation 
     
     if (price > 99999) {
         return res.status(400).json({ error: "Listing's monthly rate must be less than £100,000." })
     }
 
+    if (price < 0) {
+        return res.status(400).json({error: "Please do not use negative values."});
+    }
+ 
     //  Bedrooms validation 
 
     if (no_bedrooms > 99) {
         return res.status(400).json({ error: "Listing must have less than 100 bedrooms." })
+    }
+
+    if (no_bedrooms < 0) {
+        return res.status(400).json({error: "Please do not use negative values."});
     }
 
     // Bathrooms validation
@@ -121,10 +139,24 @@ router.route("/:propID")
         return res.status(400).json({ error: "Listing must have less than 100 bathrooms." })
     }
 
+    if (no_bathrooms < 0) {
+        return res.status(400).json({error: "Please do not use negative values."});
+    }
+
     // Size validatiob 
 
     if (size > 9999) {
-        return res.status(400).json({ error: "Listing's size must be less than 10,000m²." })
+        return res.status(400).json({ error: "Listing's size must be less than 10,000m²." });
+    }
+
+    if (size < 0) {
+        return res.status(400).json({ error: "Please do not use negative values."});
+    }
+
+    //  Furniture validation 
+
+    if (furniture && !validFurniture.includes(furniture)) {
+        return res.status(400).json({error: "Please choose a valid furniture option."})
     }
 
     //  Property summary & description validations
