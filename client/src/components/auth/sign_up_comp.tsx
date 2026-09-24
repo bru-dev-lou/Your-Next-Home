@@ -18,9 +18,11 @@ type NewUserData = {
 
 function SignUp () {
     const [ data, setData ] = useState<NewUserData>({username: "", name: "", address: "", number: "", email: "", password: "", confirmPass: ""});
+    
     const [ shortErrorMessage, setShortErrorMessage ] = useState("");
     const [ longErrorMessage, setLongErrorMessage ] = useState("");
     const [ successMessage, setSuccessMessage ] = useState(""); 
+
     const [ missingField, setMissingField ] = useState("");
     const [ inUseField, setInUseField ] = useState("");
 
@@ -29,30 +31,27 @@ function SignUp () {
    
     const createAccount = async (e:React.SubmitEvent<HTMLFormElement>) => {
         e.preventDefault();
-        setShortErrorMessage("");
-        setLongErrorMessage("");
-        setMissingField("");
-        setInUseField("");
-
+        clearFeedback();
         
-    // Empty field check
+        // Empty field check
 
-    const blankFieldCheck = [
-        {field: data.username, error:"Please choose a username."},
-        {field: data.name, error: "Please provide your name / company's name."},
-        {field: data.address, error: "Please provide your address / company's address."},
-        {field: data.number, error: "Please provide your phone number / company's phone number."},
-        {field: data.email, error: "Please provide your email address."},
-        {field: data.password, error: "Please choose a password."},
-        {field: data.confirmPass, error: "Please confirm your chosen password."}
-    ];
+        const blankFieldCheck = [
+            {field: data.username, error:"Please choose a username.", name: "username"},
+            {field: data.name, error: "Please provide your name / company's name.", name: "name"},
+            {field: data.address, error: "Please provide your address / company's address.", name: "address"},
+            {field: data.number, error: "Please provide your phone number / company's phone number.", name: "phone_number"},
+            {field: data.email, error: "Please provide your email address.", name: "email"},
+            {field: data.password, error: "Please choose a password.", name: "password"},
+            {field: data.confirmPass, error: "Please confirm your chosen password.", name: "confirm_password"}
+        ];
 
-    for (const {field, error} of blankFieldCheck) {
-        if(!field) {
-            setShortErrorMessage(error);
-            return;
-        }
-    } 
+        for (const {field, error, name} of blankFieldCheck) {
+            if(!field) {
+                setShortErrorMessage(error);
+                setMissingField(name);
+                return;
+            }
+        } 
 
         //  Username validation 
 
@@ -167,6 +166,17 @@ function SignUp () {
         }
     };
 
+
+    // Clear feedback messages function so ARIA-INVALID resets and reduce verbose in JSX return
+
+    const clearFeedback = () => {
+        setShortErrorMessage("");
+        setLongErrorMessage("");
+        setSuccessMessage("");
+        setMissingField("");
+        setInUseField("");
+    }
+
     return (
         <div className={styles.main_container}>
             <form 
@@ -184,13 +194,12 @@ function SignUp () {
                             value={data.username}
                             onChange={(e) => {
                                 setData({...data, username: e.target.value});
-                                setShortErrorMessage("");
-                                setLongErrorMessage("");
+                                clearFeedback();
                             }}
                             autoComplete="username"
                             required
                             aria-describedby="username_hint"
-                            aria-invalid={missingField === "username" || inUseField === "username" ? "true" : "false"}
+                            aria-invalid={missingField === "username" || inUseField === "username"}
                             className={styles.input_format}
                         />
                         <span id="username_hint" className={styles.sr_content}>Choose a username to set up your account. This information will remain private. </span>
@@ -203,12 +212,11 @@ function SignUp () {
                             value={data.name}
                             onChange= {(e) => {
                                 setData({...data, name: e.target.value});
-                                setShortErrorMessage("");
-                                setLongErrorMessage("");                 
+                                clearFeedback();                 
                             }}
                             required
                             aria-describedby="name_hint"
-                            aria-invalid={missingField === "name" ? "true" : "false"}
+                            aria-invalid={missingField === "name"}
                             className={styles.input_format}
                         />
                         <span id="name_hint" className={styles.sr_content}>If you represent a company, insert its name. If you are an individual property owner, insert your name. This information will be visible to other users.</span>
@@ -223,13 +231,12 @@ function SignUp () {
                                 const addressWords = e.target.value.split(/\s+/).filter(Boolean);
                                 if (addressWords.length <= 25) {
                                     setData({...data, address: e.target.value});
-                                    setShortErrorMessage("");
-                                    setLongErrorMessage("");                 
+                                    clearFeedback();                 
                                 }
                             }}                            
                             required
                             aria-describedby="address_hint"
-                            aria-invalid={missingField === "address" || inUseField === "address" ? "true" : "false"}
+                            aria-invalid={missingField === "address" || inUseField === "address"}
                             className={styles.input_format}
                         />
                         <span id="address_hint" className={styles.sr_content}>If you represent a company, insert its address. If you are an individual property owner, insert your property's address. This information will be visible to other users.</span>
@@ -243,12 +250,11 @@ function SignUp () {
                             onChange= {(e) => {
                                 const filteredNumber = e.target.value.replace(/[^0-9]/g, "");   
                                 setData({...data, number: filteredNumber});
-                                setShortErrorMessage("");
-                                setLongErrorMessage("");
+                                clearFeedback();
                             }}
                             required
                             aria-describedby="phone_number_hint"
-                            aria-invalid={missingField === "phone_number" || inUseField === "phone_number" ? "true" : "false"}
+                            aria-invalid={missingField === "phone_number" || inUseField === "phone_number"}
                             className={styles.input_format}
                         />
                         <span id="phone_number_hint" className={styles.sr_content}>If you represent a company, insert your work phone number. If you are an individual property owner, insert your prefered phone number to be contacted on. This information will be visible to other users.</span>
@@ -261,12 +267,11 @@ function SignUp () {
                             value= {data.email}
                             onChange={(e) => { 
                                 setData({...data, email: e.target.value});
-                                setShortErrorMessage("");
-                                setLongErrorMessage("");
+                                clearFeedback();
                             }}
                             required
                             aria-describedby="email_hint"           
-                            aria-invalid={missingField === "email" || inUseField === "email" ? "true" : "false"}   
+                            aria-invalid={missingField === "email" || inUseField === "email"}   
                             className={styles.input_format}  
                         />
                         <span id="email_hint" className={styles.sr_content}>If you represent a company, insert your work email address. If you are an individual property owner, insert your prefered email address to be contacted on. This information will be visible to other users.</span>
@@ -279,13 +284,12 @@ function SignUp () {
                             value= {data.password}
                             onChange= {(e) => {
                                 setData({...data, password: e.target.value});
-                                setShortErrorMessage("");
-                                setLongErrorMessage("");
+                                clearFeedback();
                             }}
                             autoComplete= "new-password"
                             required
                             aria-describedby="password_hint"
-                            aria-invalid={missingField === "password" || shortErrorMessage.includes("password") || longErrorMessage.includes("password") ? "true" : "false"}
+                            aria-invalid={missingField === "password" || shortErrorMessage.includes("password") || longErrorMessage.includes("password")}
                             className={styles.input_format}
                         />
                         <span id="password_hint" className={styles.sr_content}>Your password must be 8 or more characters long. It must have one lowercase letter, one uppercase letter, a number and a special character from the following options: ? ! @ # $ % ^ & *. </span>
@@ -305,12 +309,11 @@ function SignUp () {
                             value= {data.confirmPass}
                             onChange= {(e) => {
                                 setData({...data, confirmPass: e.target.value})
-                                setShortErrorMessage("");
-                                setLongErrorMessage("");         
+                                clearFeedback();         
                             }}
                             autoComplete="new-password"
                             required
-                            aria-invalid={missingField === "confirm_password" || shortErrorMessage.includes("password") || longErrorMessage.includes("password") ? "true" : "false"}
+                            aria-invalid={missingField === "confirm_password" || shortErrorMessage.includes("password") || longErrorMessage.includes("password")}
                             className={styles.input_format}
                         />
                         <button 
