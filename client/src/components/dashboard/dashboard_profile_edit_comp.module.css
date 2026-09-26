@@ -225,7 +225,9 @@
     height: 100%;
     width: 40%;
 
-    margin-left: 55%     
+    margin-left: 55%;     
+
+    cursor: pointer; 
 }
 
 .password_container {
@@ -274,6 +276,7 @@
     width: 40%;
 
     margin: 3% 0 0 55%;
+    cursor: pointer; 
 }
 
 .account_management_container { 
@@ -396,6 +399,8 @@
     width: 40%;
 
     margin: 1% 0 0 55%;
+    
+    cursor: pointer;
 }
 
 .delete_account_container {
@@ -439,6 +444,8 @@
     width: 40%;
 
     margin: 3% 0 0 55%;
+
+    cursor: pointer; 
 }
 
 .container_format_account_deletion {
@@ -505,6 +512,8 @@
     width: 40%;
 
     margin: 1% 0 0 55%;
+
+    cursor: pointer;
 }
 
 .account_deleted_feedback {

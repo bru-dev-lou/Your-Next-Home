@@ -261,7 +261,7 @@ function DashboardMain() {
                                             {property.no_bedrooms} bedrooms
                                         </h4>
                                     </div>
-                                    <div className={property.no_bedrooms > 9 ? 
+                                    <div className={property.no_bathrooms > 9 ? 
                                         styles.basic_info_multiple_bathrooms_container 
                                         : 
                                         styles.basic_info_single_bathrooms_container

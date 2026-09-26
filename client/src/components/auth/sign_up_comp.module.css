@@ -95,12 +95,11 @@
 }
 
 .password_button {
-    background-color: #BFBFBF;
-
-    border: 1px solid #787777;
-    border-radius: 5px;  
+    background-color: transparent;
+    border: none;
     
     line-height: 30px;
+    cursor: pointer;
 } 
 
 .password_button_1_format {
@@ -147,6 +146,8 @@
     width: 40%;
     
     margin: 2% 0 0 60%;
+
+    cursor: pointer;    
 }
 
 .error_message {    
