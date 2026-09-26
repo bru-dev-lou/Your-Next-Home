@@ -1,4 +1,5 @@
-import { createContext, useContext, useEffect, useState } from "react";
+import { createContext, useEffect, useState, useContext } from "react";
+import { useLocation } from "react-router-dom";
 
 type UserData = {
     id: number;
@@ -16,9 +17,14 @@ const UserContext = createContext<UserContextType | null>(null);
 
 export function UserProvider ({ children }: { children: React.ReactNode }) {
     const [ user, setUser ] = useState<UserData | null>(null);
-    const [ loading, setLoading ] = useState(true); 
+    const [ loading, setLoading ] = useState(false); 
+    const location = useLocation(); 
 
     useEffect (() => {
+        if (location.pathname === "/" || location.pathname === "/inquiries" || location.pathname === "/signIn" || location.pathname === "/signUp") {
+            return; 
+        }
+
         setLoading(true);
 
         const fetchUserData = async () => {
@@ -41,7 +47,7 @@ export function UserProvider ({ children }: { children: React.ReactNode }) {
             }
         }
         fetchUserData()
-    }, []);
+    }, [location.pathname]);
     
     return (
         <UserContext.Provider value={{ user, setUser, loading }}>
