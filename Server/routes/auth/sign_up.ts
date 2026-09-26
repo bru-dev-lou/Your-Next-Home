@@ -9,7 +9,7 @@ router.post("/", async (req, res) => {
     const name = req.body.name;
     const address = req.body.address?.trim();
     const number = req.body.number?.trim();
-    const email = req.body.email?.trim().toLowerCase();
+    const email = req.body.email?.trim().toLowerCase(); 
     const password = req.body.password;
     const confirmPass = req.body.confirmPass;
 

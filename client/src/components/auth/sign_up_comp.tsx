@@ -153,11 +153,15 @@ function SignUp () {
                 setLongErrorMessage("");
             }
 
+            else if (result.error) {
+                setShortErrorMessage(result.error);
+                setLongErrorMessage("");
+                setMissingField(result.name);
+                setInUseField(result.column);
+            }
             else {
                 setShortErrorMessage(result.shortError);
                 setLongErrorMessage(result.longError);
-                setMissingField(result.name);
-                setInUseField(result.column);
             }
         }
 
