@@ -26,8 +26,8 @@ function App() {
   return (
     <BrowserRouter>
       <div className={styles.main_site_container}>
-      <UserProvider>
-        <MainNavigationBar />
+        <UserProvider>
+          <MainNavigationBar />
           <Routes>
             <Route path="/" element={< HomePage />} />
             <Route path="/search" element={<PropertySearchPage />} /> 

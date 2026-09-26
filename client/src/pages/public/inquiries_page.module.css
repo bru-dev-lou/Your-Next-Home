@@ -1,8 +1,8 @@
 .main_container {
     width: 94%;
-    height: 89%;
 
     display: flex;    
+    flex: 1;
     position: relative;
     
     margin-left: 3%;

@@ -41,7 +41,8 @@
 /* Styling in the order it appears in the JSX return */
 
 .main_container {
-    height: 100%;
+    /* deliberate over 100% height to cause overflow which hides main_title_container upon scrolling */
+    height: 112%;
     width: 94%;
 
     margin: 1% 0 0 3%;
