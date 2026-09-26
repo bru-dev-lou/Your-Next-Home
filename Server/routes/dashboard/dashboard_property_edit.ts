@@ -22,7 +22,12 @@ type PropertyData = {
 
 type CloudinaryResult = {
     secure_url: string;
+    public_id: string;
 };
+
+type CloudinaryPhotoDeletion = {
+    cloudinary_id: string;
+}
 
 const router = express.Router();
 
@@ -33,6 +38,7 @@ router.route("/:propID")
     const ownerID = req.user?.id;
 
     try {     
+        
         const SQLPropertyData = db.prepare(`SELECT * FROM property_list WHERE owner_id = ? AND id = ?`).get(ownerID, propID) as PropertyData;
 
         if (!SQLPropertyData) {
@@ -65,6 +71,9 @@ router.route("/:propID")
     const ownerID = req.user?.id;
     const {type, city, price, no_bedrooms, no_bathrooms, size, furniture, summary, detail} = req.body;
 
+    const validTypes = ["Apartment", "Terraced", "Semi-Detached", "Detached", "Bungalow"];
+    const validFurniture = ["Furnished", "Semi-Furnished", "Unfurnished"];
+    
     // Empty field checks
     
     const fieldCheck = [
@@ -103,16 +112,30 @@ router.route("/:propID")
         return res.status(400).json({ error: "City must not exceed 50 characters." })
     }
     
+    //  Property type validation 
+    
+    if (type && !validTypes.includes(type)) {
+        return res.status(400).json({error: "Please choose a valid property type."})
+    }
+    
     //  Price validation 
     
     if (price > 99999) {
         return res.status(400).json({ error: "Listing's monthly rate must be less than £100,000." })
     }
 
+    if (price < 0) {
+        return res.status(400).json({error: "Please do not use negative values."});
+    }
+ 
     //  Bedrooms validation 
 
     if (no_bedrooms > 99) {
         return res.status(400).json({ error: "Listing must have less than 100 bedrooms." })
+    }
+
+    if (no_bedrooms < 0) {
+        return res.status(400).json({error: "Please do not use negative values."});
     }
 
     // Bathrooms validation
@@ -121,10 +144,24 @@ router.route("/:propID")
         return res.status(400).json({ error: "Listing must have less than 100 bathrooms." })
     }
 
+    if (no_bathrooms < 0) {
+        return res.status(400).json({error: "Please do not use negative values."});
+    }
+
     // Size validatiob 
 
     if (size > 9999) {
-        return res.status(400).json({ error: "Listing's size must be less than 10,000m²." })
+        return res.status(400).json({ error: "Listing's size must be less than 10,000m²." });
+    }
+
+    if (size < 0) {
+        return res.status(400).json({ error: "Please do not use negative values."});
+    }
+
+    //  Furniture validation 
+
+    if (furniture && !validFurniture.includes(furniture)) {
+        return res.status(400).json({error: "Please choose a valid furniture option."})
     }
 
     //  Property summary & description validations
@@ -159,6 +196,8 @@ router.route("/:propID")
         return res.status(400).json({ noFilesError: "No photos have been selected." });
     }
 
+    const photoData: {secure_url: string, public_id: string}[] = []; 
+     
     try {
         //  404 over 403 error to avoid leaking propIDs validity 
 
@@ -175,16 +214,31 @@ router.route("/:propID")
             return res.status(400).json({ excessiveFiles: "You may upload up to 10 photos in total."})
         }
 
-        const SQLAddPhoto = db.prepare(`INSERT INTO property_photos (property_id, photo_path) VALUES (?, ?)`);
+        try {
+            for (const photo of photos) {
+                const result = await new Promise<CloudinaryResult>((resolve, reject) => {
+                    cloudinary.uploader.upload_stream({ folder: 'property_photos' }, (error, result) => {
+                        if (error || !result) reject(error);
+                        else resolve(result);
+                    }).end(photo.buffer);
+                });   
+                photoData.push({secure_url: result.secure_url, public_id: result.public_id});
+            }
+        }
 
-        for (const photo of photos) {
-            const result = await new Promise<CloudinaryResult>((resolve, reject) => {
-                cloudinary.uploader.upload_stream({ folder: 'new_property_photos' }, (error, result) => {
-                    if (error || !result) reject(error);
-                    else resolve(result);
-                }).end(photo.buffer);
-            });   
-            SQLAddPhoto.run(propID, result.secure_url);
+        catch (error) {
+            for (const photo of photoData){
+                await cloudinary.uploader.destroy(photo.public_id);
+            }
+
+            console.log("Failed to upload all photos. ", error);
+            return res.status(500).json({ error: "Photo uploading interrupted. Please try again."});
+        }
+
+        const SQLAddPhoto = db.prepare(`INSERT INTO property_photos (property_id, photo_path, cloudinary_id) VALUES (?, ?, ?)`);
+
+        for (const photo of photoData) {
+            SQLAddPhoto.run(propID, photo.secure_url, photo.public_id);
         }
 
         db.prepare(`UPDATE property_photos SET is_main = 1 WHERE property_id = ? ORDER BY id ASC LIMIT 1`).run(propID);
@@ -195,18 +249,20 @@ router.route("/:propID")
         }
 
         else {
-            return res.status(400).json({ error: "Failed to add photos." });
+            return res.status(400).json({ error: "Failed to retrieve photos." });
         }
     }
 
     catch (error) {
-        console.error("Error while adding property photos: ", error);
+        for (const photo of photoData){
+            await cloudinary.uploader.destroy(photo.public_id);
+        }
+        console.error("Error while adding new photos: ", error);
         return res.status(500).json({ error: "Server Error: The team has been notified." });
     }
-
 })
 
-.delete((req, res) => {
+.delete(async(req, res) => {
     const ownerID = req.user?.id;
     const propID = req.params.propID;
     const {photoID, photo_path} = req.body;
@@ -223,10 +279,22 @@ router.route("/:propID")
         const SQLPhotoCheck = db.prepare(`SELECT * FROM property_photos WHERE property_id = ?`).all(propID);
 
         if (SQLPhotoCheck.length <= 5) {
-            return res.status(400).json({minPhotosError: "Each property must have at least 5 photos." })
+            return res.status(400).json({minPhotosError: "Each property must have at least 5 photos." });
         }
 
-        const SQLDeletePhotos = db.prepare(`DELETE FROM property_photos WHERE id = ? AND property_id = ? AND photo_path = ?`).run(photoID, propID, photo_path);
+        const cloudinaryIdRetrieval = db.prepare(`
+            SELECT cloudinary_id FROM property_photos 
+            WHERE id = ? AND property_id = ? AND photo_path = ?`)
+            .get(photoID, propID, photo_path) as CloudinaryPhotoDeletion
+        ;
+
+        await cloudinary.uploader.destroy(cloudinaryIdRetrieval.cloudinary_id);
+
+        const SQLDeletePhotos = db.prepare(`
+            DELETE FROM property_photos 
+            WHERE id = ? AND property_id = ? AND photo_path = ?`)
+            .run(photoID, propID, photo_path)
+        ;
 
         if (SQLDeletePhotos.changes > 0) {
             db.prepare(`UPDATE property_photos SET is_main = 1 WHERE property_id = ? ORDER BY id ASC LIMIT 1`).run(propID);

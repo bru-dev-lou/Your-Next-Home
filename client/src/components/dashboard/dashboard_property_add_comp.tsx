@@ -1,4 +1,4 @@
-import {useEffect, useState, useRef} from "react";
+import {useEffect, useRef, useState} from "react";
 import {useNavigate} from "react-router-dom";
 
 import styles from "../dashboard/dashboard_property_add_comp.module.css";
@@ -74,10 +74,26 @@ function DashboardPropertyAdd () {
     const [ announceDescriptionWordCount, setAnnounceDescriptionWordCount ] = useState(0); 
     const descriptionWordCount = propertyDetails?.detail ? propertyDetails.detail?.split(/\s+/).filter(Boolean).length : 0;
     
+    //  useRef to ensure setTimeouts do not stack on fetchAutoComplete function
+
+    const errorTimeoutRef = useRef<ReturnType<typeof setTimeout> | null> (null);
     
     useEffect(() => {
         const fetchAutoComplete = async () => {
+            if ((propertyDetails?.city?.length ?? 0) > 50) {
+                setErrorMessageAC("Maximum length exceeded!");
             
+                if (errorTimeoutRef.current) {
+                    clearTimeout(errorTimeoutRef.current);
+                }
+
+                errorTimeoutRef.current = setTimeout(() => {
+                    setErrorMessageAC("");
+                }, 2000)
+            
+                return; 
+            };
+
             try {
                 const res = await fetch(`/api/cities?city=${propertyDetails.city}`);
                 const result = await res.json();
@@ -119,7 +135,7 @@ function DashboardPropertyAdd () {
   
         const timeout = setTimeout (() => {
             fetchAutoComplete();
-        }, 300);
+        }, 100);
 
         return () => clearTimeout(timeout);
         
@@ -127,25 +143,26 @@ function DashboardPropertyAdd () {
 
     async function addPropertyData (e: React.MouseEvent<HTMLButtonElement>) {
         e.preventDefault();
-        setMissingField("");
-
+        clearDataErrorMessage();
+        
         // Empty field checks
 
         const fieldCheck = [
-            { field: propertyDetails.city, error: "Please state where your property is located." },
-            { field: propertyDetails.type, error: "Please choose a property type." },
-            { field: propertyDetails.price, error: "Please state the property's monthly rental rate." },
-            { field: propertyDetails.bedrooms, error: "Please state how many bedrooms your property has." },
-            { field: propertyDetails.bathrooms, error: "Please state how many bathrooms your property has." },
-            { field: propertyDetails.size, error: "Please state the size of your property in m²." },
-            { field: propertyDetails.furniture, error: "Please choose your property's type of furnishing." },
-            { field: propertyDetails.summary, error: "Please provide a summary of your property." },
-            { field: propertyDetails.detail, error: "Please provide a detailed description of your property." } 
+            { field: propertyDetails.city, error: "Please state where your property is located.", name: "city"},
+            { field: propertyDetails.type, error: "Please choose a property type.", name: "type"},
+            { field: propertyDetails.price, error: "Please state the property's monthly rental rate.", name: "price"},
+            { field: propertyDetails.bedrooms, error: "Please state how many bedrooms your property has.", name: "bedrooms"},
+            { field: propertyDetails.bathrooms, error: "Please state how many bathrooms your property has.", name: "bathrooms"},
+            { field: propertyDetails.size, error: "Please state the size of your property in m².", name: "size"},
+            { field: propertyDetails.furniture, error: "Please choose your property's type of furnishing.", name: "furniture"},
+            { field: propertyDetails.summary, error: "Please provide a summary of your property.", name: "summary"},
+            { field: propertyDetails.detail, error: "Please provide a detailed description of your property.", name: "detail"} 
         ];
 
-        for (const {field, error} of fieldCheck) {
-            if (!field || field === "0" ) {
+        for (const {field, error, name} of fieldCheck) {
+            if (!field || field === "0" || field === "Select" ) {
                 setDataErrorMessage(error); 
+                setMissingField(name);
                 return;
             }
         }
@@ -342,6 +359,7 @@ function DashboardPropertyAdd () {
 
     function clearDataErrorMessage () {
         setDataErrorMessage("");
+        setMissingField("");
     }
 
     function clearPhotoErrorMessages () {
@@ -352,7 +370,7 @@ function DashboardPropertyAdd () {
         setDropdown(prev => !prev);
     }
 
-   const setValue = (e: React.MouseEvent<HTMLLIElement>, property: keyof PropertyData, setLabel: (value:string) => void, defaultValue: string) => {
+    const setValue = (e: React.MouseEvent<HTMLLIElement>, property: keyof PropertyData, setLabel: (value:string) => void, defaultValue: string) => {
         setPropertyDetails({...propertyDetails, [property]: e.currentTarget.dataset.value!});
         setLabel(e.currentTarget.textContent || defaultValue)
     } 
@@ -456,6 +474,7 @@ function DashboardPropertyAdd () {
                         <ul
                             id="property_type"
                             onClick ={() => showDropdown(setPropertyTypeDropdown)}
+                            aria-invalid={missingField === "type"}                            
                             className={styles.ul_container_closed}
                         >
                             <li 
@@ -474,6 +493,7 @@ function DashboardPropertyAdd () {
                         >
                             <li 
                                 data-value={propertyDetails.type}
+                                onClick={ () => clearDataErrorMessage}
                                 className={styles.list_item} 
                             >
                                 {propertyTypeLabel}
@@ -510,11 +530,16 @@ function DashboardPropertyAdd () {
                     </label>
                         <input 
                             id="rental_rate"
-                            type="number" 
+                            type="text"
+                            inputMode="numeric"
+                            min={0}
                             value={propertyDetails.price || ""}
                             onChange={(e) => { 
-                                setPropertyDetails({...propertyDetails, price: (Number(e.target.value))})
-                                clearDataErrorMessage(); 
+                                const numberRegex = /^[0-9]*$/;
+                                if (numberRegex.test(e.target.value)) {
+                                    setPropertyDetails({...propertyDetails, price: (Number(e.target.value))})
+                                    clearDataErrorMessage(); 
+                                }
                             }} 
                             required 
                             aria-invalid={missingField === "price"}
@@ -528,11 +553,15 @@ function DashboardPropertyAdd () {
                     </label>
                         <input 
                             id="bedrooms"
-                            type= "number" 
+                            type= "text"
+                            inputMode="numeric"
                             value={propertyDetails.bedrooms || ""}
                             onChange={(e) => {
-                                setPropertyDetails({...propertyDetails, bedrooms: (Number(e.target.value))})
-                                clearDataErrorMessage(); 
+                                const numberRegex = /^[0-9]*$/;
+                                if (numberRegex.test(e.target.value)) {
+                                    setPropertyDetails({...propertyDetails, bedrooms: (Number(e.target.value))})
+                                    clearDataErrorMessage(); 
+                                }
                             }} 
                             required
                             aria-invalid={missingField === "bedrooms"}
@@ -546,11 +575,15 @@ function DashboardPropertyAdd () {
                     </label>
                         <input 
                             id="bathrooms"
-                            type= "number" 
+                            type= "text"
+                            inputMode="numeric" 
                             value={propertyDetails.bathrooms || ""}
                             onChange={(e) => {
-                                setPropertyDetails({...propertyDetails, bathrooms: (Number(e.target.value))})
-                                clearDataErrorMessage();
+                                const numberRegex = /^[0-9]*$/;
+                                if (numberRegex.test(e.target.value)) {                            
+                                    setPropertyDetails({...propertyDetails, bathrooms: (Number(e.target.value))})
+                                    clearDataErrorMessage();
+                                }
                             }} 
                             required
                             aria-invalid={missingField === "bathrooms"}
@@ -564,11 +597,15 @@ function DashboardPropertyAdd () {
                     </label> 
                         <input 
                             id="property_size"
-                            type= "number" 
+                            type= "text"
+                            inputMode="numeric" 
                             value={propertyDetails.size || ""}
                             onChange={(e) => {
-                                setPropertyDetails({...propertyDetails, size: (Number(e.target.value))})
-                                clearDataErrorMessage(); 
+                                const numberRegex = /^[0-9]*$/;
+                                if (numberRegex.test(e.target.value)) {                                
+                                    setPropertyDetails({...propertyDetails, size: (Number(e.target.value))})
+                                    clearDataErrorMessage(); 
+                                }
                             }} 
                             required 
                             aria-invalid={missingField === "size"}
@@ -605,6 +642,7 @@ function DashboardPropertyAdd () {
                         >
                             <li
                                 data-value={propertyDetails.furniture}
+                                onClick={() => clearDataErrorMessage()}
                                 className={styles.list_item}
                             >
                                 {furnitureLabel}
@@ -725,7 +763,7 @@ function DashboardPropertyAdd () {
                     <div className={styles.extra_photos_row}>
                         <button
                             disabled = {galleryIndex === 0}
-                            onClick={() => previousPhotos()}
+                            onClick={() => {previousPhotos(), clearPhotoErrorMessages()}}
                             className={styles.left_arrow_container}
                             aria-describedby="previous_photos_button"
                         >
@@ -748,7 +786,7 @@ function DashboardPropertyAdd () {
                             accept="image/*" 
                             onChange={(e) => {
                                 displayPhotos(e); 
-                                clearPhotoErrorMessages()
+                                setPhotoErrorMessage("");
                             }}
                             ref={photoUpload}
                             style={{display: "none"}}
@@ -783,7 +821,7 @@ function DashboardPropertyAdd () {
                         </ul>   
                         <button 
                             disabled={galleryIndex + 3 >= tempURLs.length}
-                            onClick={() => nextPhotos()}
+                            onClick={() => {nextPhotos(), clearPhotoErrorMessages()}}
                             aria-labelledby="next_photos_button"
                             className={styles.right_arrow_container}
                         >

@@ -18,7 +18,7 @@ CREATE TABLE IF NOT EXISTS property_list (
     no_bathrooms INTEGER NOT NULL,
     size INTEGER NOT NULL,
     furniture TEXT NOT NULL,
-    summary TEXT NOT NULL DEFAULT 'Seems like a description is missing for this property. Please contact the owner for more details.If you are the owner, please update the property description.',
+    summary TEXT NOT NULL,
     owner_id INTEGER NOT NULL,
     date_listed TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     detail TEXT NOT NULL,
@@ -30,6 +30,7 @@ CREATE TABLE IF NOT EXISTS property_photos (
     property_id INTEGER NOT NULL,
     photo_path TEXT NOT NULL,
     is_main BOOLEAN DEFAULT 0,
+    cloudinary_id TEXT NOT NULL,
     FOREIGN KEY (property_id) REFERENCES property_list(id) ON DELETE CASCADE
 );
 

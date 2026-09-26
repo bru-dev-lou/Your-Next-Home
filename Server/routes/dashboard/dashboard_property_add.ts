@@ -6,6 +6,7 @@ import upload from "../../config/multerConfig.js";
 
 type CloudinaryResult = {
     secure_url: string;
+    public_id: string;
 };
 
 const router = express.Router(); 
@@ -16,6 +17,9 @@ router.route("/")
     const ownerID = req.user?.id;   
     const photos = req.files as Express.Multer.File[];
     const { type, city, price, bedrooms, bathrooms, size, furniture, summary, detail } = req.body;
+
+    const validTypes = ["Apartment", "Terraced", "Semi-Detached", "Detached", "Bungalow"];
+    const validFurniture = ["Furnished", "Semi-Furnished", "Unfurnished"];
     
     // Empty field checks
 
@@ -32,7 +36,7 @@ router.route("/")
     ];
 
     for (const {field, name, error} of fieldCheck) {
-        if (!field || field === "0") {
+        if (!field || field === "0" || field === "Select") {
             return res.status(400).json ({name, error}); 
         }
     }
@@ -40,7 +44,7 @@ router.route("/")
     // Number validations for property price, bedrooms, bathrooms and size 
 
     if (isNaN(Number(price)) || isNaN(Number(bedrooms)) || isNaN(Number(bathrooms)) || isNaN(Number(size))) {
-        return res.status(400).json({ error: "Property monthly rate, number of bedrooms, number of bathrooms and size must all be valid numbers."})
+        return res.status(400).json({ error: "Invalid format, please insert a numerical value."})
     } 
 
     // City validation 
@@ -55,10 +59,20 @@ router.route("/")
         return  res.status(400).json({ error: "City must not exceed 50 characters." })
     }
     
+    //  Type validation 
+
+    if (type && !validTypes.includes(type)) {
+        return res.status(400).json({error: "Please choose a valid property type."})
+    }
+
     //  Price validation 
     
     if (price > 99999) {
         return res.status(400).json({ error: "Listing's monthly rate must be less than £100,000." })
+    }
+
+    if (price < 0) {
+        return res.status(400).json({error: "Please do not use negative values."})
     }
 
     //  Bedrooms validation 
@@ -67,10 +81,18 @@ router.route("/")
         return res.status(400).json({ error: "Listing must have less than 100 bedrooms." })
     }
 
+    if (bedrooms < 0) {
+        return res.status(400).json({error: "Please do not use negative values."})
+    } 
+
     // Bathrooms validation
 
     if (bathrooms > 99) {
         return res.status(400).json({ error: "Listing must have less than 100 bathrooms." })
+    }
+
+    if (bathrooms < 0) {
+        return res.status(400).json({error: "Please do not use negative values."})
     }
 
     // Size validatiob 
@@ -79,6 +101,16 @@ router.route("/")
         return res.status(400).json({ error: "Listing's size must be less than 10,000m²." })
     }
 
+    if (size < 0) {
+        return res.status(400).json({error: "Please do not use negative values."})
+    }
+
+    //  Furniture validation 
+
+    if (furniture && !validFurniture.includes(furniture)) {
+        return res.status(400).json({error: "Please choose a valid furniture option."})
+    }
+    
     //  Property summary & description validations
 
     if (summary.split(/\s+/).filter(Boolean).length > 50) {
@@ -94,37 +126,62 @@ router.route("/")
     if (photos.length <= 4) {
         return res.status(400).json({ photosError: `Please upload at least ${5 - photos.length} more ${photos.length === 4 ? "photo" : "photos"}.` });
     }
+    
+    const photoData: {secure_url: string; public_id: string}[] = [];
 
-    try {        
+    try {     
+        try {
+            for (const photo of photos) {
+                const result = await new Promise<CloudinaryResult>((resolve, reject) => {
+                    cloudinary.uploader.upload_stream({ folder: 'property_photos' }, (error, result) => {
+                        if (error || !result) reject(error);
+                        else resolve(result);
+                    }).end(photo.buffer);
+                });   
+                photoData.push({secure_url: result.secure_url, public_id: result.public_id});
+            }
+        }
+
+        catch(error) {
+            for (const photo of photoData) {
+                await cloudinary.uploader.destroy(photo.public_id);
+            };
+
+            console.log("Failed to upload all photos. ", error);
+            return res.status(500).json({error: "Photo uploading interrupted. Please try again."})
+        }
+
         const newPropertyData = db.prepare(`
             INSERT INTO property_list 
             (type, city, price, no_bedrooms, no_bathrooms, size, furniture, summary, owner_id, detail)
             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`)
-            .run(type, city, price, bedrooms, bathrooms, size, furniture, summary, ownerID, detail)
         ;
-        
+
         const newPropertyPhotos = db.prepare(`
             INSERT INTO property_photos 
-            (property_id, photo_path) 
-            VALUES (?, ?)`)
+            (property_id, photo_path, cloudinary_id) 
+            VALUES (?, ?, ?)`)
         ;
 
-        for (const photo of photos) {
-            const result = await new Promise<CloudinaryResult>((resolve, reject) => {
-                cloudinary.uploader.upload_stream({ folder: 'new_property_photos' }, (error, result) => {
-                    if (error || !result) reject(error);
-                    else resolve(result);
-                }).end(photo.buffer);
-            });   
-            newPropertyPhotos.run(newPropertyData.lastInsertRowid, result.secure_url);
-        }
+        let propertyResult;
 
-        db.prepare(`UPDATE property_photos SET is_main = 1 WHERE property_id = ? ORDER BY id ASC LIMIT 1`).run(newPropertyData.lastInsertRowid);
+        const createProperty =  db.transaction(() => {
+            propertyResult = newPropertyData.run(type, city, price, bedrooms, bathrooms, size, furniture, summary, ownerID, detail);
+            for (const photo of photoData) {
+                newPropertyPhotos.run(propertyResult.lastInsertRowid, photo.secure_url, photo.public_id) 
+            }
+        });
 
-        res.status(201).json({ message: "∗∗∗ Listing Created ∗∗∗", lastInsertRowid: newPropertyData.lastInsertRowid });
+        createProperty();
+
+        db.prepare(`UPDATE property_photos SET is_main = 1 WHERE property_id = ? ORDER BY id ASC LIMIT 1`).run(propertyResult!.lastInsertRowid);
+        res.status(201).json({ message: "∗∗∗ Listing Created ∗∗∗", lastInsertRowid: propertyResult!.lastInsertRowid });
     }    
 
     catch (error) {
+        for (const photo of photoData) {
+            await cloudinary.uploader.destroy(photo.public_id);
+        };  
         console.error("Error while adding new property: ", error);
         res.status(500).json({error: "Server Error: The team has been notified."}); 
     }

@@ -1,6 +1,10 @@
 import express from "express";
 import db from "../../database/database.js";
+import cloudinary from "../../config/cloudinaryConfig.ts";
 
+type CloudinaryPhotoInformation = {
+    cloudinary_id: string; 
+}
 
 const router = express.Router();
 
@@ -45,11 +49,32 @@ router.route("/")
 
 })
 
-.delete((req, res) => {
+.delete(async(req, res) => {
     const ownerID = req.user?.id;
     const propID = req.body.propID;
     
     try {
+
+        /* Cloudinary photo deletion V1 code. 
+        V2 will put failed deleted photos into a table based on cloudinary_id */
+
+        const propertyPhotosID = db.prepare(`
+            SELECT property_photos.cloudinary_id 
+            FROM property_photos
+            JOIN property_list
+            ON property_photos.property_id = property_list.id
+            WHERE property_list.id = ? AND property_list.owner_id = ?`).all(propID, ownerID) as CloudinaryPhotoInformation[];
+        ;
+
+        const deletePhotos = propertyPhotosID.map((photo => {
+            return cloudinary.uploader.destroy(photo.cloudinary_id);
+        }))
+
+        const deletionResults = await Promise.allSettled(deletePhotos);
+
+        console.log(deletionResults);
+        
+
         const deleteProperty = db.prepare(`DELETE FROM property_list WHERE id = ? AND owner_id = ?`);
         const result = deleteProperty.run(propID, ownerID);
 

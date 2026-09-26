@@ -24,14 +24,42 @@ router.get("/", (req, res) => {
     };
     
     const city = ((req.query.city || values.city) as string || "").replace(/[^a-zA-Z- ]/g, "");    
-    const type = req.query.type || values.type;
-    const furniture = req.query.furniture || values.furniture;
-    const minBeds = Number(req.query.minBeds) || values.minBeds;    
-    const minBaths = Number(req.query.minBaths) || values.minBaths;
-    const maxPrice = Number(req.query.maxPrice) || values.maxPrice;
+
+    let type = req.query.type as string || values.type;
+    const validTypes = ["Apartment", "Terraced", "Semi-Detached", "Detached", "Bungalow"];
+
+    let furniture = req.query.furniture as string || values.furniture;
+    const validFurniture = ["Furnished", "Semi-Furnished", "Unfurnished"];
+
+    let minBeds = Number(req.query.minBeds) || values.minBeds;
+    let minBaths = Number(req.query.minBaths) || values.minBaths;
+    let maxPrice = Number(req.query.maxPrice) || values.maxPrice;
 
     const options: Record<string, string> = {highestprice: "price DESC", lowestprice: "price ASC", date: "date_listed DESC"};
     let sortBy = req.query.sortBy as string || "date";
+    
+    // Validations for all filters 
+     
+    if (type && !validTypes.includes(type)){
+        type = values.type;
+    }
+    
+    if (furniture && !validFurniture.includes(furniture)) {
+        furniture = values.furniture; 
+    }
+
+    if (minBeds > 99 || minBeds < 0) {
+        minBeds = values.minBeds;
+    }
+
+    if (minBaths > 99 || minBaths < 0) {
+        minBaths = values.minBaths;
+    }
+    
+    if (maxPrice > 99999 || maxPrice < 0) {
+        maxPrice = values.maxPrice;
+    }
+
     if (!(sortBy in options)) {
         sortBy = "date";
     } 

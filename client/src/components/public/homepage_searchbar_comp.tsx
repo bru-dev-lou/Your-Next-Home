@@ -1,18 +1,20 @@
-import { useState, useEffect } from 'react'; 
+import { useState, useRef, useEffect } from 'react'; 
 import { useNavigate } from 'react-router-dom';
 import styles from "../public/homepage_searchbar_comp.module.css";
 
-type HomePageErrorMessageFunctino = {
+type HomePageErrorMessageFunction = {
     setLocationErrorMessage: (message: string) => void;
 } 
 
-function HomePageSearchBar( {setLocationErrorMessage} : HomePageErrorMessageFunctino ) {
+const budgetValues = Array.from({length : 16}, (_, i) => (i + 5) * 100);
+
+function HomePageSearchBar( {setLocationErrorMessage} : HomePageErrorMessageFunction ) {
     const [ autoCompleteQuery, setAutoCompleteQuery ] = useState("");
     const [ autoCompleteQueryClicked, setAutoCompleteQueryClicked ] = useState(true); 
 
     const [ citySuggestions, setCitySuggestions ] = useState<{ city: string }[]>([]);
     const [ maxPrice, setMaxPrice ] = useState(99999);
-    const [ maxPriceLabel, setMaxPriceLabel ] = useState(" No Maximum ");
+    const [ maxPriceLabel, setMaxPriceLabel ] = useState("No Maximum");
     const [ budgetDropdown, setBudgetDropdown ] = useState<boolean>(false); 
     
     const navigate = useNavigate();
@@ -20,11 +22,23 @@ function HomePageSearchBar( {setLocationErrorMessage} : HomePageErrorMessageFunc
     // Error Message → AC = Auto Complete 
 
     const [errorMessageAC, setErrorMessageAC] = useState(""); 
+    const errorTimeoutRef = useRef<ReturnType<typeof setTimeout> | null> (null);
+
 
     useEffect(() => {
         const fetchCity = async () => {
             if (autoCompleteQuery.length > 50) {
-                setErrorMessageAC("Maximum length exceeded!")
+                setErrorMessageAC("Maximum length exceeded!");
+            
+                if (errorTimeoutRef.current) {
+                    clearTimeout(errorTimeoutRef.current);
+                }
+
+                errorTimeoutRef.current = setTimeout(() => {
+                    setErrorMessageAC("");
+                }, 2000)
+            
+                return; 
             };
 
             try {
@@ -96,7 +110,6 @@ function HomePageSearchBar( {setLocationErrorMessage} : HomePageErrorMessageFunc
             return;
         }
 
-
         navigate(`/search?city=${autoCompleteQuery}&maxPrice=${maxPrice}`);
     };
 
@@ -159,8 +172,13 @@ function HomePageSearchBar( {setLocationErrorMessage} : HomePageErrorMessageFunc
                                 id="max_price"
                                 onClick = {showBudget}
                                 className={styles.budget_container_closed}
+                            >
+                                <li 
+                                    data-value= {maxPrice} 
+                                    className={styles.budget_item_closed}
                                 >
-                                    <li data-vale= {maxPrice} className={styles.budget_item_closed}>{maxPriceLabel}</li>
+                                    {maxPriceLabel}
+                                </li>
                             </ul>  
                             <button type="submit" className={styles.search_button}> Search </button>
                         </div>
@@ -169,25 +187,25 @@ function HomePageSearchBar( {setLocationErrorMessage} : HomePageErrorMessageFunc
                             <label htmlFor= "max_price" className={styles.label}> Budget: </label>
                             <ul id="max_price" onClick = {showBudget} className={styles.budget_container_open}>
                                 <li data-value= {maxPrice} className={styles.budget_item}>{maxPriceLabel}</li>
-                                {maxPriceLabel !== " No Maximum " && 
-                                    <li data-value={10000} onClick={setBudget} className={styles.budget_item}> No Maximum </li>
+                                {maxPriceLabel !== "No Maximum" && 
+                                    <li 
+                                        data-value={99999} 
+                                        onClick={setBudget} 
+                                        className={styles.budget_item}
+                                    > 
+                                        No Maximum 
+                                    </li>
                                 }
-                                <li data-value = "500" onClick={setBudget} className={styles.budget_item}> £500 PCM </li>
-                                <li data-value = "600" onClick={setBudget} className={styles.budget_item}> £600 PCM </li>
-                                <li data-value = "700" onClick={setBudget} className={styles.budget_item}> £700 PCM </li>
-                                <li data-value = "800" onClick={setBudget} className={styles.budget_item}> £800 PCM </li>
-                                <li data-value = "900" onClick={setBudget} className={styles.budget_item}> £900 PCM </li>
-                                <li data-value = "1000" onClick={setBudget} className={styles.budget_item}> £1,000 PCM </li>
-                                <li data-value = "1100" onClick={setBudget} className={styles.budget_item}> £1,100 PCM </li>
-                                <li data-value = "1200" onClick={setBudget} className={styles.budget_item}> £1,200 PCM </li>
-                                <li data-value = "1300" onClick={setBudget} className={styles.budget_item}> £1,300 PCM </li>
-                                <li data-value = "1400" onClick={setBudget} className={styles.budget_item}> £1,400 PCM </li>
-                                <li data-value = "1500" onClick={setBudget} className={styles.budget_item}> £1,500 PCM </li>
-                                <li data-value = "1600" onClick={setBudget} className={styles.budget_item}> £1,600 PCM </li>
-                                <li data-value = "1700" onClick={setBudget} className={styles.budget_item}> £1,700 PCM </li>
-                                <li data-value = "1800" onClick={setBudget} className={styles.budget_item}> £1,800 PCM </li>
-                                <li data-value = "1900" onClick={setBudget} className={styles.budget_item}> £1,900 PCM </li>
-                                <li data-value = "2000" onClick={setBudget} className={styles.budget_item}> £2,000 PCM </li>
+                                {budgetValues.map(value => (
+                                <li 
+                                    key={value} 
+                                    data-value={value} 
+                                    onClick={setBudget}
+                                    className={styles.budget_item}
+                                > 
+                                    £{value.toLocaleString()}PCM
+                                </li>
+                                ))}
                             </ul>                              
                             <button type="submit" className={styles.search_button}> Search </button>                                    
                         </div>        

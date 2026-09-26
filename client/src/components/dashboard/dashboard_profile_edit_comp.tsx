@@ -108,19 +108,21 @@ function DashboardProfileEdit () {
 
     async function updateUserPublicDetails (e:React.MouseEvent<HTMLButtonElement>) {
         e.preventDefault();
+        publicDetailsUIreset();
 
         //  Empty field checks
 
         const fieldCheck = [
-            {field: userPublicDetails.name, error: "Please provide your name to update your profile."},
-            {field: userPublicDetails.address,  error: "Please provide your address to update your profile."},
-            {field: userPublicDetails.phone_number,  error: "Please provide your phone number to update your profile."},
-            {field: userPublicDetails.email, error: "Please provide your email to update your profile."}
+            {field: userPublicDetails.name, error: "Please provide your name to update your profile.", name: "name"},
+            {field: userPublicDetails.address,  error: "Please provide your address to update your profile.", name: "address"},
+            {field: userPublicDetails.phone_number,  error: "Please provide your phone number to update your profile.", name: "number"},
+            {field: userPublicDetails.email, error: "Please provide your email to update your profile.", name: "email"}
         ];
 
-        for (const {field, error} of fieldCheck) {
+        for (const {field, error, name} of fieldCheck) {
             if (!field) {
                 setErrorMessageMP(error);
+                setMissingField(name);
                 return;
             }
         }
@@ -189,6 +191,7 @@ function DashboardProfileEdit () {
 
         if (!userPublicDetails.password) {
             setErrorMessageMP("Please provide your password to confirm these changes.");
+            setPassErrorCodeMP("missing_password");
             return;
         }        
 
@@ -258,12 +261,15 @@ function DashboardProfileEdit () {
 
     async function updateUserPrivateDetails (e:React.MouseEvent<HTMLButtonElement>) {
         e.preventDefault(); 
+        privateDetailsUIreset();
+
         const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[?!@#$%^&*]).{8,}$/;
 
         // Current password check
 
         if (!userPrivateDetails.password) {
             setErrorMessageAM("Please start by providing your password.");
+            setPassErrorCodeAM("missing_current_pass");
             return;
         }
 
@@ -271,21 +277,25 @@ function DashboardProfileEdit () {
 
         if(!userPrivateDetails.newPassword) {
             setErrorMessageAM("Please choose a new password.");
+            setPassErrorCodeAM("missing_new_pass");
             return;
         }
 
         if (userPrivateDetails.newPassword !== userPrivateDetails.passwordConfirmation) {
             setErrorMessageAM("Passwords do not match.");
+            setPassErrorCodeAM("no_match_passwords");
             return;
         }                
 
         if (!passwordRegex.test(userPrivateDetails.newPassword)) {
             setErrorMessageAM("Password must be 8+ characters with an uppercase, a lowercase, a number and a special character [?!@#$%^&*].");
+            setPassErrorCodeAM("new_pass_wrong_format");
             return;
         }
 
         if (userPrivateDetails.newPassword === userPrivateDetails.password) {
             setErrorMessageAM("New password cannot be the same as old password.");
+            setPassErrorCodeAM("new_pass_same_old_pass");
             return;
         }
         
@@ -320,11 +330,14 @@ function DashboardProfileEdit () {
 
     async function deleteAccount (e:React.MouseEvent<HTMLButtonElement>) {
         e.preventDefault();
+        setErrorMessageDA("");
+        setPassErrorCodeDA("");
 
         //  Password check 
 
         if (!userAccountDeleteDetails.password) {
             setErrorMessageDA("Please provide your password before deleting your account.");
+            setPassErrorCodeDA("missing_password");
             return; 
         }
         
@@ -513,9 +526,7 @@ function DashboardProfileEdit () {
                                     type= {showCurrentPasswordMP ? "text" : "password"} 
                                     value = {userPublicDetails.password}
                                     onChange= {(e) => {
-                                        setErrorMessageMP(""); 
-                                        setSuccessMessageMP(""); 
-                                        setPassErrorCodeMP("");
+                                        publicDetailsUIreset();
                                         setUserPublicDetails({...userPublicDetails, password: e.target.value});
                                     }}
                                     required
@@ -697,7 +708,7 @@ function DashboardProfileEdit () {
                         <button onClick= {deleteAccount} className={styles.delete_account_confirm_button}> Confirm Account Deletion</button>
                     }                          
                     {accountDeleted && accountDeleteRequest &&
-                        <div className={styles.account_deleted_feedback}>
+                        <div role="alert" className={styles.account_deleted_feedback}>
                             <h3 className={styles.account_deleted_message}> Your account is being deleted, please wait.</h3>
                             <h3 className={styles.account_deleted_message}> Thank you for using our services!</h3>
                         </div>
