@@ -1,59 +1,102 @@
-/* Fonts first */
-
-.h2_font {
-    color: #F2EFE2;    
-    font-family: "Source Sans 3", sans-serif;
-    font-size: 28px;
-    font-weight: 390;
-    text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
-    justify-self: center;
-    margin: 4% 0 0 0;
-}
-
 /* Styling in the order it appears */
 
 .main_page_container {
+    height: 85%;
     width: 94%;
+    
     display: flex;
-    flex: 1;
-    margin: 0 0 0 3%;
-
+    justify-content: flex-end;
+    align-items: center;
+    
     position: relative;
-}
-
-.search_box_container {
-    background-color: #125370;
-    border: solid 2px #002461;
-    border-radius: 40px;
-
-    height: 36%;
-    width: 40%;
-
-    position: relative; 
-    margin: 14% 0 0 9%;
-    z-index: 2;
-}
-
-.error_message {
-    color: #F2EFE2;    
-    font-family: "Source Sans 3", sans-serif;
-    font-size: 24px;
-    font-weight: 390;
-    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
-    justify-self: center;
-    margin: 5% 0 0 0;
+    margin: 0 0 0 3%;
 }
 
 .home_page_photo {
     box-shadow: 0px 0px 20px rgba(0,0,0,0.9);
     border-radius: 50px;
-        
-    width: 70%;
-    height: 90%;
     
-    position: absolute;
-    top: 5%; 
-    left: 30%;
-
-    z-index: 1;
+    height: 100%; 
+    width: 70%;
 }
+
+@media (min-width: 1920px) and (min-height: 950px) {
+    .home_page_photo {
+        height: 98%;
+    }
+}
+
+@media (min-width: 1920px) and (max-height: 800px) {
+    .home_page_photo {
+        height: 98%;
+
+        margin: 0 0 1% 0;
+    }
+}
+
+@media (max-width: 1024px) and (max-height: 1001px) {
+    .main_page_container {
+        height: 94%;
+        align-items: center;
+    }
+    
+    .home_page_photo{
+        height: 98%;
+        width: 100%;
+        border-radius: 20px;
+
+
+        object-fit: cover;
+        margin-bottom: 1%;
+        }
+}
+
+@media (max-width: 1024px) and (max-height: 701px) {
+    .main_page_container {
+        height: 91%;
+    }
+}
+
+@media (max-width: 701px) and (max-height: 966px) {
+    .main_page_container {
+        height: 93%;
+    }
+}
+
+@media (max-width: 501px) and (max-height: 966px) {
+    .main_page_container{
+        height: 95%;
+    }
+    
+    .home_page_photo {
+        height: 100%;
+        
+        border-radius: 20px;
+        margin: 0;
+    }
+}
+
+@media (max-width: 501px) and (max-height: 766px) {
+    .main_page_container {
+        height: 94%;
+    }
+}
+
+
+@media (max-width: 501px) and (max-height: 666px) {
+    .main_page_container {
+        height: 93%;
+    }
+
+    .home_page_photo {
+        margin-top: 1%;
+    }
+}
+
+
+
+
+
+
+
+

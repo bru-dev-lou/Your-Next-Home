@@ -24,11 +24,16 @@ function MainNavigationBar (){
                 setUser(null);
                 navigate("/");
             }
-
         }
 
         catch(error){
-            setErrorMessage("Failed to sign user out. Please check your internet and try again.");
+            setErrorMessage("Failed to sign user out.");
+            setTimeout(() => {
+                setErrorMessage("Please check your internet and try again.");
+            }, 2000);
+            setTimeout(() => {
+                setErrorMessage("");
+            }, 4000); 
         }
     }
 
@@ -82,11 +87,23 @@ function MainNavigationBar (){
                         <h2 className={styles.font_format}>Your Next Home</h2>
                         <img src={logo} className={styles.logo_img}/>
                     </div>
-                    <div className={styles.link_container}>
+                    <div 
+                        className={styles.link_container}
+                        style={{ display: errorMessage ? "none" : "flex" }}
+                        >
                         <Link to="/" className={`${styles.link_item} ${styles.font_format}`}>Home</Link>
                         <Link to="/search" className={`${styles.link_item} ${styles.font_format}`}>Rent</Link>
                         <Link to="/inquiries" className={`${styles.link_item} ${styles.font_format}`}>Inquiries</Link>
                     </div>
+                    {errorMessage && 
+                        <h3 
+                            role="alert" 
+                            className={styles.error_message}
+                            style={{display: errorMessage ? "flex" : "none"}}    
+                        >
+                            {errorMessage}
+                        </h3>       
+                    }             
                     {!dashDrop ?
                         <div className={styles.dropdown_container_format}>
                             <ul 
@@ -94,7 +111,10 @@ function MainNavigationBar (){
                                 aria-label="Dashboard navigation."
                                 className={styles.dropdown_container_closed}
                             >
-                                <li className={`${styles.dropdown_item_username} ${styles.closed_position} ${styles.font_format}`}> {user.name} </li>
+                                <li className={`${styles.dropdown_item_username} ${styles.closed_position} ${styles.font_format}`}> 
+                                    <span className={styles.wide_screen}>{user.name} </span>
+                                    <span className={styles.narrow_screen}>Dashboard</span>  
+                                </li>
                             </ul>
                         </div>
                     :                            
@@ -103,27 +123,36 @@ function MainNavigationBar (){
                                 aria-label="Dashboard navigation."
                                 className={styles.dropdown_container_open_user}
                             >   
-                                <li onClick = {dashDropdown} className={`${styles.dropdown_item_username} ${styles.open_position} ${styles.font_format}`}> {user.name} </li>
+                                <li 
+                                    onClick = {dashDropdown} 
+                                    className={`${styles.dropdown_item_username} ${styles.open_position} ${styles.font_format}`}
+                                > 
+                                    <span className={styles.wide_screen}>{user.name} </span>
+                                    <span className={styles.narrow_screen}>Dashboard</span> 
+                                </li>
                                 <li 
                                     onClick = {(e) => userNavigation(e.currentTarget.dataset.value!)} 
                                     data-value="My Properties"
                                     className={`${styles.dropdown_item} ${styles.font_format}`}
                                 >
-                                    My Properties
+                                    <span className={styles.wide_screen}>My Properties </span>
+                                    <span className={styles.narrow_screen}>Properties</span> 
                                 </li>
                                 <li 
                                     onClick = {(e) => userNavigation(e.currentTarget.dataset.value!)}
                                     data-value="My Profile"
                                     className={`${styles.dropdown_item} ${styles.font_format}`}
                                 >
-                                    My Profile
+                                    <span className={styles.wide_screen}>My Profile </span>
+                                    <span className={styles.narrow_screen}>Profile</span> 
                                 </li>
                                 <li 
                                     onClick = {(e) => userNavigation(e.currentTarget.dataset.value!)}
                                     data-value="Favorite Properties"
                                     className={`${styles.dropdown_item} ${styles.font_format}`}
                                 >
-                                    Favorite Properties
+                                    <span className={styles.wide_screen}>Favorite Properties</span>
+                                    <span className={styles.narrow_screen}>Favorites</span> 
                                 </li>
                                 <li 
                                     onClick = {(e) => userNavigation(e.currentTarget.dataset.value!)}
@@ -136,12 +165,7 @@ function MainNavigationBar (){
                         </div>
                     }
                 </nav>
-            }      
-            {errorMessage && 
-                <h3 role="alert" className={styles.error_message}>
-                    {errorMessage}
-                </h3>
-            }          
+            }       
         </div>
     );
 }

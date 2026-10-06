@@ -2,13 +2,11 @@ import { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styles from "../public/homepage_searchbar_comp.module.css";
 
-type HomePageErrorMessageFunction = {
-    setLocationErrorMessage: (message: string) => void;
-} 
+
 
 const budgetValues = Array.from({length : 16}, (_, i) => (i + 5) * 100);
 
-function HomePageSearchBar( {setLocationErrorMessage} : HomePageErrorMessageFunction ) {
+function HomePageSearchBar() {
     const [ autoCompleteQuery, setAutoCompleteQuery ] = useState("");
     const [ autoCompleteQueryClicked, setAutoCompleteQueryClicked ] = useState(true); 
 
@@ -23,7 +21,7 @@ function HomePageSearchBar( {setLocationErrorMessage} : HomePageErrorMessageFunc
 
     const [errorMessageAC, setErrorMessageAC] = useState(""); 
     const errorTimeoutRef = useRef<ReturnType<typeof setTimeout> | null> (null);
-
+    const [ locationErrorMessage, setLocationErrorMessage ] = useState(""); 
 
     useEffect(() => {
         const fetchCity = async () => {
@@ -114,9 +112,18 @@ function HomePageSearchBar( {setLocationErrorMessage} : HomePageErrorMessageFunc
     };
 
     return (
-        <div>
-            <form onSubmit={propertySearch}>
-                <div className={styles.main_container}>
+        <div className={styles.search_box_container}>
+            {locationErrorMessage ? 
+            <h2 
+                role="alert"
+                className={styles.h2_font}
+            >
+                {locationErrorMessage}
+            </h2>
+            :
+            <h2 className={styles.h2_font}>Your journey starts here!</h2>
+            }
+            <form className={styles.form_container} onSubmit={propertySearch}>
                     <div className={styles.location_container}>
                         <label htmlFor="location_selection" className={styles.label}> Location: </label>
                         <input
@@ -137,6 +144,7 @@ function HomePageSearchBar( {setLocationErrorMessage} : HomePageErrorMessageFunc
                             aria-live="polite" 
                             aria-label="City autocomplete suggestions."
                             className={styles.autocomplete_container}
+                            style={ {display: citySuggestions.length === 0 ? "none" : "inline" } }
                         >
                             {citySuggestions.map((city, index) => (
                                 <li 
@@ -185,32 +193,33 @@ function HomePageSearchBar( {setLocationErrorMessage} : HomePageErrorMessageFunc
                     :                        
                         <div className={styles.budget_container}>
                             <label htmlFor= "max_price" className={styles.label}> Budget: </label>
-                            <ul id="max_price" onClick = {showBudget} className={styles.budget_container_open}>
-                                <li data-value= {maxPrice} className={styles.budget_item}>{maxPriceLabel}</li>
-                                {maxPriceLabel !== "No Maximum" && 
+                            <div className={styles.open_container_wrapper}>
+                                <ul id="max_price" onClick = {showBudget} className={styles.budget_container_open}>
+                                    <li data-value= {maxPrice} className={styles.budget_item}>{maxPriceLabel}</li>
+                                    {maxPriceLabel !== "No Maximum" && 
+                                        <li 
+                                            data-value={99999} 
+                                            onClick={setBudget} 
+                                            className={styles.budget_item}
+                                        > 
+                                            No Maximum 
+                                        </li>
+                                    }
+                                    {budgetValues.map(value => (
                                     <li 
-                                        data-value={99999} 
-                                        onClick={setBudget} 
+                                        key={value} 
+                                        data-value={value} 
+                                        onClick={setBudget}
                                         className={styles.budget_item}
                                     > 
-                                        No Maximum 
+                                        £{value.toLocaleString()}PCM
                                     </li>
-                                }
-                                {budgetValues.map(value => (
-                                <li 
-                                    key={value} 
-                                    data-value={value} 
-                                    onClick={setBudget}
-                                    className={styles.budget_item}
-                                > 
-                                    £{value.toLocaleString()}PCM
-                                </li>
-                                ))}
-                            </ul>                              
+                                    ))}
+                                </ul>                              
+                            </div>
                             <button type="submit" className={styles.search_button}> Search </button>                                    
                         </div>        
                     }
-                </div>
             </form>
         </div>
     );
