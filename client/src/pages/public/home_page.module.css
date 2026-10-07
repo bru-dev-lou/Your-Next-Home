@@ -93,6 +93,16 @@
     }
 }
 
+@media (max-width: 401px) {
+    .main_page_container {
+        height: 94%;
+    } 
+    
+    .home_page_photo {
+        margin-top: 2%;
+     }
+}
+
 
 
 
