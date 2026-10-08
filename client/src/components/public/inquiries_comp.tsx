@@ -177,7 +177,7 @@ function Inquiries () {
         <form 
             onSubmit={submitInquiry}
             noValidate
-            className={styles.form_container}
+            className={styles.main_container}
         >
             <div className={styles.inquiries_container}>
                 <h2 className={styles.main_title}>How can we help?</h2>
@@ -213,59 +213,63 @@ function Inquiries () {
                 </div>
                 <div className={styles.container_format}>
                     <label htmlFor="topic" className={styles.label_font}> Topic: </label>
-                    <input
-                        id="topic"
-                        type="text"
-                        value={data.messageTopic}
-                        onChange={(e) => {
-                            const topicWords = e.target.value.split(/\s+/).filter(Boolean); 
-                            if (topicWords.length <= 25) { 
-                            setData({...data, messageTopic: e.target.value});
-                            clearFeedback();
-                        }}}
-                        required
-                        aria-describedby="topic_hint"
-                        aria-invalid={missingField === "topic" || errorMessage.includes("Topic should")}
-                        className={styles.input_format}
-                    />
-                    <span 
-                        id="topic_hint" 
-                        className={styles.sr_content}
-                    >
-                        Add a topic name to your inquiry.
-                    </span>
-                    <span className={`${styles.word_count_25} ${styles.span_font}`}>{topicWordCount} / 25 </span>
-                    <span
-                        aria-live="polite"
-                        className={styles.sr_content}
-                    >
-                        {announceTopicWordCount > 0 && `${announceTopicWordCount} out of 25 words used.`}    
-                    </span>
-                </div> 
-                <div className={styles.container_format}>
-                    <label htmlFor="message" className={styles.label_font}> Message: </label>
-                    <textarea
-                        id="message"
-                        value={data.message}
-                        onChange={(e) => {
-                            const messageWords = e.target.value.split(/\s+/).filter(Boolean);
-                            if (messageWords.length <= 250) {
-                            setData({...data, message: e.target.value});
-                            clearFeedback();
+                    <div className={styles.topic_wrapper}>
+                        <input
+                            id="topic"
+                            type="text"
+                            value={data.messageTopic}
+                            onChange={(e) => {
+                                const topicWords = e.target.value.split(/\s+/).filter(Boolean); 
+                                if (topicWords.length <= 25) { 
+                                setData({...data, messageTopic: e.target.value});
+                                clearFeedback();
                             }}}
-                        required
-                        aria-describedby="message_hint"
-                        aria-invalid={missingField === "message" || errorMessage.includes("Message should")}
-                        className={styles.textarea_format}
-                    />
-                    <span id="message_hint" className={styles.sr_content}>Provide a description regarding your inquiry. 250 words max.</span>
-                    <span className={`${styles.word_count_250} ${styles.span_font}`}>{messageWordCount} / 250 </span>
-                    <span
-                        aria-live="polite"
-                        className={styles.sr_content}
-                    >
-                        {announceMessageWordCount > 0 && `${announceMessageWordCount} out of 250 words used.`}    
-                    </span>
+                            required
+                            aria-describedby="topic_hint"
+                            aria-invalid={missingField === "topic" || errorMessage.includes("Topic should")}
+                            className={styles.input_format_custom}
+                        />
+                        <span 
+                            id="topic_hint" 
+                            className={styles.sr_content}
+                        >
+                            Add a topic name to your inquiry.
+                        </span>
+                        <span className={`${styles.word_count} ${styles.span_font}`}>{topicWordCount} / 25 </span>
+                        <span
+                            aria-live="polite"
+                            className={styles.sr_content}
+                        >
+                            {announceTopicWordCount > 0 && `${announceTopicWordCount} out of 25 words used.`}    
+                        </span>
+                    </div>
+                </div> 
+                <div className={styles.container_format_custom}>
+                    <label htmlFor="message" className={styles.label_font}> Message: </label>
+                    <div className={styles.message_wrapper}>
+                        <textarea
+                            id="message"
+                            value={data.message}
+                            onChange={(e) => {
+                                const messageWords = e.target.value.split(/\s+/).filter(Boolean);
+                                if (messageWords.length <= 250) {
+                                setData({...data, message: e.target.value});
+                                clearFeedback();
+                                }}}
+                            required
+                            aria-describedby="message_hint"
+                            aria-invalid={missingField === "message" || errorMessage.includes("Message should")}
+                            className={styles.textarea_format}
+                        />
+                        <span id="message_hint" className={styles.sr_content}>Provide a description regarding your inquiry. 250 words max.</span>
+                        <span className={`${styles.word_count} ${styles.span_font}`}>{messageWordCount} / 250 </span>
+                        <span
+                            aria-live="polite"
+                            className={styles.sr_content}
+                        >
+                            {announceMessageWordCount > 0 && `${announceMessageWordCount} out of 250 words used.`}    
+                        </span>
+                    </div> 
                 </div>
                 <div className={styles.container_format}> 
                     <label htmlFor="property_id" className={styles.label_font}> Prop ID: </label>
@@ -277,7 +281,7 @@ function Inquiries () {
                             setData({...data, propID: e.target.value});
                             clearFeedback();
                         }}
-                        placeholder="Add property ID here."
+                        placeholder="Property ID - Optional"
                         aria-describedby="property_id_hint"
                         className={styles.input_format}
                     />
@@ -287,7 +291,7 @@ function Inquiries () {
                     {errorMessage && <h3 role="alert" className={styles.result_message}>{errorMessage}</h3>}
                     {errorMessageSE && <h3 role="alert" className={styles.server_error_message}>{errorMessageSE}</h3>}
                     {successMessage && <h3 role="status" className={styles.result_message}>{successMessage}</h3>}
-                        <button 
+                    <button 
                         type="submit" 
                         className={styles.button_format} 
                         style={{display: (errorMessage || errorMessageSE) || successMessage ? "none" : "block"}}
