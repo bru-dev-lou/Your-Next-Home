@@ -245,7 +245,7 @@ function Inquiries () {
                     </div>
                 </div> 
                 <div className={styles.container_format_custom}>
-                    <label htmlFor="message" className={styles.label_font}> Message: </label>
+                    <label htmlFor="message" className={`${styles.label_font} ${styles.message_label}`} > Message: </label>
                     <div className={styles.message_wrapper}>
                         <textarea
                             id="message"
