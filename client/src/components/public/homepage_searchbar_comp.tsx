@@ -145,7 +145,7 @@ function HomePageSearchBar() {
                                 aria-live="polite" 
                                 aria-label="City autocomplete suggestions."
                                 className={styles.autocomplete_container}
-                                style={ {display: citySuggestions.length === 0 ? "none" : "inline" } }
+                                style={ {display: citySuggestions.length === 0 ? "none" : "flex" } }
                             >
                                 {citySuggestions.map((city, index) => (
                                     <li 
@@ -214,7 +214,7 @@ function HomePageSearchBar() {
                                         onClick={setBudget}
                                         className={styles.budget_item}
                                     > 
-                                        £{value.toLocaleString()}PCM
+                                        £{value.toLocaleString()} PCM
                                     </li>
                                     ))}
                                 </ul>                              
