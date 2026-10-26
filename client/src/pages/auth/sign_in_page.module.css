@@ -1,13 +1,16 @@
 .main_container {
-    height: 86%;
+    min-height: 0;
     width: 94%;
 
     display: flex;
+    flex: 1;
+
     justify-content: flex-end;
+    align-items: center;
 
     position: relative;
 
-    margin-left: 3%;
+    margin: 0 0 15px 3%;
 }
 
 .sign_in_photo { 
@@ -16,139 +19,24 @@
     
     height: 100%;
     width: 70%;
+
+    object-fit: cover;
     
     z-index: 1;
 }
 
 
-@media (max-width: 2000px) and (max-height: 801px) {
-    .main_container {
-        height: 84%;
-    }
-
-    .sign_in_photo {
-        object-fit: cover;
-    }
-}
-
-@media (max-width: 2000px) and (max-height: 701px) {
-    .main_container {
-        height: 82%;
-    }
-}
-
-@media (max-width: 2000px) and (max-height: 701px) {
-    .main_container {
-        height: 80%;
-    }
-}
-
-
-@media (max-width: 1700px) and (min-height: 800px) {
-    .main_container {
-        height: 88%;
-    }
-}
-
-@media (max-width: 1700px) and (min-height: 800px) {
-    .sign_in_photo {
-        object-fit: cover;
-    }
-}
-
-@media (max-width: 1540px) {
-    .main_container {
-        height: 86%;
-    }
-}
-
-@media (max-width: 1401px) and (max-height: 1001px) {
-    .main_container {
-        height: 90%;
-    }
-}
-
-@media (max-width: 1101px) and (max-height: 1001px) {
-    .main_container {
-        height: 92%;
-    }
-}
-
-@media (max-width: 1101px) and (max-height: 901px) {
-    .main_container {
-        height: 90%
-    }
-}
-
-@media (max-width: 1101px) and (max-height: 701px) {
-    .main_container {
-        height: 88%;
-    }
-}
-
-@media (max-width: 901px) and (max-height: 1001px) {
-    .main_container {
-        margin-top: 0.5%;
-        height: 93%;    
-    }
-
+@media (max-width: 1201px) and (max-height: 1081px) {
     .sign_in_photo {
         width: 100%;
         border-radius: 25px;
     }
 }
 
-@media (max-width: 901px) and (max-height: 851px) {
-    .main_container {
-        height: 91%;
-    }
-}
-
-@media (max-width: 901px) and (max-height: 651px) {
-    .main_container {
-        height: 89%;
-    }
-}
-
-@media (max-width: 601px) and (max-height: 1001px) {
-    .main_container {
-        height: 94%;
-    }
-}
-
-@media (max-width: 601px) and (max-height: 701px) {
-    .main_container {
-        height: 92%;
-    }
-}
-
-@media (max-width: 501px) and (max-height: 1001px) {
-    .main_container {
-        height: 95%;
-    }
-}
-
-@media (max-width: 501px) and (max-height: 801px) {
-    .main_container {
-        height: 93%;
-    }
-}
-
-@media (max-width: 401px) and (max-height: 1001px) {
+@media (max-width: 401px) and (max-height: 1081px) {
     .sign_in_photo {
         border-radius: 15px;
     }
 }
 
-@media (max-width: 401px) and (max-height: 801px) {
-    .main_container {
-        height: 94%;
-    }
-}
-
-@media (max-width: 401px) and (max-height: 651px) {
-    .main_container {
-        height: 93%;
-    }
-}
 
