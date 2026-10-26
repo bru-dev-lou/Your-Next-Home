@@ -7,7 +7,7 @@ function HomePage() {
   return (
       <div className={styles.main_page_container}>
         <HomePageSearchBar />        
-        <img className={styles.home_page_photo} src={homePagePhoto}></img>      
+        <img className={styles.home_page_photo} src={homePagePhoto} alt=""/>      
       </div>
   )
 }
