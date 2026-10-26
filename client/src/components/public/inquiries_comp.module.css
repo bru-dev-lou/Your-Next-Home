@@ -21,7 +21,7 @@
 .label_font {
     color: #F2EFE2;
     font-family: "Source Sans 3", sans-serif;
-    font-size: clamp(16px, 1.4vw, 100px);
+    font-size: clamp(18px, 1.4vw, 100px);
     font-weight: 390;
     text-shadow: 1px 1px 2px rgba(0,0,0,0.8);    
 
@@ -32,7 +32,7 @@
 /* Styling code in the order it appears in the JSX */
 
 .main_container {
-    width: 45%;
+    width: 47%;
 
     display: flex;
     align-self:  center;
@@ -45,6 +45,7 @@
 
 .inquiries_container {
     background-color: #125370;
+    
     border: solid 2px #002461;
     border-radius: 50px;
     
@@ -56,7 +57,7 @@
     
     position: relative;
 
-    padding: 2% 0 3% 0;
+    padding: 2% 0 5% 0;
     margin: 0;    
 }
 
@@ -72,7 +73,7 @@
 
 .input_format {
     font-family: "Source Sans 3", sans-serif;
-    font-size: clamp(15px, 1.1vw, 100px);
+    font-size: clamp(16px, 1.1vw, 100px);
 
     background-color: #F5F2EB;
     border-radius: 5px;
@@ -95,7 +96,7 @@
 
 .input_format_custom {
     font-family: "Source Sans 3", sans-serif;
-    font-size: clamp(15px, 1.1vw, 100px);
+    font-size: clamp(16px, 1.1vw, 100px);
 
     background-color: #F5F2EB;
     border-radius: 5px;
@@ -127,7 +128,7 @@
 
 .textarea_format {
     font-family: "Source Sans 3", sans-serif;
-    font-size: clamp(15px, 1.1vw, 100px);
+    font-size: clamp(16px, 1.1vw, 100px);
     
     background-color: #F5F2EB;
     border: solid 1px black;
@@ -143,7 +144,6 @@
 }
 
 .update_container {    
-    height: 16%;
     width: 62%;
 
     margin-left: 24%;
@@ -152,7 +152,7 @@
 .button_format {
     color: #125370;
     font-family: "Source Sans 3", sans-serif;
-    font-size: clamp(15px, 1.4vw, 100px);
+    font-size: clamp(16px, 1.4vw, 100px);
     font-weight: 450;
     text-shadow: 1px 1px 2px rgba(0,0,0,0.5);  
 
@@ -162,7 +162,7 @@
 
     width: 50%;   
 
-    margin-top: 0;
+    margin-top: 5px;
 
     justify-self: flex-end;
 }
@@ -170,12 +170,12 @@
 .result_message {
     color: #F2EFE2;
     font-family: "Source Sans 3", sans-serif;
-    font-size: clamp(18px, 1.4vw, 100px);
+    font-size: clamp(16px, 1.2vw, 100px);
     font-weight: 390;
     text-shadow: 1px 1px 2px rgba(0,0,0,0.8);    
     
     text-align: center;
-    margin: 0;
+    margin: -5px 0 0 0;
 }
 
 .server_error_message {
@@ -190,18 +190,31 @@
 }
 
 
-@media (max-width: 1101px) and (max-height: 1001px) {
-    .inquiries_container {
-        row-gap: 20px;
-        padding-bottom: 3%;
-    }
-
-    .button_format {
-        width: 65%;
+@media (max-width: 1271px) {
+    .main_container {
+        width: 51%;
     }
 }
 
-@media (max-width: 801px) and (max-height: 1001px) {
+@media (max-width: 1176px) and (max-height: 1081px) {
+    .main_container {
+        width: 60%;
+        left: 20%;
+    }
+
+    .inquiries_container {
+        background-color: rgb(21, 96, 130, 75%);
+    }
+}
+
+@media (max-width: 1001px) and (max-height: 1081px) {
+    .main_container {
+        width: 67%;
+        left: 16.5%;
+    }
+}
+
+@media (max-width: 901px) and (max-height: 1081px) {
     .main_container {
         width: 75%;
         
@@ -209,15 +222,11 @@
         left: 12.5%;
     }
 
-    .inquiries_container {
-        padding-bottom: 2%;
-    }
-
     .main_title {
         font-size: clamp(18px, 2.8vw, 100px);
     }
 
-    .label_font, .button_format, .result_message, .server_error_message {
+    .label_font, .button_format, .server_error_message {
         font-size: clamp(16px, 2.2vw, 100px);
     }
 
@@ -226,14 +235,14 @@
     }
 }
 
-@media (max-width: 710px) and (max-height: 1001px) {
+@media (max-width: 801px) and (max-height: 1081px) {
     .main_container {
         width: 100%;
         left: 0;    
     }
 }
 
-@media (max-width: 710px) and (max-height: 801px) {
+@media (max-width: 801px) and (max-height: 801px) {
     .container_format_custom {
         height: 80px;
     }
@@ -243,15 +252,23 @@
     .inquiries_container{
         border-radius: 30px;
     }
+
+    .button_format {
+        width: 60%;
+    }
 }
 
 @media (max-width: 451px) {
+    .inquiries_container {
+        row-gap: 20px;
+    }
+
     .label_font {
-        font-size: clamp(14px, 1.4vw, 100px);
+        font-size: clamp(15px, 1.4vw, 100px);
     }
 
     .input_format, .input_format_custom, .textarea_format, .span_font {
-        font-size: clamp(12px, 1.1vw, 100px);
+        font-size: clamp(13px, 1.1vw, 100px);
     }
 
     .topic_wrapper {
@@ -259,10 +276,14 @@
     }
 
     .input_format_custom {
-        width: 83.5%
+        width: 83.5%;
     }
 
     .container_format_custom {
         height: 60px;
+    }
+
+    .button_format {
+        width: 70%;
     }
 }
