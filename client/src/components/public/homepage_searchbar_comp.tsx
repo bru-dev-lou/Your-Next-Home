@@ -177,11 +177,11 @@ function HomePageSearchBar() {
                     </div>
                     {!budgetDropdown ?
                         <div className={styles.budget_container}> 
-                            <label htmlFor= "max_price" className={styles.label}> Budget: </label>
+                            <label id="max_price" className={styles.label}> Budget: </label>
                             <ul 
-                                id="max_price"
                                 onClick = {showBudget}
                                 className={styles.budget_container_closed}
+                                aria-labelledby="max_price"
                             >
                                 <li 
                                     data-value= {maxPrice} 
@@ -194,9 +194,13 @@ function HomePageSearchBar() {
                         </div>
                     :                        
                         <div className={styles.budget_container}>
-                            <label htmlFor= "max_price" className={styles.label}> Budget: </label>
+                            <label id="max_price" className={styles.label}> Budget: </label>
                             <div className={styles.open_container_wrapper}>
-                                <ul id="max_price" onClick = {showBudget} className={styles.budget_container_open}>
+                                <ul
+                                    onClick = {showBudget} 
+                                    className={styles.budget_container_open}
+                                    aria-labelledby="max_price"
+                                >
                                     <li data-value= {maxPrice} className={styles.budget_item}>{maxPriceLabel}</li>
                                     {maxPriceLabel !== "No Maximum" && 
                                         <li 
