@@ -6,7 +6,7 @@ const router = express.Router();
 
 router.post("/", async (req, res) => {
     const username = req.body.username?.trim();
-    const name = req.body.name;
+    const name = req.body.name?.trim();
     const address = req.body.address?.trim();
     const number = req.body.number?.trim();
     const email = req.body.email?.trim().toLowerCase(); 
@@ -34,74 +34,68 @@ router.post("/", async (req, res) => {
     // Username validation 
 
     if (username.length < 5 || username.length > 20) {
-        return res.status(400).json({shortError: "Username must be between 5 and 20 characters."})
+        return res.status(400).json({shortError: "Username must be between 5 and 20 characters.", errorField: "username"})
     }
 
     // Name validation 
 
     if (name.length < 5 ) {
-        return res.status(400).json({ shortError: "Please include a name at least 5 characters long." })
+        return res.status(400).json({ shortError: "Please include a name at least 5 characters long.", errorField: "name"})
     }
 
     if (name.length > 39) {
-        return res.status(400).json({ shortError: "Please include a name shorter than 40 characters"});
+        return res.status(400).json({ shortError: "Please include a name shorter than 40 characters", errorField: "name"});
     }
 
     const nameHasLetters = /\p{L}/u.test(name);
     const nameIsValidFormat = /^[\p{L}\s'-]+$/u.test(name);
 
     if (!nameHasLetters || !nameIsValidFormat) {
-        return res.status(400).json({shortError: "Please include a name with no special characters."})
+        return res.status(400).json({shortError: "Please include a name with no special characters.", errorField: "name"})
     }
 
     // Address validation 
 
     if (address.length < 5) {
-        return res.status(400).json({ shortError: "Please include an address at least 5 characters long."})
+        return res.status(400).json({ shortError: "Please include an address at least 5 characters long.", errorField: "address"})
     }
 
     if (address.length > 40) {
-        return res.status(400).json({ shortError: "Please include an address shorter than 40 characters"});
+        return res.status(400).json({ shortError: "Please include an address shorter than 40 characters", errorField: "address"});
     }
 
     // Phone number validation 
 
     if (number.length > 20) {
-        return res.status(400).json({ shortError: "Phone number must be shorter than 20 digits."});
+        return res.status(400).json({ shortError: "Phone number must be shorter than 20 digits.", errorField: "phone_number"});
     }
 
     const validNumber = /^[0-9]{10,}$/.test(number);
     
     if (!validNumber) {
-        return res.status(400).json({ longError: "Please ensure your phone number is at least 10 digits long with no spaces or symbols."})
+        return res.status(400).json({ longError: "Please ensure your phone number is at least 10 digits long with no spaces or symbols.", errorField: "phone_number"})
     }
 
     // Email validation 
 
     if (email.length > 50) {
-        return res.status(400).json({ shortError: "Please include an email shorter than 50 characters."});
+        return res.status(400).json({ shortError: "Please include an email shorter than 50 characters.", errorField: "email"});
     }
 
     const isValidEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 
     if (!isValidEmail) {
-        return res.status(400).json({ shortError: "Please include a valid email address."})
+        return res.status(400).json({ shortError: "Please include a valid email address.", errorField: "email"})
     }
     
-    
-    /* For the next two if statements, do not change the error messages. 
-    Changing these will affect aria-invalid for the relevant fields in the frontend. */ 
-
-    
     if (confirmPass !== password) {
-        return res.status(400).json({shortError: "Passwords must match."}); 
+        return res.status(400).json({shortError: "Passwords must match.", errorField: "confirm_password"}); 
     }    
 
     const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[?!@#$%^&*]).{8,}$/;
 
     if (!passwordRegex.test(password)) {
-        return res.status(400).json({longError: "Password must be 8+ characters with an uppercase, a lowercase, a number and a special character [?!@#$%^&*]."
-        });
+        return res.status(400).json({longError: "Password must be 8+ characters with an uppercase, a lowercase, a number and a special character [?!@#$%^&*].", errorField: "password"});
     }
 
     try {
