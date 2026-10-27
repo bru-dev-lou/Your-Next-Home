@@ -570,8 +570,8 @@ If containers are needed indibidually, follow label names → e.g. bedrooms_cont
         width: 80%; 
     }
 
-    .label_short_viewport_bedrooms_custom {
-        width: 18%;
+    .label_short_viewport_custom {
+        width: 19%;
     }
 
     .bedrooms_wrapper, .bathrooms_wrapper {
@@ -635,13 +635,17 @@ If containers are needed indibidually, follow label names → e.g. bedrooms_cont
     .list_item_closed, .list_item_open {
         padding-left: 5%;
     }
+
+    .custom_padding {
+        padding-left: 8%; 
+    }
     
     .bedrooms_container, .bathrooms_container {
         width: 70%;
     }
 
-    .label_short_viewport_bedrooms_custom {
-        width: 30%;
+    .label_short_viewport_custom {
+        width: 29%;
     }
 
     .bedrooms_wrapper, .bathrooms_wrapper {
@@ -676,15 +680,16 @@ If containers are needed indibidually, follow label names → e.g. bedrooms_cont
     }
 
     .bedrooms_container, .bathrooms_container {
-        width: 62%;
+        width: 64%;
     }
 
-    .label_short_viewport_bedrooms_custom {
-        width: 33%;
+    .label_short_viewport_custom {
+        width: 20%;
     }
 
     .bedrooms_wrapper, .bathrooms_wrapper {
-        width: 100%;
+        margin-left: 4%;
+        width: 80%;
     }
 
     .search_button {

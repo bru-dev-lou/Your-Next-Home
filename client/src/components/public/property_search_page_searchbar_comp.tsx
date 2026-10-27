@@ -414,7 +414,7 @@ function PropertySearchPageSearchBar ({sortBy, setLocationErrorMessage} : Search
                             >
                                 <li 
                                     data-value={propData.maxPrice} 
-                                    className={styles.list_item_closed}
+                                    className={`${styles.list_item_closed} ${styles.custom_padding}`}
                                 >
                                     {maxPriceLabel !== "No Maximum" && maxPriceLabel !== "No Max" ?
                                         maxPriceLabel
@@ -435,7 +435,7 @@ function PropertySearchPageSearchBar ({sortBy, setLocationErrorMessage} : Search
                             >
                                 <li 
                                     data-value= {propData.maxPrice} 
-                                    className={styles.list_item_open}
+                                    className={`${styles.list_item_open} ${styles.custom_padding}`}
                                 >
                                     {maxPriceLabel !== "No Maximum" && maxPriceLabel !== "No Max" ?
                                         maxPriceLabel
@@ -450,7 +450,7 @@ function PropertySearchPageSearchBar ({sortBy, setLocationErrorMessage} : Search
                                     <li 
                                         data-value={99999} 
                                         onClick={(e) => {setValue(e, "maxPrice", setMaxPriceLabel, "No Maximum")}} 
-                                        className={styles.list_item_open}
+                                        className={`${styles.list_item_open} ${styles.custom_padding}`}
                                     > 
                                         <span className={styles.li_element_wide_viewport}>No Maximum</span>
                                         <span className={styles.li_element_short_viewport}>No Max</span>
@@ -461,7 +461,7 @@ function PropertySearchPageSearchBar ({sortBy, setLocationErrorMessage} : Search
                                         key={value} 
                                         data-value={value} 
                                         onClick={(e) => {setValue(e, "maxPrice", setMaxPriceLabel, "No Maximum")}} 
-                                        className={styles.list_item_open}
+                                        className={`${styles.list_item_open} ${styles.custom_padding}`}
                                     > 
                                         £{value.toLocaleString()}PCM
                                     </li>
@@ -481,7 +481,7 @@ function PropertySearchPageSearchBar ({sortBy, setLocationErrorMessage} : Search
                     </label>
                     <label 
                         htmlFor="min_bedrooms"
-                        className={`${styles.label_short_viewport} ${styles.label_short_viewport_bedrooms_custom}`}
+                        className={`${styles.label_short_viewport} ${styles.label_short_viewport_custom}`}
                         aria-label="Minimum number of bedrooms"
                     >
                         <IoBedOutline className={styles.react_icon_format} />
@@ -500,7 +500,7 @@ function PropertySearchPageSearchBar ({sortBy, setLocationErrorMessage} : Search
                             >
                                 <li 
                                     data-value= {propData.minBeds} 
-                                    className={styles.list_item_closed}
+                                    className={`${styles.list_item_closed} ${styles.custom_padding}`}
                                 >
                                     {bedroomsLabel !== "No Minimum" && bedroomsLabel !== "No Min" ?
                                         bedroomsLabel
@@ -522,7 +522,7 @@ function PropertySearchPageSearchBar ({sortBy, setLocationErrorMessage} : Search
                             >
                                 <li 
                                     data-value={propData.minBeds} 
-                                    className={styles.list_item_open}
+                                    className={`${styles.list_item_open} ${styles.custom_padding}`}
                                 >
                                     {bedroomsLabel !== "No Minimum" && bedroomsLabel !== "No Min" ?
                                         bedroomsLabel
@@ -537,7 +537,7 @@ function PropertySearchPageSearchBar ({sortBy, setLocationErrorMessage} : Search
                                     <li 
                                         data-value={0} 
                                         onClick={(e) => {setValue(e, "minBeds", setBedroomsLabel, "No Minimum")}}                                     
-                                        className={styles.list_item_open}
+                                        className={`${styles.list_item_open} ${styles.custom_padding}`}
                                     >
                                         <span className={styles.li_element_wide_viewport}>No Minimum</span>
                                         <span className={styles.li_element_short_viewport}>No Min</span>
@@ -548,7 +548,7 @@ function PropertySearchPageSearchBar ({sortBy, setLocationErrorMessage} : Search
                                         key={value} 
                                         data-value={value} 
                                         onClick={(e) => {setValue(e, "minBeds", setBedroomsLabel, "No Minimum")}}  
-                                        className={styles.list_item_open}
+                                        className={`${styles.list_item_open} ${styles.custom_padding}`}
                                     >
                                         {value}
                                     </li>
@@ -566,7 +566,7 @@ function PropertySearchPageSearchBar ({sortBy, setLocationErrorMessage} : Search
                     </label>
                     <label 
                         htmlFor="min_bathrooms"
-                        className={styles.label_short_viewport}
+                        className={`${styles.label_short_viewport} ${styles.label_short_viewport_custom}`}
                         aria-label="Minimum number of bathrooms"
                     >
                         <PiToilet className={styles.react_icon_format} />
@@ -585,7 +585,7 @@ function PropertySearchPageSearchBar ({sortBy, setLocationErrorMessage} : Search
                             >
                                 <li 
                                     data-value={propData.minBaths} 
-                                    className={styles.list_item_closed}
+                                    className={`${styles.list_item_closed} ${styles.custom_padding}`}
                                 >
                                     {bathroomsLabel !== "No Minimum" && bathroomsLabel !== "No Min" ? 
                                         bathroomsLabel
@@ -607,7 +607,7 @@ function PropertySearchPageSearchBar ({sortBy, setLocationErrorMessage} : Search
                             >
                                 <li 
                                     data-value={propData.minBaths} 
-                                    className={styles.list_item_open}
+                                    className={`${styles.list_item_open} ${styles.custom_padding}`}
                                 >
                                     {bathroomsLabel !== "No Minimum" && bathroomsLabel !== "No Min" ? 
                                         bathroomsLabel
@@ -622,7 +622,7 @@ function PropertySearchPageSearchBar ({sortBy, setLocationErrorMessage} : Search
                                     <li 
                                         data-value={0} 
                                         onClick={(e) => {setValue(e, "minBaths", setBathroomsLabel, "No Minimum")}}
-                                        className={styles.list_item_open}
+                                        className={`${styles.list_item_open} ${styles.custom_padding}`}
                                     >
                                         <span className={styles.li_element_wide_viewport}>No Minimum</span>
                                         <span className={styles.li_element_short_viewport}>No Min</span>
@@ -633,7 +633,7 @@ function PropertySearchPageSearchBar ({sortBy, setLocationErrorMessage} : Search
                                         key={value} 
                                         data-value={value}
                                         onClick={(e) => {setValue(e, "minBaths", setBathroomsLabel, "No Minimum")}}
-                                        className={styles.list_item_open}
+                                        className={`${styles.list_item_open} ${styles.custom_padding}`}
                                     >
                                         {value}
                                     </li>
