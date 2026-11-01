@@ -1,6 +1,6 @@
 import { BrowserRouter, Routes, Route,} from "react-router-dom";
 
-import { UserProvider } from "./context/user_context";
+import { UserDetailsManager } from "./context/user_context";
 import RouteProtection from "./components/auth/route_protection";
 
 import MainNavigationBar from "./components/public/main_navigation_bar_comp";
@@ -23,7 +23,7 @@ function App() {
 
   return (
     <BrowserRouter>
-        <UserProvider>
+        <UserDetailsManager>
           <MainNavigationBar />
           <Routes>
             <Route path="/" element={< HomePage />} />
@@ -38,7 +38,7 @@ function App() {
             <Route path="/dashboard/profile/edit" element={<RouteProtection> <DashboardProfileEditPage /> </RouteProtection>} />
             <Route path="/dashboard/property/favorites" element={<RouteProtection> <DashboardFavoritePropertiesPage /> </RouteProtection>} />
           </Routes>
-        </UserProvider>
+        </UserDetailsManager>
     </BrowserRouter>    
   )
 }
