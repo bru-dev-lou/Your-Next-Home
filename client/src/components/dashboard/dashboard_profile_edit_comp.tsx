@@ -379,6 +379,12 @@ function DashboardProfileEdit () {
         setChangeRequest(false);
     }    
 
+    const publicDetaisUIresetForPassword = () => {
+        setErrorMessageMP(""); 
+        setSuccessMessageMP("");
+        setMissingField("");
+    }
+
     const privateDetailsUIreset = () => {
         setErrorMessageAM("");
         setSuccessMessageAM("");
@@ -526,7 +532,7 @@ function DashboardProfileEdit () {
                                     type= {showCurrentPasswordMP ? "text" : "password"} 
                                     value = {userPublicDetails.password}
                                     onChange= {(e) => {
-                                        publicDetailsUIreset();
+                                        publicDetaisUIresetForPassword();
                                         setUserPublicDetails({...userPublicDetails, password: e.target.value});
                                     }}
                                     required
