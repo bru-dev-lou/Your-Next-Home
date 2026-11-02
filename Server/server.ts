@@ -5,6 +5,7 @@ import cookieParser from "cookie-parser";
 
 import autoCompleteRouter from "./routes/public/auto_complete_function.js";
 import authMiddleware from "./middleware/auth_middleware.js";
+import signedOutAuthentication from "./middleware/signed_out_auth_middleware.ts";
 import userCheck from "./routes/auth/user_check.js";
 
 import propertySearchResultsRouter from "./routes/public/property_search_results.js";
@@ -35,7 +36,7 @@ app.get("/", (req, res) => {
 })
 
 app.use("/api", autoCompleteRouter);
-app.use("/api/userCheck", authMiddleware, userCheck);
+app.use("/api/userCheck", signedOutAuthentication, userCheck);
 
 app.use("/api/search", propertySearchResultsRouter);   
 app.use("/api/property", detailedPropertyResultsRouter);

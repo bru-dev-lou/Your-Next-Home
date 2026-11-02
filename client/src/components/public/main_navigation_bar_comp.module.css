@@ -91,6 +91,7 @@
 .dropdown_item_username {
     border-radius: 10px;
     
+    white-space: nowrap;
     list-style: none;
 }
 

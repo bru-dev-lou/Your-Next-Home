@@ -9,7 +9,7 @@ import logo from "../../assets/logo.png";
 function MainNavigationBar (){
     const [ errorMessage, setErrorMessage ] = useState(""); 
     const [ dashDrop, setDashDrop ] = useState<boolean>(false);
-    const { user, setUser } = useUser();
+    const { user, setUser, loading } = useUser();
     const navigate = useNavigate();
 
 
@@ -66,7 +66,7 @@ function MainNavigationBar (){
 
     return (
         <div className={styles.main_container}>   
-            {!user?
+            {!user ?
                 <nav className={styles.nav_container}>
                     <div className={styles.title_container}>
                         <h2 className={styles.font_format}>Your Next Home</h2>
@@ -78,7 +78,7 @@ function MainNavigationBar (){
                         <Link to="/inquiries" className={`${styles.link_item} ${styles.font_format}`}>Inquiries</Link>
                     </div>
                     <div className={styles.sign_in_container}>
-                        <Link to="/signIn" className={`${styles.sign_in_item} ${styles.font_format}`}>Sign In</Link>
+                        {!loading && <Link to="/signIn" className={`${styles.sign_in_item} ${styles.font_format}`}>Sign In</Link>}
                     </div>
                 </nav>
             :            
