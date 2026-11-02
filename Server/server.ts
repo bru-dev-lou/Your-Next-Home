@@ -54,6 +54,12 @@ app.use("/api/dashboard/property/favorites", authMiddleware, dashboardPropertyFa
 app.use("/api/search/favorites", authMiddleware, favoritePropertiesFeatureRouter);
 
 
-app.listen(port, () => {
+app.listen(port, (error) => {
+    if (error) {
+        console.error(error);
+        process.exit(1);
+    }
+
     console.log(`Server is running on port ${port}`);
+    
 });
