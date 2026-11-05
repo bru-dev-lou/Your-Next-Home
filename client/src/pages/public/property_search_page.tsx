@@ -334,7 +334,7 @@ function PropertySearchPage () {
         </div>
       }  
       <div className={styles.property_main_container}>
-        {propertyResults.map(property => (
+        {propertyResults.map((property: PropertyDetails) => (
           <div className={styles.property_card_container} key={property.id}>
             <div className={styles.property_card_first_row}> 
               <div className={styles.address_container}>
