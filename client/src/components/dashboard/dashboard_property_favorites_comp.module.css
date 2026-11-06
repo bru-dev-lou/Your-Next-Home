@@ -9,146 +9,112 @@
     white-space: nowrap;
 }
 
-/*  General styling starts here - 3+ elements will use these. */
-
-.h2_font {
-    font-family: "Source Sans 3", sans-serif;
-    font-size: 26px;
-    color: #F2EFE2;
-    font-weight: 390;
-    text-shadow: 1px 1px 2px rgba(0,0,0,0.8);    
-
-    margin: 0;
-}
-
-.h3_font {
-    font-family: "Source Sans 3", sans-serif;
-    font-size: 23px;
-    color: #F2EFE2;
-    font-weight: 390;
-    text-shadow: 1px 1px 2px rgba(0,0,0,0.8);    
-    margin: 0;
-}
-
-.h4_font {
-    font-family: "Source Sans 3", sans-serif;
-    font-size: 20px;
-    color: #F2EFE2;
-    font-weight: 390;
-    margin: 0;
-}
-
 /* Style code in the order it appears in the JSX return */
 
 .error_container {
-    height: 97%;
-    width: 94%;
+    width: 100%;
 
-    margin: 1% 0 0 3%;
+    display: flex; 
+    flex-direction: column;
+    align-items: center;
 }
 
 .main_title_container {
     background-color: #156082;
     border: solid 2px #042433;
     border-radius: 10px;
-    height: 45px;
+    
     width: 100%;
 
     display: flex;
     justify-content: center;
+
+    padding: 0.25% 0 0.25% 0;
 }
 
 .main_title {
     color: #F2EFE2;
     font-family: "Source Sans 3", sans-serif;
-    font-size: 26px;
+    font-size: clamp(14px, 1.75vw, 100px);
     font-weight: 390;
-    text-shadow: 1px 1px 2px rgba(0,0,0,0.8);    
-
-    margin: 0 3% 0 0;
-    line-height: 42px;
-}
-
-.server_error_image {
-    width: 30%;
-    height: 46%;
-
-    margin: 6% 0 0 34%; 
-}
-
-.error_message_FP {
-    color: #C00000;
-    font-family: "Source Sans 3", sans-serif;
-    font-size: 30px;
-    font-weight: 390;
-    text-shadow: 1px 1px 2px rgba(0,0,0,0.8);    
-    text-align: center;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.8); 
     
-    margin: 3% 1% 0 0;
+    margin: 0;
+}
+
+.server_error_image, .no_props_image {
+    width: 30%;
+    aspect-ratio: 1 / 0.7;
+    margin-top: 4%; 
 }
 
 .no_props_image {
-    width: 30%;
-    height: 45%;
-
-    margin: 5% 0 0 33%;
+    aspect-ratio:  1 / 0.65;
 }
 
-.no_properties_message {
-    color: #8E0100;
+.error_message_FP, .no_properties_message {
+    color: #C00000;
     font-family: "Source Sans 3", sans-serif;
-    font-size: 30px;
-    font-weight: 490;
-    text-shadow: 1px 1px 1px rgba(0,0,0,0.2);    
-    text-align: center;
+    font-size: clamp(16px, 2vw, 100px);
+    font-weight: 390;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.8);    
     
-    margin: 4% 1% 0 0;
+    margin-top: 3%;
 }
 
 .main_container {
     height: 100%;
-    width: 94%;
-    
-    margin: 1% 0 0 3%;
+    width: 100%;
 }
+
+/* ↓↓↓ Same as main_title but will look into editing it for V2 ↓↓↓ */
 
 .remove_from_favorites_error_message {
-    color: #fb0202;
+    color: #F2EFE2;
     font-family: "Source Sans 3", sans-serif;
-    font-size: 23px;
-    font-weight: 500;
-    text-shadow: 1px 1px 5px rgba(144, 36, 36, 0.5);    
-    
-    margin: 0 3% 0 0;
-    line-height: 50px;
+    font-size: clamp(14px, 1.75vw, 100px);
+    font-weight: 390;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.8); 
+
+    padding: 0.25% 0 0.25% 0;
 }
 
-.property_and_favorite_container {
-    height: 47%;
+.property_and_favorite_main_container {
     width: 100%;
 
     display: flex;
-    row-gap: 12%;
-    
-    margin-top: 3%;
+    flex: 1; 
+    flex-direction: column;
+
+    row-gap: 2vw;
+    padding: 0;
+    margin: 2vw 0 0 0;
+}
+
+.property_and_favorite_container {
+    height: 23vw;
+    min-height: 175px;
+    width: 100%;
+
+    display: flex;    
+    margin: 0 0 0 0;
 }
 
 .property_card_container {
     background-color: #125370;
     border: solid 2px #042433;
-    border-radius: 35px;
+    border-radius: 25px;
     
     width: 82%;
-    height: 100%;
-
-    display: flex; 
-    flex-direction: column;
+    
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: auto minmax(0, 1fr) auto;
     
     z-index: 2;
 }
 
 .property_card_row_1 {
-    height: 10%;
     width: 94%;
 
     display: flex; 
@@ -156,14 +122,22 @@
 }
 
 .location_container {
-    width: 80%;
+    width: 50%;
 
     display: flex; 
     justify-content: flex-start;
 }
 
+.quick_data_row_1_font {
+    color: #F2EFE2;
+    font-family: "Source Sans 3", sans-serif;
+    font-size: clamp(12px, 1.55vw, 100px);
+    font-weight: 390;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.8);    
+}
+
 .rental_rate_container {
-    width: 20%;
+    width: 50%;
 
     display: flex;
     justify-content: flex-end;
@@ -171,21 +145,17 @@
 
 .property_card_row_2 {
     width: 94%;
-    height: 66%;
+    height: auto;
 
     display: flex; 
-    margin: 1% 0 0 3%;
+    margin: 0.5% 0 0 3%;
 }
 
 .property_photo {
     border-radius: 20px;    
     border: solid 2px #002461;
+    box-shadow: 0px 5px 2px rgba(0,0,0,0.2);
 
-
-    box-shadow: 
-    0px 5px 2px rgba(0,0,0,0.2);
-
-    height: 100%;     
     width: 40%;
 
     object-fit: cover;
@@ -193,79 +163,108 @@
 }
 
 .summary_container {
-    height: 100%;
-    width: 55%;
+    width: 57%;
     
-    margin-left: 5%;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+
+    margin-left: 3%;
 }
 
-.summary_title {
-    line-height: 20px;
+.summary_title, .summary_content {
+    color: #F2EFE2;
+    font-family: "Source Sans 3", sans-serif;
+    font-size: clamp(12px, 1.55vw, 100px);
+    font-weight: 390;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.8);    
 }
 
 .summary_content {
-    color: #F2EFE2;    
-    font-family: "Source Sans 3", sans-serif;
-    font-size: 18px;
-    font-weight: 390;
-    text-shadow: 1px 1px 2px rgba(0,0,0,0.8);    
+    font-size: clamp(12px, 1.25vw, 100px);
+    font-weight: 370;
 
     margin-top: 3%;
+
+    text-align: justify;
     overflow-wrap: break-word;
     hyphens: auto;
 
-    text-align: justify;
+    /*  Ensure line clamps match once Chrome supports unprefixed ones */
+    
+    line-clamp: 5;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 4;
+    overflow: hidden;
 }
 
 .property_card_row_3 {
     width: 94%;
-    height: 10%;
 
-    display: flex; 
+    display: flex;
+    align-items: center; 
     margin: 1% 0 0 3%;
+    padding-bottom: 1%;
+
+    overflow-x: hidden;
 }
 
 .date_listed_container {
     width: 40%;
+    display: flex;
+    align-items: center;
+}
+
+.quick_data_row_3_font {
+    font-family: "Source Sans 3", sans-serif;
+    font-size: clamp(12px, 1.35vw, 100px);
+    color: #F2EFE2;
+    font-weight: 350;
 }
 
 .remaining_info_container {
-    width: 55%;
+    width: 57%;
 
-    display: flex; 
-    justify-content: space-between;
-    
-    margin-left: 5%;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+
+    margin-left: 3%;
 }
 
 .property_type_container {
-    width: 26%;
     display: flex;
+    justify-content: flex-start;
+    align-items: center;
 }
 
 .bedrooms_container {
-    width: 23%;
     display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.quick_data_row_3_short_viewport {
+    display: none; 
 }
 
 .bathrooms_container {
-    width: 24%;
     display: flex;
+    justify-content: flex-end;
+    align-items: center;
 }
 
 .react_icon {
     color: #ECE7D4;
-    font-size: 18px;
+    font-size: clamp(12px, 1.2vw, 100px);
 
-    margin-top: 3%;
-    margin-right: 4%; 
+    margin: 1% 3% 0 0; 
 }
-
 
 .favorites_div {
     background-color: #156082;
     border: solid 2px #042433;
-    border-radius: 35px;
+    border-radius: 25px;
 
     height: 100%;
     width: 19%;
@@ -298,7 +297,7 @@
 
 .fav_button_react_icon {
     fill: #F2EFE2;
-    font-size: 35px;
+    font-size: clamp(14px, 2.3vw, 100px);
 
     stroke: #D8CEA8;
     stroke-width: 45px;
@@ -306,14 +305,13 @@
     cursor: pointer;
 }
 
-
 .favorites_div_confirm_removal {
     background-color: #156082;
     border: solid 2px #042433;
-    border-radius: 35px;
+    border-radius: 25px;
 
     height: 100%;
-    width: 23%;
+    width: 43%;
 
     position: relative;
     z-index: 1;
@@ -322,39 +320,140 @@
     flex-direction: column;
     justify-content: center;    
 
-    margin-left: -5%;
+    margin-left: -25%;
 }
 
-.confirm_removal_message {
-    width: 78%;    
+.confirm_removal_question {
+    font-family: "Source Sans 3", sans-serif;
+    font-size: clamp(12px, 1.55vw, 100px);
+    color: #F2EFE2;
+    font-weight: 390;
     text-shadow: 1px 1px 2px rgba(0,0,0,0.8);
     
-    margin-left: 22%;   
+    width: 40%;
+
+    margin: 0 0 0 auto;   
     text-align: center;
 }
 
+.c_f_m_short_viewport {
+    display: none;
+}
+
 .removal_buttons_container {
-    width: 78%;
+    width: 40%;
     height: 11%;
 
     display: flex;
     justify-content: center; 
     column-gap: 11%;
     
-    margin: 5% 0 0 22%;
+    margin: 3% 0% 0 auto;
 }
 
 .confirm_cancel_removal_button {
+    color: #156082;
+    font-size: clamp(12px, 1.4vw, 100px);
+
     background-color: #F5F2EB;
     border: none; 
-    border-radius: 5px;
-
-    font-size: 20px;
-    color: #156082;
-    line-height: 50%;
+    border-radius: 10px;
 
     width: 32%;
-    height: 100%;
     
     cursor: pointer;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+@media (max-width: 1201px) {
+    .confirm_cancel_removal_button {
+        border-radius: 5px;
+    }
+}
+@media (max-width: 1001px) {
+    .main_title_container {
+        border-radius: 7px;
+    }
+
+    .property_card_container, .favorites_div, .favorites_div_confirm_removal {
+        border-radius: 15px;
+    }
+}
+
+@media (max-width: 751px) {
+    .property_card_row_1 {
+        padding-top: 0.25%;
+    }
+
+    .property_photo {
+        border-radius: 10px;
+    }
+
+    .property_card_row_3 {
+        display: grid;
+        grid-template-columns: repeat(4, auto);
+        column-gap: 5px;
+    }
+
+    .remaining_info_container {
+        display: contents;
+    }
+}
+
+@media (max-width: 601px) {
+    .confirm_cancel_removal_button {
+        width: 40%;
+    }
+}
+
+@media (max-width: 501px) {
+    .property_and_favorite_container {
+        min-height: 160px;
+        max-height: 170px;
+    }
+
+    .quick_data_row_3_short_viewport {
+        display: flex;
+    }
+
+    .quick_data_row_3_wide_viewport {
+        display: none;
+    }
+
+    .react_icon {
+        display: none;
+    }
+
+    .c_f_m_wide_viewport {
+        display: none;
+    }
+
+    .c_f_m_short_viewport {
+        display: flex; 
+        justify-content: center;
+    }
+}
+
+@media (max-width: 451px) {
+    .removal_buttons_container {
+        height: 40%;
+        
+
+        flex-direction: column;
+        justify-content: flex-start;
+        align-items: center;
+        row-gap: 15px;
+        column-gap: 0;
+        
+        margin-top: 5%;
+    }    
+
+    .confirm_cancel_removal_button {
+        width: 80%;
+
+        border-radius: 3px;
+    }
 }
