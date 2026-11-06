@@ -102,7 +102,7 @@ const DashboardFavoriteProperties = () => {
         }
         
         catch(error){
-            setErrorMessageDP("Failed to delete property. Please check your internet and try again.");
+            setErrorMessageDP("Please check your internet and refresh the page.");
         }
     }
 
@@ -111,19 +111,19 @@ const DashboardFavoriteProperties = () => {
         return (
            <div className={styles.error_container}>
                 <div className={styles.main_title_container}>
-                    <h2 className={`${styles.h2_font} ${styles.main_title}`}>Favorite Properties</h2>
+                    <h1 className={styles.main_title}>Favorite Properties</h1>
                 </div>
                 <img 
                     src={serverErrorPhoto} 
                     className={styles.server_error_image} 
                     alt="Server error illustration."
                 />                
-                    <h4 
-                        role="alert"
-                        className={styles.error_message_FP}    
-                    >
-                        {errorMessageFP}
-                    </h4>
+                <span 
+                    role="alert"
+                    className={styles.error_message_FP}    
+                >
+                    {errorMessageFP}
+                </span>
             </div>
         )
     }
@@ -132,19 +132,19 @@ const DashboardFavoriteProperties = () => {
         return (
            <div className={styles.error_container}>
                 <div className={styles.main_title_container}>
-                    <h2 className={`${styles.h2_font} ${styles.main_title}`}>Favorite Properties</h2>
+                    <h1 className={styles.main_title}>Favorite Properties</h1>
                 </div>
                 <img 
                     src={missingPropertyPhoto} 
                     className={styles.no_props_image} 
                     alt="No saved properties illustration."
                 />                     
-                  <h4 
-                        role="alert"
-                        className={styles.no_properties_message}    
-                    >
-                        {noPropertiesMessage}
-                    </h4>                
+                <span 
+                    role="alert"
+                    className={styles.no_properties_message}    
+                >
+                    {noPropertiesMessage}
+                </span>                
             </div>            
         )
     }
@@ -153,7 +153,7 @@ const DashboardFavoriteProperties = () => {
         return (
            <div className={styles.error_container}>
                 <div className={styles.main_title_container}>
-                    <h2 className={`${styles.h2_font} ${styles.main_title}`}>Loading... </h2>
+                    <h1 className={styles.main_title}>Loading... </h1>
                 </div>
             </div>            
         )
@@ -163,75 +163,83 @@ const DashboardFavoriteProperties = () => {
         <div className={styles.main_container}>
             <div className={styles.main_title_container}>
                 {errorMessageDP ?
-                    <h3 className={styles.remove_from_favorites_error_message} role="alert">
+                    <span className={styles.remove_from_favorites_error_message} role="alert">
                         {errorMessageDP}
-                    </h3>
+                    </span>
                     :
-                    <h2 className={`${styles.h2_font} ${styles.main_title}`}>Favorite Properties</h2>
+                    <h1 className={styles.main_title}>Favorite Properties</h1>
                 }                    
-            </div>              
-            {favoriteProps.map((property) => {
-                return (
-                    <div key = {property.id} className={styles.property_and_favorite_container}>                                                    
+            </div>
+            <ul className={styles.property_and_favorite_main_container}>              
+                {favoriteProps.map((property) => (
+                    <li key = {property.id} className={styles.property_and_favorite_container}>                                                    
                         <div className={styles.property_card_container}>
                             <div className={styles.property_card_row_1}>
                                 <div className={styles.location_container}>
                                     <span className={styles.sr_content}>Location:</span>
-                                    <h3 className={styles.h3_font}>
+                                    <span className={styles.quick_data_row_1_font}>
                                         {property.city}
-                                    </h3>
+                                    </span>
                                 </div>
                                 <div className={styles.rental_rate_container}>
                                     <span className={styles.sr_content}>Monthly rental rate:</span>
-                                    <h3 className={styles.h3_font}>
+                                    <span className={styles.quick_data_row_1_font}>
                                         £{property.price.toLocaleString()} pcm
-                                    </h3>
+                                    </span>
                                 </div>
                             </div>
                             <div className={styles.property_card_row_2}>
                                 <img src={property.photo_path} 
                                     role="button"
-                                    alt="Property's main photo - press enter to view detailed property page." 
+                                    alt={`Main photo for property ${property.id}`} 
                                     tabIndex={0}
-                                    onKeyDown= { (e) => { if (e.key === "Enter" || e.key === " ") {
+                                    onKeyDown= { (e) => { if (e.key === "Enter") {
                                         navigate(`/property/${property.id}`);
                                     }}}
                                     onClick = {() => navigate(`/property/${property.id}`)} 
                                     className={styles.property_photo}
                                 />
                                 <div className={styles.summary_container}>
-                                    <h3 className={`${styles.h3_font} ${styles.summary_title}`}>Summary</h3>
-                                    <h5 className={styles.summary_content}>
+                                    <span className={styles.summary_title}>
+                                        Summary
+                                    </span>
+                                    <span className={styles.summary_content}>
                                         {property.summary}
-                                    </h5>
+                                    </span>
                                 </div>
                             </div>
                             <div className={styles.property_card_row_3}>
                                 <div className={styles.date_listed_container}>
                                     <span className={styles.sr_content}>Date listed:</span>
-                                    <h4 className={styles.h4_font}>
+                                    <span className={styles.quick_data_row_3_font}>
                                         {new Date(property.date_listed).toLocaleDateString("en-GB").replace(/\//g, ".")}
-                                    </h4>
+                                    </span>
                                 </div>
                                 <div className={styles.remaining_info_container}>
                                     <div className={styles.property_type_container}>
                                         <span className={styles.sr_content}>Property type:</span>
                                         <span className={styles.react_icon}><BsHouse /> </span>
-                                        <h4 className={styles.h4_font}>
+                                        <span className={styles.quick_data_row_3_font}>
                                             {property.type}
-                                        </h4>
+                                        </span>
                                     </div>
                                     <div className={styles.bedrooms_container}> 
                                         <span className={styles.react_icon}> <IoBedSharp/> </span>
-                                        <h4 className={styles.h4_font}>
+                                        <span className={`${styles.quick_data_row_3_font} ${styles.quick_data_row_3_wide_viewport}`}>
                                             {property.no_bedrooms} {property.no_bedrooms === 1 ? "bedroom" : "bedrooms"}
-                                        </h4>
+                                        </span>
+                                        <span className={`${styles.quick_data_row_3_font} ${styles.quick_data_row_3_short_viewport}`}>
+                                            {property.no_bedrooms} {property.no_bedrooms === 1 ? "bed" : "beds"}
+                                        </span>                                        
                                     </div>
                                     <div className={styles.bathrooms_container}>
                                         <span className={styles.react_icon}> <LuToilet /> </span>                    
-                                        <h4 className={styles.h4_font}>
+                                        <span className={`${styles.quick_data_row_3_font} ${styles.quick_data_row_3_wide_viewport}`}>
                                             {property.no_bathrooms} {property.no_bathrooms === 1 ? "bathroom" : "bathrooms"}
-                                        </h4>
+                                        </span>
+                                        <span className={`${styles.quick_data_row_3_font} ${styles.quick_data_row_3_short_viewport}`}>
+                                            {property.no_bathrooms} {property.no_bathrooms === 1 ? "bath" : "baths"}
+                                        </span>                                        
                                     </div>
                                 </div>
                             </div>
@@ -242,43 +250,49 @@ const DashboardFavoriteProperties = () => {
                                     <button 
                                         onClick= {() => setRemoveIDConfirmation(property.id)}
                                         className={styles.favorites_button}
-                                        aria-describedby="favorites_button"
+                                        aria-describedby={`Favorite_button_property_${property.id}`}
                                     >
                                         <IoIosHeart className={styles.fav_button_react_icon} />
                                     </button>
-                                    <span id="favorites_button" className={styles.sr_content}>
+                                    <span id={`Favorite_button_property_${property.id}`} className={styles.sr_content}>
                                         Clicking this button begins a 2-step process where the relevant property is removed from your favorite's list. 
                                     </span>
                                 </div>
                             </div>
                         :
                             <div className={styles.favorites_div_confirm_removal}>
-                                <h3 
-                                    className={`${styles.h3_font} ${styles.confirm_removal_message}`}
-                                    aria-label="Remove from favorites question"> 
-                                    Are you sure ?
-                                </h3>
+                                <span 
+                                    className={`${styles.confirm_removal_question} ${styles.c_f_m_wide_viewport}`}
+                                > 
+                                    Are you sure?
+                                </span>
+                                <span 
+                                    className={`${styles.confirm_removal_question} ${styles.c_f_m_short_viewport}`}
+                                >
+                                    Sure?
+                                </span>
                                 <div className={styles.removal_buttons_container}>
                                     <button 
                                         onClick={() => deleteFavProperty(property.id)}
                                         className={styles.confirm_cancel_removal_button}
-                                        aria-label="confirm"
+                                        aria-label={`Confirm deletion of property ${property.id}`}
                                     >
                                         ✔ 
                                     </button>
                                     <button 
                                         onClick={() => {setRemoveIDConfirmation(null);}}
                                         className={styles.confirm_cancel_removal_button}
-                                        aria-label="cancel"
+                                        aria-label={`Cancel deletion of property ${property.id}`}
                                     >
                                         ✖ 
                                     </button>
                                 </div>
                             </div>           
                         }                    
-                    </div>
-                )
-            })}
+                    </li>
+                ))}
+            </ul>
+            <br></br>
         </div>
     )
 }
