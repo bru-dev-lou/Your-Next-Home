@@ -9,40 +9,11 @@
     white-space: nowrap;
 }
 
-/*  General font styling */
-
-.h2_font {
-    color: #F2EFE2;
-    font-family: "Source Sans 3", sans-serif;
-    font-size: 26px;
-    font-weight: 390;
-    text-shadow: 1px 1px 2px rgba(0,0,0,0.8);    
-}
-
-.h3_font {
-    color: #F2EFE2;
-    font-family: "Source Sans 3", sans-serif;
-    font-size: 23px;
-    font-weight: 390;
-    text-shadow: 1px 1px 2px rgba(0,0,0,0.8);    
-    margin: 0;
-}
-
-.h4_font {
-    color: #156082;    
-    font-family: "Source Sans 3", sans-serif;
-    font-size: 20px;
-    font-weight: 600;
-    margin: 0;
-}
-
 /* Styling classes in the order they appear in the JSX return */
 
 .error_container {
-    height: 97%;
-    width: 94%;
+    width: 100%;
 
-    margin: 1% 0 0 3%;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -53,7 +24,6 @@
     border: solid 2px #042433;
     border-radius: 10px;
 
-    height: 45px;
     width: 100%;
 
     display: flex;
@@ -61,433 +31,426 @@
 }
 
 .main_title {
-    margin: 0 3% 0 0;
-    line-height: 42px;
+    color: #F2EFE2;
+    font-family: "Source Sans 3", sans-serif;
+    font-size: clamp(14px, 1.75vw, 100px);
+    font-weight: 390;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.8);    
+    
+    margin: 0;
+    padding: 0.25% 0 0.25% 0;
 }
 
 .server_error_image {
     width: 35%;
-    height: 55%;
-
-    margin: 4% 2% 0 0;
+    aspect-ratio:  1 / 0.7;
+    min-height: 120px;
+    min-width: 175px;
+    
+    margin-top: 3%;
 }
 
 .server_error_message {
     color: #C00000;
     font-family: "Source Sans 3", sans-serif;
-    font-size: 30px;
+    font-size: clamp(14px, 2vw, 100px);
     font-weight: 390;
     text-shadow: 1px 1px 2px rgba(0,0,0,0.8);    
 
-    margin: 4% 0 0 0;
+    margin: 3% 0 0 0;
 }
 
 .error_message_container {
-    height: 50%;
     width: 100%;
 
     display: flex;
     flex-direction: column;
-}
-
-.no_internet_react_icon {
-    color: #8e0505;
-
-    width: 15rem;
-    height: 15rem;
-
-    align-self: center;
-    margin: 3% 3% 0 0;
+    align-items: center;
 }
 
 .no_user_data_error {
     color: #C00000;
     font-family: "Source Sans 3", sans-serif;
-    font-size: 30px;
+    font-size: clamp(14px, 2vw, 100px);
     font-weight: 390;
     text-shadow: 1px 1px 2px rgba(0,0,0,0.8);    
 
     text-align: center;
     white-space: pre-line;
     
-    margin: 2% 3% 0 0;
+    margin-top: 3%;
 }
 
 .main_container {
-    height: 150%;
-    width: 94%;
-    
-    margin: 1% 0 0 3%;
+    height: 100%;
+    width: 100%;
 }
 
 .edit_profile_container {
-    height: 42%;
-    width: 50%;
+    width: 45%;
+
+    margin-top: 2.5%;
 }
 
-.subtitle_1_container {
-    height: 22%;
+.edit_profile_titles_subtitles_container {
     width: 100%;
-        
+
     display: flex;
     flex-direction: column;
+}
 
+.edit_profile_title {
+    color: #F2EFE2;
+    font-family: "Source Sans 3", sans-serif;
+    font-size: clamp(14px, 1.55vw, 100px);
+    font-weight: 390;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.8);    
+
+    background-color: #156082;
+    border: solid 2px #042433;
+    border-radius: 7px;
+
+    width: max-content;
+
+    text-align: center;
+    margin: 0;
+    padding: 0.25% 5% 0.25% 5%;
+}
+
+.edit_profile_error_message, .edit_profile_success_message, .edit_profile_subtitle {
+    color: #C00000;    
+    font-family: "Source Sans 3", sans-serif;
+    font-size: clamp(12px, 1.35vw, 100px);
+    font-weight: 390;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.8);    
     margin-top: 5%;
 }
 
-.subtitle_1 {
-    background-color: #156082;
-    border: solid 2px #042433;
-    border-radius: 5px;
-
-    height: 42%;
-    width: 25%;
-
-    text-align: center;
-    line-height: 41px;
-}
-
-.profile_error_message {
-    color: #C00000;    
-    font-family: "Source Sans 3", sans-serif;
-    font-size: 20px;
-    font-weight: 390;
-    text-shadow: 1px 1px 2px rgba(0,0,0,0.8);    
-    margin-top: 4%;
-}
-
-.profile_success_message {
+.edit_profile_success_message {
     color: #3B7D23;    
-    font-family: "Source Sans 3", sans-serif;
-    font-size: 20px;       
-    font-weight: 390;
-    text-shadow: 1px 1px 2px rgba(0,0,0,0.8);
-    margin-top: 4%;
 }
 
-.subtitle_1_info {
-    text-shadow: 1px 1px 2px rgba(0,0,0,0.8);    
-    font-weight: 390;
-    margin-top: 4%;
+.edit_profile_subtitle {
+    color: #156082;    
 }
 
 .edit_profile_user_data_container {
-    height: 76%;
     width: 100%;
     
     display: flex;
     flex-direction: column;
-    row-gap: 5%;
+    row-gap: 1.35vw;
     
     margin-top: 3%; 
 }
 
-.container_format_edit_profile {
-    height: 11%;
-
+.edit_profile_labels_and_inputs {
     display: flex;
     align-items: center;
 }
 
-.label_format_edit_profile {
-    height: 100%;
-    width: 30%;
+.edit_profile_label_format {
+    color: #156082;    
+    font-family: "Source Sans 3", sans-serif;
+    font-size: clamp(12px, 1.35vw, 100px);
+    font-weight: 550;
 
-    line-height: 36px;
+    width: 35%; 
 }
 
-.input_format_edit_profile {
+.edit_profile_input_format {
     color: #125370;
     font-family: "Source Sans 3", sans-serif;
-    font-size: 16px;
+    font-size: clamp(12px, 1.1vw, 100px);
 
     background-color: #D9E4F3;
     border: solid 2px #125370;  
     border-radius: 5px;
     
-    height: 100%; 
-    width: 60%;
+    width: 65%;
 
-    margin-left: 5%;
-    padding-left: 1%;
+    padding: 0.25% 0 0.25% 1%;
 }
 
-.save_profile_changes_button {
+.edit_profile_save_changes_button {
     color: #125370;
     font-family: "Source Sans 3", sans-serif;
-    font-size: 16px;
-    font-weight: 600;
+    font-size: clamp(12px, 1.1vw, 100px);
+    font-weight: 550;
 
     background-color: #BFBFBF;
     border: solid 2px #042433;
     border-radius: 5px;
 
-    height: 100%;
-    width: 40%;
+    width: 15em;
 
-    margin-left: 55%;     
+    margin-left: auto;     
+    padding: 0.5% 0 0.5% 0;
 
     cursor: pointer; 
 }
 
 .password_container {
-    height: 36%;
     width: 100%;
-    
+
     display: flex;
     flex-direction: column;
+    position: relative;
 }
 
-.container_format_edit_profile_custom {
-    height: 30%;
-    width: 100%;
-
-    display: flex;
-    align-items: center;
-}
-
-.show_hide_password_button_MP {
+.show_hide_password_button_EP {
     color: #125370;
+    font-size: clamp(14px, 1vw, 100px); 
     background-color: transparent;
     border: none;
     
-    height: 90%;
-    width: 4%;
-    
-    line-height: 11%;    
+    align-self: center;
+    margin-top: 0.5%;
 
-    position: relative; 
-    margin-left: -4%;
+    position: absolute;
+    right: 0;
 
     cursor: pointer; 
 }
 
-.confirm_profile_changes_button {
+.edit_profile_confirm_changes_button {
     color: #125370;
     font-family: "Source Sans 3", sans-serif;
-    font-size: 16px;
-    font-weight: 600;
+    font-size: clamp(12px, 1.1vw, 100px);
+    font-weight: 550;
 
     background-color: #BFBFBF;
     border: solid 2px #042433;
     border-radius: 5px;
 
-    height: 30%;
-    width: 40%;
+    width: 15em;
 
-    margin: 3% 0 0 55%;
+    margin: 3% 0 0 auto;
+    padding: 0.5% 0 0.5% 0;
+
     cursor: pointer; 
 }
 
 .account_management_container { 
     display: flex; 
     flex-direction: column; 
-    
-    height: 35%;
-    width: 50%;
 
-    margin-top: 2%;    
+    width: 45%;
+    margin-top: 3%;    
 }
 
-.subtitle_2_container {
-    height: 27%;
-    width: 100%;
-}
-
-.subtitle_2 {
-    background-color: #156082;
-    border: solid 2px #042433;
-    border-radius: 5px;
-
-    height: 43%;
-    width: 40%;
-    
-    text-align :center;
-    line-height: 42px;
-}
-
-.account_error_message {
-    color: #C00000;
-    font-family: "Source Sans 3", sans-serif;
-    font-size: 20px;
-    font-weight: 390;
-    text-shadow: 1px 1px 2px rgba(0,0,0,0.8);    
-    margin-top: 4%;
-    width: 150%;
-}
-
-.account_success_message {
-    color: #3B7D23;        
-    font-family: "Source Sans 3", sans-serif;
-    font-size: 20px;
-    font-weight: 390;
-    text-shadow: 1px 1px 2px rgba(0,0,0,0.8);
-    margin-top: 4%; 
-}
-
-.subtitle_2_info {
-    text-shadow: 1px 1px 2px rgba(0,0,0,0.8);    
-    font-weight: 390;
-
-    margin-top: 4%;    
-}
-
-.password_change_container {
-    height: 68%;
+.account_management_titles_and_subtitles {
     width: 100%;
     
     display: flex;
     flex-direction: column;
-    row-gap: 9%;
-
-    margin-top: 4%;
 }
 
-.container_format_account_management {
-    height: 16%;
+.account_management_title {
+    color: #F2EFE2;
+    font-family: "Source Sans 3", sans-serif;
+    font-size: clamp(14px, 1.55vw, 100px);
+    font-weight: 390;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.8);    
+
+    background-color: #156082;
+    border: solid 2px #042433;
+    border-radius: 7px;
+
+    width: max-content;
+    text-align: center;
+    margin: 0;
+    padding: 0.25% 5% 0.25% 5%;
+}
+
+.account_management_error_message, .account_management_long_error_message, .account_management_success_message, .account_management_subtitle {
+    color: #C00000;
+    font-family: "Source Sans 3", sans-serif;
+    font-size: clamp(12px, 1.35vw, 100px);
+    font-weight: 390;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.8);  
+
+    margin-top: 5%;
+}
+
+.account_management_long_error_message {
+    text-align: center;
+}
+
+.account_management_success_message {
+    color: #3B7D23;        
+}
+
+.account_management_subtitle {
+    color: #156082;    
+}
+
+.password_change_container {
     width: 100%;
-
+    
     display: flex;
+    flex-direction: column;
+    row-gap: 1.35vw;
+
+    margin-top: 3%;
 }
 
-.label_format_account_management {
-    height: 100%;
-    width: 30%;
+.account_management_labels_and_inputs {
+    width: 100%;
+    
+    display: flex;
+    align-items: center;
 
-    line-height: 37px;
+    position: relative;
 }
 
-.input_format_account_management {
+.account_management_label_format {
+    color: #156082;    
+    font-family: "Source Sans 3", sans-serif;
+    font-size: clamp(12px, 1.35vw, 100px);
+    font-weight: 550;
+
+    width: 35%;
+}
+
+.account_management_input_format {
     color: #125370;
     font-family: "Source Sans 3", sans-serif;
-    font-size: 16px;
+    font-size: clamp(12px, 1.1vw, 100px);
 
     background-color: #D9E4F3;
     border: solid 2px #125370;  
     border-radius: 5px;
     
-    height: 100%; 
-    width: 60%;
+    width: 65%;
 
-    margin-left: 5%;
-    padding-left: 1%;
+    padding: 0.25% 0 0.25% 1%;
 }
 
 .show_hide_password_button_AM {
     color: #125370;
+    font-size: clamp(14px, 1vw, 100px); 
     background-color: transparent;
     border: none;
-
-    height: 100%;
-    width: 4%;  
     
-    margin: 0 0 0 -4%;
+    align-self: center;
+    margin-top: 0.5%;
+
+    position: absolute;
+    right: 0;
+
     cursor: pointer; 
 }
 
 .change_password_confirm_button {
     color: #125370;
     font-family: "Source Sans 3", sans-serif;
-    font-size: 16px;
-    font-weight: 600;
+    font-size: clamp(12px, 1.1vw, 100px);
+    font-weight: 550;
 
     background-color: #BFBFBF;
     border: solid 2px #042433;
     border-radius: 5px;
 
-    height: 15%;
-    width: 40%;
+    width: 15em;
 
-    margin: 1% 0 0 55%;
-    
-    cursor: pointer;
+    margin-left: auto;
+    padding: 0.5% 0 0.5% 0;
+
+    cursor: pointer; 
 }
 
 .delete_account_container {
-    height: 21%;
-    width: 50%;
+    width: 45%;
 
-    margin-top: 1%;
+    display: flex;
+    flex-direction: column;
+    row-gap: 1.35vw;
+
+    margin-top: 3%;
 }
 
-.delete_account_error_message {
+.delete_account_error_message, .delete_account_title {
     color: #C00000;
     font-family: "Source Sans 3", sans-serif;
-    font-size: 20px;
+    font-size: clamp(12px, 1.35vw, 100px);
     font-weight: 390;
-    text-shadow: 1px 1px 2px rgba(0,0,0,0.5);    
-    margin: 0;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.8);  
 
-    height: 15%;
-    width: 100%;
+    width: 150%;
 }
 
 .delete_account_title {
-    text-shadow: 1px 1px 2px rgba(0,0,0,0.8);    
-    font-weight: 390;
-
-    height: 15%;
-    width: 100%;   
+    color: #125370;
+    margin: 0;
 }
 
 .delete_account_request_button {
     color: #125370;
     font-family: "Source Sans 3", sans-serif;
-    font-size: 16px;
-    font-weight: 600;
+    font-size: clamp(12px, 1.1vw, 100px);
+    font-weight: 550;
 
     background-color: #BFBFBF;
     border: solid 2px #042433;
     border-radius: 5px;
 
-    height: 17%;   
-    width: 40%;
+    width: 15em;
 
-    margin: 3% 0 0 55%;
+    margin-left: auto;
+    padding: 0.5% 0 0.5% 0;
 
     cursor: pointer; 
 }
 
-.container_format_account_deletion {
-    height: 18%;
+.delete_account_labels_and_inputs {
     width: 100%;
 
     display: flex;
-    margin-top: 3%;
+    align-items: center;
+    position: relative;
+
+    margin-top: 1%;
 }
 
-.label_format_account_deletion {
-    height: 100%;
-    width: 30%;
+.delete_account_label_format {
+    color: #156082;    
+    font-family: "Source Sans 3", sans-serif;
+    font-size: clamp(12px, 1.35vw, 100px);
+    font-weight: 550;
 
-    line-height: 38px;
+    width: 35%; 
 }
 
-.input_format_account_deletion {
+.delete_account_input_format {
     color: #125370;
     font-family: "Source Sans 3", sans-serif;
-    font-size: 16px;
+    font-size: clamp(12px, 1.1vw, 100px);
 
     background-color: #D9E4F3;
     border: solid 2px #125370;  
     border-radius: 5px;
     
-    height: 100%; 
-    width: 60%;
+    width: 65%;
 
-    margin-left: 5%;
-    padding-left: 1%;
+    padding: 0.25% 0 0.25% 1%;
+}
+
+.password_input_padding {
+    padding-right: clamp(25px, 3.5%, 4%);
 }
 
 .show_hide_password_button_DA {
     color: #125370;
+    font-size: clamp(14px, 1vw, 100px); 
     background-color: transparent;
     border: none;
+        
+    align-self: center;
+    margin-top: 0.5%;
 
-    height: 100%;
-    width: 4%;  
-    
-    margin: 0 0 0 -4%;
+    position: absolute;
+    right: 0;
     cursor: pointer; 
 }
 
@@ -495,39 +458,140 @@
     height: 47%;
     width: 100%;
 
-    margin-top: 3%;
+    display: flex;
+    flex-direction: column;
 }
 
 .delete_account_confirm_button {
     color: #125370;
     font-family: "Source Sans 3", sans-serif;
-    font-size: 16px;
-    font-weight: 600;
+    font-size: clamp(12px, 1.1vw, 100px);
+    font-weight: 550;
 
     background-color: #BFBFBF;
     border: solid 2px #042433;
     border-radius: 5px;
 
-    height: 35%;   
-    width: 40%;
+    width: 15em;
 
-    margin: 1% 0 0 55%;
+    margin-left: auto;
+    padding: 0.5% 0 0.5% 0;
 
-    cursor: pointer;
-}
-
-.account_deleted_feedback {
-    padding-top: 3%;
+    cursor: pointer; 
 }
 
 .account_deleted_message {
     color: #3B7D23;    
     font-family: "Source Sans 3", sans-serif;
-    font-size: 20px;
+    font-size: clamp(12px, 1.35vw, 100px);
     font-weight: 390;
     text-shadow: 1px 1px 2px rgba(0,0,0,0.8);
 
     text-align: center;
-    margin: 0;
+    display: block;
 }
 
+@media (max-width: 1051px) {
+    /* font changes first */
+
+    .main_title {
+        font-size: clamp(12px, 2vw, 100px);
+    }
+
+    .edit_profile_title, .account_management_title {
+        font-size: clamp(12px, 1.75vw, 100px);
+    }
+    .edit_profile_error_message, .edit_profile_success_message, .edit_profile_subtitle,
+    .account_management_error_message, .account_management_long_error_message, .account_management_success_message, .account_management_subtitle,
+    .delete_account_error_message, .delete_account_title {
+        font-size: clamp(12px, 1.6vw, 100px);
+        width: auto;
+    }
+
+    .edit_profile_label_format, .account_management_label_format, .delete_account_label_format {
+        font-size: clamp(12px, 1.6vw, 100px);
+    }
+
+    .edit_profile_input_format, .account_management_input_format, .delete_account_input_format {
+        font-size: clamp(12px, 1.4vw, 100px);
+    }
+
+    .edit_profile_save_changes_button, .edit_profile_confirm_changes_button,
+    .change_password_confirm_button, 
+    .delete_account_request_button, .delete_account_confirm_button {
+        font-size: clamp(12px, 1.25vw, 100px);
+    }
+    
+    /* Layout changes in the order they appear in the JSX */
+
+    .main_container {   
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .main_title_container {
+        border-radius: 5px;
+    }
+
+    .edit_profile_container, .account_management_container, .delete_account_container {
+        width: 70%;
+    }
+
+    .edit_profile_title, .account_management_title {
+        border-radius: 5px;
+        align-self: center;
+        padding: 0.5% 7% 0.5% 7%;
+    }
+
+    .edit_profile_user_data_container, .password_change_container, .delete_account_container {
+        row-gap: 1.6vw;
+    }
+
+    .edit_profile_error_message, .edit_profile_success_message, .edit_profile_subtitle,
+    .account_management_error_message, .account_management_long_error_message, .account_management_success_message, .account_management_subtitle {
+        margin-top: 3%;
+    }
+}
+
+@media(max-width: 601px) {
+    .edit_profile_title, .account_management_title {
+        align-self: flex-start;
+        margin-top: 1.5%;
+    }
+
+    .edit_profile_container, .account_management_container, .delete_account_container {
+        width: 100%;
+    }
+
+    .edit_profile_label_format, .account_management_label_format, .delete_account_label_format {
+        width: 40%;
+    }
+
+    .edit_profile_input_format, .account_management_input_format, .delete_account_input_format {
+        width: 60%;
+        margin-left: auto;
+    }
+
+    .edit_profile_user_data_container, .password_change_container, .delete_account_container {
+        row-gap: 2.5vw;
+    }
+}
+
+@media(max-width: 501px) {
+    .edit_profile_title, .account_management_title {
+        padding: 0.5% 1.5% 0.25% 1.5%;
+        margin-top: 1%;
+    }
+    
+    .edit_profile_save_changes_button, .change_password_confirm_button, 
+    .delete_account_request_button, .delete_account_confirm_button {
+        width: 60%;
+        margin-top: 1%;
+    }
+
+    .edit_profile_confirm_changes_button {
+        width: 60%;
+        margin-top: 3.6%;
+    }
+}

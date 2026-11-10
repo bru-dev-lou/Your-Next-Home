@@ -1,4 +1,9 @@
 .main_container {
-    height: 100%;
-    width: 100%;
+    min-height: 0;
+    width: 94%;
+
+    display: flex; 
+    flex: 1;
+
+    margin-left: 3%;
 }
