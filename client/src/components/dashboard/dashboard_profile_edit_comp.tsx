@@ -5,11 +5,11 @@ import { useUser } from "../../context/user_context";
 import styles from "../dashboard/dashboard_profile_edit_comp.module.css"; 
 import serverErrorImage from "../../assets/server_error_photo.png";
 import { LuEye, LuEyeClosed } from "react-icons/lu";
-import { BsWifiOff } from "react-icons/bs";
 
 
 
 type UserPublicData = {
+    username: string;
     name: string;
     address: string;
     phone_number: string;
@@ -31,8 +31,8 @@ function DashboardProfileEdit () {
     const navigate = useNavigate();
     const { setUser } = useUser();
 
-    const [ originalUserPublicDetails, setOriginalUserPublicDetails] = useState<UserPublicData>({name: "", address: "", phone_number: "", email: "", password: ""}); 
-    const [ userPublicDetails, setUserPublicDetails ] = useState<UserPublicData>({name: "", address: "", phone_number: "", email: "", password: ""}); 
+    const [ originalUserPublicDetails, setOriginalUserPublicDetails] = useState<UserPublicData>({username: "", name: "", address: "", phone_number: "", email: "", password: ""}); 
+    const [ userPublicDetails, setUserPublicDetails ] = useState<UserPublicData>({username: "", name: "", address: "", phone_number: "", email: "", password: ""}); 
 
     const [ userPrivateDetails, setUserPrivateDetails ] = useState<UserPrivateData>({password: "", newPassword: "", passwordConfirmation: ""});
     const [ userAccountDeleteDetails, setUserAccountDeleteDetails ] = useState<UserAccountDeleteData>({password: ""});
@@ -44,6 +44,7 @@ function DashboardProfileEdit () {
     const [ errorMessageMP, setErrorMessageMP ] = useState(""); 
     const [ successMessageMP, setSuccessMessageMP ] = useState("");
     const [ errorMessageAM, setErrorMessageAM ] = useState(""); 
+    const [ longErrorMessageAM, setLongErrorMessageAM ] = useState("");
     const [ successMessageAM, setSuccessMessageAM ] = useState("");
     const [ errorMessageDA, setErrorMessageDA ] = useState(""); 
 
@@ -94,22 +95,21 @@ function DashboardProfileEdit () {
             }
 
             catch(error) {
-                setErrorGeneralMessage("Failed to fetch user's data. Please check your internet and refresh the page.");
+                setErrorGeneralMessage("Failed to fetch user's data. \n Please check your internet and refresh the page.");
             }
 
             finally {
-                setDataLoading(false)
+                setDataLoading(false);
             }
-
         }
         fetchData();
 
     }, []);
 
-    async function updateUserPublicDetails (e:React.MouseEvent<HTMLButtonElement>) {
+    async function updateUserPublicDetails (e:React.SubmitEvent<HTMLFormElement>) {
         e.preventDefault();
-        publicDetailsUIreset();
-
+        publicDetaisUIresetForPassword()
+        
         //  Empty field checks
 
         const fieldCheck = [
@@ -123,6 +123,7 @@ function DashboardProfileEdit () {
             if (!field) {
                 setErrorMessageMP(error);
                 setMissingField(name);
+                setChangeRequest(false);
                 return;
             }
         }
@@ -131,11 +132,13 @@ function DashboardProfileEdit () {
 
         if (userPublicDetails.name.length < 5) {
             setErrorMessageMP("Please include a name at least 5 characters long.");
+            setChangeRequest(false);
             return;
         }
 
         if (userPublicDetails.name.length > 39) {
             setErrorMessageMP("Please include a name shorter than 40 characters.");
+            setChangeRequest(false);
             return;
         }
 
@@ -144,6 +147,7 @@ function DashboardProfileEdit () {
 
         if (!nameHasLetters || !nameIsValidFormat) {
             setErrorMessageMP("Please include a name with no special characters.");
+            setChangeRequest(false);
             return;
         }
 
@@ -151,11 +155,13 @@ function DashboardProfileEdit () {
 
         if (userPublicDetails.address.length < 5) {
             setErrorMessageMP("Please include an address at least 5 characters long.");
+            setChangeRequest(false);
             return;
         }
 
         if (userPublicDetails.address.length > 40) {
             setErrorMessageMP("Please include an address shorter than 40 characters.");
+            setChangeRequest(false);
             return;
         }
 
@@ -163,13 +169,15 @@ function DashboardProfileEdit () {
 
         if (userPublicDetails.phone_number.length > 20) {
             setErrorMessageMP("Phone number must be shorter than 20 digits.");
+            setChangeRequest(false);
             return;
         }
 
         const validNumber = /^[0-9]{10,}$/.test(userPublicDetails.phone_number);
         
         if (!validNumber) {
-            setErrorMessageMP("Please ensure your phone number is at least 10 digits long with no spaces or symbols.");
+            setErrorMessageMP("Please ensure your phone number is at least 10 digits long.");
+            setChangeRequest(false);
             return;
         }
 
@@ -177,6 +185,7 @@ function DashboardProfileEdit () {
 
         if (userPublicDetails.email.length > 50) {
             setErrorMessageMP("Please include an email shorter than 50 characters.");
+            setChangeRequest(false);
             return; 
         }        
 
@@ -184,6 +193,7 @@ function DashboardProfileEdit () {
 
         if (!isValidEmail) {
             setErrorMessageMP("Please include a valid email address.");
+            setChangeRequest(false);
             return;
         }
 
@@ -255,11 +265,11 @@ function DashboardProfileEdit () {
         }
 
         catch (error) {
-            setErrorMessageMP("Failed to update user's profile. Please check your internet and try again.")
+            setErrorMessageMP("Please check your internet and refresh the page.")
         };
     }
 
-    async function updateUserPrivateDetails (e:React.MouseEvent<HTMLButtonElement>) {
+    async function updateUserPrivateDetails (e:React.SubmitEvent<HTMLFormElement>) {
         e.preventDefault(); 
         privateDetailsUIreset();
 
@@ -288,7 +298,7 @@ function DashboardProfileEdit () {
         }                
 
         if (!passwordRegex.test(userPrivateDetails.newPassword)) {
-            setErrorMessageAM("Password must be 8+ characters with an uppercase, a lowercase, a number and a special character [?!@#$%^&*].");
+            setLongErrorMessageAM("Password must be 8+ characters with an uppercase, a lowercase, a number and a special character [?!@#$%^&*].");
             setPassErrorCodeAM("new_pass_wrong_format");
             return;
         }
@@ -316,6 +326,13 @@ function DashboardProfileEdit () {
                 setUserPrivateDetails({...userPrivateDetails, password: "", newPassword: "", passwordConfirmation: ""});
             }
 
+            else if (result.longError) {
+                setErrorMessageAM("");
+                setSuccessMessageAM("");
+                setLongErrorMessageAM(result.longError);
+                setPassErrorCodeAM(result.name); 
+            }
+
             else {
                 setSuccessMessageAM("");
                 setErrorMessageAM(result.error);
@@ -324,11 +341,11 @@ function DashboardProfileEdit () {
         }
             
         catch (error) {
-            setErrorMessageAM("Failed to update user's password. Please check your internet and try again.")
+            setErrorMessageAM("Please check your internet and refresh the page.")
         }
     }
 
-    async function deleteAccount (e:React.MouseEvent<HTMLButtonElement>) {
+    async function deleteAccount (e:React.SubmitEvent<HTMLFormElement>) {
         e.preventDefault();
         setErrorMessageDA("");
         setPassErrorCodeDA("");
@@ -368,7 +385,7 @@ function DashboardProfileEdit () {
         }
 
         catch(error) {
-            setErrorMessageDA("Failed to delete user's account. Please check your internet and try again.")
+            setErrorMessageDA("Please check your internet and refresh the page.")
         }
     }
 
@@ -387,6 +404,7 @@ function DashboardProfileEdit () {
 
     const privateDetailsUIreset = () => {
         setErrorMessageAM("");
+        setLongErrorMessageAM("");
         setSuccessMessageAM("");
         setPassErrorCodeAM("");        
     }
@@ -395,9 +413,13 @@ function DashboardProfileEdit () {
         return (
             <div className={styles.error_container}>
                 <div className={styles.main_title_container}>
-                    <h2 className={`${styles.h2_font} ${styles.main_title}`}>
+                    <h1 className={styles.sr_content}> My Profile </h1>
+                    <span 
+                        role="status"
+                        className={styles.main_title}
+                    >
                         Fetching user data...
-                    </h2>
+                    </span>
                 </div>
             </div>
         )    
@@ -407,12 +429,12 @@ function DashboardProfileEdit () {
         return (
             <div className={styles.error_container}>
                 <div className={styles.main_title_container}>
-                    <h2 className={`${styles.h2_font} ${styles.main_title}`}>
+                    <h1 className={styles.main_title}>
                         My Profile
-                    </h2>
+                    </h1>
                 </div>
-                <img src={serverErrorImage} className={styles.server_error_image}/>
-                <h3 role="status" className={styles.server_error_message}>{errorMessageServer}</h3>
+                <img alt="Server error illustration" src={serverErrorImage} className={styles.server_error_image}/>
+                <span role="alert" className={styles.server_error_message}>{errorMessageServer}</span>
             </div>
         )    
     }
@@ -421,13 +443,13 @@ function DashboardProfileEdit () {
         return (
             <div className={styles.error_container}>
                 <div className={styles.main_title_container}>
-                    <h2 className={`${styles.h2_font} ${styles.main_title}`}>
+                    <h1 className={styles.main_title}>
                         My Profile
-                    </h2>
+                    </h1>
                 </div> 
                 <div className={styles.error_message_container}>
-                    <BsWifiOff className={styles.no_internet_react_icon}/>
-                    <h3 role="alert" className={styles.no_user_data_error}>{errorGeneralMessage}</h3>
+                    <img alt="Server error illustration" src={serverErrorImage} className={styles.server_error_image}/>
+                    <span role="alert" className={styles.no_user_data_error}>{errorGeneralMessage}</span>
                 </div>
             </div>
         )    
@@ -436,24 +458,28 @@ function DashboardProfileEdit () {
     return (
         <div className={styles.main_container}>
             <div className={styles.main_title_container}>
-                <h2 className={`${styles.h2_font} ${styles.main_title}`}>
+                <h1 className={styles.main_title}>
                     My Profile
-                </h2>
+                </h1>
             </div>
             <div className={styles.edit_profile_container}>
-                <div className={styles.subtitle_1_container}>
-                    <h3 className={`${styles.h3_font} ${styles.subtitle_1}`}>Edit Profile</h3>
-                    {errorMessageMP && <h4 role="alert" className={styles.profile_error_message}>{errorMessageMP}</h4>}         
-                    {successMessageMP && <h4 role="status" className ={styles.profile_success_message}>{successMessageMP}</h4>}   
+                <div className={styles.edit_profile_titles_subtitles_container}>
+                    <h2 className={styles.edit_profile_title}>Edit Profile</h2>
+                    {errorMessageMP && <span role="alert" className={styles.edit_profile_error_message}>{errorMessageMP}</span>}         
+                    {successMessageMP && <span role="status" className ={styles.edit_profile_success_message}>{successMessageMP}</span>}   
                     {!errorMessageMP && !successMessageMP && 
-                        <h4 className={`${styles.h4_font} ${styles.subtitle_1_info}`}>
+                        <span className={styles.edit_profile_subtitle}>
                             Profile Information - This is what others can see about you.
-                        </h4>
+                        </span>
                     }
                 </div>
-                <div className={styles.edit_profile_user_data_container}>
-                    <div className={styles.container_format_edit_profile}>
-                        <label htmlFor="name" className={`${styles.h4_font} ${styles.label_format_edit_profile}`}> Name: </label>
+                <form 
+                    onSubmit={updateUserPublicDetails}
+                    className={styles.edit_profile_user_data_container}
+                    noValidate
+                >
+                    <div className={styles.edit_profile_labels_and_inputs}>
+                        <label htmlFor="name" className={styles.edit_profile_label_format}> Name: </label>
                         <input 
                             id="name"
                             type="text"
@@ -463,12 +489,12 @@ function DashboardProfileEdit () {
                                 setUserPublicDetails({...userPublicDetails, name: e.target.value});
                             }} 
                             required
-                            className={styles.input_format_edit_profile}
+                            className={styles.edit_profile_input_format}
                             aria-invalid={missingField === "name"}
                         />
                     </div>
-                    <div className={styles.container_format_edit_profile}>
-                        <label htmlFor="address" className={`${styles.h4_font} ${styles.label_format_edit_profile}`}> Address: </label>
+                    <div className={styles.edit_profile_labels_and_inputs}>
+                        <label htmlFor="address" className={styles.edit_profile_label_format}> Address: </label>
                         <input 
                             id="address"
                             type="text"
@@ -479,11 +505,11 @@ function DashboardProfileEdit () {
                             }} 
                             required
                             aria-invalid={missingField === "address"}
-                            className={styles.input_format_edit_profile}
+                            className={styles.edit_profile_input_format}
                         />
                     </div>
-                    <div className={styles.container_format_edit_profile}>
-                        <label htmlFor="phone_number" className={`${styles.h4_font} ${styles.label_format_edit_profile}`}> Phone Number: </label> 
+                    <div className={styles.edit_profile_labels_and_inputs}>
+                        <label htmlFor="phone_number" className={styles.edit_profile_label_format}> Phone Number: </label> 
                         <input 
                             id="phone_number"
                             type="tel"
@@ -496,11 +522,11 @@ function DashboardProfileEdit () {
                             }} 
                             required
                             aria-invalid={missingField === "number"}
-                            className={styles.input_format_edit_profile}
+                            className={styles.edit_profile_input_format}
                         />
                     </div>
-                    <div className={styles.container_format_edit_profile}>
-                        <label htmlFor="email" className={`${styles.h4_font} ${styles.label_format_edit_profile}`}> Email: </label> 
+                    <div className={styles.edit_profile_labels_and_inputs}>
+                        <label htmlFor="email" className={styles.edit_profile_label_format}> Email: </label> 
                         <input 
                             id="email"
                             type="email"
@@ -511,24 +537,31 @@ function DashboardProfileEdit () {
                             }} 
                             required
                             aria-invalid={missingField === "email"}
-                            className={styles.input_format_edit_profile}
+                            className={styles.edit_profile_input_format}
                         />
                     </div>
                     {!changeRequest ? 
-                        <div className={styles.container_format_edit_profile}>
                             <button 
+                                type="button"
                                 onClick={() => setChangeRequest(true)}
-                                className={styles.save_profile_changes_button}    
+                                className={styles.edit_profile_save_changes_button}    
                             >
                                 Save Changes
                             </button>
-                        </div>
                     :
                         <div className={styles.password_container}>
-                            <div className={styles.container_format_edit_profile_custom}>
-                                <label htmlFor="password_request1" className={`${styles.h4_font} ${styles.label_format_edit_profile}`}> Provide password: </label>
+                            <div className={styles.edit_profile_labels_and_inputs}>
+                                <label htmlFor="password_request_1" className={styles.edit_profile_label_format}> Provide password: </label>
                                 <input 
-                                    id="password_request1"
+                                    value = {originalUserPublicDetails.username}
+                                    autoComplete="username"
+                                    aria-hidden="true"
+                                    className={styles.sr_content}
+                                    tabIndex={-1}
+                                    readOnly 
+                                />
+                                <input 
+                                    id="password_request_1"
                                     type= {showCurrentPasswordMP ? "text" : "password"} 
                                     value = {userPublicDetails.password}
                                     onChange= {(e) => {
@@ -537,43 +570,54 @@ function DashboardProfileEdit () {
                                     }}
                                     required
                                     aria-invalid={passErrorCodeMP === "missing_password" || passErrorCodeMP === "incorrect_password"}
-                                    className={styles.input_format_edit_profile}
+                                    autoComplete="current-password"
+                                    className={`${styles.edit_profile_input_format} ${styles.password_input_padding}`}
                                 />                                                      
                                 <button 
                                     type="button"
                                     onClick= {() => setShowCurrentPasswordMP(!showCurrentPasswordMP)}
-                                    aria-describedby="button_hint1"
+                                    aria-label="Show password"
                                     aria-pressed={showCurrentPasswordMP}
-                                    className={styles.show_hide_password_button_MP}
+                                    className={styles.show_hide_password_button_EP}
                                 >
                                     {showCurrentPasswordMP ? <LuEye/> : <LuEyeClosed/>}
                                 </button>  
-                                <span id="button_hint1" className={styles.sr_content}>
-                                    Clicking this button allows your screen reader to read the password you have inserted
-                                </span>  
                             </div>                          
                             <button 
-                                onClick= {updateUserPublicDetails}
-                                className={styles.confirm_profile_changes_button}
+                                type="submit"
+                                className={styles.edit_profile_confirm_changes_button}
                             >
                                 Confirm Changes
                             </button>      
                         </div>                             
                     }
-                </div>               
+                </form>
             </div>          
             <div className={styles.account_management_container}>
-                <div className={styles.subtitle_2_container}>
-                    <h3 className={`${styles.h3_font} ${styles.subtitle_2}`}>Account Management</h3>
-                    {errorMessageAM && <h4 role="alert" className={styles.account_error_message}>{errorMessageAM}</h4>}
-                    {successMessageAM && <h4 role="status" className={styles.account_success_message}>{successMessageAM}</h4>}
-                    {!errorMessageAM && !successMessageAM &&
-                        <h4 className={`${styles.h4_font} ${styles.subtitle_2_info}`}>Password Change</h4>
+                <div className={styles.account_management_titles_and_subtitles}>
+                    <h2 className={styles.account_management_title}>Account Management</h2>
+                    {errorMessageAM && <span role="alert" className={styles.account_management_error_message}>{errorMessageAM}</span>}
+                    {longErrorMessageAM && <span role="alert" className={styles.account_management_long_error_message}>{longErrorMessageAM}</span>}
+                    {successMessageAM && <span role="status" className={styles.account_management_success_message}>{successMessageAM}</span>}
+                    {!errorMessageAM && !longErrorMessageAM && !successMessageAM &&
+                        <span className={styles.account_management_subtitle}>Password Change</span>
                     }
                 </div>
-                <div className={styles.password_change_container}>
-                    <div className={styles.container_format_account_management}>
-                        <label htmlFor="current_password" className={`${styles.h4_font} ${styles.label_format_account_management}`}> Current password: </label>
+                <form 
+                    onSubmit={updateUserPrivateDetails}
+                    className={styles.password_change_container}
+                    noValidate
+                >
+                    <div className={styles.account_management_labels_and_inputs}>
+                        <label htmlFor="current_password" className={styles.account_management_label_format}> Current password: </label>
+                        <input 
+                            value = {originalUserPublicDetails.username}
+                            autoComplete="username"
+                            aria-hidden="true"
+                            className={styles.sr_content}
+                            tabIndex={-1}
+                            readOnly 
+                        />                        
                         <input 
                             id="current_password"
                             type= {showCurrentPasswordAM ? "text" : "password"}
@@ -584,23 +628,21 @@ function DashboardProfileEdit () {
                             }}
                             required
                             aria-invalid={passErrorCodeAM === "missing_current_pass" || passErrorCodeAM === "incorrect_current_pass"}
-                            className={styles.input_format_account_management}
+                            autoComplete="current-password"
+                            className={`${styles.account_management_input_format} ${styles.password_input_padding}`}
                         />
                         <button 
                             type="button"
                             onClick= {() => setShowCurrentPasswordAM(!showCurrentPasswordAM)}
-                            aria-describedby="button_hint2"
+                            aria-label="Show current password"
                             aria-pressed={showCurrentPasswordAM}
                             className={styles.show_hide_password_button_AM}
                         >
                             {showCurrentPasswordAM ? <LuEye/> : <LuEyeClosed/>}                              
                         </button>  
-                        <span id="button_hint2" className={styles.sr_content}>
-                            Clicking this button allows your screen reader to read the password you have inserted
-                        </span>
                     </div>
-                    <div className={styles.container_format_account_management}>
-                        <label htmlFor="new_password" className={`${styles.h4_font} ${styles.label_format_account_management}`}> New password: </label>
+                    <div className={styles.account_management_labels_and_inputs}>
+                        <label htmlFor="new_password" className={styles.account_management_label_format}> New password: </label>
                         <input 
                             id="new_password"
                             type= {showNewPassword ? "text" : "password"}
@@ -616,23 +658,21 @@ function DashboardProfileEdit () {
                                 passErrorCodeAM === "no_match_passwords"    ||
                                 passErrorCodeAM === "new_pass_same_old_pass"
                             }
-                            className={styles.input_format_account_management}
+                            autoComplete="new-password"
+                            className={`${styles.account_management_input_format} ${styles.password_input_padding}`}
                         />
                         <button 
                             type="button"
                             onClick= {() => setShowNewPassword(!showNewPassword)}
-                            aria-describedby="button_hint3"
+                            aria-label="Show new password"
                             aria-pressed={showNewPassword}
                             className={styles.show_hide_password_button_AM}
                         >
                             {showNewPassword ? <LuEye/> : <LuEyeClosed/>}                                                               
                         </button>
-                        <span id="button_hint3" className={styles.sr_content}>
-                            Clicking this button allows your screen reader to read the password you have inserted
-                        </span>
                     </div>
-                    <div className={styles.container_format_account_management}>
-                        <label htmlFor="password_confirmation" className={`${styles.h4_font} ${styles.label_format_account_management}`}> Confirm new password: </label>
+                    <div className={styles.account_management_labels_and_inputs}>
+                        <label htmlFor="password_confirmation" className={styles.account_management_label_format}> Confirm new password: </label>
                         <input 
                             id="password_confirmation"
                             type= {showConfirmPassword ? "text" : "password"}
@@ -643,47 +683,61 @@ function DashboardProfileEdit () {
                             }}
                             required
                             aria-invalid={passErrorCodeAM === "no_match_passwords"}
-                            className={styles.input_format_account_management}
+                            autoComplete="new-password"
+                            className={`${styles.account_management_input_format} ${styles.password_input_padding}`}
                         />
                         <button 
                             type="button"
                             onClick= {() => setShowConfirmPassword(!showConfirmPassword)}
-                            aria-describedby="button_hint4"
+                            aria-label="Show confirm new password"
                             aria-pressed={showConfirmPassword}
                             className={styles.show_hide_password_button_AM}
                         >
                             {showConfirmPassword ? <LuEye/> : <LuEyeClosed/>}                                                                    
                         </button> 
-                        <span id="button_hint4" className={styles.sr_content}>
-                            Clicking this button allows your screen reader to read the password you have inserted
-                        </span>
                     </div>
                     <button 
-                        onClick= {updateUserPrivateDetails}
+                        type="submit"
                         className={styles.change_password_confirm_button}
                     >
                         Change Password
                     </button>
-                </div>
+                </form>                       
             </div>
-            <div className={styles.delete_account_container}>
+            <form 
+                onSubmit={deleteAccount}
+                className={styles.delete_account_container}
+                noValidate
+            >
                 {errorMessageDA ? 
-                    <h3 role="alert" className={styles.delete_account_error_message}>{errorMessageDA}</h3>
+                    <span role="alert" className={styles.delete_account_error_message}>{errorMessageDA}</span>
                 :
-                    <h4 className={`${styles.h4_font} ${styles.delete_account_title}`}>Delete Account</h4>
+                    <h2 className={styles.delete_account_title}>Delete Account</h2>
                 }
                 {!accountDeleteRequest ? 
                     <button 
+                        type="button"
                         onClick={() => setAccountDeleteRequest(true)}
                         className={styles.delete_account_request_button}    
                     >
                         Delete Account
                     </button>
                 :
-                    <div className={styles.container_format_account_deletion}>
-                        <label htmlFor="password_request2" className={`${styles.h4_font} ${styles.label_format_account_deletion}`}> Provide Password: </label>
+                    <div 
+                        className={styles.delete_account_labels_and_inputs}
+                        style={{display: accountDeleteRequest && accountDeleted ? "none" : "flex" }}
+                    >
+                        <label htmlFor="password_request_2" className={styles.delete_account_label_format}> Provide Password: </label>
+                        <input 
+                            value = {originalUserPublicDetails.username}
+                            autoComplete="username"
+                            aria-hidden="true"
+                            className={styles.sr_content}
+                            tabIndex={-1}
+                            readOnly 
+                        />                        
                         <input
-                            id="password_request2" 
+                            id="password_request_2" 
                             type= {showCurrentPasswordDA ? "text" : "password"} 
                             value={userAccountDeleteDetails.password}
                             onChange= {(e) => {
@@ -693,34 +747,33 @@ function DashboardProfileEdit () {
                             }}
                             required
                             aria-invalid={passErrorCodeDA === "missing_password" || passErrorCodeDA === "incorrect_password"}
-                            className={styles.input_format_account_deletion}
+                            autoComplete="current-password"
+                            className={`${styles.delete_account_input_format} ${styles.password_input_padding}`}
                         />
                         <button 
                             type="button"
                             onClick= {() => setShowCurrentPasswordDA(!showCurrentPasswordDA)}
-                            aria-describedby="button_hint5"
+                            aria-label="Show provide password"
                             aria-pressed={showCurrentPasswordDA}
                             className={styles.show_hide_password_button_DA}
                         >
                             {showCurrentPasswordDA ? <LuEye/> : <LuEyeClosed/>}                                                                  
                         </button>   
-                        <span id="button_hint5" className={styles.sr_content}>
-                            Clicking this button allows your screen reader to read the password you have inserted
-                        </span>
                     </div>
                 }                                 
                 <div className={styles.account_deleted_container}>
                     {!accountDeleted && accountDeleteRequest &&
-                        <button onClick= {deleteAccount} className={styles.delete_account_confirm_button}> Confirm Account Deletion</button>
-                    }                          
+                        <button type="submit" className={styles.delete_account_confirm_button}> Confirm Account Deletion</button>
+                    }     
                     {accountDeleted && accountDeleteRequest &&
-                        <div role="alert" className={styles.account_deleted_feedback}>
-                            <h3 className={styles.account_deleted_message}> Your account is being deleted, please wait.</h3>
-                            <h3 className={styles.account_deleted_message}> Thank you for using our services!</h3>
-                        </div>
-                    }                                                     
+                        <div role="alert">
+                            <span className={styles.account_deleted_message}> Your account is being deleted, please wait.</span>
+                            <span className={styles.account_deleted_message}> Thank you for using our services!</span>
+                        </div>    
+                    }
+                    <br></br>                                  
                 </div>
-            </div>
+            </form>
         </div>
     )   
 }
