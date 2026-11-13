@@ -486,15 +486,15 @@ function DashboardPropertyAdd () {
                         </div>
                         <div className={styles.labels_and_inputs_container}>
                             <label 
-                                htmlFor="property_type"
+                                id="property_type"
                                 className={styles.label_format}
                             > 
                                 Property Type: 
                             </label>
                             <div className={styles.ul_container}>
                                 <ul
-                                    id="property_type"
                                     onClick ={() => showDropdown(setPropertyTypeDropdown)}
+                                    aria-labelledby="property_type"                                    
                                     aria-invalid={missingField === "type"}                            
                                     className={styles.ul_container_closed}
                                 >
@@ -650,16 +650,16 @@ function DashboardPropertyAdd () {
                         </div>
                         <div className={styles.labels_and_inputs_container}>
                             <label 
-                                htmlFor="furniture"
+                                id="furniture"
                                 className={styles.label_format}
                             > 
                                 Furniture: 
                             </label>                             
                             <div className={styles.ul_container}>
                                 <ul
-                                    id="furniture"
                                     onClick={() => showDropdown(setFurnitureDropdown)}
                                     aria-invalid={missingField === "furniture"}
+                                    aria-labelledby="furniture"
                                     className={styles.ul_container_closed}
                                 >
                                     <li

@@ -119,7 +119,7 @@
     position: relative;
     z-index: 3;
 
-    padding: 0.4% 0 0.4% 1%;
+    padding: 0.3% 0 0.3% 1%;
 }
 
 .input_format_custom[aria-expanded="true"] {
@@ -177,12 +177,11 @@
 }
 
 .ul_container {
-    width: 30%;
+    width: 35%;
 
     display: flex;
     align-items: flex-start;
     
-    margin-left: auto;
     position: relative;
 }
 
@@ -284,12 +283,12 @@
     border: solid 2px #125370; 
     border-radius: 7px;
 
-    width: 70%;
+    width: 35%;
 
     position: relative;
     z-index: 3;
 
-    padding: 0.4% 0 0.4% 1%;
+    padding: 0.2% 0 0.2% 1%;
 }
 
 .ul_container_open_custom {
@@ -720,12 +719,10 @@
         margin-top: -2px;
     }
 
-    .ul_container {
-        margin-left: 0;
-    }
     .ul_container_open {
         min-height: 70px;
     }
+
     .ul_container_open_custom  {
         min-height: 60px;
     }
@@ -797,11 +794,7 @@
         width: 32.5%;
     }
 
-    .ul_container {
-        width: 35%;
-    }
-
-    .input_and_auto_complete_container, .input_format, .textarea_container {
+    .input_and_auto_complete_container, .textarea_container {
         width: 67.5%;
     }
 
