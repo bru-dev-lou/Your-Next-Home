@@ -29,7 +29,7 @@ type PropertyPhotos = {
 };
 
 const propertyTypes = ["Apartment", "Terraced", "Semi-Detached", "Detached", "Bungalow"];
-const furnitureTypes =["Furnished", "Semi-Furnished", "Unfurnished"]; 
+const furnitureTypes = ["Furnished", "Semi-Furnished", "Unfurnished"]; 
 
 
 function DashboardPropertyAdd () {
@@ -83,6 +83,8 @@ function DashboardPropertyAdd () {
 
     const errorTimeoutRef = useRef<ReturnType<typeof setTimeout> | null> (null);
 
+    //  Setting aria-expanded with the variable below to style input based on the ul being open or not
+    
     const autoCompleteOpen = autoCompleteQueries.length > 0 || Boolean(errorMessageAC);
     
     useEffect(() => {
