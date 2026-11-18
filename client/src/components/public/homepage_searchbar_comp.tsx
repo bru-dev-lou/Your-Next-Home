@@ -1,12 +1,15 @@
 import { useState, useRef, useEffect } from 'react'; 
 import { useNavigate } from 'react-router-dom';
-import styles from "../public/homepage_searchbar_comp.module.css";
 
+import styles from "../public/homepage_searchbar_comp.module.css";
+import { MdArrowDropDown } from "react-icons/md";
 
 
 const budgetValues = Array.from({length : 16}, (_, i) => (i + 5) * 100);
 
 function HomePageSearchBar() {
+    const navigate = useNavigate();
+
     const [ autoCompleteQuery, setAutoCompleteQuery ] = useState("");
     const [ autoCompleteQueryClicked, setAutoCompleteQueryClicked ] = useState(true); 
 
@@ -14,8 +17,6 @@ function HomePageSearchBar() {
     const [ maxPrice, setMaxPrice ] = useState(99999);
     const [ maxPriceLabel, setMaxPriceLabel ] = useState("No Maximum");
     const [ budgetDropdown, setBudgetDropdown ] = useState<boolean>(false); 
-    
-    const navigate = useNavigate();
 
     // Error Message → AC = Auto Complete 
 
@@ -89,7 +90,7 @@ function HomePageSearchBar() {
 
     const setBudget = (e : React.MouseEvent<HTMLLIElement>) => {
         setMaxPrice(Number(e.currentTarget.dataset.value)); 
-        setMaxPriceLabel(e.currentTarget.textContent || "No Maximum");
+        setMaxPriceLabel(e.currentTarget.innerText || "No Maximum");
     }
 
     const propertySearch = (e:React.SubmitEvent<HTMLFormElement>) => {
@@ -111,121 +112,137 @@ function HomePageSearchBar() {
         navigate(`/search?city=${autoCompleteQuery}&maxPrice=${maxPrice}`);
     };
 
+    const autoCompleteOpen = citySuggestions.length > 0 || Boolean(errorMessageAC); 
+
     return (
         <div className={styles.search_box_container}>
             {locationErrorMessage ? 
-            <h2 
-                role="alert"
-                className={styles.h2_font}
-            >
-                {locationErrorMessage}
-            </h2>
+                <span 
+                    role="alert"
+                    className={styles.slogan_and_error_message}
+                >
+                    {locationErrorMessage}
+                </span>
             :
-            <h2 className={styles.h2_font}>Your journey starts here!</h2>
+                <span className={styles.slogan_and_error_message}>Your journey starts here!</span>
             }
-            <form className={styles.form_container} onSubmit={propertySearch}>
-                    <div className={styles.location_container}>
-                        <label htmlFor="location_selection" className={styles.label}> Location: </label>
-                        <div className={styles.location_wrapper}>
-                            <input
-                                id="location_selection"
-                                type="text"
-                                value={autoCompleteQuery}
-                                onChange={(e) => {
-                                    const validCity = e.target.value.replace(/[^a-zA-Z- ]/g, "");
-                                    setAutoCompleteQuery(validCity);
-                                    setAutoCompleteQueryClicked(false); 
-                                }}
-                                placeholder = " e.g. London"
-                                aria-describedby="location_hint"
-                                className= {styles.location_input}
-                            />
-                            <span id="location_hint" className={styles.sr_content}>Insert a city name to see properties for rent in that area.</span>
-                            <ul 
-                                aria-live="polite" 
-                                aria-label="City autocomplete suggestions."
-                                className={styles.autocomplete_container}
-                                style={ {display: citySuggestions.length === 0 ? "none" : "flex" } }
-                            >
-                                {citySuggestions.map((city, index) => (
-                                    <li 
-                                        key={index}
-                                        onClick = {() => {
-                                            setAutoCompleteQuery(city.city);
-                                            setCitySuggestions([]);
-                                            setAutoCompleteQueryClicked(true);
-                                        }}
-                                        tabIndex={0}
-                                        onKeyDown= { (e) => { if (e.key === "Enter") {
-                                            setAutoCompleteQuery(city.city);
-                                            setCitySuggestions([]);
-                                            setAutoCompleteQueryClicked(true);
-                                        }}}
-                                        aria-label={`Select ${city.city}`}
-                                        className={styles.autocomplete_item}
-                                    >   
-                                        {city.city}
-                                    </li>
-                                ))}
-                                {errorMessageAC && 
-                                    <li role="alert" className={`${styles.ac_error_message} ${styles.autocomplete_item}`}>
-                                        {errorMessageAC}
-                                    </li>
-                                }
-                            </ul>
-                        </div>
+            <form className={styles.main_container} onSubmit={propertySearch}>
+                <div className={styles.location_container}>
+                    <label htmlFor="location_selection" className={styles.label_format}> Location: </label>
+                    <div className={styles.input_and_autocomplete_container}>
+                        <input
+                            id="location_selection"
+                            type="text"
+                            maxLength={50}
+                            value={autoCompleteQuery}
+                            onChange={(e) => {
+                                const validCity = e.target.value.replace(/[^a-zA-Z- ]/g, "");
+                                setAutoCompleteQuery(validCity);
+                                setAutoCompleteQueryClicked(false); 
+                            }}
+                            placeholder = "e.g. London"
+                            aria-describedby="location_hint"
+                            aria-expanded={autoCompleteOpen}                            
+                            className= {styles.location_input}
+                        />
+                        <span id="location_hint" className={styles.sr_content}>Insert a city name to see properties for rent in that area.</span>
+                        <ul 
+                            aria-live="polite" 
+                            aria-label="City autocomplete suggestions."
+                            className={styles.autocomplete_container}
+                        >
+                            {citySuggestions.map((city, index) => (
+                                <li 
+                                    key={index}
+                                    onClick = {() => {
+                                        setAutoCompleteQuery(city.city);
+                                        setCitySuggestions([]);
+                                        setAutoCompleteQueryClicked(true);
+                                    }}
+                                    tabIndex={0}
+                                    onKeyDown= { (e) => { if (e.key === "Enter") {
+                                        setAutoCompleteQuery(city.city);
+                                        setCitySuggestions([]);
+                                        setAutoCompleteQueryClicked(true);
+                                    }}}
+                                    aria-label={`Select ${city.city}`}
+                                    className={styles.autocomplete_item}
+                                >   
+                                    {city.city}
+                                </li>
+                            ))}
+                            {errorMessageAC && 
+                                <li role="alert" className={styles.ac_error_message}>
+                                    {errorMessageAC}
+                                </li>
+                            }
+                        </ul>
                     </div>
-                    {!budgetDropdown ?
-                        <div className={styles.budget_container}> 
-                            <label id="max_price" className={styles.label}> Budget: </label>
-                            <ul 
-                                onClick = {showBudget}
-                                className={styles.budget_container_closed}
+                </div>
+                <div className={styles.budget_container}> 
+                    <label id="max_price" className={styles.label_format}> Budget: </label>
+                    <div className={styles.ul_container}>
+                        <ul 
+                            onClick = {showBudget}
+                            aria-labelledby="max_price"
+                            className={styles.budget_container_closed}
+                        >
+                            <li 
+                                data-value= {maxPrice} 
+                                className={styles.budget_item_closed}
+                            >
+                                {maxPriceLabel !== "No Maximum" && maxPriceLabel !== "No Max" ?
+                                    maxPriceLabel
+                                :
+                                    <>
+                                    <span className={styles.budget_item_wide_viewport}>No Maximum</span>  
+                                    <span className={styles.budget_item_short_viewport}>No Max</span>                                
+                                    </>
+                                }
+                                <MdArrowDropDown className={styles.react_icon_down_arrow}/>
+                            </li>
+                        </ul>  
+                        {budgetDropdown &&                    
+                            <ul
+                                onClick = {showBudget} 
+                                className={styles.budget_container_open}
                                 aria-labelledby="max_price"
                             >
-                                <li 
-                                    data-value= {maxPrice} 
-                                    className={styles.budget_item_closed}
-                                >
-                                    {maxPriceLabel}
+                                <li data-value= {maxPrice} className={styles.budget_item_open}>
+                                    {maxPriceLabel !== "No Maximum" && maxPriceLabel !== "No Max" ?
+                                        maxPriceLabel
+                                    :
+                                        <>
+                                        <span className={styles.budget_item_wide_viewport}>No Maximum</span>  
+                                        <span className={styles.budget_item_short_viewport}>No Max</span>                                
+                                        </>
+                                    }                                    
                                 </li>
-                            </ul>  
-                            <button type="submit" className={styles.search_button}> Search </button>
-                        </div>
-                    :                        
-                        <div className={styles.budget_container}>
-                            <label id="max_price" className={styles.label}> Budget: </label>
-                            <div className={styles.open_container_wrapper}>
-                                <ul
-                                    onClick = {showBudget} 
-                                    className={styles.budget_container_open}
-                                    aria-labelledby="max_price"
-                                >
-                                    <li data-value= {maxPrice} className={styles.budget_item}>{maxPriceLabel}</li>
-                                    {maxPriceLabel !== "No Maximum" && 
-                                        <li 
-                                            data-value={99999} 
-                                            onClick={setBudget} 
-                                            className={styles.budget_item}
-                                        > 
-                                            No Maximum 
-                                        </li>
-                                    }
-                                    {budgetValues.map(value => (
+                                {maxPriceLabel !== "No Maximum" && maxPriceLabel !== "No Max" &&
                                     <li 
-                                        key={value} 
-                                        data-value={value} 
-                                        onClick={setBudget}
-                                        className={styles.budget_item}
+                                        data-value={99999} 
+                                        onClick={setBudget} 
+                                        className={styles.budget_item_open}
                                     > 
-                                        £{value.toLocaleString()} PCM
+                                        <span className={styles.budget_item_wide_viewport}>No Maximum</span>  
+                                        <span className={styles.budget_item_short_viewport}>No Max</span>
                                     </li>
-                                    ))}
-                                </ul>                              
-                            </div>
-                            <button type="submit" className={styles.search_button}> Search </button>                                    
-                        </div>        
-                    }
+                                }
+                                {budgetValues.map(value => (
+                                <li 
+                                    key={value} 
+                                    data-value={value} 
+                                    onClick={setBudget}
+                                    className={styles.budget_item_open}
+                                > 
+                                    £{value.toLocaleString()} PCM
+                                </li>
+                                ))}
+                            </ul>   
+                        }                           
+                    </div>
+                    <button type="submit" className={styles.search_button}> Search </button>                                                            
+                </div>                        
             </form>
         </div>
     );
