@@ -254,6 +254,8 @@
 
 @media(max-width: 1601px) and (min-height: 851px) {
     .search_box_container {
+        background-color: rgb(18, 83, 112, 90%);
+
         position: absolute; 
         margin: 12% 0 0 0;
     }
@@ -282,6 +284,8 @@
 
 @media(max-width: 1401px) {
     .search_box_container {
+        background-color: rgb(18, 83, 112, 90%);
+
         border-radius: 15px;
         
         width: 50%;
