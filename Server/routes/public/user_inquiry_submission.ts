@@ -6,13 +6,13 @@ const router = express.Router();
 router.post("/", (req, res) => {
     const { name, email, messageTopic, message } = req.body;
     let { propID } = req.body;
-    
+
     // Empty field check 
 
     const fieldCheck = [
         {name: "name", field: name, error: "Please include your name."},
         {name: "email", field: email, error: "Please include your email so we can get back to you."},
-        {name: "topic", field: messageTopic, error: "Please include a message topic."},
+        {name: "topic", field: messageTopic, error: "Please add a message topic."},
         {name: "message", field: message, error: "Please include a message describing your inquiry."}
     ]
 
@@ -28,36 +28,31 @@ router.post("/", (req, res) => {
     const nameIsValidFormat = /^[\p{L}\s'-]+$/u.test(name);
 
     if (name.length < 5 || name.length > 25 ) {
-        return res.status(400).json({error: "Please include a name between 5 and 25 characters long."})
+        return res.status(400).json({error: "Name must be between 5 and 25 characters long."})
     }
 
     if (!nameHasLetters || !nameIsValidFormat) {
-        return res.status(400).json({error: "Please include a name with no numbers."})
+        return res.status(400).json({error: "Name must only have letters."})
     }
 
     // Email validation 
 
     const isValidEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 
+    if (email.length > 50) {
+        return res.status(400).json({ error: "Email must be less than 50 characters."})
+    }
+
     if (!isValidEmail) {
         return res.status(400).json({ error: "Please include a valid email address."})
-    }
-
-    if (email.length > 50) {
-        return res.status(400).json({ error: "Email should be less than 50 characters."})
-    }
-
-/*  
-    For the next two if statements, do not change the error messages. 
-    Changing these will affect aria-invalid for the relevant fields in the frontend. 
-*/        
+    } 
 
     if (messageTopic.split(/\s+/).filter(Boolean).length < 5 || messageTopic.split(/\s+/).filter(Boolean).length > 25 ) {
-        return res.status(400).json({ error: "Topic should be between 5 and 25 words long." });
+        return res.status(400).json({ error: "Topic must be between 5 and 25 words long." });
     }
 
     if (message.split(/\s+/).filter(Boolean).length < 25 || message.split(/\s+/).filter(Boolean).length > 250) {
-        return res.status(400).json({ error: "Message should be between 25 and 250 words long." });
+        return res.status(400).json({ error: "Message must be between 25 and 250 words long." });
     }
 
     //  PROPID validation and fallback value 
