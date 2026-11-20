@@ -17,8 +17,6 @@ router.post("/", async (req, res) => {
     const username = req.body.username?.trim();
     const password = req.body.password?.trim();
 
-    
-
     if (!username || !password) {
         const missing = [];
         if (!username) missing.push("username");
@@ -36,6 +34,8 @@ router.post("/", async (req, res) => {
 
         const match = await bcrypt.compare(password, user.password_hash);
 
+        // JSX aria-invalid relies on "credentials" value - change it if the error message is changed. 
+        
         if (!match) {
             return res.status(401).json({ error: "Invalid credentials, please try again." });
         }
