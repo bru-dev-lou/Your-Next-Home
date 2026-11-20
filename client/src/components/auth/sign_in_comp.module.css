@@ -1,40 +1,33 @@
 .main_container {
+    background-color: #125370;
+    border: solid 2px #002461;
+    border-radius: 50px;
+    
     width: 42%;
     
     display: flex;
+    flex-direction: column;
+    row-gap: 1.2vw;
     align-self: center;
 
     position: absolute;
     left: 5%;
 
     z-index: 2;
-}
-
-.sign_in_container {
-    background-color: #125370;
-    border: solid 2px #002461;
-    border-radius: 50px;
-
-    width: 100%;
-
-    display: flex;
-    flex-direction: column;
-    row-gap: 15px;
-
-    padding: 3% 0 3% 0;
+    padding: 1% 0 1.5% 0;
 }
 
 .main_title {
     color: #F2EFE2;
     font-family: "Source Sans 3", sans-serif;
-    font-size: clamp(18px, 1.7vw, 100px);
-    font-weight: 390;
+    font-size: clamp(18px, 1.75vw, 100px);
+    font-weight: 350;
     text-shadow: 1px 1px 2px rgba(0,0,0,0.8);    
     text-align: center;
     margin: 0; 
 }
 
-.username_password_container {
+.container_format {
     width: 85%;
 
     display: flex; 
@@ -42,7 +35,7 @@
     margin: 1% 0 0 7.5%;
 }
 
-.username_password_label {
+.label_format {
     color: #F2EFE2;
     font-family: "Source Sans 3", sans-serif;
     font-size: clamp(16px, 1.4vw, 100px);
@@ -53,21 +46,31 @@
     width: 30%;
 }
 
-.username_password_input {
+.input_format {
     color: black;
     font-family: "Source Sans 3", sans-serif;
     font-size: clamp(14px, 1.1vw, 100px);
     background-color: #F5F2EB;
     border-radius: 7px;
 
-    width: 65%;
+    width: 70%;
 
     padding-left: 1.5%;
 }
 
+.results_container {
+    height: 4.5vw;
+    width: 100%;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
 .submit_container {
     width: 100%;
-        
+
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -95,13 +98,13 @@
 .button_format {
     color: #125370;
     font-family: "Source Sans 3", sans-serif;
-    font-size: clamp(16px, 1.3vw, 100px);
-    font-weight: 450;
+    font-size: clamp(16px, 1.4vw, 100px);
+    font-weight: 400;
     text-shadow: 1px 1px 2px rgba(0,0,0,0.5);  
 
     background-color: #BFBFBF;
     border: 2px solid #747474;
-    border-radius: 5px;  
+    border-radius: 7px;  
     
     width: 25%;
 
@@ -111,7 +114,7 @@
 }
 
 .error_message {
-    color: #F2EFE2;
+    color: #f8adad;
     font-family: "Source Sans 3", sans-serif;
     font-size: clamp(16px, 1.4vw, 100px);
     font-weight: 390;
@@ -119,72 +122,74 @@
     text-shadow: 1px 1px 2px rgba(0,0,0,0.8);    
     text-decoration: none;
     text-align: center;
-
-    margin: 1% 0 1% 0;
 }
 
-@media (max-width: 1201px) and (max-height: 1081px) {
+
+@media
+(max-width: 1601px) and (min-height: 900px), 
+(min-height: 1100px), 
+(max-width: 1401px) {
     .main_container {
-        width: 60%;
-        left: 20%;    
-        transform: translateY(45%);
+        background-color: rgb(18, 83, 112, 90%);
+        border-radius: 30px;
+
+        left:auto;
+        margin-top: 15%;
+    }
+}
+
+
+@media(max-width: 1001px) {
+    .main_container {
+        width: 55%;
+        border-radius: 20px;
+        padding: 2% 0 2% 0;
     }
     
-    .sign_in_container{
-        border-radius: 30px;
+    .results_container {
+        min-height: 60px; 
     }
 
-    .main_title {
-        font-size: clamp(18px, 3vw, 28px);
-    }
-
-    .username_password_label, .button_format, .error_message {
-        font-size: clamp(16px, 2vw, 24px);
-        
-    }
-
-    .username_password_input, .register_message {
-        font-size: clamp(14px, 1.6vw, 100px);
-    }
 }
 
-@media (max-width: 901px) and (max-height: 1081px) {
+@media(max-width: 751px) {
     .main_container {
-        width: 80%;
-        left: 10%;
-        transform: none;
-        align-self: flex-end;
-    }
-
-    .username_password_label, .button_format, .error_message {
-        font-size: clamp(16px, 2.5vw, 100px);
-    }
-
-    .username_password_input, .register_message {
-        font-size: clamp(14px, 2.2vw, 100px);
+        width: 75%;
+        row-gap: 1.75vw;
     }
 }
 
-@media (max-width: 601px) and (max-height: 1081px) {
+@media(max-width: 601px) {
     .main_container {
         width: 90%;
-        left: 5%;
-        align-self: center;
-        transform: translateY(55%);
-    }
-
-    .sign_in_container {
-        border-radius: 25px;
+        margin-top: 25%;    
     }
 }
 
-@media (max-width: 401px) and (max-height: 1081px) {
+@media(max-width: 501px) {
     .main_container {
-        width: 100%;
-        left: 0;
-    }
-
-    .sign_in_container {
+        padding: 3% 0 3% 0;
         border-radius: 15px;
     }
+
+    .container_format {
+        width: 90%;
+        margin-left: 5%;
+        margin-top: 2%;
+    }
 }
+
+@media(max-width: 401px) {
+    .label_format {
+        width: 35%;
+    }
+
+    .input_format {
+        width: 65%;
+    }
+
+    .button_format {
+        width: 30%;
+    }
+}
+
