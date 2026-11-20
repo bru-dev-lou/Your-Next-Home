@@ -7,8 +7,11 @@ function SignInPage () {
 
     return (
         <div className={styles.main_container}>
+            <h1 className={styles.sr_content}>
+                Sign in page
+            </h1>
             <SignIn />
-            <img src={sign_in_photo} className={styles.sign_in_photo}/>
+            <img src={sign_in_photo} alt="" className={styles.sign_in_photo}/>
         </div>
     )
 }
