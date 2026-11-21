@@ -32,7 +32,10 @@
 }
 
 
-@media(max-width: 1601px) and (min-height: 851px) {
+@media
+(max-width: 1701px) and (min-height: 901px),
+(min-height: 1100px),
+(max-width: 1401px) {
     .main_page_container {
         justify-content: center;
     }
@@ -42,15 +45,6 @@
     }
 }
 
-@media(max-width: 1401px) {
-    .main_page_container {
-        justify-content: center;
-    }
-
-    .home_page_photo {
-        width: 100%;
-    }
-}
 
 @media(max-width: 1001px) {
     .home_page_photo {
