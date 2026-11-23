@@ -7,6 +7,9 @@ function SignUpPage () {
 
     return (
         <div className={styles.main_container}>
+            <h1 className={styles.sr_content}>
+                Registration page
+            </h1>
             <SignUp />
             <img src={register_account_photo} className={styles.main_photo} alt=""/>
         </div>
