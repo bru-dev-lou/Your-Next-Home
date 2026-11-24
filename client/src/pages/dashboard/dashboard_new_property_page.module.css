@@ -1,8 +1,8 @@
 .main_container {
-    width: 94%;
+    width: 97%;
 
     display: flex; 
     flex: 1;
 
-    margin-left: 3%;
+    margin-left: 1.5%;
 }
