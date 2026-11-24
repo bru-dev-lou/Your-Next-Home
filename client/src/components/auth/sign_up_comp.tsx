@@ -77,8 +77,8 @@ function SignUp () {
             return;
         }         
 
-        if (cleanData.name.length < 5 || cleanData.name.length > 40) {
-            setErrorMessage("Name must be between 5 and 40 characters");
+        if (cleanData.name.length < 5 || cleanData.name.length > 20) {
+            setErrorMessage("Name must be between 5 and 20 characters");
             setErrorField("name");
             return;
         }

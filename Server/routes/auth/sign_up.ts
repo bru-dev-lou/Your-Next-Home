@@ -46,8 +46,8 @@ router.post("/", async (req, res) => {
         return res.status(400).json({validationError: "Name must include no special characters", name: "name"})
     }
 
-    if (name.length < 5 || name.length > 40) {
-        return res.status(400).json({ validationError: "Name must be between 5 and 40 characters", name: "name"})
+    if (name.length < 5 || name.length > 20) {
+        return res.status(400).json({ validationError: "Name must be between 5 and 20 characters", name: "name"})
     }
 
     // Address validation 
