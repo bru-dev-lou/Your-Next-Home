@@ -58,8 +58,8 @@ router.route("/")
         return res.status(400).json({ error: "Please include a name at least 5 characters long." })
     }
 
-    if (name.length > 39) {
-        return res.status(400).json({ error: "Please include a name shorter than 40 characters"});
+    if (name.length > 20) {
+        return res.status(400).json({ error: "Please include a name shorter than 20 characters"});
     }
 
     const nameHasLetters = /\p{L}/u.test(name);

@@ -37,11 +37,11 @@ function DashboardProfileEdit () {
     const [ userPrivateDetails, setUserPrivateDetails ] = useState<UserPrivateData>({password: "", newPassword: "", passwordConfirmation: ""});
     const [ userAccountDeleteDetails, setUserAccountDeleteDetails ] = useState<UserAccountDeleteData>({password: ""});
     
-    // Error Messages - MP = My Profile / AM = Account Management / DA = Delete Account 
+    // Error Messages - EP = Edit Profile / AM = Account Management / DA = Delete Account 
 
     const [ errorGeneralMessage, setErrorGeneralMessage ] = useState("");
     const [ errorMessageServer, setErrorMessageServer ] = useState("");
-    const [ errorMessageMP, setErrorMessageMP ] = useState(""); 
+    const [ errorMessageEP, setErrorMessageEP ] = useState(""); 
     const [ successMessageMP, setSuccessMessageMP ] = useState("");
     const [ errorMessageAM, setErrorMessageAM ] = useState(""); 
     const [ longErrorMessageAM, setLongErrorMessageAM ] = useState("");
@@ -50,7 +50,7 @@ function DashboardProfileEdit () {
 
     // Show / Hide password button states.
 
-    const [ showCurrentPasswordMP, setShowCurrentPasswordMP ] = useState(false);
+    const [ showCurrentPasswordEP, setShowCurrentPasswordEP ] = useState(false);
     const [ showCurrentPasswordAM, setShowCurrentPasswordAM ] = useState(false);
     const [ showCurrentPasswordDA, setShowCurrentPasswordDA ] = useState(false);
     const [ showNewPassword, setShowNewPassword ] = useState(false);
@@ -69,10 +69,12 @@ function DashboardProfileEdit () {
     // States for WAI ARIA invalid triggers - MP = My Profile / AM = Account Management / DA = Delete Account 
 
     const [ missingField, setMissingField ] = useState("");
-    const [ passErrorCodeMP, setPassErrorCodeMP ] = useState(""); 
+    const [ passErrorCodeEP, setPassErrorCodeEP ] = useState(""); 
     const [ passErrorCodeAM, setPassErrorCodeAM] = useState(""); 
     const [ passErrorCodeDA, setPassErrorCodeDA ] = useState(""); 
     
+
+    // User data fetch 
 
     useEffect(() => {
         const fetchData = async () => {
@@ -106,9 +108,31 @@ function DashboardProfileEdit () {
 
     }, []);
 
+    // UI reset for Edit Profile page section 
+
+    const publicDetailsUIreset = () => {
+        setErrorMessageEP(""); 
+        setSuccessMessageMP("");
+        setMissingField("");
+        setChangeRequest(false);
+    }    
+
+    const publicDetaisUIresetForPassword = () => {
+        setErrorMessageEP(""); 
+        setSuccessMessageMP("");
+        setMissingField("");
+    }
+
+    const passwordAndChangeRequestReset = () => {
+        setChangeRequest(false);
+        setOriginalUserPublicDetails({...userPublicDetails, password: ""});
+        setUserPublicDetails({...userPublicDetails, password: ""});
+    }
+
     async function updateUserPublicDetails (e:React.SubmitEvent<HTMLFormElement>) {
         e.preventDefault();
         publicDetaisUIresetForPassword()
+        
         
         //  Empty field checks
 
@@ -121,9 +145,9 @@ function DashboardProfileEdit () {
 
         for (const {field, error, name} of fieldCheck) {
             if (!field) {
-                setErrorMessageMP(error);
+                setErrorMessageEP(error);
                 setMissingField(name);
-                setChangeRequest(false);
+                passwordAndChangeRequestReset();
                 return;
             }
         }
@@ -131,14 +155,14 @@ function DashboardProfileEdit () {
         // Name validation 
 
         if (userPublicDetails.name.length < 5) {
-            setErrorMessageMP("Please include a name at least 5 characters long.");
-            setChangeRequest(false);
+            setErrorMessageEP("Please include a name at least 5 characters long.");
+            passwordAndChangeRequestReset();
             return;
         }
 
-        if (userPublicDetails.name.length > 39) {
-            setErrorMessageMP("Please include a name shorter than 40 characters.");
-            setChangeRequest(false);
+        if (userPublicDetails.name.length > 20) {
+            setErrorMessageEP("Please include a name shorter than 20 characters.");
+            passwordAndChangeRequestReset();
             return;
         }
 
@@ -146,73 +170,73 @@ function DashboardProfileEdit () {
         const nameIsValidFormat = /^[\p{L}\s'-]+$/u.test(userPublicDetails.name);
 
         if (!nameHasLetters || !nameIsValidFormat) {
-            setErrorMessageMP("Please include a name with no special characters.");
-            setChangeRequest(false);
+            setErrorMessageEP("Please include a name with no special characters.");
+            passwordAndChangeRequestReset();
             return;
         }
 
         // Address validation 
 
         if (userPublicDetails.address.length < 5) {
-            setErrorMessageMP("Please include an address at least 5 characters long.");
-            setChangeRequest(false);
+            setErrorMessageEP("Please include an address at least 5 characters long.");
+            passwordAndChangeRequestReset();
             return;
         }
 
         if (userPublicDetails.address.length > 40) {
-            setErrorMessageMP("Please include an address shorter than 40 characters.");
-            setChangeRequest(false);
+            setErrorMessageEP("Please include an address shorter than 40 characters.");
+            passwordAndChangeRequestReset();
             return;
         }
 
         // Phone number validation 
 
         if (userPublicDetails.phone_number.length > 20) {
-            setErrorMessageMP("Phone number must be shorter than 20 digits.");
-            setChangeRequest(false);
+            setErrorMessageEP("Phone number must be shorter than 20 digits.");
+            passwordAndChangeRequestReset();
             return;
         }
 
         const validNumber = /^[0-9]{10,}$/.test(userPublicDetails.phone_number);
         
         if (!validNumber) {
-            setErrorMessageMP("Please ensure your phone number is at least 10 digits long.");
-            setChangeRequest(false);
+            setErrorMessageEP("Please ensure your phone number is at least 10 digits long.");
+            passwordAndChangeRequestReset();
             return;
         }
 
         // Email validation 
 
         if (userPublicDetails.email.length > 50) {
-            setErrorMessageMP("Please include an email shorter than 50 characters.");
-            setChangeRequest(false);
+            setErrorMessageEP("Please include an email shorter than 50 characters.");
+            passwordAndChangeRequestReset();
             return; 
         }        
 
         const isValidEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(userPublicDetails.email);
 
         if (!isValidEmail) {
-            setErrorMessageMP("Please include a valid email address.");
-            setChangeRequest(false);
+            setErrorMessageEP("Please include a valid email address.");
+            passwordAndChangeRequestReset();
             return;
         }
 
         // Password check
 
         if (!userPublicDetails.password) {
-            setErrorMessageMP("Please provide your password to confirm these changes.");
-            setPassErrorCodeMP("missing_password");
+            setErrorMessageEP("Please provide your password to confirm these changes.");
+            setPassErrorCodeEP("missing_password");
             return;
         }        
+
+        // No changes validation
 
         const {password: _password1, ...detailsToCompare} = userPublicDetails;
         const {password: _password2, ...originalDetails} = originalUserPublicDetails;
 
         if (JSON.stringify(detailsToCompare) === JSON.stringify(originalDetails)) {
-            setErrorMessageMP("Please update at least one field.");
-            setSuccessMessageMP("");
-            setChangeRequest(false);
-            setUserPublicDetails({...userPublicDetails, password: ""});     
+            setErrorMessageEP("Please update at least one field.");
+            passwordAndChangeRequestReset();
             return;
         }        
 
@@ -229,14 +253,11 @@ function DashboardProfileEdit () {
         
             if (res.ok) {
                 setMissingField("");
-                setErrorMessageMP("");                
-                setPassErrorCodeMP("");
+                setErrorMessageEP("");                
+                setPassErrorCodeEP("");
 
                 setSuccessMessageMP(result.message);
-                setChangeRequest(false);
-
-                setOriginalUserPublicDetails({...userPublicDetails, password: ""});
-                setUserPublicDetails({...userPublicDetails, password: ""});
+                passwordAndChangeRequestReset();
 
                 setTimeout(() => {
                     setSuccessMessageMP("");
@@ -244,28 +265,24 @@ function DashboardProfileEdit () {
             }
 
             else if (result.passwordError) {
-                setErrorMessageMP(result.passwordError);
-                setPassErrorCodeMP(result.name); 
+                setErrorMessageEP(result.passwordError);
+                setPassErrorCodeEP(result.name); 
 
                 setSuccessMessageMP("");
-                setChangeRequest(true);
-
-                setUserPublicDetails({...userPublicDetails, password: ""});            
+                passwordAndChangeRequestReset();      
             }
 
             else {
-                setErrorMessageMP(result.error);
+                setErrorMessageEP(result.error);
                 setMissingField(result.name);
-
+                
                 setSuccessMessageMP("");
-                setChangeRequest(false);
-
-                setUserPublicDetails({...userPublicDetails, password: ""});            
+                passwordAndChangeRequestReset();    
             }
         }
 
         catch (error) {
-            setErrorMessageMP("Please check your internet and refresh the page.")
+            setErrorMessageEP("Please check your internet and refresh the page.")
         };
     }
 
@@ -389,19 +406,6 @@ function DashboardProfileEdit () {
         }
     }
 
-    const publicDetailsUIreset = () => {
-        setErrorMessageMP(""); 
-        setSuccessMessageMP("");
-        setMissingField("");
-        setChangeRequest(false);
-    }    
-
-    const publicDetaisUIresetForPassword = () => {
-        setErrorMessageMP(""); 
-        setSuccessMessageMP("");
-        setMissingField("");
-    }
-
     const privateDetailsUIreset = () => {
         setErrorMessageAM("");
         setLongErrorMessageAM("");
@@ -465,9 +469,9 @@ function DashboardProfileEdit () {
             <div className={styles.edit_profile_container}>
                 <div className={styles.edit_profile_titles_subtitles_container}>
                     <h2 className={styles.edit_profile_title}>Edit Profile</h2>
-                    {errorMessageMP && <span role="alert" className={styles.edit_profile_error_message}>{errorMessageMP}</span>}         
+                    {errorMessageEP && <span role="alert" className={styles.edit_profile_error_message}>{errorMessageEP}</span>}         
                     {successMessageMP && <span role="status" className ={styles.edit_profile_success_message}>{successMessageMP}</span>}   
-                    {!errorMessageMP && !successMessageMP && 
+                    {!errorMessageEP && !successMessageMP && 
                         <span className={styles.edit_profile_subtitle}>
                             Profile Information - This is what others can see about you.
                         </span>
@@ -562,25 +566,25 @@ function DashboardProfileEdit () {
                                 />
                                 <input 
                                     id="password_request_1"
-                                    type= {showCurrentPasswordMP ? "text" : "password"} 
+                                    type= {showCurrentPasswordEP ? "text" : "password"} 
                                     value = {userPublicDetails.password}
                                     onChange= {(e) => {
                                         publicDetaisUIresetForPassword();
                                         setUserPublicDetails({...userPublicDetails, password: e.target.value});
                                     }}
                                     required
-                                    aria-invalid={passErrorCodeMP === "missing_password" || passErrorCodeMP === "incorrect_password"}
+                                    aria-invalid={passErrorCodeEP === "missing_password" || passErrorCodeEP === "incorrect_password"}
                                     autoComplete="current-password"
                                     className={`${styles.edit_profile_input_format} ${styles.password_input_padding}`}
                                 />                                                      
                                 <button 
                                     type="button"
-                                    onClick= {() => setShowCurrentPasswordMP(!showCurrentPasswordMP)}
+                                    onClick= {() => setShowCurrentPasswordEP(!showCurrentPasswordEP)}
                                     aria-label="Show password"
-                                    aria-pressed={showCurrentPasswordMP}
+                                    aria-pressed={showCurrentPasswordEP}
                                     className={styles.show_hide_password_button_EP}
                                 >
-                                    {showCurrentPasswordMP ? <LuEye/> : <LuEyeClosed/>}
+                                    {showCurrentPasswordEP ? <LuEye/> : <LuEyeClosed/>}
                                 </button>  
                             </div>                          
                             <button 
