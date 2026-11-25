@@ -12,8 +12,7 @@ router.route("/")
 
 .get((req, res) => {
     const ownerID = req.user?.id;
-
-   try {    
+    try {    
         const user = db.prepare("SELECT name FROM property_owners WHERE id =?").get(ownerID); 
 
         const properties = db.prepare(`SELECT 
@@ -51,10 +50,9 @@ router.route("/")
 
 .delete(async(req, res) => {
     const ownerID = req.user?.id;
-    const propID = req.body.propID;
-    
-    try {
+    const propID = req.body.propID;  
 
+    try {
         /* Cloudinary photo deletion V1 code. 
         V2 will put failed deleted photos into a table based on cloudinary_id */
 

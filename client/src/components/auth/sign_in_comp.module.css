@@ -1,83 +1,87 @@
 .main_container {
-    width: 100%;
-    height: 100%;
-
-    display: flex;
-    position: relative; 
-}
-
-
-.sign_in_container {
     background-color: #125370;
-    border: solid 3px #002461;
+    border: solid 2px #002461;
     border-radius: 50px;
-
-    width: 35%;
-    height: 37%;
-
+    
+    width: 42%;
+    
     display: flex;
     flex-direction: column;
-    row-gap: 15px;
+    row-gap: 1.2vw;
+    align-self: center;
 
-    position: relative;
-    margin: 13% 0 0 10%;
+    position: absolute;
+    left: 5%;
 
     z-index: 2;
+    padding: 1% 0 1.5% 0;
 }
 
 .main_title {
-    font-family: "Source Sans 3", sans-serif;
-    font-size: 26px;
     color: #F2EFE2;
-    font-weight: 390;
+    font-family: "Source Sans 3", sans-serif;
+    font-size: clamp(18px, 1.75vw, 100px);
+    font-weight: 350;
     text-shadow: 1px 1px 2px rgba(0,0,0,0.8);    
     text-align: center;
-    margin: 3% 0 0 0; 
+    margin: 0; 
 }
 
-.username_password_container {
+.container_format {
     width: 85%;
 
     display: flex; 
-    margin: 1% 0 0 7%;
+
+    margin: 1% 0 0 7.5%;
 }
 
-.username_password_label {
+.label_format {
     color: #F2EFE2;
     font-family: "Source Sans 3", sans-serif;
-    font-size: 21px;
+    font-size: clamp(16px, 1.4vw, 100px);
     font-weight: 390;
     text-shadow: 1px 1px 2px rgba(0,0,0,0.8);    
     
-    width: 25%;
+    align-self: center;
+    width: 30%;
 }
 
-.username_password_input {
+.input_format {
+    color: black;
+    font-family: "Source Sans 3", sans-serif;
+    font-size: clamp(14px, 1.1vw, 100px);
     background-color: #F5F2EB;
     border-radius: 7px;
 
-    width: 65%;
+    width: 70%;
 
-    margin: 0 0 0 5%;
+    padding-left: 1.5%;
+}
+
+.results_container {
+    height: 4.5vw;
+    width: 100%;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
 }
 
 .submit_container {
-    height: 29%;
-    width: 85%;
-    
+    width: 100%;
+
     display: flex;
     flex-direction: column;
- 
-    margin: 0 0 0 7%;
+    align-items: center;
 }
 
 .register_message {
-    font-family: "Source Sans 3", sans-serif;
-    font-size: 16px;
     color: #F2EFE2;
+    font-family: "Source Sans 3", sans-serif;
+    font-size: clamp(12px, 1.1vw, 100px);
     font-weight: 390;
     text-shadow: 1px 1px 2px rgba(0,0,0,0.8);    
-    text-align: center;
     
     margin: 0;
 }
@@ -92,47 +96,100 @@
 }
 
 .button_format {
-    font-family: "Source Sans 3", sans-serif;
-    font-size: 18px;
-    font-weight: 450;
     color: #125370;
+    font-family: "Source Sans 3", sans-serif;
+    font-size: clamp(16px, 1.4vw, 100px);
+    font-weight: 400;
     text-shadow: 1px 1px 2px rgba(0,0,0,0.5);  
 
     background-color: #BFBFBF;
-    border: 1px solid #747474;
-    border-radius: 5px;  
+    border: 2px solid #747474;
+    border-radius: 7px;  
     
-    height: 45%;
     width: 25%;
 
-    margin: 3% 0 0 37%;
+    margin-top: 2%;
 
     cursor: pointer;
 }
 
 .error_message {
+    color: #f8adad;
     font-family: "Source Sans 3", sans-serif;
-    font-size: 20px;
+    font-size: clamp(16px, 1.4vw, 100px);
     font-weight: 390;
-    color: #F2EFE2;
     
     text-shadow: 1px 1px 2px rgba(0,0,0,0.8);    
     text-decoration: none;
     text-align: center;
-
-    margin: 4% 0 0 0;
 }
 
-.sign_in_photo { 
-    box-shadow: 0px 0px 20px rgba(0,0,0,0.6);
-    border-radius: 40px;
-    
-    height: 80%;
-    width: 70%;
-    
-    position: absolute;
-    top: 5%;
-    left: 30%;
-    
-    z-index: 1;
+
+@media
+(max-width: 1701px) and (min-height: 1000px), 
+(min-height: 1100px), 
+(max-width: 1401px) {
+    .main_container {
+        background-color: rgb(18, 83, 112, 90%);
+        border-radius: 30px;
+
+        left:auto;
+        margin-top: 15%;
+    }
 }
+
+
+@media(max-width: 1001px) {
+    .main_container {
+        width: 55%;
+        border-radius: 20px;
+        padding: 2% 0 2% 0;
+    }
+    
+    .results_container {
+        min-height: 60px; 
+    }
+
+}
+
+@media(max-width: 751px) {
+    .main_container {
+        width: 75%;
+        row-gap: 1.75vw;
+    }
+}
+
+@media(max-width: 601px) {
+    .main_container {
+        width: 90%;
+        margin-top: 25%;    
+    }
+}
+
+@media(max-width: 501px) {
+    .main_container {
+        padding: 3% 0 3% 0;
+        border-radius: 15px;
+    }
+
+    .container_format {
+        width: 90%;
+        margin-left: 5%;
+        margin-top: 2%;
+    }
+}
+
+@media(max-width: 401px) {
+    .label_format {
+        width: 35%;
+    }
+
+    .input_format {
+        width: 65%;
+    }
+
+    .button_format {
+        width: 30%;
+    }
+}
+

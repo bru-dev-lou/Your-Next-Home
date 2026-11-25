@@ -12,12 +12,11 @@ router.route("/")
 
 .get((req, res) => {
     const ownerID = req.user?.id;
-
     try {           
-        const userData = db.prepare(`SELECT name, address, phone_number, email FROM property_owners WHERE id = ?`).get(ownerID);
+        const userData = db.prepare(`SELECT username, name, address, phone_number, email FROM property_owners WHERE id = ?`).get(ownerID);
 
         if (!userData) {
-            return res.status(404).json({ noUserError: "User data not found. \n Please check your internet connection and try again." });
+            return res.status(404).json({ noUserError: "User data not found." });
         }   
 
         res.status(200).json({userData});
@@ -27,15 +26,13 @@ router.route("/")
         console.error("Error while retrieving user's data: ", error);
         return res.status(500).json({error: "Server Error: The team has been notified."})
     }
-
-
 })
 
 .patch(async (req, res) => {
     const ownerID = req.user?.id;
 
-    const name = req.body.userPublicDetails.name;
-    const address = req.body.userPublicDetails.address?.trim();
+    const name = req.body.userPublicDetails.name?.trim();
+    const address = req.body.userPublicDetails?.address.trim();
     const number = req.body.userPublicDetails.phone_number;
     const email = req.body.userPublicDetails.email?.trim().toLowerCase();
     const password = req.body.userPublicDetails.password?.trim();
@@ -61,8 +58,8 @@ router.route("/")
         return res.status(400).json({ error: "Please include a name at least 5 characters long." })
     }
 
-    if (name.length > 39) {
-        return res.status(400).json({ error: "Please include a name shorter than 40 characters"});
+    if (name.length > 20) {
+        return res.status(400).json({ error: "Please include a name shorter than 20 characters"});
     }
 
     const nameHasLetters = /\p{L}/u.test(name);
@@ -91,7 +88,7 @@ router.route("/")
     const validNumber = /^[0-9]{10,}$/.test(number);
     
     if (!validNumber) {
-        return res.status(400).json({ error: "Please ensure your phone number is at least 10 digits long with no spaces or symbols."})
+        return res.status(400).json({ error: "Please ensure your phone number is at least 10 digits long."})
     }
 
     // Email validation 
@@ -109,7 +106,7 @@ router.route("/")
     // Password check 
 
     if (!password) {
-        return res.status(400).json({name: "missing_password", passwordError: "Please provide your password to confirm these changes."})
+        return res.status(400).json({name: "missing_password", passwordError: "Please provide your password to confirm changes."})
     }
 
     try {     
@@ -189,7 +186,7 @@ router.route("/password_change")
     }
         
     if (!passwordRegex.test(newPassword)) {
-            return res.status(400).json({name: "new_pass_wrong_format", error: "Password must be 8+ characters with an uppercase, a lowercase, a number and a special character [?!@#$%^&*]."});
+            return res.status(400).json({name: "new_pass_wrong_format", longError: "Password must be 8+ characters with an uppercase, a lowercase, a number and a special character [?!@#$%^&*]."});
     }
     
     if (newPassword === password) {

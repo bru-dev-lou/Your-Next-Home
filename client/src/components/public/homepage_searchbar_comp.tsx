@@ -1,14 +1,17 @@
 import { useState, useRef, useEffect } from 'react'; 
 import { useNavigate } from 'react-router-dom';
+
 import styles from "../public/homepage_searchbar_comp.module.css";
 
-type HomePageErrorMessageFunction = {
-    setLocationErrorMessage: (message: string) => void;
-} 
+import logo from "../../assets/logo_high_contrast.png";
+import { MdArrowDropDown } from "react-icons/md";
+
 
 const budgetValues = Array.from({length : 16}, (_, i) => (i + 5) * 100);
 
-function HomePageSearchBar( {setLocationErrorMessage} : HomePageErrorMessageFunction ) {
+function HomePageSearchBar() {
+    const navigate = useNavigate();
+
     const [ autoCompleteQuery, setAutoCompleteQuery ] = useState("");
     const [ autoCompleteQueryClicked, setAutoCompleteQueryClicked ] = useState(true); 
 
@@ -16,14 +19,12 @@ function HomePageSearchBar( {setLocationErrorMessage} : HomePageErrorMessageFunc
     const [ maxPrice, setMaxPrice ] = useState(99999);
     const [ maxPriceLabel, setMaxPriceLabel ] = useState("No Maximum");
     const [ budgetDropdown, setBudgetDropdown ] = useState<boolean>(false); 
-    
-    const navigate = useNavigate();
 
     // Error Message → AC = Auto Complete 
 
     const [errorMessageAC, setErrorMessageAC] = useState(""); 
     const errorTimeoutRef = useRef<ReturnType<typeof setTimeout> | null> (null);
-
+    const [ locationErrorMessage, setLocationErrorMessage ] = useState(""); 
 
     useEffect(() => {
         const fetchCity = async () => {
@@ -91,7 +92,7 @@ function HomePageSearchBar( {setLocationErrorMessage} : HomePageErrorMessageFunc
 
     const setBudget = (e : React.MouseEvent<HTMLLIElement>) => {
         setMaxPrice(Number(e.currentTarget.dataset.value)); 
-        setMaxPriceLabel(e.currentTarget.textContent || "No Maximum");
+        setMaxPriceLabel(e.currentTarget.innerText || "No Maximum");
     }
 
     const propertySearch = (e:React.SubmitEvent<HTMLFormElement>) => {
@@ -113,23 +114,43 @@ function HomePageSearchBar( {setLocationErrorMessage} : HomePageErrorMessageFunc
         navigate(`/search?city=${autoCompleteQuery}&maxPrice=${maxPrice}`);
     };
 
+    const autoCompleteOpen = citySuggestions.length > 0 || Boolean(errorMessageAC); 
+
     return (
-        <div>
-            <form onSubmit={propertySearch}>
-                <div className={styles.main_container}>
-                    <div className={styles.location_container}>
-                        <label htmlFor="location_selection" className={styles.label}> Location: </label>
+        <div className={styles.search_box_container}>
+            {locationErrorMessage ? 
+                <span 
+                    role="alert"
+                    className={styles.error_message}
+                >
+                    {locationErrorMessage}
+                </span>
+            :
+                <div className={styles.welcome_container}>
+                    <span className={styles.slogan_message_wide_viewport}>Your journey starts here!</span>
+                    <span className={styles.company_name_short_viewport}>
+                        Your Next Home 
+                        <img src={logo} className={styles.logo_img} alt="company logo"/>
+                    </span>                
+                </div>
+            }
+            <form className={styles.main_container} onSubmit={propertySearch}>
+                <div className={styles.location_container}>
+                    <label htmlFor="location_selection" className={styles.label_format}> Location: </label>
+                    <div className={styles.input_and_autocomplete_container}>
                         <input
                             id="location_selection"
                             type="text"
+                            maxLength={50}
                             value={autoCompleteQuery}
                             onChange={(e) => {
                                 const validCity = e.target.value.replace(/[^a-zA-Z- ]/g, "");
                                 setAutoCompleteQuery(validCity);
                                 setAutoCompleteQueryClicked(false); 
                             }}
-                            placeholder = " e.g. London"
+                            placeholder = "e.g. London"
                             aria-describedby="location_hint"
+                            aria-expanded={autoCompleteOpen}                            
                             className= {styles.location_input}
                         />
                         <span id="location_hint" className={styles.sr_content}>Insert a city name to see properties for rent in that area.</span>
@@ -159,41 +180,60 @@ function HomePageSearchBar( {setLocationErrorMessage} : HomePageErrorMessageFunc
                                 </li>
                             ))}
                             {errorMessageAC && 
-                                <li role="alert" className={`${styles.ac_error_message} ${styles.autocomplete_item}`}>
+                                <li role="alert" className={styles.ac_error_message}>
                                     {errorMessageAC}
                                 </li>
                             }
                         </ul>
                     </div>
-                    {!budgetDropdown ?
-                        <div className={styles.budget_container}> 
-                            <label htmlFor= "max_price" className={styles.label}> Budget: </label>
-                            <ul 
-                                id="max_price"
-                                onClick = {showBudget}
-                                className={styles.budget_container_closed}
+                </div>
+                <div className={styles.budget_container}> 
+                    <label id="max_price" className={styles.label_format}> Budget: </label>
+                    <div className={styles.ul_container}>
+                        <ul 
+                            onClick = {showBudget}
+                            aria-labelledby="max_price"
+                            className={styles.budget_container_closed}
+                        >
+                            <li 
+                                data-value= {maxPrice} 
+                                className={styles.budget_item_closed}
                             >
-                                <li 
-                                    data-value= {maxPrice} 
-                                    className={styles.budget_item_closed}
-                                >
-                                    {maxPriceLabel}
+                                {maxPriceLabel !== "No Maximum" && maxPriceLabel !== "No Max" ?
+                                    maxPriceLabel
+                                :
+                                    <>
+                                    <span className={styles.budget_item_wide_viewport}>No Maximum</span>  
+                                    <span className={styles.budget_item_short_viewport}>No Max</span>                                
+                                    </>
+                                }
+                                <MdArrowDropDown className={styles.react_icon_down_arrow}/>
+                            </li>
+                        </ul>  
+                        {budgetDropdown &&                    
+                            <ul
+                                onClick = {showBudget} 
+                                className={styles.budget_container_open}
+                                aria-labelledby="max_price"
+                            >
+                                <li data-value= {maxPrice} className={styles.budget_item_open}>
+                                    {maxPriceLabel !== "No Maximum" && maxPriceLabel !== "No Max" ?
+                                        maxPriceLabel
+                                    :
+                                        <>
+                                        <span className={styles.budget_item_wide_viewport}>No Maximum</span>  
+                                        <span className={styles.budget_item_short_viewport}>No Max</span>                                
+                                        </>
+                                    }                                    
                                 </li>
-                            </ul>  
-                            <button type="submit" className={styles.search_button}> Search </button>
-                        </div>
-                    :                        
-                        <div className={styles.budget_container}>
-                            <label htmlFor= "max_price" className={styles.label}> Budget: </label>
-                            <ul id="max_price" onClick = {showBudget} className={styles.budget_container_open}>
-                                <li data-value= {maxPrice} className={styles.budget_item}>{maxPriceLabel}</li>
-                                {maxPriceLabel !== "No Maximum" && 
+                                {maxPriceLabel !== "No Maximum" && maxPriceLabel !== "No Max" &&
                                     <li 
                                         data-value={99999} 
                                         onClick={setBudget} 
-                                        className={styles.budget_item}
+                                        className={styles.budget_item_open}
                                     > 
-                                        No Maximum 
+                                        <span className={styles.budget_item_wide_viewport}>No Maximum</span>  
+                                        <span className={styles.budget_item_short_viewport}>No Max</span>
                                     </li>
                                 }
                                 {budgetValues.map(value => (
@@ -201,16 +241,16 @@ function HomePageSearchBar( {setLocationErrorMessage} : HomePageErrorMessageFunc
                                     key={value} 
                                     data-value={value} 
                                     onClick={setBudget}
-                                    className={styles.budget_item}
+                                    className={styles.budget_item_open}
                                 > 
-                                    £{value.toLocaleString()}PCM
+                                    £{value.toLocaleString()} PCM
                                 </li>
                                 ))}
-                            </ul>                              
-                            <button type="submit" className={styles.search_button}> Search </button>                                    
-                        </div>        
-                    }
-                </div>
+                            </ul>   
+                        }                           
+                    </div>
+                    <button type="submit" className={styles.search_button}> Search </button>                                                            
+                </div>                        
             </form>
         </div>
     );

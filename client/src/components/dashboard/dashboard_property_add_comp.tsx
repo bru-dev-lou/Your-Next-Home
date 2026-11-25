@@ -2,6 +2,9 @@ import {useEffect, useRef, useState} from "react";
 import {useNavigate} from "react-router-dom";
 
 import styles from "../dashboard/dashboard_property_add_comp.module.css";
+
+import { MdArrowDropDown } from "react-icons/md";
+
 import { LuPlus } from "react-icons/lu";
 import { TiDelete } from "react-icons/ti";
 import { IoMdArrowRoundBack } from "react-icons/io";
@@ -26,7 +29,7 @@ type PropertyPhotos = {
 };
 
 const propertyTypes = ["Apartment", "Terraced", "Semi-Detached", "Detached", "Bungalow"];
-const furnitureTypes =["Furnished", "Semi-Furnished", "Unfurnished"]; 
+const furnitureTypes = ["Furnished", "Semi-Furnished", "Unfurnished"]; 
 
 
 function DashboardPropertyAdd () {
@@ -57,12 +60,14 @@ function DashboardPropertyAdd () {
 
     const photoUpload = useRef<HTMLInputElement>(null);
 
-    // Error Message States
+    // Error & Success Message States
 
     const [ photoErrorMessage, setPhotoErrorMessage ] = useState("");
     const [ dataErrorMessage, setDataErrorMessage ] = useState("");
+    const [ dataErrorMessageSmallViewport, setDataErrorMessageSmallViewport ] = useState("");
     const [ dataSuccessMessage, setDataSuccessMessage ] = useState("");
     const [ excessPhotosMessage, setExcessPhotosMessage ] = useState(""); 
+     
 
     // WAI-ARIA states for missing fields, and live region updates on word count for summary and description fields.
 
@@ -77,6 +82,10 @@ function DashboardPropertyAdd () {
     //  useRef to ensure setTimeouts do not stack on fetchAutoComplete function
 
     const errorTimeoutRef = useRef<ReturnType<typeof setTimeout> | null> (null);
+
+    //  Setting aria-expanded with the variable below to style input based on the ul being open or not
+    
+    const autoCompleteOpen = autoCompleteQueries.length > 0 || Boolean(errorMessageAC);
     
     useEffect(() => {
         const fetchAutoComplete = async () => {
@@ -162,6 +171,7 @@ function DashboardPropertyAdd () {
         for (const {field, error, name} of fieldCheck) {
             if (!field || field === "0" || field === "Select" ) {
                 setDataErrorMessage(error); 
+                setDataErrorMessageSmallViewport("Error - Please check Step 1");
                 setMissingField(name);
                 return;
             }
@@ -173,11 +183,13 @@ function DashboardPropertyAdd () {
 
         if (!validCity) {
             setDataErrorMessage("City must only include letters and hyphens.");
+            setDataErrorMessageSmallViewport("Error - Please check Step 1");
             return; 
         }
 
         if ((propertyDetails?.city?.length ?? 0) > 50) {
             setDataErrorMessage("City name must not exceed 50 characters.");
+            setDataErrorMessageSmallViewport("Error - Please check Step 1");
             return;
         }
 
@@ -185,6 +197,7 @@ function DashboardPropertyAdd () {
 
         if ((propertyDetails?.price ?? 0) > 99999) {
             setDataErrorMessage("Listing's monthly rate must be less than £100,000.");
+            setDataErrorMessageSmallViewport("Error - Please check Step 1");
             return;
         } 
 
@@ -192,6 +205,7 @@ function DashboardPropertyAdd () {
 
         if ((propertyDetails?.bedrooms ?? 0) > 99) {
             setDataErrorMessage("Listing must have less than 100 bedrooms.");
+            setDataErrorMessageSmallViewport("Error - Please check Step 1");
             return;
         }
 
@@ -199,6 +213,7 @@ function DashboardPropertyAdd () {
 
         if ((propertyDetails?.bathrooms ?? 0) > 99) {
             setDataErrorMessage("Listing must have less than 100 bathrooms.");
+            setDataErrorMessageSmallViewport("Error - Please check Step 1");
             return;
         }        
 
@@ -206,6 +221,7 @@ function DashboardPropertyAdd () {
 
         if ((propertyDetails?.size ?? 0) > 9999) {
             setDataErrorMessage("Listing's size must be less than 10,000m².");
+            setDataErrorMessageSmallViewport("Error - Please check Step 1");
             return;
         }
 
@@ -270,6 +286,7 @@ function DashboardPropertyAdd () {
 
             else {
                 setDataErrorMessage(result.error);
+                setDataErrorMessageSmallViewport("Error - Please check Step 1");
                 setPhotoErrorMessage("");
                 setMissingField(result.name);
                 setDataSuccessMessage("");
@@ -277,7 +294,7 @@ function DashboardPropertyAdd () {
         }
 
         catch (error) {
-            setDataErrorMessage("Failed to create new property. Please check your internet and try again."); 
+            setDataErrorMessage("Please check your internet and try again."); 
         }
 
         finally {
@@ -359,6 +376,7 @@ function DashboardPropertyAdd () {
 
     function clearDataErrorMessage () {
         setDataErrorMessage("");
+        setDataErrorMessageSmallViewport("");
         setMissingField("");
     }
 
@@ -394,368 +412,393 @@ function DashboardPropertyAdd () {
     return (
         <div className={styles.main_container}>
             <div className={styles.main_title_container}>
-                <h2 className={`${styles.main_title} ${styles.h2_font}`}>New Property</h2>
+                <h1 className={styles.main_title}>New Property</h1>
             </div>
             <div className={styles.add_property_container}>
                 <div className={styles.property_data_container}>
-                    <div className={styles.data_subtitle_container}>
-                        {dataErrorMessage ?
-                            <h3 role="alert" 
+                    {dataErrorMessage ?
+                        <span 
+                            role="alert" 
                             className={styles.data_error_message}
                         >
                             {dataErrorMessage}
-                        </h3>
-                        :
-                            <h3 className={styles.h3_font}>Step 1: Complete the fields below.</h3>
-                        }
-                    </div>
-                    <div className={styles.city_container}>
-                        <label 
-                            htmlFor="location"
-                            className={`${styles.h4_font} ${styles.city_label}`}
-                        >
-                            City: 
-                        </label>
-                            <input 
-                                id="location"
-                                type="text"
-                                value={propertyDetails.city}
-                                onChange={(e) => {
-                                    setPropertyDetails({...propertyDetails, city: e.target.value});
-                                    setAutoCompleteQueryClicked(false);
-                                    clearDataErrorMessage(); 
-                                }}
-                                required
-                                aria-invalid={missingField === "city"}
-                                aria-describedby="location_hint"
-                                className={styles.city_input}
-                            />
-                        <span id="location_hint" className={styles.sr_content}>State in what city your property is located.</span>
-                        <ul 
-                            aria-live="polite" 
-                            aria-label="City autocomplete suggestions"
-                            className={styles.autocomplete_container}
-                        > 
-                            {autoCompleteQueries.map((query, index) => (
-                                <li 
-                                    key={index}
-                                    onClick = {() => {
-                                        setPropertyDetails({...propertyDetails, city: query.city});
-                                        setAutoCompleteQueries([]);
-                                        setAutoCompleteQueryClicked(true);
-                                        }}
-                                    tabIndex={0} 
-                                    onKeyDown= { (e) => { if (e.key === "Enter") {
-                                        setPropertyDetails({...propertyDetails, city: query.city});
-                                        setAutoCompleteQueries([]);
-                                        setAutoCompleteQueryClicked(true);
-                                    }}}
-                                    style = {{ cursor: "pointer"}}
-                                    aria-label={`Select ${query.city}`}
-                                    className={styles.autocomplete_item}
-                                >
-                                     {query.city}
-                                </li>                                                                
-                            ))}                  
-                            {errorMessageAC && 
-                                <li role="alert" className={`${styles.error_message_ac} ${styles.autocomplete_item}`}>
-                                    {errorMessageAC}
-                                </li>
-                            }                                  
-                        </ul>
-                    </div>
-                    <label 
-                        htmlFor="property_type"
-                        className={`${styles.h4_font} ${styles.standard_label_format}`}
-                    > 
-                        Property Type: 
-                    </label>
-                    {!propertyTypeDropdown ?
-                        <ul
-                            id="property_type"
-                            onClick ={() => showDropdown(setPropertyTypeDropdown)}
-                            aria-invalid={missingField === "type"}                            
-                            className={styles.ul_container_closed}
-                        >
-                            <li 
-                                data-value={propertyTypeLabel} 
-                                className={styles.list_item_closed}
-                            >
-                                {propertyTypeLabel}
-                            </li>
-                        </ul>
-                        :                    
-                        <ul  
-                            id="property_type"
-                            onClick={() => {showDropdown(setPropertyTypeDropdown)}}    
-                            aria-invalid={missingField === "type"}
-                            className={styles.ul_container_open}
-                        >
-                            <li 
-                                data-value={propertyDetails.type}
-                                onClick={ () => clearDataErrorMessage}
-                                className={styles.list_item} 
-                            >
-                                {propertyTypeLabel}
-                            </li>
-                            {propertyTypeLabel === "" &&  
-                                <li 
-                                    data-value="Select" 
-                                    onClick={(e) => {setValue(e, "type", setPropertyTypeLabel, "" )}} 
-                                    className={styles.list_item}
-                                >
-                                    Select 
-                                </li>
-                            }
-                            {remainingPropertyTypes.map(type => (
-                                <li 
-                                    key={type} 
-                                    data-value={type} 
-                                    onClick={(e) => {
-                                        setValue(e, "type", setPropertyTypeLabel, "" );
-                                        clearDataErrorMessage();
-                                    }} 
-                                    className={styles.list_item}
-                                >
-                                    {type}
-                                </li>
-                            ))}
-                        </ul>    
+                        </span>
+                    :
+                        <h2 className={styles.property_data_subtitle}>Step 1: Complete the fields below.</h2>
                     }
-                    <label 
-                        htmlFor="rental_rate"
-                        className={`${styles.h4_font} ${styles.standard_label_format}`}
-                    > 
-                        Monthly Rate: 
-                    </label>
-                        <input 
-                            id="rental_rate"
-                            type="text"
-                            inputMode="numeric"
-                            min={0}
-                            value={propertyDetails.price || ""}
-                            onChange={(e) => { 
-                                const numberRegex = /^[0-9]*$/;
-                                if (numberRegex.test(e.target.value)) {
-                                    setPropertyDetails({...propertyDetails, price: (Number(e.target.value))})
-                                    clearDataErrorMessage(); 
-                                }
-                            }} 
-                            required 
-                            aria-invalid={missingField === "price"}
-                            className={`${styles.standard_input_format} ${styles.input_custom}`}
-                        />
-                    <label 
-                        htmlFor="bedrooms"
-                        className={`${styles.h4_font} ${styles.standard_label_format}`}
-                    > 
-                        Bedrooms: 
-                    </label>
-                        <input 
-                            id="bedrooms"
-                            type= "text"
-                            inputMode="numeric"
-                            value={propertyDetails.bedrooms || ""}
-                            onChange={(e) => {
-                                const numberRegex = /^[0-9]*$/;
-                                if (numberRegex.test(e.target.value)) {
-                                    setPropertyDetails({...propertyDetails, bedrooms: (Number(e.target.value))})
-                                    clearDataErrorMessage(); 
-                                }
-                            }} 
-                            required
-                            aria-invalid={missingField === "bedrooms"}
-                            className={styles.standard_input_format}
-                        />
-                    <label 
-                        htmlFor="bathrooms"
-                        className={`${styles.h4_font} ${styles.standard_label_format}`}
-                    > 
-                        Bathrooms: 
-                    </label>
-                        <input 
-                            id="bathrooms"
-                            type= "text"
-                            inputMode="numeric" 
-                            value={propertyDetails.bathrooms || ""}
-                            onChange={(e) => {
-                                const numberRegex = /^[0-9]*$/;
-                                if (numberRegex.test(e.target.value)) {                            
-                                    setPropertyDetails({...propertyDetails, bathrooms: (Number(e.target.value))})
-                                    clearDataErrorMessage();
-                                }
-                            }} 
-                            required
-                            aria-invalid={missingField === "bathrooms"}
-                            className={styles.standard_input_format}
-                        />
-                    <label 
-                        htmlFor="property_size"
-                        className={`${styles.h4_font} ${styles.standard_label_format}`}
-                    > 
-                        Size (m²): 
-                    </label> 
-                        <input 
-                            id="property_size"
-                            type= "text"
-                            inputMode="numeric" 
-                            value={propertyDetails.size || ""}
-                            onChange={(e) => {
-                                const numberRegex = /^[0-9]*$/;
-                                if (numberRegex.test(e.target.value)) {                                
-                                    setPropertyDetails({...propertyDetails, size: (Number(e.target.value))})
-                                    clearDataErrorMessage(); 
-                                }
-                            }} 
-                            required 
-                            aria-invalid={missingField === "size"}
-                            aria-describedby="size_hint"
-                            className={styles.standard_input_format}
-                        />
-                    <span id="size_hint" className={styles.sr_content}>State the overall size of your property in m².</span>
-                    <label 
-                        htmlFor="furniture"
-                        className={`${styles.h4_font} ${styles.standard_label_format}`}
-                    > 
-                        Furniture: 
-                    </label> 
-                    {!furnitureDropdown ?
-                        <ul
-                            id="furniture"
-                            onClick={() => showDropdown(setFurnitureDropdown)}
-                            aria-invalid={missingField === "furniture"}
-                            className={styles.ul_container_closed}
-                        >
-                            <li
-                                data-value={furnitureLabel}
-                                className={styles.list_item_closed}
+                    <div className={styles.property_information_container}>
+                        <div className={styles.labels_and_inputs_container}>
+                            <label 
+                                htmlFor="location"
+                                className={styles.label_format}
                             >
-                                {furnitureLabel}
-                            </li>
-                        </ul>
-                        :                    
-                        <ul 
-                            id="furniture"
-                            onClick={() => {showDropdown(setFurnitureDropdown)}}
-                            aria-invalid={missingField === "furniture"}
-                            className={styles.ul_container_open} 
-                        >
-                            <li
-                                data-value={propertyDetails.furniture}
-                                onClick={() => clearDataErrorMessage()}
-                                className={styles.list_item}
-                            >
-                                {furnitureLabel}
-                            </li>
-                            {furnitureLabel === "" &&
-                                <li
-                                    data-value=""
-                                    onClick={(e) => setValue(e, "furniture", setFurnitureLabel, "")}
-                                    className={styles.list_item}
-                                >
-                                    Select
-                                </li>
-                            }
-                            {remainingFurnitureTypes.map(type => (
-                                <li 
-                                    key={type}
-                                    data-value={type}
-                                    onClick={ (e) =>{
-                                        setValue(e,"furniture", setFurnitureLabel, "");
-                                        clearDataErrorMessage();
+                                City: 
+                            </label>
+                            <div className={styles.input_and_auto_complete_container}>
+                                <input 
+                                    id="location"
+                                    type="text"
+                                    maxLength={50}
+                                    value={propertyDetails.city}
+                                    onChange={(e) => {
+                                        setPropertyDetails({...propertyDetails, city: e.target.value});
+                                        setAutoCompleteQueryClicked(false);
+                                        clearDataErrorMessage(); 
                                     }}
-                                    className={styles.list_item}
-                                >
-                                    {type}
-                                </li>
-                            ))}
-                        </ul>
-                    }                                
-                    <div className={styles.summary_container}>
-                        <label 
-                            htmlFor="property_summary"
-                            className={`${styles.h4_font} ${styles.summary_description_label_format}`}
-                        > 
-                            Summary: 
-                        </label>
-                        <textarea 
-                            id="property_summary"
-                            value={propertyDetails.summary} 
-                            onChange={(e) => {
-                                const summaryWords = e.target.value.split(/\s+/).filter(Boolean);
-                                if (summaryWords.length <= 50) {
-                                    setPropertyDetails({...propertyDetails, summary: e.target.value})
-                                }
-                                clearDataErrorMessage(); 
-                            }}
-                            placeholder="Add a short summary about your property."
-                            required
-                            aria-invalid={missingField === "summary"}
-                            className={styles.textarea_format}
-                        />                            
-                        <div className={styles.summary_word_count_container}>
-                            <span className={styles.word_count_item}>{summaryWordCount} / 50 </span>
-                            <span
-                                aria-live="polite"
-                                className={styles.sr_content}
-                            >
-                                {announceSummaryWordCount > 0 && `${announceSummaryWordCount} out of 50 words used.`}
-                            </span>                        
+                                    required
+                                    aria-invalid={missingField === "city"}
+                                    aria-describedby="location_hint"
+                                    aria-expanded={autoCompleteOpen}
+                                    className={styles.input_format_custom}
+                                />
+                                <span id="location_hint" className={styles.sr_content}>Choose which city your property is located.</span>
+                                <ul 
+                                    aria-live="polite" 
+                                    aria-label="City autocomplete suggestions"
+                                    className={styles.autocomplete_container}
+                                > 
+                                    {autoCompleteQueries.map((query, index) => (
+                                        <li 
+                                            key={index}
+                                            onClick = {() => {
+                                                setPropertyDetails({...propertyDetails, city: query.city});
+                                                setAutoCompleteQueries([]);
+                                                setAutoCompleteQueryClicked(true);
+                                                }}
+                                            tabIndex={0} 
+                                            onKeyDown= { (e) => { if (e.key === "Enter") {
+                                                setPropertyDetails({...propertyDetails, city: query.city});
+                                                setAutoCompleteQueries([]);
+                                                setAutoCompleteQueryClicked(true);
+                                            }}}
+                                            style = {{ cursor: "pointer"}}
+                                            aria-label={`Select ${query.city}`}
+                                            className={styles.autocomplete_item}
+                                        >
+                                            {query.city}
+                                        </li>                                                                
+                                    ))}                  
+                                    {errorMessageAC && 
+                                        <li role="alert" className={`${styles.error_message_ac} ${styles.autocomplete_item}`}>
+                                            {errorMessageAC}
+                                        </li>
+                                    }                                  
+                                </ul>
+                            </div>
                         </div>
-                    </div>
-                    <div className={styles.description_container}>
-                        <label 
-                            htmlFor="property_description"
-                            className={`${styles.h4_font} ${styles.summary_description_label_format}`}
-                        > 
-                            Description: 
-                        </label>
-                            <textarea 
-                                id="property_description"
-                                value={propertyDetails.detail}
-                                onChange= {(e) => {
-                                    const detailwords = e.target.value.split(/\s+/).filter(Boolean); 
-                                        if (detailwords.length <= 250) {
-                                        setPropertyDetails({...propertyDetails, detail: e.target.value})
+                        <div className={styles.labels_and_inputs_container}>
+                            <label 
+                                id="property_type"
+                                className={styles.label_format}
+                            > 
+                                Property Type: 
+                            </label>
+                            <div className={styles.ul_container}>
+                                <ul
+                                    onClick ={() => showDropdown(setPropertyTypeDropdown)}
+                                    aria-labelledby="property_type"                                    
+                                    aria-invalid={missingField === "type"}                            
+                                    className={styles.ul_container_closed}
+                                >
+                                    <li 
+                                        data-value={propertyTypeLabel} 
+                                        className={styles.list_item_closed}
+                                    >
+                                        {propertyTypeLabel} 
+                                        <MdArrowDropDown className={styles.react_icon_down_arrow}/>              
+                                    </li>
+                                </ul>
+                                {propertyTypeDropdown &&                 
+                                    <ul  
+                                        onClick={() => {showDropdown(setPropertyTypeDropdown)}}    
+                                        aria-invalid={missingField === "type"}
+                                        className={styles.ul_container_open}
+                                    >
+                                        <li 
+                                            data-value={propertyDetails.type}
+                                            onClick={ () => clearDataErrorMessage()}
+                                            className={styles.list_item_open} 
+                                        >
+                                            {propertyTypeLabel}
+                                        </li>
+                                        {propertyTypeLabel === "" &&  
+                                            <li 
+                                                data-value="Select" 
+                                                onClick={(e) => {setValue(e, "type", setPropertyTypeLabel, "" )}} 
+                                                className={styles.list_item_open}
+                                            >
+                                                Select 
+                                            </li>
+                                        }
+                                        {remainingPropertyTypes.map(type => (
+                                            <li 
+                                                key={type} 
+                                                data-value={type} 
+                                                onClick={(e) => {
+                                                    setValue(e, "type", setPropertyTypeLabel, "" );
+                                                    clearDataErrorMessage();
+                                                }} 
+                                                className={styles.list_item_open}
+                                            >
+                                                {type}
+                                            </li>
+                                        ))}
+                                    </ul>    
+                                }                                
+                            </div>
+                        </div>
+                        <div className={styles.labels_and_inputs_container}>                        
+                            <label 
+                                htmlFor="rental_rate"
+                                className={styles.label_format}
+                            > 
+                                Monthly Rate (£): 
+                            </label>
+                            <input 
+                                id="rental_rate"
+                                type="text"
+                                inputMode="numeric"
+                                min={0}
+                                maxLength={5}
+                                value={propertyDetails.price || ""}
+                                onChange={(e) => { 
+                                    const numberRegex = /^[0-9]*$/;
+                                    if (numberRegex.test(e.target.value)) {
+                                        setPropertyDetails({...propertyDetails, price: (Number(e.target.value))})
+                                        clearDataErrorMessage(); 
                                     }
-                                    clearDataErrorMessage(); 
-                                }}
-                                placeholder="Add a description of your property. Finish off by add an empty paragraph so your description has a space at the end."
-                                required
-                                aria-invalid={missingField === "detail"}
-                                className={styles.textarea_format}
+                                }} 
+                                required 
+                                aria-invalid={missingField === "price"}
+                                className={styles.input_format}
                             />
-                        <div className={styles.description_word_count_container}>
-                            <span className={styles.word_count_item}>{descriptionWordCount} / 250</span>
-                            <span 
-                                aria-live="polite" 
-                                className={styles.sr_content}
-                            >
-                                {announceDescriptionWordCount > 0 && `${announceDescriptionWordCount} out of 250 words used.`}
-                            </span>                        
+                        </div>
+                        <div className={styles.labels_and_inputs_container}>
+                            <label 
+                                htmlFor="bedrooms"
+                                className={styles.label_format}
+                            > 
+                                Bedrooms: 
+                            </label>
+                            <input 
+                                id="bedrooms"
+                                type= "text"
+                                maxLength={2}
+                                inputMode="numeric"
+                                value={propertyDetails.bedrooms || ""}
+                                onChange={(e) => {
+                                    const numberRegex = /^[0-9]*$/;
+                                    if (numberRegex.test(e.target.value)) {
+                                        setPropertyDetails({...propertyDetails, bedrooms: (Number(e.target.value))})
+                                        clearDataErrorMessage(); 
+                                    }
+                                }} 
+                                required
+                                aria-invalid={missingField === "bedrooms"}
+                                className={styles.input_format}
+                            />
+                        </div>
+                        <div className={styles.labels_and_inputs_container}>
+                            <label 
+                                htmlFor="bathrooms"
+                                className={styles.label_format}
+                            > 
+                                Bathrooms: 
+                            </label>
+                            <input 
+                                id="bathrooms"
+                                type= "text"
+                                maxLength={2}
+                                inputMode="numeric" 
+                                value={propertyDetails.bathrooms || ""}
+                                onChange={(e) => {
+                                    const numberRegex = /^[0-9]*$/;
+                                    if (numberRegex.test(e.target.value)) {                            
+                                        setPropertyDetails({...propertyDetails, bathrooms: (Number(e.target.value))})
+                                        clearDataErrorMessage();
+                                    }
+                                }} 
+                                required
+                                aria-invalid={missingField === "bathrooms"}
+                                className={styles.input_format}
+                            />
+                        </div>
+                        <div className={styles.labels_and_inputs_container}>
+                            <label 
+                                htmlFor="property_size"
+                                className={styles.label_format}
+                            > 
+                                Size (m²): 
+                            </label> 
+                            <input 
+                                id="property_size"
+                                type= "text"
+                                maxLength={4}
+                                inputMode="numeric" 
+                                value={propertyDetails.size || ""}
+                                onChange={(e) => {
+                                    const numberRegex = /^[0-9]*$/;
+                                    if (numberRegex.test(e.target.value)) {                                
+                                        setPropertyDetails({...propertyDetails, size: (Number(e.target.value))})
+                                        clearDataErrorMessage(); 
+                                    }
+                                }} 
+                                required 
+                                aria-invalid={missingField === "size"}
+                                aria-describedby="size_hint"
+                                className={styles.input_format}
+                            />
+                            <span id="size_hint" className={styles.sr_content}>State the overall size of your property in m².</span>
+                        </div>
+                        <div className={styles.labels_and_inputs_container}>
+                            <label 
+                                id="furniture"
+                                className={styles.label_format}
+                            > 
+                                Furniture: 
+                            </label>                             
+                            <div className={styles.ul_container}>
+                                <ul
+                                    onClick={() => showDropdown(setFurnitureDropdown)}
+                                    aria-invalid={missingField === "furniture"}
+                                    aria-labelledby="furniture"
+                                    className={styles.ul_container_closed}
+                                >
+                                    <li
+                                        data-value={furnitureLabel}
+                                        className={styles.list_item_closed}
+                                    >
+                                        {furnitureLabel}
+                                        <MdArrowDropDown className={styles.react_icon_down_arrow}/>              
+                                    </li>
+                                </ul>
+                                {furnitureDropdown &&                     
+                                    <ul 
+                                        onClick={() => {showDropdown(setFurnitureDropdown)}}
+                                        aria-invalid={missingField === "furniture"}
+                                        className={styles.ul_container_open_custom} 
+                                    >
+                                        <li
+                                            data-value={propertyDetails.furniture}
+                                            onClick={() => clearDataErrorMessage()}
+                                            className={styles.list_item_open}
+                                        >
+                                            {furnitureLabel}
+                                        </li>
+                                        {furnitureLabel === "" &&
+                                            <li
+                                                data-value=""
+                                                onClick={(e) => setValue(e, "furniture", setFurnitureLabel, "")}
+                                                className={styles.list_item_open}
+                                            >
+                                                Select
+                                            </li>
+                                        }
+                                        {remainingFurnitureTypes.map(type => (
+                                            <li 
+                                                key={type}
+                                                data-value={type}
+                                                onClick={ (e) =>{
+                                                    setValue(e,"furniture", setFurnitureLabel, "");
+                                                    clearDataErrorMessage();
+                                                }}
+                                                className={styles.list_item_open}
+                                            >
+                                                {type}
+                                            </li>
+                                        ))}
+                                    </ul>
+                                }
+                            </div>         
+                        </div>                       
+                        <div className={styles.labels_and_textareas_container}>
+                            <div className={styles.label_and_wordcount_container}>
+                                <label 
+                                    htmlFor="property_summary"
+                                    className={styles.label_format_custom}
+                                > 
+                                    Summary: 
+                                </label>
+                                <span className={styles.word_count_item}>{summaryWordCount} / 50 </span>
+                                <span
+                                    aria-live="polite"
+                                    className={styles.sr_content}
+                                >
+                                    {announceSummaryWordCount > 0 && `${announceSummaryWordCount} out of 50 words used.`}
+                                </span>       
+                            </div>
+                            <div className={styles.textarea_container}>
+                                <textarea 
+                                    id="property_summary"
+                                    value={propertyDetails.summary} 
+                                    onChange={(e) => {
+                                        const summaryWords = e.target.value.split(/\s+/).filter(Boolean);
+                                        if (summaryWords.length <= 50) {
+                                            setPropertyDetails({...propertyDetails, summary: e.target.value})
+                                        }
+                                        clearDataErrorMessage(); 
+                                    }}
+                                    placeholder="Add a short summary about your property."
+                                    required
+                                    aria-invalid={missingField === "summary"}
+                                    className={styles.textarea_format}
+                                />                            
+                            </div>
+                        </div>
+                        <div className={styles.labels_and_textareas_container}>
+                            <div className={styles.label_and_wordcount_container}>
+                                <label 
+                                    htmlFor="property_description"
+                                    className={styles.label_format_custom}
+                                > 
+                                    Description: 
+                                </label>
+                                <span className={styles.word_count_item}>{descriptionWordCount} / 250</span>
+                                <span 
+                                    aria-live="polite" 
+                                    className={styles.sr_content}
+                                >
+                                    {announceDescriptionWordCount > 0 && `${announceDescriptionWordCount} out of 250 words used.`}
+                                </span>                                   
+                            </div>
+                            <div className={styles.textarea_container}>
+                                <textarea 
+                                    id="property_description"
+                                    value={propertyDetails.detail}
+                                    onChange= {(e) => {
+                                        const detailwords = e.target.value.split(/\s+/).filter(Boolean); 
+                                            if (detailwords.length <= 250) {
+                                            setPropertyDetails({...propertyDetails, detail: e.target.value})
+                                        }
+                                        clearDataErrorMessage(); 
+                                    }}
+                                    placeholder="Add a description of your property. Finish off by adding an empty paragraph so your description has a space at the end."
+                                    required
+                                    aria-invalid={missingField === "detail"}
+                                    className={styles.textarea_format}
+                                />  
+                            </div>                                               
                         </div>
                     </div>
                 </div>
                 <div className={styles.property_image_container}>
-                    <div className={styles.image_subtitle_container}>
-                        {photoErrorMessage ?
-                            <h3 
-                                role="alert" 
-                                className={styles.photo_error_message}
-                            >
-                                {photoErrorMessage}
-                            </h3>
-                        :
-                            <h3 className={styles.h3_font}>Step 2: Upload between 5 to 10 photos.</h3>
-                        }
-                    </div>
+                    {photoErrorMessage ?
+                        <span
+                            role="alert" 
+                            className={styles.photo_error_message}
+                        >
+                            {photoErrorMessage}
+                        </span>
+                    :
+                        <h2 className={styles.property_image_subtitle}>Step 2: Upload between 5 to 10 photos.</h2>
+                    }
                     <div className={styles.main_photo_container}>
                         {tempURLs.length > 0 ?                        
                             <img 
                                 src={tempURLs[mainPhotoIndex].url}
                                 className={styles.main_photo}
                                 alt="Main property photo"                                
-                                />
+                            />
                         :
                             <div className={styles.no_main_photo_div}></div>
                         }
@@ -764,10 +807,10 @@ function DashboardPropertyAdd () {
                         <button
                             disabled = {galleryIndex === 0}
                             onClick={() => {previousPhotos(), clearPhotoErrorMessages()}}
-                            className={styles.left_arrow_container}
                             aria-describedby="previous_photos_button"
+                            className={styles.left_arrow_container}
                         >
-                            <IoMdArrowRoundBack className={styles.react_arrow_format} />                           
+                            <IoMdArrowRoundBack className={styles.react_icon_arrow_format} />                           
                         </button>
                         <span id="previous_photos_button" className={styles.sr_content}>
                             Display previous 3 uploaded photos. If these are the first 3 uploaded photos, this button will be disabled. 
@@ -778,7 +821,7 @@ function DashboardPropertyAdd () {
                             className={styles.photo_upload_button}
                             aria-label="Photo upload button"
                         >
-                            <LuPlus className={styles.photo_upload_react_icon}/>
+                            <LuPlus className={styles.react_icon_plus_sign}/>
                         </button> 
                         <input 
                             type="file" 
@@ -816,7 +859,7 @@ function DashboardPropertyAdd () {
                                 )
                             })}  
                             {Array.from({ length: 3 - visiblePhotos.length }).map((_, index) => (
-                                <li key={index} className={styles.no_extra_photo_li}></li>
+                                <li key={index} className={styles.no_extra_photo_list}></li>
                             ))}       
                         </ul>   
                         <button 
@@ -825,7 +868,7 @@ function DashboardPropertyAdd () {
                             aria-labelledby="next_photos_button"
                             className={styles.right_arrow_container}
                         >
-                            <IoMdArrowRoundForward className={styles.react_arrow_format} />
+                            <IoMdArrowRoundForward className={styles.react_icon_arrow_format} />
                         </button>
                         <span id="next_photos_button" className={styles.sr_content}>
                             Displays the next 3 uploaded photos. If there are no more photos, this button will be disabled. 
@@ -833,20 +876,36 @@ function DashboardPropertyAdd () {
                     </div>                
                     <div className={styles.feedback_messages_container}>    
                         {tempURLs.length < 10 && !excessPhotosMessage && !uploading && !dataSuccessMessage &&
-                        <h3 
-                            role="status" 
-                            className={styles.h3_font}
-                        >
-                            Upload up to {10 - tempURLs.length} more {tempURLs.length === 9 ? "photo" : "photos"}.
-                        </h3> 
-                        }                          
+                            <span 
+                                role="status" 
+                                className={styles.photos_remaining_message}
+                            >
+                                Upload up to {10 - tempURLs.length} more {tempURLs.length === 9 ? "photo" : "photos"}.
+                            </span> 
+                        }       
+                        {tempURLs.length < 10 && !excessPhotosMessage && !uploading && !dataSuccessMessage && !dataErrorMessageSmallViewport &&
+                            <span 
+                                role="status" 
+                                className={styles.photos_remaining_message_small_viewport}
+                            >
+                                Upload up to {10 - tempURLs.length} more {tempURLs.length === 9 ? "photo" : "photos"}.
+                            </span> 
+                        }                             
+                        {dataErrorMessageSmallViewport && !excessPhotosMessage && 
+                            <span 
+                                role="alert"
+                                className={styles.data_error_message_small_viewport}
+                            >
+                                {dataErrorMessageSmallViewport}
+                            </span>              
+                        }
                         {excessPhotosMessage && !dataSuccessMessage &&
-                            <h3 
+                            <span 
                                 role="alert"
                                 className={styles.excess_photos_message}
                             >
                                 {excessPhotosMessage}
-                            </h3>
+                            </span>
                         }
                         {!uploading && !dataSuccessMessage && 
                             <button 
@@ -857,19 +916,19 @@ function DashboardPropertyAdd () {
                             </button>
                         }
                         {uploading &&
-                            <h3
+                            <span
                                 role="alert"
-                                className={`${styles.uploading_message} ${styles.h3_font}`}
+                                className={styles.uploading_message}
                             >
                                 Creating listing, please wait...
-                            </h3>
+                            </span>
                         }
                         {dataSuccessMessage &&                         
                             <div role="alert" className={styles.success_message_container}>
-                                <h3 className={styles.success_message_1}>{dataSuccessMessage}</h3>
-                                <h3 className={styles.success_message_2}>
+                                <span className={styles.success_message_1}>{dataSuccessMessage}</span>
+                                <span className={styles.success_message_2}>
                                     Redirecting you to your properties...
-                                </h3>
+                                </span>
                             </div>
                         }                   
                     </div>

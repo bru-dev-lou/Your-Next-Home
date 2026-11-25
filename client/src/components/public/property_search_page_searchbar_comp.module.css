@@ -9,74 +9,89 @@
     white-space: nowrap;
 }
 
-/* Generic font styles  */
+/* Generic font and react icon styles  */
 
-.h2_font {
-    font-family: "Source Sans 3", sans-serif;
-    font-size: 26px;
+.label_font {
     color: #F2EFE2;
+    font-family: "Source Sans 3", sans-serif;
+    font-size: clamp(15px, 1.4vw, 100px);
     font-weight: 390;
-    text-shadow: 1px 1px 2px rgba(0,0,0,0.8);    
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.8);   
+    align-self: center;
 }
 
-/* Styling in the order it appears in the JSX */
+.label_short_viewport {
+    display: none;  
+}
+
+.react_icon_format {
+        height: 100%;
+
+    color: #F2EFE2;
+    font-size: clamp(14px, 2vw, 100px);
+}
 
 .main_container {
     background-color: #125370;
     border: solid 2px #002461;    
     border-radius: 20px;
     
+    width: 100%;
+
     display: flex;
     flex-direction: column;
-    row-gap: 23px;
-
-    width: 100%;    
-    height: 156px;
-    
-    margin-top: 2%;
+    row-gap: 1.5vw;
+        
+    padding: 1.5% 0 1.5% 0;
 }
 
 .first_row_container {
+    height: 2.5vw;
     width: 96%;
-    height: 25%;
 
     display: flex;
-    
-    margin: 2% 0 0 2%;
+    justify-content: space-between;
+    margin: 0 0 0 2%;
 
-    position: relative;
+    container-type: size;
 }
 
 .location_container {
+    height: 100%;
     width: 32%; 
 
     display: flex;
-    position: relative;
 }
 
 .location_label {
-    height: 100%;
-    width: 24%;
+    
+    width: 29%;
 }   
+
+.autocomplete_wrapper {
+    height: 100%;
+    width: 68%;
+
+    display: flex;
+    flex-direction: column;
+
+    position: relative;
+    margin-left: 3%;
+}
 
 .location_input {
     font-family: "Source Sans 3", sans-serif;
-    font-size: 16px;
+    font-size: clamp(15px, 1.1vw, 100px);
 
     background-color: #F8F6F2;
     border: solid 2px #002461;
     border-radius: 7px;
 
     height: 100%;
-    width: 68%;
+    width: 100%;
     
+    outline: none;  
     padding-left: 2%;
-    margin-left: 8%;
-
-    outline: none;
-
-    position:relative;
-    z-index: 4;
 }
 
 .autocomplete_container {    
@@ -84,25 +99,32 @@
     border: 2px solid #125370;
     border-radius: 7px;
 
-    width: 68%;
+    width: 100%; 
 
     display: flex;
     flex-direction: column;
 
     position: absolute;
-    top: 55%;
-    left: 32%;
+    top: 97%;
+
     z-index: 3;
 
+    margin: 0;
     padding: 0;
 }
 
 .autocomplete_item {
     font-family: "Source Sans 3", sans-serif;
-    font-size: 16px;
+    font-size: clamp(15px, 1.1vw, 100px);
+    
+    height: calc(100cqh - 2px);
+    width: 100%;
+
+    display: flex;
+    align-items: center; 
+    padding-left: 2%;
     
     list-style: none;
-    padding: 2% 1% 2% 3%;
 }
 
 .autocomplete_item:hover {
@@ -113,174 +135,183 @@
 .ac_error_message {
     color: #C00000;
     font-family: "Source Sans 3", sans-serif;
-    font-size: 16px;
+    font-size: clamp(15px, 1.1vw, 100px);
     font-weight: 390;
-
     text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+    height: calc(100cqh - 2px);
+}
+
+.ac_error_wide_viewport {
+    display: flex;
+}
+
+.ac_error_short_viewport {
+    display: none; 
 }
 
 .property_type_container {
+    height: 100%; 
     width: 32%;
 
     display: flex;
-    margin-left: 5%;
 }
 
 .property_type_label {
-    height: 100%;
     width: 38%;
 }
 
-.property_type_container_closed {
-    font-family: "Source Sans 3", sans-serif;
-    font-size: 16px;
-    
-    background-color: #F8F6F2;
-    border: solid 2px #002461;
-    border-radius: 7px;
-
+.property_type_wrapper {
     height: 100%;
     width: 56%;
 
-    position: relative;
+    margin-left: 6%;
 
-    margin: 0 0 0 6%;
+    container-type: size;
+}
+
+/* The following code applies to all containers in the first row. */
+
+.first_row_container_closed {    
+    background-color: #F8F6F2;
+    box-shadow: inset 0 0 0 2px #002461;
+    border-radius: 7px;
+
+    height: 100%;
+    width: 100%;
+
+    display: flex;
+    align-items: center;
+
+    margin: 0;
+    padding: 0;
+    container-type: size;
+}
+
+.first_row_container_open {
+    background-color: #F8F6F2;
+    box-shadow: inset 0 0 0 2px #002461;
+
+    border-radius: 7px;
+
+    height: 102px;
+    width: 100%;
+    overflow-y: scroll;
+
+    display: flex;
+    flex-direction: column;
+    
+    position: relative;
+    
+    z-index: 3;
+
+    margin: 0;
     padding: 0;
 }
 
-.property_type_container_closed::after {
-    font-family: "Source Sans 3", sans-serif;
-    font-size: 16px;
-    content: "⏷";
+.first_row_container_open::-webkit-scrollbar {
+    width: 7px;    
+}
+
+.first_row_container_open::-webkit-scrollbar-track {
+    background-color: rgba(0, 36, 97, 0.3);
+    margin-block: 2px;
     
-    position: absolute;
-    top: 0;
-    left: 88%;    
-
-    line-height: 36px;
+    border-radius: 0 7px 7px 0;
 }
 
-.property_type_container_closed:hover{
-    box-shadow: inset 0px 0px 15px rgba(0,36,97,0.5);
-    cursor: pointer;
+.first_row_container_open::-webkit-scrollbar-thumb {
+    background-color: rgba(0, 36, 97, 0.7);
+    border-radius: 0 7px 7px 0;    
 }
 
-/* The folowing generic code applies to all list elements */
+/* The folowing code applies to all list elements */
 
-.generic_list_item_format {
+.list_item_closed {
     font-family: "Source Sans 3", sans-serif;
-    font-size: 16px;
+    font-size: clamp(15px, 1.1vw, 100px);
+
+    height: 100cqh;
+    width: 100%;
+
+    display: flex;
+    align-items: center;
+    
+    padding: 0 0 0 3%;
 
     list-style: none;
-    line-height: 36px;
-
-    padding: 0 0 0 4%;
 }
 
-.generic_list_item_format:hover {
-    box-shadow: inset 0px 0px 15px rgba(0,36,97,0.5);
+.react_icon_down_arrow {
+    font-size: clamp(16px, 1.7vw, 100px);
+    margin-left: auto;
+    margin-right: 1%;
+}
+
+.list_item_open {
+    font-family: "Source Sans 3", sans-serif;
+    font-size: clamp(15px, 1.1vw, 100px);
+
+    height: 100cqh;
+    width: 100%;
+
+    display: flex;
+    align-items: center;
+    flex-shrink: 0;
+    padding: 0 0 0 3%;
+
+    list-style: none;
+}
+
+.list_item_open:hover, .list_item_closed:hover {
+    box-shadow: inset 0px 0px 27px rgba(0,36,97,0.5);
+    border-radius: 7px;
     cursor: pointer;
+}
+
+.list_item_open:hover {
+    border-radius: 0px;
+}
+
+.li_element_short_viewport {
+    display: none;
 }
 
 /*  Back to styling in the order it appears */
 
-.property_type_container_open {
-    font-family: "Source Sans 3", sans-serif;
-    font-size: 16px;
-
-    background-color: #F8F6F2;
-    border: solid 2px #002461;
-    border-radius: 7px;
-
-    display: flex;
-    flex-direction: column;
-    row-gap: 2%;
-
-    width: 56%;
-    height: 105px;
-    overflow-y: scroll;
-    
-    position: relative;
-    z-index: 3;
-
-    margin: 0 0 0 6%;
-    padding: 0;
-}
-
 .budget_container {
+    height: 100%;
     width: 25%;
 
     display: flex;
-    margin-left: 6%;    
 }
 
 .budget_label {
     width: 25%;
 }
 
-.budget_container_closed{
-    font-family: "Source Sans 3", sans-serif;
-    font-size: 16px;
+.budget_wrapper {
+    height: 100%;
+    width: 65%; 
+    margin-left: 10%;
 
-    background-color: #F8F6F2;
-    border: solid 2px #002461;
-    border-radius: 7px;
-
-    width: 64%;
-    
-    margin: 0 0 0 11%;
-    padding: 0;
-
-    position: relative;
+    container-type: size;
 }
 
-.budget_container_closed::after {
-    font-family: "Source Sans 3", sans-serif;
-    font-size: 16px;    
-    content: "⏷";
-    line-height: 36px;
-
-    position: absolute;
-    top: 0;
-    left: 85%;
-}
-
-.budget_container_closed:hover{
-    box-shadow: inset 0px 0px 15px rgba(0,36,97,0.5);
-    cursor: pointer;
-}
-
-.budget_container_open {
-    font-family: "Source Sans 3", sans-serif;
-    font-size: 16px;
-
-    background-color: #F8F6F2;
-    border: solid 2px #002461;
-    border-radius: 7px;
-
-    width: 64%;
-    height: 105px;
-    overflow-y: scroll;
-
-    padding: 0;
-    margin: 0 0 0 11%;
-
-    position: relative;
-    z-index: 3;
-}
+/* Keeping identical code for two seperate rows in case these need to be changed. */
 
 .second_row_container {
+    height: 2.5vw;
     width: 96%;
-    height: 25%;
 
     display: flex;   
     justify-content: space-between; 
     margin: 0 0 0 2%;
-
-    position: relative;
 }
 
+/* Back to styling in the order it appears in the JSX */
+
 .bedrooms_container {
+    height: 100%;
     width: 24%; 
 
     display: flex;
@@ -290,58 +321,71 @@
     width: 34%; 
 }
 
-.bedrooms_container_closed {
-    font-family: "Source Sans 3", sans-serif;
-    font-size: 16px;
+.bedrooms_wrapper {
+    height: 100%;
+    width: 57%;
 
+    display: flex;
+    margin-left: 9%;
+
+    container-type: size;
+}
+
+/* The following code applies to all containers in the second row. 
+If containers are needed indibidually, follow label names → e.g. bedrooms_container_closed */
+
+.second_row_container_closed {
     background-color: #F8F6F2;
-    border: solid 2px #002461;
+    box-shadow: inset 0 0 0 2px #002461;
     border-radius: 7px;
 
-    width: 58%;
+    height: 100%;
+    width: 100%;
 
-    margin: 0 0 0 9%;
+    margin: 0;
     padding: 0;
 
     position: relative;
+    display: flex;
+    align-items: center; 
 }
 
-.bedrooms_container_closed::after{ 
-    font-family: "Source Sans 3", sans-serif;
-    font-size: 16px;    
-    content: "⏷";
-    line-height: 35px;
-
-    position: absolute;
-    top: 0;
-    left: 88%;
-}
-
-.bedrooms_container_closed:hover {
-    box-shadow: inset 0px 0px 15px rgba(0,36,97,0.5);
-    cursor: pointer;    
-}
-
-.bedrooms_container_open {
-    font-family: "Source Sans 3", sans-serif;
-    font-size: 16px;
-
+.second_row_container_open {
     background-color: #F8F6F2;
-    border: solid 2px #002461;
+    box-shadow: inset 0 0 0 2px #002461;
     border-radius: 7px;
 
-    width: 58%;
     height: 105px;
+    width: 100%;
     overflow-y: scroll;
 
-    margin: 0 0 0 9%;
+    margin: 0;
     padding: 0;
     
     position: relative; 
     z-index: 3;
 }
 
+.second_row_container_open::-webkit-scrollbar {
+    width: 7px;    
+}
+
+.second_row_container_open::-webkit-scrollbar-track {
+    background-color: rgba(0, 36, 97, 0.3);
+    margin-block: 2px;
+    
+    border-radius: 0 7px 7px 0;
+}
+
+.second_row_container_open::-webkit-scrollbar-thumb {
+    background-color: rgba(0, 36, 97, 0.7);
+    border-radius: 0 7px 7px 0;    
+}
+
+/*  Back to styling in the order it appears */
+
 .bathrooms_container {
+    height: 100%;
     width: 24%;
 
     display: flex;  
@@ -351,58 +395,18 @@
     width: 40%;
 }
 
-.bathrooms_container_closed {
-    font-family: "Source Sans 3", sans-serif;    
-    font-size: 16px;
+.bathrooms_wrapper {
+    height: 100%;
+    width: 53%;
 
-    background-color: #F8F6F2;
-    border: solid 2px #002461;
-    border-radius: 7px;
+    display: flex;
+    margin-left: 7%;
 
-    width: 58%;
-
-    margin: 0 0 0 9%;
-    padding: 0;
-
-    position: relative;
-}
-
-.bathrooms_container_closed:hover {
-    box-shadow: inset 0px 0px 15px rgba(0,36,97,0.5);
-    cursor: pointer;   
-}
-
-.bathrooms_container_closed::after{ 
-    font-family: "Source Sans 3", sans-serif;    
-    font-size: 16px;    
-    content: "⏷";
-    line-height: 35px;
-    
-    position: absolute;
-    top: 0;
-    left: 85%;
-}
-
-.bathrooms_container_open {
-    font-family: "Source Sans 3", sans-serif;    
-    font-size: 16px;
-
-    background-color: #F8F6F2;
-    border: solid 2px #002461;
-    border-radius: 7px;
-
-    width: 58%;
-    height: 105px;
-    overflow-y: scroll;
-    
-    padding: 0;
-    margin: 0 0 0 9%;
-
-    position: relative;
-    z-index: 3;
+    container-type: size;
 }
 
 .furniture_container {
+    height: 100%;
     width: 23%;
 
     display: flex;
@@ -412,60 +416,21 @@
     width: 35%;
 }
 
-.furniture_container_closed {
-    font-family: "Source Sans 3", sans-serif;    
-    font-size: 16px;
-
-    background-color: #F8F6F2;
-    border: solid 2px #002461;
-    border-radius: 7px;
-
+.furniture_wrapper {
+    height: 100%;
     width: 56%;
+
+    display: flex;
+    margin-left: 9%;
+
+    container-type: size;
     
-    padding: 0;
-    margin: 0 0 0 9%;
-    position: relative;
-}
-
-.furniture_container_closed:hover {
-    box-shadow: inset 0px 0px 15px rgba(0,36,97,0.5);
-    cursor: pointer;   
-}
-
-.furniture_container_closed::after{ 
-    font-family: "Source Sans 3", sans-serif;        
-    font-size: 16px;    
-    content: "⏷";
-    line-height: 35px;
-
-    position: absolute;
-    top: 0;
-    left: 85%;
-}
-
-.furniture_container_open {
-    font-family: "Source Sans 3", sans-serif;    
-    font-size: 16px;
-
-    background-color: #F8F6F2;
-    border: solid 2px #002461;
-    border-radius: 7px;
-
-    width: 56%;
-    height: 105px;
-    overflow-y: scroll;
-    
-    padding: 0;
-    margin: 0 0 0 9%;
-    
-    position: relative;
-    z-index: 3;
 }
 
 .search_button {
     color: #125370;    
     font-family: "Source Sans 3", sans-serif;
-    font-size: 20px;
+    font-size: clamp(15px, 1.5vw, 100px);
     font-weight: 450;
     text-shadow: 1px 1px 2px rgba(0,0,0,0.5);  
 
@@ -473,7 +438,262 @@
     border: 2px solid #747474;
     border-radius: 7px;  
 
+    height: 98%;
     width: 11%;
 
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
     cursor: pointer;
+}
+
+
+@media (min-width: 1920px) {
+    .location_input, .autocomplete_container, .first_row_container_closed, .first_row_container_open,
+    .second_row_container_closed, .second_row_container_open, .search_button 
+    {
+        border-radius: 10px;    
+    }
+    
+    .main_container {
+        row-gap: 1.7vw;     
+    }
+
+    .first_row_container_open {
+        height: 200px;
+    }
+
+    .second_row_container_open {
+        height: 150px;
+    }
+}
+
+@media (max-width: 1301px) {
+    .list_item_closed, .list_item_open {
+        padding-left: 5%;
+    }
+}
+
+@media (max-width: 1101px) {
+    .furniture_container {
+        width: 25%;
+        margin-left: 0%;
+    }
+}
+
+@media (max-width: 1001px) {
+    .main_container {
+        padding: 2% 0 2% 0;
+        row-gap: 2vw;
+    }
+
+    .location_input, .autocomplete_item {
+        font-size: clamp(13px, 1.1vw, 100px);
+    }
+
+    .first_row_container {
+        display: grid; 
+        grid-template-columns: repeat(3, 1fr);
+        min-height: 27px;
+        column-gap: 20px;
+    }
+
+    .location_container, .property_type_container, .budget_container{
+        width: 100%;
+    }
+
+    .second_row_container {
+        display: grid; 
+        grid-template-columns: repeat(3, 0.8fr) 0.4fr;
+        column-gap: 20px;
+    }
+    
+    .bedrooms_container, .bathrooms_container, .furniture_container, .search_button {
+        width: 100%;
+    }
+
+    .bedrooms_label {
+        width: 33%;
+    }
+    
+    .bedrooms_wrapper {
+        margin-left: 5.5%;
+    }
+
+    .li_element_wide_viewport {
+        display: none; 
+    }
+    
+    .li_element_short_viewport {
+        display: flex;
+    }
+}
+
+@media (max-width: 909px) {
+    .main_container {
+        row-gap: 1.5vw;
+        padding: 2% 0 2% 0;
+    }
+    
+    .label_wide_viewport {
+        display: none;
+    }
+
+    .label_short_viewport {
+        display: flex;
+        width: 15%;
+    }
+
+    .first_row_container, .second_row_container {
+        height: 3.5vw;
+        min-height: 25px;
+        column-gap: 15px;
+        display: flex; 
+        justify-content: space-between;
+    }
+
+    .second_row_container {
+        column-gap:  0px;
+    }
+
+    .list_item_closed, .list_item_open {
+        font-size: clamp(14px, 1.1vw, 100px);
+    }
+
+    .autocomplete_wrapper, .property_type_wrapper, .budget_wrapper {
+        width: 85%;
+        margin: 0;
+    }
+
+    .bedrooms_container, .bathrooms_container {
+        width: 80%; 
+    }
+
+    .label_short_viewport_custom {
+        width: 19%;
+    }
+
+    .bedrooms_wrapper, .bathrooms_wrapper {
+        width: 70%; 
+        margin: 0;
+    }
+
+    .furniture_wrapper {
+        width: 70%;
+        margin: 0;
+    }
+
+    .search_button{
+        width: 50%;
+    }
+}
+
+@media(max-width: 701px) {
+    .ac_error_short_viewport {
+        display: flex;
+    }
+
+    .ac_error_wide_viewport {
+        display: none;
+    }
+}
+
+@media (max-width: 601px) {
+    .main_container {
+        border-radius:  15px;
+    }
+
+    .first_row_container, .second_row_container {
+        column-gap: 10px;
+    }
+
+    .location_input, .autocomplete_container, .first_row_container_closed, 
+    .first_row_container_open, .second_row_container_closed, .second_row_container_open, 
+    .search_button 
+    {
+        border-radius: 5px;
+    }
+
+    .location_input {
+        border-radius: 5px;
+        padding-left: 4%;
+    }
+
+    .location_container, .property_type_container {
+        width: 95%;
+    }
+
+    .budget_container {
+        width: 70%;
+    }
+
+    .list_item_closed, .list_item_open, .autocomplete_item, .location_input {
+        font-size: clamp(12px, 1.1vw, 100px);
+    }
+
+    .list_item_closed, .list_item_open {
+        padding-left: 5%;
+    }
+
+    .custom_padding {
+        padding-left: 8%; 
+    }
+    
+    .bedrooms_container, .bathrooms_container {
+        width: 70%;
+    }
+
+    .label_short_viewport_custom {
+        width: 29%;
+    }
+
+    .bedrooms_wrapper, .bathrooms_wrapper {
+        width: 100%;
+    }
+
+    .furniture_wrapper {
+        width: 100%;
+    }
+
+    .search_button {
+        font-size: clamp(14px, 1.1vw, 100px);
+        width: 40%;
+    }
+}
+
+@media (max-width: 501px) {
+    .list_item_closed::after {
+        margin-right: 5%;
+    }
+}
+
+@media(max-width: 415px) {
+    .main_container {
+        border-radius:  10px;
+        row-gap: 2vw;
+    }
+
+    .first_row_container, .second_row_container {
+        column-gap: 5px;
+        min-height: 24px;
+    }
+
+    .bedrooms_container, .bathrooms_container {
+        width: 64%;
+    }
+
+    .label_short_viewport_custom {
+        width: 20%;
+    }
+
+    .bedrooms_wrapper, .bathrooms_wrapper {
+        margin-left: 4%;
+        width: 80%;
+    }
+
+    .search_button {
+        font-size: clamp(12px, 1.1vw, 100px);
+        width: 35%;
+    }
 }

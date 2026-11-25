@@ -1,14 +1,18 @@
-import { useState, useEffect } from "react";
+import { useState, useRef, useEffect } from "react";
 import { useSearchParams, useNavigate } from "react-router-dom";
 
 import PropertySearchPageSearchBar from "../../components/public/property_search_page_searchbar_comp";
 
 import styles from "../public/property_search_page.module.css";
+
+import { RiFilter3Line } from "react-icons/ri";
+import { MdArrowDropDown } from "react-icons/md";
 import serverErrorPhoto from "../../assets/server_error_photo.png";
 import { IoIosHeartEmpty, IoIosHeart } from "react-icons/io";
 import { BsHouse } from "react-icons/bs";
 import { IoBedSharp } from "react-icons/io5";
 import { LuToilet } from "react-icons/lu";
+
 
 
 type PropertyDetails = {
@@ -52,6 +56,32 @@ function PropertySearchPage () {
   const [ introMessage, setIntroMessage ] = useState("");
   const [ locationErrorMessage, setLocationErrorMessage ] = useState(""); 
 
+  //  Ref variable to close dropdown when clicking anywhere in the document 
+
+  const orderByRef = useRef<HTMLUListElement>(null); 
+
+  useEffect (() => {
+    function clickCheck (e:MouseEvent) {
+      if(!e.composedPath().includes(orderByRef.current!)) {
+        setOrderDropdown(false);
+      }    
+    }
+    
+    function EscapeCheck (e:KeyboardEvent) {
+      if (e.key === "Escape") {
+        setOrderDropdown(false);
+      }
+    }
+    
+    document.addEventListener("click", clickCheck);
+    document.addEventListener("keydown", EscapeCheck);
+
+    return () => {
+      document.removeEventListener("click",clickCheck);
+      document.removeEventListener("keydown", EscapeCheck);
+    }
+  }, [])
+  
 
   useEffect(() => {
     const fetchPropertyResults = async () => {
@@ -83,11 +113,11 @@ function PropertySearchPage () {
           setLocationErrorMessage("");
 
           if (!city) {
-            setIntroMessage(`Properties available for rent in England`);
+            setIntroMessage(`Properties for rent in England`);
           }
 
           else {
-            setIntroMessage(`Properties available for rent in ${city}`);
+            setIntroMessage(`Properties for rent in ${city}`);
           }
 
           setPropertyResults(result); 
@@ -212,7 +242,6 @@ function PropertySearchPage () {
     }
   };
 
-
   return (
     <div className={styles.main_container}>
       <PropertySearchPageSearchBar 
@@ -222,27 +251,51 @@ function PropertySearchPage () {
       {(introMessage || locationErrorMessage) && 
         <div className={styles.intro_main_container}>
           <div className={styles.intro_title_container}>
-                  {introMessage && <h2 style={{display: locationErrorMessage ? "none": "block" }} className={styles.main_container_font}>{introMessage}</h2>}
-                  {locationErrorMessage && <h2 className={styles.location_error_message}> {locationErrorMessage}</h2>}
+            {introMessage && 
+              <h2 
+                style={{display: locationErrorMessage ? "none": "flex" }} 
+                className={`${styles.main_container_font} ${styles.main_container_font_color}`}
+              >
+                {introMessage}
+              </h2>
+            }
+            {locationErrorMessage && 
+              <h2 
+                className={`${styles.location_error_message} ${styles.location_error_font_color}`}
+              > 
+                {locationErrorMessage}
+              </h2>
+            }
           </div>
           <div className={styles.order_by_container}>
-            <h2 className={styles.main_container_font}>Order by:</h2>
+            <h2 
+              className={`${styles.main_container_font} ${styles.main_container_font_color} ${styles.order_by_wide_viewport}`}
+            >
+              Order by:
+            </h2>
+            <h2 
+              className={`${styles.main_container_font} ${styles.main_container_font_color} ${styles.order_by_short_viewport}`}
+            >
+              <RiFilter3Line className={styles.react_icon_filter_format}/>
+            </h2>
             {!orderDropdown ? 
               <ul 
-                onClick={ () => {setOrderDropdown(!orderDropdown)}}
+                onClick={() => {setOrderDropdown(!orderDropdown)}}
+                ref={orderByRef}
                 aria-label="Sort by"
                 aria-describedby="sort_by_hint"
                 className={styles.order_by_container_closed}
               >
                 <li 
                   data-value={sortByValue}
-                  className={styles.order_by_item_custom}
+                  className={styles.order_by_item_closed}
                 >
-                  {orderByLabel}
+                  {orderByLabel} <MdArrowDropDown className={styles.react_icon_down_arrow} />
                 </li>
               </ul>
             :          
               <ul 
+                ref={orderByRef}
                 aria-label="Sort by"
                 aria-describedby="sort_by_hint"
                 className={styles.order_by_container_open}
@@ -250,21 +303,21 @@ function PropertySearchPage () {
                 <li 
                   data-value ="date"
                   onClick={ (e) => {orderResults(e.currentTarget.dataset.value!, e.currentTarget.textContent)}}
-                  className={styles.order_by_item}
+                  className={styles.order_by_item_open}
                 >
                   Date
                 </li>
                 <li 
                   data-value ="highestprice" 
                   onClick={ (e) => {orderResults(e.currentTarget.dataset.value!, e.currentTarget.textContent)}}
-                  className={styles.order_by_item}
+                  className={styles.order_by_item_open}
                 >
                   Highest Price
                 </li>
                 <li 
                   data-value ="lowestprice" 
                   onClick={ (e) => {orderResults(e.currentTarget.dataset.value!, e.currentTarget.textContent)}}
-                  className={styles.order_by_item}
+                  className={styles.order_by_item_open}
                 >
                   Lowest Price
                 </li>
@@ -281,7 +334,7 @@ function PropertySearchPage () {
         </div>
       }  
       <div className={styles.property_main_container}>
-        {propertyResults.map(property => (
+        {propertyResults.map((property: PropertyDetails) => (
           <div className={styles.property_card_container} key={property.id}>
             <div className={styles.property_card_first_row}> 
               <div className={styles.address_container}>
@@ -294,39 +347,41 @@ function PropertySearchPage () {
               </div>
             </div>
             <div className={styles.property_card_second_row}>
-              {errorMessageFP.id === property.id &&
-                  <h4 role="alert" className={styles.fp_error_format}>{errorMessageFP.error}</h4>
-              }             
-              <img 
-                src={property.photo_path}
-                role="button"
-                alt={`Main photo for property number ${property.id} - press enter to view detailed property page.`}
-                tabIndex={0} 
-                onKeyDown= { (e) => { if (e.key === "Enter" || e.key === " ") {
-                  propertyDetailedResult(property.id);
-                }}} 
-                onClick={ () => propertyDetailedResult(property.id)} 
-                className={styles.image_format}
-              />
-              {propFavorite.has(property.id) ?
-                <button 
-                  onClick={ () => removeFromFavorites(property.id)}
-                  aria-label="remove"
-                  aria-describedby="button_hint_1"
-                  className={styles.fav_button}
-                > 
-                  <IoIosHeart color="#a01313" size={40}/> 
-                </button>
-              :
-                <button 
-                  onClick={ () => addToFavorites(property.id)}
-                  aria-label="add"
-                  aria-describedby="button_hint_2"
-                  className={styles.fav_button}
-                > 
-                  <IoIosHeartEmpty color="#f60101" size={40} /> 
-                </button>
-              }
+              <div className={styles.image_wrapper}>       
+                <img 
+                  src={property.photo_path}
+                  role="button"
+                  alt={`Main photo for property number ${property.id} - press enter to view detailed property page.`}
+                  tabIndex={0} 
+                  onKeyDown= { (e) => { if (e.key === "Enter" || e.key === " ") {
+                    propertyDetailedResult(property.id);
+                  }}} 
+                  onClick={ () => propertyDetailedResult(property.id)} 
+                  className={styles.image_format}
+                />
+                {errorMessageFP.id === property.id &&
+                    <h4 role="alert" className={styles.fp_error_format}>{errorMessageFP.error}</h4>
+                }                      
+                {propFavorite.has(property.id) ?
+                  <button 
+                    onClick={ () => removeFromFavorites(property.id)}
+                    aria-label="remove"
+                    aria-describedby="button_hint_1"
+                    className={styles.fav_button_position}
+                  > 
+                    <IoIosHeart className={styles.react_icon_is_favorite}/> 
+                  </button>
+                :
+                  <button 
+                    onClick={ () => addToFavorites(property.id)}
+                    aria-label="add"
+                    aria-describedby="button_hint_2"
+                    className={styles.fav_button_position}
+                  > 
+                    <IoIosHeartEmpty className={styles.react_icon_not_favorite}/> 
+                  </button>
+                }
+              </div>
               <span id="button_hint_1" className={styles.sr_content}>
                 If aria-label shows 'remove', it means the property is currently in your favorite properties' list. Clicking the button will remove it from this list.
               </span>
@@ -338,37 +393,31 @@ function PropertySearchPage () {
             </div>
             <div className={styles.property_card_third_row}>
               <h4 
-                className={`${styles.h4_format} ${styles.date_listed_position}`}
+                className={`${styles.quick_data_font} ${styles.date_listed_position}`}
               >
                 {new Date(property.date_listed).toLocaleDateString("en-GB").replace(/\//g, ".")}
               </h4>
               <div className={styles.quick_data_container}>
                 <div className={styles.property_type_container}>
                   <span> <BsHouse className={styles.react_icon}/> </span>
-                  <h4  
-                    className={`${styles.h4_format} ${styles.quick_data_position}`}
-                  >
+                  <h4 className={styles.quick_data_font}>
                     {property.type}
                   </h4>
                 </div>
                 <div className={styles.bedrooms_container}>
                   <span> <IoBedSharp className={styles.react_icon} /> </span>
-                  <h4  
-                    className={`${styles.h4_format} ${styles.quick_data_position}`}
-                  >
+                  <h4 className={styles.quick_data_font}>
                     {`${property.no_bedrooms} ${property.no_bedrooms > 1 ? "bedrooms" : "bedroom"}`}
-                  </h4>
+                  </h4>    
                 </div>
                 <div className={styles.bathrooms_container}>
                   <span> <LuToilet className={styles.react_icon} /> </span>
-                  <h4  
-                    className={`${styles.h4_format} ${styles.quick_data_position}`}
-                  >
+                  <h4 className={styles.quick_data_font}>
                     {`${property.no_bathrooms} ${property.no_bathrooms > 1 ? "bathrooms" : "bathroom"}`}
-                  </h4>
+                  </h4>   
                 </div>
               </div>
-            </div>
+            </div>  
           </div>
         ))}
       </div>

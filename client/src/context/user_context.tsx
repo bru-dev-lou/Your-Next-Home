@@ -1,28 +1,25 @@
-import { createContext, useContext, useEffect, useState } from "react";
+import { createContext, useEffect, useState, useContext } from "react";
 
-type UserData = {
+type UserDetails = {
     id: number;
     name: string;
     username: string;
 };
 
 type UserContextType = {
-    user: UserData | null;
+    user: UserDetails | null;
     loading: boolean;
-    setUser: (user: UserData | null) => void;
+    setUser: (user: UserDetails | null) => void;
 };
 
-const UserContext = createContext<UserContextType | null>(null);
+const UserDetails = createContext<UserContextType | null>(null);
 
-export function UserProvider ({ children }: { children: React.ReactNode }) {
-    const [ user, setUser ] = useState<UserData | null>(null);
+export function UserDetailsManager ({ children }: { children: React.ReactNode }) {
+    const [ user, setUser ] = useState<UserDetails | null>(null);
     const [ loading, setLoading ] = useState(true); 
 
     useEffect (() => {
-        setLoading(true);
-
         const fetchUserData = async () => {
-
             try {
                 const res = await fetch("/api/userCheck");
                 const result = await res.json(); 
@@ -44,14 +41,14 @@ export function UserProvider ({ children }: { children: React.ReactNode }) {
     }, []);
     
     return (
-        <UserContext.Provider value={{ user, setUser, loading }}>
+        <UserDetails.Provider value={{ user, setUser, loading }}>
             {children}
-        </UserContext.Provider>
+        </UserDetails.Provider>
     );
 }
 
 export function useUser() {
-    const context = useContext(UserContext);
+    const context = useContext(UserDetails);
     if (!context) throw new Error("useUser must be used within a UserProvider");
     return context;
 }

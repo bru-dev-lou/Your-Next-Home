@@ -13,7 +13,6 @@ type DefaultValues = {
 }
 
 router.get("/", (req, res) => {
-
     const values : DefaultValues = {
         city: "",
         type: "",
@@ -65,7 +64,7 @@ router.get("/", (req, res) => {
     } 
 
     if (city.length > 50) {
-        return res.status(400).json({locationInputError: "Location must be less than 50 characters."})
+        return res.status(400).json({locationInputError: "Location: 50 characters max"})
     }
 
     try {

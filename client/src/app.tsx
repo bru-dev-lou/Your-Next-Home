@@ -1,8 +1,6 @@
 import { BrowserRouter, Routes, Route,} from "react-router-dom";
 
-import styles from "../src/app.module.css";
-
-import { UserProvider } from "./context/user_context";
+import { UserDetailsManager } from "./context/user_context";
 import RouteProtection from "./components/auth/route_protection";
 
 import MainNavigationBar from "./components/public/main_navigation_bar_comp";
@@ -25,9 +23,8 @@ function App() {
 
   return (
     <BrowserRouter>
-      <div className={styles.main_site_container}>
-      <UserProvider>
-        <MainNavigationBar />
+        <UserDetailsManager>
+          <MainNavigationBar />
           <Routes>
             <Route path="/" element={< HomePage />} />
             <Route path="/search" element={<PropertySearchPage />} /> 
@@ -41,8 +38,7 @@ function App() {
             <Route path="/dashboard/profile/edit" element={<RouteProtection> <DashboardProfileEditPage /> </RouteProtection>} />
             <Route path="/dashboard/property/favorites" element={<RouteProtection> <DashboardFavoritePropertiesPage /> </RouteProtection>} />
           </Routes>
-        </UserProvider>
-      </div>
+        </UserDetailsManager>
     </BrowserRouter>    
   )
 }

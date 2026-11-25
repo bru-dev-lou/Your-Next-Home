@@ -1,23 +1,55 @@
-.main_container {
-    width: 94%;
-    height: 89%;
+.sr_content {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+}
 
-    display: flex;    
-    position: relative;
+/* Styling in the order it appears */
+
+.main_container {
+    min-height: 0;
+    width: 97%;
+
+    overflow: hidden;
+
+    display: flex;
+    justify-content: flex-end;
+    flex: 1;
     
-    margin-left: 3%;
+    position: relative;
+    margin: 0 0 1% 1.5%;
 }
 
 .inquiries_photo {
-    box-shadow: 0px 0px 20px rgba(0,0,0,0.9);
-    border-radius: 50px;
+    box-shadow: 0px 0px 10px rgba(0,0,0,0.9);
+    border-radius: 45px;
 
     width: 70%;
-    height: 90%; 
-    
-    position: absolute;  
-    top: 5%;
-    left: 30%;
+
+    object-fit: cover;
 
     z-index: 1;
+}
+
+@media 
+(min-width: 2000px) and (max-height: 901px), 
+(min-height: 1100px),
+(max-width: 1601px) and (min-height:901px), 
+(max-width: 1301px) {
+    .main_container{
+        justify-content: center;
+    }
+
+    .inquiries_photo {
+        width: 100%;
+    }
+}
+
+@media(max-width: 1301px) {
+    .inquiries_photo {
+        border-radius: 25px;
+    }
 }

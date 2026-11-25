@@ -62,7 +62,7 @@ router.route("/")
     //  Type validation 
 
     if (type && !validTypes.includes(type)) {
-        return res.status(400).json({error: "Please choose a valid property type."})
+        return res.status(400).json({ error: "Please choose a valid property type." })
     }
 
     //  Price validation 
@@ -72,7 +72,7 @@ router.route("/")
     }
 
     if (price < 0) {
-        return res.status(400).json({error: "Please do not use negative values."})
+        return res.status(400).json({ error: "Please do not use negative values." })
     }
 
     //  Bedrooms validation 
@@ -82,7 +82,7 @@ router.route("/")
     }
 
     if (bedrooms < 0) {
-        return res.status(400).json({error: "Please do not use negative values."})
+        return res.status(400).json({ error: "Please do not use negative values." })
     } 
 
     // Bathrooms validation
@@ -92,7 +92,7 @@ router.route("/")
     }
 
     if (bathrooms < 0) {
-        return res.status(400).json({error: "Please do not use negative values."})
+        return res.status(400).json({ error: "Please do not use negative values." })
     }
 
     // Size validatiob 
@@ -102,13 +102,13 @@ router.route("/")
     }
 
     if (size < 0) {
-        return res.status(400).json({error: "Please do not use negative values."})
+        return res.status(400).json({ error: "Please do not use negative values." })
     }
 
     //  Furniture validation 
 
     if (furniture && !validFurniture.includes(furniture)) {
-        return res.status(400).json({error: "Please choose a valid furniture option."})
+        return res.status(400).json({ error: "Please choose a valid furniture option." })
     }
     
     //  Property summary & description validations

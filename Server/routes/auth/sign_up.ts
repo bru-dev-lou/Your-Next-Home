@@ -6,116 +6,104 @@ const router = express.Router();
 
 router.post("/", async (req, res) => {
     const username = req.body.username?.trim();
-    const name = req.body.name;
+    const name = req.body.name?.trim();
     const address = req.body.address?.trim();
     const number = req.body.number?.trim();
-    const email = req.body.email?.trim().toLowerCase();
+    const email = req.body.email?.trim().toLowerCase(); 
     const password = req.body.password;
     const confirmPass = req.body.confirmPass;
 
     // Empty field check
-
+    
     const blankFieldCheck = [
-        {name: "username", field: username, error:"Please choose a username."},
-        {name: "name", field: name, error: "Please provide your name / company's name."},
-        {name: "address", field: address, error: "Please provide your address / company's address."},
-        {name: "phone_number", field: number, error: "Please provide your phone number / company's phone number."},
-        {name: "email", field: email, error: "Please provide your email address."},
-        {name: "password", field: password, error: "Please choose a password."},
-        {name: "confirm_password", field: confirmPass, error: "Please confirm your chosen password."}
+        {name: "username", field: username, missingError:"Please choose a username"},
+        {name: "name", field: name, missingError: "Please provide your name / company's name"},
+        {name: "address", field: address, missingError: "Please provide your address / company's address"},
+        {name: "phone_number", field: number, missingError: "Please provide your phone number / company's phone number"},
+        {name: "email", field: email, missingError: "Please provide your email address"},
+        {name: "password", field: password, missingError: "Please choose a password"},
+        {name: "confirm_password", field: confirmPass, missingError: "Please confirm your chosen password"}
     ];
 
-    for (const {name, field, error} of blankFieldCheck) {
+    for (const {name, field, missingError} of blankFieldCheck) {
         if(!field) {
-            return res.status(400).json({name, error});
+            return res.status(400).json({name, missingError});
         }
     } 
 
     // Username validation 
 
     if (username.length < 5 || username.length > 20) {
-        return res.status(400).json({shortError: "Username must be between 5 and 20 characters."})
+        return res.status(400).json({validationError: "Username must be between 5 and 20 characters", name: "username"})
     }
 
     // Name validation 
-
-    if (name.length < 5 ) {
-        return res.status(400).json({ shortError: "Please include a name at least 5 characters long." })
-    }
-
-    if (name.length > 39) {
-        return res.status(400).json({ shortError: "Please include a name shorter than 40 characters"});
-    }
-
+    
     const nameHasLetters = /\p{L}/u.test(name);
     const nameIsValidFormat = /^[\p{L}\s'-]+$/u.test(name);
 
     if (!nameHasLetters || !nameIsValidFormat) {
-        return res.status(400).json({shortError: "Please include a name with no special characters."})
+        return res.status(400).json({validationError: "Name must include no special characters", name: "name"})
+    }
+
+    if (name.length < 5 || name.length > 20) {
+        return res.status(400).json({ validationError: "Name must be between 5 and 20 characters", name: "name"})
     }
 
     // Address validation 
 
-    if (address.length < 5) {
-        return res.status(400).json({ shortError: "Please include an address at least 5 characters long."})
-    }
-
-    if (address.length > 40) {
-        return res.status(400).json({ shortError: "Please include an address shorter than 40 characters"});
+    if (address.length < 5 || address.length > 40) {
+        return res.status(400).json({ validationError: "Address must be between 5 and 40 characters", name: "address"})
     }
 
     // Phone number validation 
 
-    if (number.length > 20) {
-        return res.status(400).json({ shortError: "Phone number must be shorter than 20 digits."});
-    }
-
-    const validNumber = /^[0-9]{10,}$/.test(number);
+    const validNumber = /^[0-9]+$/.test(number);
     
     if (!validNumber) {
-        return res.status(400).json({ longError: "Please ensure your phone number is at least 10 digits long with no spaces or symbols."})
+        return res.status(400).json({ validationError: "Phone number must only include numbers", name: "phone_number"})
+    }
+
+    if (number.length < 10 || number.length > 20) {
+        return res.status(400).json({ validationError: "Phone number must be between 10 and 20 digits", name: "phone_number"});
     }
 
     // Email validation 
-
-    if (email.length > 50) {
-        return res.status(400).json({ shortError: "Please include an email shorter than 50 characters."});
-    }
-
+    
     const isValidEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 
     if (!isValidEmail) {
-        return res.status(400).json({ shortError: "Please include a valid email address."})
+        return res.status(400).json({ validationError: "Please include a valid email address.", name: "email"})
+    }
+
+    if (email.length > 50) {
+        return res.status(400).json({ validationError: "Email must be shorter than 50 characters", name: "email"});
     }
     
-    
-    /* For the next two if statements, do not change the error messages. 
-    Changing these will affect aria-invalid for the relevant fields in the frontend. */ 
+    // Password validation 
 
-    
     if (confirmPass !== password) {
-        return res.status(400).json({shortError: "Passwords must match."}); 
+        return res.status(400).json({validationError: "Passwords must match.", name: "confirm_password"}); 
     }    
 
     const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[?!@#$%^&*]).{8,}$/;
 
     if (!passwordRegex.test(password)) {
-        return res.status(400).json({longError: "Password must be 8+ characters with an uppercase, a lowercase, a number and a special character [?!@#$%^&*]."
-        });
+        return res.status(400).json({validationError: "Incorrect password format", name: "password"});
     }
 
     try {
         const existingFieldCheck = [
-            {column: "username", value: username, error: "This username is unavailable. Please choose another one."},
-            {column: "address", value: address, error: "This address is already in use. Please choose another one."},
-            {column: "phone_number", value: number, error: "This phone number is already in use. Please choose another one."},
-            {column: "email", value: email, error: "This email is already in use. Please choose another one."}
+            {name: "username", value: username, existingError: "Username unavailable. Please choose another one."},
+            {name: "address", value: address, existingError: "Address already in use. Please choose another one."},
+            {name: "phone_number", value: number, existingError: "Phone number already in use. Please choose another one."},
+            {name: "email", value: email, existingError: "Email already in use. Please choose another one."}
         ];
 
-        for (const {column, value, error} of existingFieldCheck){
-            const exists = db.prepare(`SELECT 1 FROM property_owners WHERE ${column} = ?`).get(value); 
+        for (const {name, value, existingError} of existingFieldCheck){
+            const exists = db.prepare(`SELECT 1 FROM property_owners WHERE ${name} = ?`).get(value); 
             if(exists){
-                return res.status(400).json({column, error});
+                return res.status(400).json({name, existingError});
             }
         }
 
@@ -129,7 +117,7 @@ router.post("/", async (req, res) => {
 
     catch(error) {
         console.log("Error creating a new account: ", error);
-        res.status(500).json({error: "Server Error: The team has been notified."}); 
+        res.status(500).json({serverError: "Server Error: The team has been notified."}); 
     }
 
 }) 

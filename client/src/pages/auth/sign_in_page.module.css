@@ -1,6 +1,57 @@
-.main_container {
-    width: 94%;
-    height: 100%;
+.sr_content {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+}
 
-    margin-left: 3%;
+.main_container {
+    min-height: 450px;
+    width: 94%;
+
+    overflow: hidden;
+
+    display: flex;
+    justify-content: flex-end;
+    flex: 1;
+
+    position: relative;
+
+    margin: 0 0 1% 3%;
+}
+
+.sign_in_photo { 
+    box-shadow: 0px 0px 10px rgba(0,0,0,0.6);
+    border-radius: 40px;
+    
+    height: 100%;
+    width: 70%;
+
+    object-fit: cover;
+    
+    z-index: 1;
+}
+
+@media
+(max-width: 1701px) and (min-height: 1000px), 
+(min-height: 1100px), 
+(max-width: 1401px) {
+    .main_container {
+        justify-content: center;
+    }
+    
+    .sign_in_photo {
+        width: 100%;
+        border-radius: 25px;
+        box-shadow: 0px 0px 10px rgba(0,0,0,0.2);
+
+    }
+}
+
+@media(max-width: 501px) {
+    .sign_in_photo {
+        border-radius: 10px;
+    }
 }

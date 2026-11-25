@@ -1,12 +1,17 @@
 import SignIn from "../../components/auth/sign_in_comp";
 
+import sign_in_photo from "../../assets/sign_in_photo.jpg";
 import styles from "../auth/sign_in_page.module.css"
 
 function SignInPage () {
 
     return (
         <div className={styles.main_container}>
+            <h1 className={styles.sr_content}>
+                Sign in page
+            </h1>
             <SignIn />
+            <img src={sign_in_photo} alt="" className={styles.sign_in_photo}/>
         </div>
     )
 }

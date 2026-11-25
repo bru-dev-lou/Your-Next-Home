@@ -12,117 +12,135 @@
 /* Generic font styles */
 
 .h3_format {
-    font-family: "Source Sans 3", sans-serif;
-    font-size: 24px;
     color: #F2EFE2;
+    font-family: "Source Sans 3", sans-serif;
+    font-size: clamp(14px, 1.6vw, 100px);
     font-weight: 390;
+    
     text-shadow: 1px 1px 2px rgba(0,0,0,0.8);    
     margin: 0px;
 }
 
-.h4_format {
-    font-family: "Source Sans 3", sans-serif;
-    font-size: 21px;
+.h4_format, .quick_data_font {
     color: #F2EFE2;
+    font-family: "Source Sans 3", sans-serif;
+    font-size: clamp(14px, 1.3vw, 100px);
     font-weight: 390;
+
     text-shadow: 1px 1px 2px rgba(0,0,0,0.8);    
     margin: 0px;
+}
+
+.quick_data_font {
+    font-size: clamp(12px, 1.3vw, 100px);
 }
 
 /* Styling in the order it appears in the JSX */
 
 .main_container {
-    width: 94%;
-    height: 100%;
-
-    margin-left: 3%;
+    min-height: 0; 
+    width: 97%;
+    
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    
+    margin-left: 1.5%;
 }
 
 .intro_main_container {
-    width: 100%;
-    height: 35px;
-    
+    width: 99.5%;
+
     display: flex;
     margin: 2% 0 0 0;
 }
 
 .intro_title_container {
-    display: flex;
-    width: 80%;
+    width: 70%;
 }
 
-.main_container_font {
+.main_container_font, .location_error_message {
+    font-family: "Source Sans 3", sans-serif;
+    font-size: clamp(16px, 1.7vw, 100px);
+    font-weight: 390;
+
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.8);    
+    margin: 0;
+}
+
+.main_container_font_color {
     color: #156082;
-    font-family: "Source Sans 3", sans-serif;
-    font-size: 26px;
-    font-weight: 390;
-    text-shadow: 1px 1px 2px rgba(0,0,0,0.8);    
-    margin: 0;
 }
 
-.location_error_message {
+.location_error_font_color {
     color: #C00000;
-    font-family: "Source Sans 3", sans-serif;
-    font-size: 26px;
-    font-weight: 390;
-    text-shadow: 1px 1px 2px rgba(0,0,0,0.8);    
-    margin: 0;
 }
 
 .order_by_container {
-    width: 20%;
+    width: 30%;
+
+    display: flex;
+    justify-content: flex-end;
+
+    container-type: size;
+}
+
+.order_by_wide_viewport {
     display: flex;
 }
 
-.order_by_container_closed {
-    font-family: "Source Sans 3", sans-serif;
-    font-size: 16px;
+.order_by_short_viewport {
+    display: none; 
+}
 
+.order_by_container_closed {
     background-color: #F5F2EB;
     border: solid 2px #002461;
     border-radius: 7px;
     
-    width: 53%;
+    height: 100%;
+    width: clamp(6rem, 12vw, 11.5rem); 
 
     position: relative;
-    margin: 0 0 0 8%;
+    margin: 0 0 0 5%;
     padding: 0;
 
-    position: relative;
+    container-type: size;
 }
 
-.order_by_container_closed::after {
+.order_by_item_closed {
     font-family: "Source Sans 3", sans-serif;
-    font-size: 16px;
-    content: "⏷";
-    line-height: 35px;
-    position: absolute;
+    font-size: clamp(12px, 1.2vw, 100px);
+
+    height: 100cqh;
     
-    top: 0;
-    left: 80%;    
+    display: flex;
+    align-items: center;
+    
+    list-style: none; 
+
+    padding-left: 5%;  
 }
 
-.order_by_container_closed:hover {
+.react_icon_down_arrow {
+    font-size: clamp(16px, 1.7vw, 100px);
+    margin-left: auto;
+    margin-right: 1%;
+}
+
+.order_by_item_closed:hover {
     box-shadow: inset 0px 0px 15px rgba(0,36,97,0.5);
     cursor: pointer;
 }
 
-.order_by_item_custom {
-    list-style: none; 
-    line-height: 35px;
-    padding-left: 8%;  
-}
-
 .order_by_container_open {
-    font-family: "Source Sans 3", sans-serif;
-    font-size: 16px;
-
     background-color: #F5F2EB;
-    border: solid 2px #002461;
+    box-shadow: inset 0 0 0 2px #002461;
     border-radius: 7px;
     
-    width: 53%;
-    height: 105px;
+    height: min-content;
+    width: clamp(6rem, 12vw, 11.5rem); 
+    
 
     display: flex; 
     flex-direction: column;
@@ -131,36 +149,45 @@
     z-index: 3;
 
     padding: 0;
-    margin: 0 0 0 8%;
+    margin: 0 0 0 5%;
 }
 
-.order_by_item{
+.order_by_item_open {
+    font-family: "Source Sans 3", sans-serif;
+    font-size: clamp(12px, 1.2vw, 100px);
+    border-radius: 7px;
+
+    height: 100cqh;
+    
     list-style: none;
-    line-height: 35px;
+    
+    display: flex;
+    flex-shrink: 0;
+    align-items: center;
 
-    padding: 0 0 0 8%;
+    padding: 0 0 0 6%;
 }
 
-.order_by_item:hover{
+.order_by_item_open:hover{
     box-shadow: inset 0px 0px 15px rgba(0,36,97,0.5);
     cursor: pointer;
 }
 
 .error_main_container {
     width: 100%;
-    height: 100%;
-
+    
     display: flex;
     flex-direction: column;
 
-    margin-top: 2%;
+    margin-top: 1%;
 }
 
 .pr_error_format {
     color: #C00000;
     font-family: "Source Sans 3", sans-serif;
-    font-size: 26px;
+    font-size: clamp(16px, 1.9vw, 100px);
     font-weight: 390;
+
     text-shadow: 1px 1px 2px rgba(0,0,0,0.8);   
     margin: 1% 0 0 0;
     
@@ -169,15 +196,18 @@
 }
 
 .server_error_photo{
-    width: 25%;
-    height: 40%;
-    margin: 3% 0 0 37%;
+    width: 35%; 
+    aspect-ratio: 1 / 0.65;
+
+    align-self: center;
+    margin-top: 3%;
 }
 
 .property_main_container {
     display: flex;
     flex-direction: column;
-    row-gap: 60px;
+    row-gap: clamp(15px, 3.5vw, 40px);
+    
     
     width: 100%;
     margin: 2% 0 0 0;
@@ -186,7 +216,7 @@
 .property_card_container {
     background-color: #125370;
     border: solid 2px #002461; 
-    border-radius: 25px;    
+    border-radius: 20px;    
 }
 
 .property_card_first_row {    
@@ -211,24 +241,57 @@
 }
 
 .property_card_second_row {
-    height: 200px;
     width: 96%;
 
+    aspect-ratio: 60 / 10;
+
+    min-height: 75px;
+    max-height: 300px;
+
     display: grid;
-    grid-template-columns: 35% 65%;
+    grid-template-columns: 32% 68%;
     grid-template-rows: 20% 80%;
-    grid-template-areas: "image property_summary_title"
-                         "image property_summary_content"
+    grid-template-areas: 
+        "image property_summary_title"
+        "image property_summary_content"
     ;
+
+    column-gap: 3%;
 
     position: relative;
     margin: 0 0 0 2%;
 }
 
+.image_wrapper {
+    height: 100%;
+    width: 100%;
+    
+    grid-area: image;
+    
+    display: grid;
+    grid-template-rows: 100%;
+}
+
+.image_wrapper > * {
+    grid-area: 1 /1;
+}
+
+.image_format {
+    border: solid 2px #002461;
+    border-radius: 20px; 
+    box-shadow: 0px 5px 2px rgba(0,0,0,0.2);
+
+    height: 100%;
+    width: 100%;
+
+    object-fit: cover;
+    cursor: pointer;
+}
+
 .fp_error_format {
     color: #F2EFE2;
     font-family: "Source Sans 3", sans-serif;
-    font-size: 21px;
+    font-size: clamp(12px, 1.4vw, 100px);
     font-weight: 390;
     text-shadow: 1px 1px 2px rgba(0,0,0,0.8);   
 
@@ -236,73 +299,76 @@
     border: 3px solid #002461;
     border-radius: 15px;     
 
-    height: 25%;
-    width: 15%;
+    width: 45%;
+
+    padding: 2%;
     
     text-align: center;
-    line-height: 49px;
-
-    position: absolute; 
-    top: 22%;
-    left: 10%;
+    justify-self: center;
+    align-self: center;
 }
 
-.image_format {
-    grid-area: image;
-
-    border: solid 2px #002461;
-    border-radius: 40px; 
-    box-shadow: 0px 5px 2px rgba(0,0,0,0.2);
-
-    height: 100%;
-    width: 100%;
-
-    object-position: center;
-    object-fit: cover;
-
-    cursor: pointer;
-}
-
-.fav_button {
+.fav_button_position {
     background: none;
     border: none;
     cursor: pointer;
-    padding: 0;
 
-    position: absolute; 
-    top: 8%;
-    left: 2%;
+    justify-self: flex-start;
+    align-self: flex-start;
+
+    margin: 3% 0 0 3%;
+    padding: 0;
 }
 
-.summary_title_format {
-    grid-area: property_summary_title;
-    
+.react_icon_is_favorite {
+    color: #a01313;
+    font-size: clamp(18px, 2.5vw, 100px);
+}
+
+.react_icon_not_favorite {
+    color: #f60101;
+    font-size: clamp(18px, 2.5vw, 100px);
+}
+
+.summary_title_format {    
     color: #F2EFE2;
     font-family: "Source Sans 3", sans-serif;
-    font-size: 24px;
+    font-size: clamp(12px, 1.6vw, 100px);
     font-weight: 390;
     text-shadow: 1px 1px 2px rgba(0,0,0,0.8);    
-    
-    margin: 0 0 0 4%;
+
+    width: 96%;
+
+    grid-area: property_summary_title;
+    align-self: flex-start;
+    margin: 0;
 }
 
 .summary_content_format {
     grid-area: property_summary_content;
+    margin: 1vw 0 0 0;
 
-    margin: 2% 0 0 4%;
+    width: 95%;
     
-    text-align: justify;
-    overflow-wrap: break-word;
+    text-align:justify;
+    overflow-wrap: break-word;  
     hyphens: auto;
+
+    line-clamp: 4;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 3;
+    overflow: hidden;
+
+    align-self: start;
 }
 
 .property_card_third_row {
     width: 96%;    
-    height: 42px;
     
     display: flex;
 
-    margin: 1% 0 0 2%;
+    margin: 1% 0 1% 2%;
 }
 
 .date_listed_position {
@@ -312,37 +378,138 @@
 .quick_data_container {
     width: 65%;
 
-    display: flex;
-    justify-content: space-between;
-    margin-left: 4%;
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
 }
 
 .property_type_container {
-    width: 30%;
-    
     display: flex;
+    column-gap: 10px;
+
+    justify-self: flex-start;
 }
 
 .bedrooms_container {
-    width: 20%;
-
     display: flex;    
+    column-gap: 10px;    
+
+    justify-self: center;
 }
 
 .bathrooms_container {
-    width: 20%;
-
     display: flex;
-}
+    column-gap: 10px;
 
-.quick_data_position {
-    margin-left: 10%;
+    justify-self: flex-end;
 }
 
 .react_icon {
     color: #ECE7D4;
-    font-size: 18px;
+    font-size: clamp(10px, 1vw, 100px);
 
     margin-top: 30%;
 }
+
+
+@media (max-width: 1201px) {
+    .property_card_container {
+        border-radius: 20px;
+    }
+}
+
+@media(max-width: 801px) {
+    .image_format {
+        border-radius: 15px;
+    }
+}
+
+@media(max-width: 701px) {
+    .summary_content_format, .h4_format {
+        font-size: 12px;
+    }
+
+    .date_listed_position {
+        display: flex;
+        align-items: center;
+    }
+
+    .property_type_container, .bedrooms_container, .bathrooms_container { 
+        display: flex;
+        align-items: center;
+    }
+}
+
+@media (max-width: 601px) {
+    .intro_title_container {
+        width: 65%;
+    }
+    
+    .order_by_container {
+        width: 35%;
+    }
+
+    .react_icon_filter_format {
+        color: #002461;
+        font-size: clamp(16px, 3vw, 100px); 
+        height: 100%;
+    }
+
+    .order_by_short_viewport {
+        display: flex;
+    }
+
+    .order_by_wide_viewport {
+        display: none; 
+    }
+
+    .server_error_photo {
+        width: 45%;
+        aspect-ratio: 1 / 0.75;
+    }
+
+    .property_card_container {
+        border-radius: 15px;
+    }
+
+    .fav_button_position {
+        margin: 4% 0 0 4%;
+    }
+}
+
+@media(max-width: 551px) {
+    .summary_content_format {
+        align-self: flex-end;
+    }
+
+    .property_type_container, .bedrooms_container, .bathrooms_container {
+        column-gap: 5px;
+    }    
+
+    .property_card_third_row {
+        margin-top: 2%;
+
+        display: flex;
+        justify-content: space-between;    
+        align-items: center;
+    }
+
+    .date_listed_position {
+        width: auto;
+    }
+    
+    .quick_data_container {
+        display: contents;
+    }
+
+}
+@media(max-width: 416px) {
+    .property_card_container, .image_format {
+        border-radius: 10px;
+    }
+
+    .order_by_container_closed, .order_by_container_open {
+        margin-left: 3%;
+    }
+}
+
 
