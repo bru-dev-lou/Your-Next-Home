@@ -2,6 +2,8 @@ import { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import styles from "../public/homepage_searchbar_comp.module.css";
+
+import logo from "../../assets/logo_high_contrast.png";
 import { MdArrowDropDown } from "react-icons/md";
 
 
@@ -119,12 +121,18 @@ function HomePageSearchBar() {
             {locationErrorMessage ? 
                 <span 
                     role="alert"
-                    className={styles.slogan_and_error_message}
+                    className={styles.error_message}
                 >
                     {locationErrorMessage}
                 </span>
             :
-                <span className={styles.slogan_and_error_message}>Your journey starts here!</span>
+                <div className={styles.welcome_container}>
+                    <span className={styles.slogan_message_wide_viewport}>Your journey starts here!</span>
+                    <span className={styles.company_name_short_viewport}>
+                        Your Next Home 
+                        <img src={logo} className={styles.logo_img} alt="company logo"/>
+                    </span>                
+                </div>
             }
             <form className={styles.main_container} onSubmit={propertySearch}>
                 <div className={styles.location_container}>

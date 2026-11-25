@@ -28,7 +28,12 @@
     margin-right: -10%;
 }
 
-.slogan_and_error_message {
+.welcome_container {
+    display: contents;
+    position: relative;
+}
+
+.error_message, .slogan_message_wide_viewport, .company_name_short_viewport {
     color: #F2EFE2;    
     font-family: "Source Sans 3", sans-serif;
     font-size: clamp(16px, 1.7vw, 100px);
@@ -38,6 +43,14 @@
     text-align: center;
 
     margin: 2% 0 0 0;
+}
+
+.error_message {
+    color: #f8adad;
+}
+
+.company_name_short_viewport {
+    display: none;
 }
 
 .main_container {
@@ -264,7 +277,7 @@
         row-gap: 20px;
     }
 
-    .slogan_and_error_message {
+    .error_message, .slogan_message_wide_viewport {
         font-size: clamp(24px, 1.7vw, 100px);
     }
 
@@ -308,7 +321,7 @@
         row-gap: 2.5vw;
     }
 
-    .slogan_and_error_message {
+    .error_message, .slogan_message_wide_viewport {
         font-size: clamp(18px, 1.8vw, 100px);
     }
 
@@ -366,6 +379,29 @@
     .budget_container_open {
         height: 30vw;
     }  
+}
+
+@media(max-width: 501px) {
+    .slogan_message_wide_viewport {
+        display: none;
+    }
+
+    .error_message {
+        font-size: clamp(15px, 2vw, 100px);
+        margin-top: 5%;
+    }
+
+    .company_name_short_viewport {
+        font-size: clamp(18px, 2vw, 100px);
+        display: block;
+        margin-top: 2%;
+    }
+
+    .logo_img {
+        width: clamp(25px, 2.5vw, 70px);
+        height: clamp(25px, 2.5vw, 70px);            
+        margin: 0 0 0 2%;
+    }
 }
 
 @media(max-width: 451px) {
