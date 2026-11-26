@@ -59,7 +59,7 @@ function HomePageSearchBar() {
                     setErrorMessageAC("");
                 }
 
-                else if (citySuggestions.some(query => query.city.toLowerCase() === autoCompleteQuery.toLowerCase())){
+                else if (result.cities.some(( query : {city : string})  => query.city.toLowerCase() === autoCompleteQuery.toLowerCase())){
                     setCitySuggestions([]);
                 }
 

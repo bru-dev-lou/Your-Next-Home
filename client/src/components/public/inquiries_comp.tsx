@@ -94,14 +94,13 @@ function Inquiries () {
 
         //  PROPID validation and fallback value 
 
-        if (!data.propID) {
-            data.propID =  "PROP0000";
-        }        
-        
-        const validPropID = /^[a-zA-Z0-9]+$/.test(data.propID);
+        const propID = data.propID || "PROP0000";
 
-        if (data.propID.length > 11 || !validPropID)  {
+        const validPropID = /^[a-zA-Z0-9]+$/.test(propID);
+    
+        if (propID.length > 11 || !validPropID)  {
             setErrorMessage("Invalid Prop ID.");
+            setInvalidField("propID");
             return; 
         }
 
@@ -111,7 +110,7 @@ function Inquiries () {
                 headers: {
                     "Content-Type": "application/json"
                 },
-                body: JSON.stringify(data)
+                body: JSON.stringify({...data, propID})
             });
             
             const result = await res.json();
@@ -286,6 +285,7 @@ function Inquiries () {
                         }}
                         placeholder="Property ID - Optional"
                         aria-describedby="property_id_hint"
+                        aria-invalid={invalidField === "propID"}
                         className={styles.input_format}
                     />
                     <span id="property_id_hint" className={styles.sr_content}>Include a property ID if your inquiry is regarding a listed property. This field is optional.</span>

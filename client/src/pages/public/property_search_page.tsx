@@ -142,26 +142,19 @@ function PropertySearchPage () {
 
   useEffect (() => {
     const fetchFavorites = async () => {
-      const updateSet = new Set(propFavorite);
     
       try {
         const res = await fetch ("/api/search/favorites");
         const results = await res.json(); 
         
         if (res.ok) {
-          for (const result of results) {
-            updateSet.add(result.property_id);
-          }
-          
-          setPropFavorite(updateSet);
+          setPropFavorite(new Set(results.map(( result : { property_id : number }) => result.property_id)));
         }
 
-        else {
-          return;
-        }
       }
       
       // Silent crash coded to avoid bad UI / UX. 
+      
       catch(error) {
             console.error(error);
       }

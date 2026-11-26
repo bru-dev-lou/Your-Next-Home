@@ -80,21 +80,13 @@ function DetailedPropertyPage () {
 
     useEffect (() => {
         const fetchFavorites = async () => {
-            const updateSet = new Set(propFavorite);
             
             try {
                 const res = await fetch ("/api/search/favorites");
                 const results = await res.json(); 
                 
                 if (res.ok) {
-                    for (const result of results) {
-                        updateSet.add(result.property_id);
-                    }
-                    setPropFavorite(updateSet);
-                }
-
-                else {
-                    return;
+                    setPropFavorite(new Set(results.map(( result : {property_id : number}) => result.property_id)))
                 }
             }
 
@@ -102,6 +94,7 @@ function DetailedPropertyPage () {
                 console.error(error);
             }
         }
+        
         fetchFavorites();
     }, []);
 
