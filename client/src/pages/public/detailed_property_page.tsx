@@ -69,6 +69,7 @@ function DetailedPropertyPage () {
             }
 
             catch(error) {
+                console.error(error);
                 setErrorMessageFP("Failed to fetch this property. Please check your internet and refresh the page.")
             }
         }
@@ -98,6 +99,7 @@ function DetailedPropertyPage () {
             }
 
             catch(error) {
+                console.error(error);
             }
         }
         fetchFavorites();
@@ -132,6 +134,7 @@ function DetailedPropertyPage () {
         }
 
         catch (error) {
+            console.error(error);
             setErrorMessageFavorites("Failed to add to favorites. Please check your internet and try again.");
             setTimeout(() => {
                 setErrorMessageFavorites("");
@@ -167,6 +170,7 @@ function DetailedPropertyPage () {
         }
 
         catch (error) {
+            console.error(error);
             setErrorMessageFavorites("Failed to remove from favorites. Please check your internet and try again.")
             setTimeout(() => {
                 setErrorMessageFavorites("");

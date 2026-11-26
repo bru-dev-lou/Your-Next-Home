@@ -27,6 +27,7 @@ function MainNavigationBar (){
         }
 
         catch(error){
+            console.error(error);
             setErrorMessage("Failed to sign user out.");
             setTimeout(() => {
                 setErrorMessage("Please check your internet refresh the page.");

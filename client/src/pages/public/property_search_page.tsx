@@ -125,6 +125,7 @@ function PropertySearchPage () {
       }
 
       catch (error){
+        console.error(error);
         setErrorMessagePR("Failed to fetch requested properties. Please check your internet and refresh the page.");
       }
     };
@@ -161,8 +162,9 @@ function PropertySearchPage () {
       }
       
       // Silent crash coded to avoid bad UI / UX. 
-
-      catch(error) {}
+      catch(error) {
+            console.error(error);
+      }
     }
       fetchFavorites();
   }, []);
@@ -201,6 +203,7 @@ function PropertySearchPage () {
     }
 
     catch (error) {
+      console.error(error);
       setErrorMessageFP({id: propID, error: "Failed to add to favorites. Please check your internet and try again."});
       setTimeout(function() {
         setErrorMessageFP({id: null, error: ""});
@@ -235,6 +238,7 @@ function PropertySearchPage () {
     }
 
     catch (error) {
+      console.error(error);
       setErrorMessageFP({id: propID, error: "Failed to remove from favorites. Please check your internet and try again."});
       setTimeout(function() {
         setErrorMessageFP({id: null, error: ""});

@@ -178,6 +178,7 @@ function PropertySearchPageSearchBar ({sortBy, setLocationErrorMessage} : Search
             }
   
             catch(error) {
+                console.error(error);
                 setErrorMessageAC("Autocomplete currently unavailable.");
             }
         }

@@ -97,6 +97,7 @@ function DashboardProfileEdit () {
             }
 
             catch(error) {
+                console.error(error);
                 setErrorGeneralMessage("Failed to fetch user's data. \n Please check your internet and refresh the page.");
             }
 
@@ -282,6 +283,7 @@ function DashboardProfileEdit () {
         }
 
         catch (error) {
+            console.error(error);
             setErrorMessageEP("Please check your internet and refresh the page.")
         };
     }
@@ -358,6 +360,7 @@ function DashboardProfileEdit () {
         }
             
         catch (error) {
+            console.error(error);
             setErrorMessageAM("Please check your internet and refresh the page.")
         }
     }
@@ -402,6 +405,7 @@ function DashboardProfileEdit () {
         }
 
         catch(error) {
+            console.error(error);
             setErrorMessageDA("Please check your internet and refresh the page.")
         }
     }

@@ -30,6 +30,7 @@ export function UserDetailsManager ({ children }: { children: React.ReactNode })
             }
 
             catch (error) {
+                console.error(error);
                 // User will be asked to log in. 
             }
 

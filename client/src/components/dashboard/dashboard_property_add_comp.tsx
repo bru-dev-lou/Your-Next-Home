@@ -131,6 +131,7 @@ function DashboardPropertyAdd () {
             }
   
             catch(error) {
+                console.error(error);
                 setErrorMessageAC("Please check your internet!");
                 setTimeout(() => {
                     setErrorMessageAC("");
@@ -294,6 +295,7 @@ function DashboardPropertyAdd () {
         }
 
         catch (error) {
+            console.error(error);
             setDataErrorMessage("Please check your internet and try again."); 
         }
 

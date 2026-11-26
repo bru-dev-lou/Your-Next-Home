@@ -70,6 +70,7 @@ function HomePageSearchBar() {
             }
 
             catch(error) {
+                console.error(error);
                 setErrorMessageAC("AutoComplete feature currently unavailable.");
             }
         };

@@ -55,6 +55,7 @@ function SignIn () {
         }
 
         catch (error) {
+            console.error(error);
             setErrorMessage("Please check your internet and refresh the page.");
         }
 

@@ -127,6 +127,7 @@ function DashboardPropertyEdit() {
             }
             
             catch (error) {
+                console.error(error);
                 setErrorMessagePF("Please check your internet and refresh the page."); 
             }
         }   
@@ -178,6 +179,7 @@ function DashboardPropertyEdit() {
             }
   
             catch(error) {
+                console.error(error);
                 setErrorMessageAC("Please check your internet!");
                 setTimeout(() => {
                     setErrorMessageAC("");
@@ -308,6 +310,7 @@ function DashboardPropertyEdit() {
         } 
             
         catch (error) {
+            console.error(error);
             setErrorMessagePE("Please check your internet and refresh the page.");
         }
     }
@@ -404,6 +407,7 @@ function DashboardPropertyEdit() {
         }
 
         catch (error) {
+            console.error(error);
             setErrorMessagePU("Please check your internet and refresh the page.");
         }
 
@@ -463,6 +467,7 @@ function DashboardPropertyEdit() {
         }
         
         catch (error) { 
+            console.error(error);
             setErrorMessagePU("Please check your internet and refresh the page.")
         }
     }
