@@ -297,6 +297,7 @@ function DashboardPropertyAdd () {
         catch (error) {
             console.error(error);
             setDataErrorMessage("Please check your internet and try again."); 
+            setUploading(false);
         }
 
         finally {

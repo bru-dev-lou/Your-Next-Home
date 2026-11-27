@@ -406,6 +406,7 @@ function DashboardPropertyEdit() {
 
             else {
                 setErrorMessagePU(result.error);
+                setTimeout(() => {setErrorMessagePU("")}, 5000);
                 setSuccessMessagePU("");
             }
         }
