@@ -5,7 +5,7 @@ import cookieParser from "cookie-parser";
 
 import autoCompleteRouter from "./routes/public/auto_complete_function.js";
 import authMiddleware from "./middleware/auth_middleware.js";
-import signedOutAuthentication from "./middleware/signed_out_auth_middleware.ts";
+import signedOutAuthentication from "./middleware/signed_out_auth_middleware.js";
 import userCheck from "./routes/auth/user_check.js";
 
 import propertySearchResultsRouter from "./routes/public/property_search_results.js";

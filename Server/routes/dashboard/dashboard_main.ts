@@ -1,6 +1,6 @@
 import express from "express";
 import db from "../../database/database.js";
-import cloudinary from "../../config/cloudinaryConfig.ts";
+import cloudinary from "../../config/cloudinaryConfig.js";
 
 type CloudinaryPhotoInformation = {
     cloudinary_id: string; 
