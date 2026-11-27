@@ -3,6 +3,11 @@ import cors from "cors";
 import express from "express";
 import cookieParser from "cookie-parser";
 
+import multer from "multer";
+import type { Request, Response, NextFunction } from "express";
+import rateLimit from "express-rate-limit";
+
+
 import autoCompleteRouter from "./routes/public/auto_complete_function.js";
 import authMiddleware from "./middleware/auth_middleware.js";
 import signedOutAuthentication from "./middleware/signed_out_auth_middleware.js";
@@ -23,6 +28,7 @@ import dashboardPropertyFavorites from "./routes/dashboard/dashboard_property_fa
 
 import favoritePropertiesFeatureRouter from "./routes/protected/favorite_properties_feature.js"; 
 
+
 const app = express(); 
 const port = 3000;
 
@@ -34,6 +40,38 @@ app.use(cookieParser());
 app.get("/", (req, res) => {
     res.send("Server is working!"); 
 })
+
+/*  Rate Limit issue found before deployment - Fix below ↓ 
+
+    • maxBody is a temporary workaround for rate limiting property add side until POST requests are split in 2
+    • rateLimit will be split into 2 apis in V2 for a better UX
+
+*/
+
+app.set("trust proxy", 1);
+
+const maxBody = 100 * 1024 * 1024; 
+
+const photoUploadLimiter = rateLimit({
+    windowMs: 60 * 60 * 1000,
+    limit: 15,
+    handler: (req, res) => {
+        const contentLength = Number(req.headers["content-length"] ?? 0);
+
+        if (contentLength > maxBody) {
+            res.status(429).json({ error: "Too many requests. Please try again later." });
+            return;
+        }
+
+        req.on("end", () => {
+            res.status(429).json({ error: "Too many requests. Please try again later." });
+        });
+        req.resume();
+    },
+});
+
+app.post("/api/dashboard/property/add", photoUploadLimiter);
+app.post("/api/dashboard/property/edit/:propID", photoUploadLimiter);
 
 app.use("/api", autoCompleteRouter);
 app.use("/api/userCheck", signedOutAuthentication, userCheck);
@@ -53,6 +91,24 @@ app.use("/api/dashboard/property/favorites", authMiddleware, dashboardPropertyFa
 
 app.use("/api/search/favorites", authMiddleware, favoritePropertiesFeatureRouter);
 
+//  Max number of photos + size server side check 
+
+app.use((err: unknown, req: Request, res: Response, next: NextFunction) => {
+    if (err instanceof multer.MulterError) {
+        let message = "There was a problem uploading your photos.";
+
+        if (err.code === "LIMIT_FILE_SIZE") {
+            message = "Each photo must be under 10MB.";
+        }
+
+        if (err.code === "LIMIT_UNEXPECTED_FILE") {
+            message = "You can upload a maximum of 10 photos.";
+        }
+
+        return res.status(400).json({ photosError: message, excessiveFile: message });
+    }
+    next(err);
+});
 
 app.listen(port, (error) => {
     if (error) {
