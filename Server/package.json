@@ -4,9 +4,9 @@
   "description": "A full-stack property rental web application where users can create and browse listings.",
   "main": "server.ts",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "nodemon --exec tsx server.ts",
-    "build": "next build"
+    "build": "tsc",
+    "start": "node dist/server.js"
   },
   "repository": {
     "type": "git",
