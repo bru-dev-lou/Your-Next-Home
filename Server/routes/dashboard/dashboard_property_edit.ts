@@ -102,7 +102,7 @@ router.route("/:propID")
 
     // City validation 
 
-    const validCity = /^[a-zA-Z\ -]+$/.test(city); 
+    const validCity = /^[a-zA-Z -]+$/.test(city); 
 
     if (!validCity) {
         return res.status(400).json({ error: "City must only include letters and hyphens." })

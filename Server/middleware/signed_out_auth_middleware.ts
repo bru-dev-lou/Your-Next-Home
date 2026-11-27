@@ -15,6 +15,7 @@ function signedOutAuthentication (req: Request, res: Response, next: NextFunctio
     }
 
     catch (error) {
+        console.error(error);
         next();
     }
 }
