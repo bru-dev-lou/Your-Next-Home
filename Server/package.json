@@ -2,7 +2,7 @@
   "name": "your-next-home",
   "version": "1.0.0",
   "description": "A full-stack property rental web application where users can create and browse listings.",
-  "main": "server.ts",
+  "main": "dist/server.js",
   "scripts": {
     "dev": "nodemon --exec tsx server.ts",
     "build": "tsc",
@@ -13,9 +13,12 @@
     "url": "git+https://github.com/bru-dev-lou/Your-Next-Home.git"
   },
   "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "author": "Bruno Lourenco",
+  "license": "UNLICENSED",
   "type": "module",
+  "engines": {
+    "node": ">=20"
+  },
   "bugs": {
     "url": "https://github.com/bru-dev-lou/Your-Next-Home/issues"
   },
@@ -41,7 +44,6 @@
     "@types/multer": "^2.1.0",
     "@types/node": "^25.6.0",
     "nodemon": "^3.1.14",
-    "ts-node": "^10.9.2",
     "tsx": "^4.21.0",
     "typescript": "^6.0.3"
   }
