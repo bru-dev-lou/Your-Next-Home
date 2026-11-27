@@ -1,8 +1,10 @@
 {
-  "name": "Your-Next-Home",
+  "name": "your-next-home",
   "private": true,
   "version": "1.0.0",
   "type": "module",
+  "author": "Bruno Lourenco",
+  "license": "UNLICENSED",
   "engines": {
     "node": "^20.19.0 || >=22.12.0"
   },
