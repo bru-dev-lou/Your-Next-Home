@@ -1,10 +1,9 @@
 import {useEffect, useRef, useState} from "react";
 import {useNavigate} from "react-router-dom";
+import { apiFetch } from "../../api";
 
 import styles from "../dashboard/dashboard_property_add_comp.module.css";
-
 import { MdArrowDropDown } from "react-icons/md";
-
 import { LuPlus } from "react-icons/lu";
 import { TiDelete } from "react-icons/ti";
 import { IoMdArrowRoundBack } from "react-icons/io";
@@ -104,7 +103,7 @@ function DashboardPropertyAdd () {
             };
 
             try {
-                const res = await fetch(`/api/cities?city=${propertyDetails.city}`);
+                const res = await apiFetch(`/api/cities?city=${propertyDetails.city}`);
                 const result = await res.json();
   
                 if (!res.ok) {
@@ -258,7 +257,7 @@ function DashboardPropertyAdd () {
             const uploadTimeout = setTimeout(() => 
             setUploading(true), 300);
 
-            const res = await fetch(`/api/dashboard/property/add`, {
+            const res = await apiFetch(`/api/dashboard/property/add`, {
             method: "POST",
             body: propertyData,
             });

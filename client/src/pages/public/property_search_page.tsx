@@ -1,5 +1,6 @@
 import { useState, useRef, useEffect } from "react";
 import { useSearchParams, useNavigate } from "react-router-dom";
+import { apiFetch } from "../../api";
 
 import PropertySearchPageSearchBar from "../../components/public/property_search_page_searchbar_comp";
 
@@ -87,7 +88,7 @@ function PropertySearchPage () {
     const fetchPropertyResults = async () => {
       
       try{
-        const res = await fetch(`/api/search?city=${city}&type=${type}&furniture=${furniture}&minBeds=${minBeds}&minBaths=${minBaths}&maxPrice=${maxPrice}&sortBy=${sortByValue}`);
+        const res = await apiFetch(`/api/search?city=${city}&type=${type}&furniture=${furniture}&minBeds=${minBeds}&minBaths=${minBaths}&maxPrice=${maxPrice}&sortBy=${sortByValue}`);
         const result = await res.json();
 
         if (result.error) {
@@ -144,7 +145,7 @@ function PropertySearchPage () {
     const fetchFavorites = async () => {
     
       try {
-        const res = await fetch ("/api/search/favorites");
+        const res = await apiFetch("/api/search/favorites");
         const results = await res.json(); 
         
         if (res.ok) {
@@ -171,7 +172,7 @@ function PropertySearchPage () {
     setErrorMessageFP({id: null, error: ""});
 
     try {
-      const res = await fetch (`/api/search/favorites/`, {
+      const res = await apiFetch(`/api/search/favorites/`, {
         method: "POST",
         headers: {
           "Content-Type" : "application/json"
@@ -210,7 +211,7 @@ function PropertySearchPage () {
 
     
     try {
-      const res = await fetch (`/api/search/favorites`, {
+      const res = await apiFetch(`/api/search/favorites`, {
         method: "DELETE",
         headers: {
           "Content-Type" : "application/json"

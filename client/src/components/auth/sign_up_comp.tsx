@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { apiFetch } from "../../api";
 
 import styles from "../../components/auth/sign_up_comp.module.css"; 
 import { LuEye, LuEyeClosed } from "react-icons/lu";
@@ -140,7 +141,7 @@ function SignUp () {
         }
 
         try {
-            const res = await fetch("/api/signUp", {
+            const res = await apiFetch("/api/signUp", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"

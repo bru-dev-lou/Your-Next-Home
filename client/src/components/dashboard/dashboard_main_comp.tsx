@@ -12,6 +12,7 @@ import { FaPencilAlt } from "react-icons/fa";
 import { BsTrash3Fill } from "react-icons/bs";
 
 import { BsWifiOff } from "react-icons/bs";
+import { apiFetch } from "../../api";
 
 
 
@@ -61,7 +62,7 @@ function DashboardMain() {
     useEffect(() => {
         const fetchPropertyData = async () => {
             try {
-                const res = await fetch(`/api/dashboard`);
+                const res = await apiFetch (`/api/dashboard`);
                 const result = await res.json();
 
                 if (!res.ok) {
@@ -93,7 +94,7 @@ function DashboardMain() {
     async function propertyDelete (propID: number) {
         
         try {
-            const res = await fetch(`/api/dashboard`, {
+            const res = await apiFetch(`/api/dashboard`, {
             method: "DELETE",
             headers: {
                 "Content-Type": "application/json"
@@ -113,7 +114,7 @@ function DashboardMain() {
                 setDeletePropertyMessage(result.message); 
                 messageReset();
 
-                const refreshPropertyPage = await fetch(`/api/dashboard`);
+                const refreshPropertyPage = await apiFetch(`/api/dashboard`);
                 const refreshResult = await refreshPropertyPage.json();
                 
                 if (!refreshPropertyPage.ok) {

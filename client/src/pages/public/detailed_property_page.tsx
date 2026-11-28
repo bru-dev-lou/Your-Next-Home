@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
+import { apiFetch } from "../../api";
 
 import styles from "../public/detailed_property_page.module.css";
 import adPhoto from "../../assets/detailed_page_ad_photo.jpg";
@@ -54,7 +55,7 @@ function DetailedPropertyPage () {
     useEffect (() => {
         const fetchData = async () => {
             try {
-                const res = await fetch(`/api/property/${propID}`);
+                const res = await apiFetch(`/api/property/${propID}`);
                 const result = await res.json(); 
 
                 if (!res.ok) {
@@ -82,7 +83,7 @@ function DetailedPropertyPage () {
         const fetchFavorites = async () => {
             
             try {
-                const res = await fetch ("/api/search/favorites");
+                const res = await apiFetch("/api/search/favorites");
                 const results = await res.json(); 
                 
                 if (res.ok) {
@@ -102,7 +103,7 @@ function DetailedPropertyPage () {
         const updateSet = new Set(propFavorite);
 
         try {            
-            const res = await fetch (`/api/search/favorites`, {
+            const res = await apiFetch(`/api/search/favorites`, {
                 method: "POST",
                 headers: {
                     "Content-Type" : "application/json"
@@ -139,7 +140,7 @@ function DetailedPropertyPage () {
         const updateSet = new Set(propFavorite); 
     
         try {
-            const res = await fetch (`/api/search/favorites`, {
+            const res = await apiFetch(`/api/search/favorites`, {
                 method: "DELETE",
                 headers: {
                     "Content-Type" : "application/json"

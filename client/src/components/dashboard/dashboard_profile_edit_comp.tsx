@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useUser } from "../../context/user_context";
+import { apiFetch } from "../../api";
 
 import styles from "../dashboard/dashboard_profile_edit_comp.module.css"; 
 import serverErrorImage from "../../assets/server_error_photo.png";
@@ -79,7 +80,7 @@ function DashboardProfileEdit () {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const res = await fetch (`/api/dashboard/profile/edit/`);
+                const res = await apiFetch(`/api/dashboard/profile/edit/`);
                 const result = await res.json();
 
                 if (result.noUserError) {
@@ -242,7 +243,7 @@ function DashboardProfileEdit () {
         }        
 
         try {
-            const res = await fetch(`/api/dashboard/profile/edit`, {
+            const res = await apiFetch(`/api/dashboard/profile/edit`, {
                 method: "PATCH",
                 headers: {
                     "Content-Type" : "application/json"
@@ -329,7 +330,7 @@ function DashboardProfileEdit () {
         }
         
         try {
-            const res = await fetch(`/api/dashboard/profile/edit/password_change`, {
+            const res = await apiFetch(`/api/dashboard/profile/edit/password_change`, {
                 method: "PATCH",
                 headers: {
                     "Content-Type" : "application/json"
@@ -379,7 +380,7 @@ function DashboardProfileEdit () {
         }
         
         try {
-            const res = await fetch (`/api/dashboard/profile/edit/`, {
+            const res = await apiFetch(`/api/dashboard/profile/edit/`, {
                 method: "DELETE",
                 headers: {
                     "Content-Type": "application/json"
