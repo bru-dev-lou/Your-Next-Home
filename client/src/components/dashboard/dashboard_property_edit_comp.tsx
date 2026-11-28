@@ -1,12 +1,12 @@
 import { useEffect, useRef, useState} from "react";
 import { useParams, useNavigate } from "react-router-dom";
+import { apiFetch } from "../../api";
 
 import styles from "../dashboard/dashboard_property_edit_comp.module.css";
 import noPropertyPhoto from "../../assets/missing_property_photo.png";
 import serverErrorPhoto from "../../assets/server_error_photo.png";
 
 import { MdArrowDropDown } from "react-icons/md";
-
 import { LuPlus } from "react-icons/lu";
 import { TiDelete } from "react-icons/ti";
 import { IoMdArrowRoundBack } from "react-icons/io";
@@ -102,7 +102,7 @@ function DashboardPropertyEdit() {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const res = await fetch(`/api/dashboard/property/edit/${propID}`);
+                const res = await apiFetch(`/api/dashboard/property/edit/${propID}`);
                 const result = await res.json();
 
                 if (!res.ok) {
@@ -155,7 +155,7 @@ function DashboardPropertyEdit() {
             };
 
             try {
-                const res = await fetch(`/api/cities?city=${city}`)
+                const res = await apiFetch(`/api/cities?city=${city}`)
                 const result = await  res.json(); 
 
                 if (!res.ok) {
@@ -287,7 +287,7 @@ function DashboardPropertyEdit() {
         //  Property summary & description validations are inline in the JSX (onChange handlers) 
         
         try {
-            const res = await fetch(`/api/dashboard/property/edit/${propID}`, {
+            const res = await apiFetch(`/api/dashboard/property/edit/${propID}`, {
                 method: "PATCH",
                 headers: {
                     "Content-Type": "application/json"
@@ -382,7 +382,7 @@ function DashboardPropertyEdit() {
             setShortErrorMessagePE("");
             setSuccessMessagePE("");
 
-            const res = await fetch(`/api/dashboard/property/edit/${propID}`, {
+            const res = await apiFetch(`/api/dashboard/property/edit/${propID}`, {
                 method: "POST",
                 body: formData
             });
@@ -426,7 +426,7 @@ function DashboardPropertyEdit() {
         e.preventDefault();
         
         try {
-            const res = await fetch(`/api/dashboard/property/edit/${propID}`, {
+            const res = await apiFetch(`/api/dashboard/property/edit/${propID}`, {
                 method: "DELETE",
                 headers: {
                     "Content-Type": "application/json"

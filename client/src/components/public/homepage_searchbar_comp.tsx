@@ -1,9 +1,10 @@
 import { useState, useRef, useEffect } from 'react'; 
 import { useNavigate } from 'react-router-dom';
+import { apiFetch } from "../../api";
 
 import styles from "../public/homepage_searchbar_comp.module.css";
-
 import logo from "../../assets/logo_high_contrast.png";
+
 import { MdArrowDropDown } from "react-icons/md";
 
 
@@ -43,7 +44,7 @@ function HomePageSearchBar() {
             };
 
             try {
-                const res = await fetch(`/api/cities?city=${autoCompleteQuery}`);
+                const res = await apiFetch(`/api/cities?city=${autoCompleteQuery}`);
                 const result = await res.json();
 
                 if (!res.ok) {

@@ -1,6 +1,7 @@
 import { useState } from "react"; 
 import { Link, useNavigate } from "react-router-dom";
 import { useUser } from "../../context/user_context";
+import { apiFetch } from "../../api";
 
 import styles from "../public/main_navigation_bar_comp.module.css";
 import logo from "../../assets/logo.png";
@@ -16,7 +17,7 @@ function MainNavigationBar (){
     async function signUserOut () {
         
         try {
-            const res = await fetch("/api/signOut/", {
+            const res = await apiFetch("/api/signOut/", {
                 method: "DELETE" 
             });
             

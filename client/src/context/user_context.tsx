@@ -1,4 +1,5 @@
 import { createContext, useEffect, useState, useContext } from "react";
+import { apiFetch } from "../api";
 
 type UserDetails = {
     id: number;
@@ -21,7 +22,7 @@ export function UserDetailsManager ({ children }: { children: React.ReactNode })
     useEffect (() => {
         const fetchUserData = async () => {
             try {
-                const res = await fetch("/api/userCheck");
+                const res = await apiFetch("/api/userCheck");
                 const result = await res.json(); 
             
                 if (res.ok) {

@@ -1,7 +1,9 @@
 import { useEffect, useRef, useState } from "react"; 
 import { useSearchParams, useNavigate } from "react-router-dom"; 
+import { apiFetch } from "../../api";
 
 import styles from "./property_search_page_searchbar_comp.module.css";
+
 import { GrMapLocation } from "react-icons/gr";
 import { LuHouse } from "react-icons/lu";
 import { RiMoneyPoundCircleLine, RiArchiveDrawerLine} from "react-icons/ri";
@@ -147,7 +149,7 @@ function PropertySearchPageSearchBar ({sortBy, setLocationErrorMessage} : Search
             };
 
             try {
-                const res = await fetch(`/api/cities?city=${propData.city}`);
+                const res = await apiFetch(`/api/cities?city=${propData.city}`);
                 const result = await res.json();
   
                 if (!res.ok) {

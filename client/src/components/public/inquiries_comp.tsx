@@ -1,4 +1,6 @@
 import { useEffect, useState } from "react";
+import { apiFetch } from "../../api";
+
 import styles from "../../components/public/inquiries_comp.module.css";
 
 type InquiryData = {
@@ -105,7 +107,7 @@ function Inquiries () {
         }
 
         try {
-            const res = await fetch("/api/inquiries", {
+            const res = await apiFetch("/api/inquiries", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"

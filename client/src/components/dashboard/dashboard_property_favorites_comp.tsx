@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { apiFetch } from "../../api";
 
 import styles from "../dashboard/dashboard_property_favorites_comp.module.css";
 import serverErrorPhoto from "../../assets/server_error_photo.png";
@@ -38,7 +39,7 @@ const DashboardFavoriteProperties = () => {
     useEffect(() => {
         async function fetchFavProperties() {
             try {
-                const res = await fetch(`/api/dashboard/property/favorites`);
+                const res = await apiFetch(`/api/dashboard/property/favorites`);
                 const result = await res.json(); 
 
                 if (!res.ok) {
@@ -65,7 +66,7 @@ const DashboardFavoriteProperties = () => {
 
     async function deleteFavProperty(propID : number) {
         try {
-            const res = await fetch (`/api/dashboard/property/favorites/${propID}`, {
+            const res = await apiFetch(`/api/dashboard/property/favorites/${propID}`, {
                 method: "DELETE",
                 headers: {
                     "Content-Type" : "application/json"
@@ -83,7 +84,7 @@ const DashboardFavoriteProperties = () => {
             }
              
             else {
-                const refreshFavoritesPage = await fetch (`/api/dashboard/property/favorites`);
+                const refreshFavoritesPage = await apiFetch(`/api/dashboard/property/favorites`);
                 const newFavoritesList = await refreshFavoritesPage.json(); 
 
                 if (newFavoritesList.noProperties) {

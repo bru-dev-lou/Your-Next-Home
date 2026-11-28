@@ -2,6 +2,8 @@ import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { useUser } from "../../context/user_context";
 
+import { apiFetch } from "../../api";
+
 import styles from "../../components/auth/sign_in_comp.module.css";
 
 type UserData = {
@@ -34,7 +36,7 @@ function SignIn () {
         }
 
         try { 
-            const res = await fetch ("/api/signIn", {
+            const res = await apiFetch ("/api/signIn", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"
