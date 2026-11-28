@@ -125,6 +125,7 @@ function PropertySearchPage () {
       }
 
       catch (error){
+        console.error(error);
         setErrorMessagePR("Failed to fetch requested properties. Please check your internet and refresh the page.");
       }
     };
@@ -141,28 +142,22 @@ function PropertySearchPage () {
 
   useEffect (() => {
     const fetchFavorites = async () => {
-      const updateSet = new Set(propFavorite);
     
       try {
         const res = await fetch ("/api/search/favorites");
         const results = await res.json(); 
         
         if (res.ok) {
-          for (const result of results) {
-            updateSet.add(result.property_id);
-          }
-          
-          setPropFavorite(updateSet);
+          setPropFavorite(new Set(results.map(( result : { property_id : number }) => result.property_id)));
         }
 
-        else {
-          return;
-        }
       }
       
       // Silent crash coded to avoid bad UI / UX. 
-
-      catch(error) {}
+      
+      catch(error) {
+            console.error(error);
+      }
     }
       fetchFavorites();
   }, []);
@@ -201,6 +196,7 @@ function PropertySearchPage () {
     }
 
     catch (error) {
+      console.error(error);
       setErrorMessageFP({id: propID, error: "Failed to add to favorites. Please check your internet and try again."});
       setTimeout(function() {
         setErrorMessageFP({id: null, error: ""});
@@ -235,6 +231,7 @@ function PropertySearchPage () {
     }
 
     catch (error) {
+      console.error(error);
       setErrorMessageFP({id: propID, error: "Failed to remove from favorites. Please check your internet and try again."});
       setTimeout(function() {
         setErrorMessageFP({id: null, error: ""});

@@ -120,7 +120,7 @@ function DashboardPropertyAdd () {
                     setErrorMessageAC("");
                 }
 
-                else if (autoCompleteQueries.some( query => query.city === propertyDetails.city)) {
+                else if (result.cities.some(( query: {city : string})  => query.city === propertyDetails.city)) {
                     setAutoCompleteQueries([]);
                 }
                 
@@ -131,6 +131,7 @@ function DashboardPropertyAdd () {
             }
   
             catch(error) {
+                console.error(error);
                 setErrorMessageAC("Please check your internet!");
                 setTimeout(() => {
                     setErrorMessageAC("");
@@ -294,7 +295,9 @@ function DashboardPropertyAdd () {
         }
 
         catch (error) {
+            console.error(error);
             setDataErrorMessage("Please check your internet and try again."); 
+            setUploading(false);
         }
 
         finally {
@@ -806,7 +809,10 @@ function DashboardPropertyAdd () {
                     <div className={styles.extra_photos_row}>
                         <button
                             disabled = {galleryIndex === 0}
-                            onClick={() => {previousPhotos(), clearPhotoErrorMessages()}}
+                            onClick={() => {
+                                previousPhotos(); 
+                                clearPhotoErrorMessages();
+                            }}
                             aria-describedby="previous_photos_button"
                             className={styles.left_arrow_container}
                         >
@@ -864,7 +870,10 @@ function DashboardPropertyAdd () {
                         </ul>   
                         <button 
                             disabled={galleryIndex + 3 >= tempURLs.length}
-                            onClick={() => {nextPhotos(), clearPhotoErrorMessages()}}
+                            onClick={() => {
+                                nextPhotos(); 
+                                clearPhotoErrorMessages();
+                            }}
                             aria-labelledby="next_photos_button"
                             className={styles.right_arrow_container}
                         >

@@ -6,7 +6,7 @@ type CountResult = {
     count: number;
 };
 
-const dbPath = path.resolve('database/database.db');
+const dbPath = process.env.DB_PATH || path.resolve('database/database.db');
 const schemaPath = path.resolve('database/schema.sql');
 const seedPath = path.resolve('database/seed.sql');
 

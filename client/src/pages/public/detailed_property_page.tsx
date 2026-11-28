@@ -69,6 +69,7 @@ function DetailedPropertyPage () {
             }
 
             catch(error) {
+                console.error(error);
                 setErrorMessageFP("Failed to fetch this property. Please check your internet and refresh the page.")
             }
         }
@@ -79,27 +80,21 @@ function DetailedPropertyPage () {
 
     useEffect (() => {
         const fetchFavorites = async () => {
-            const updateSet = new Set(propFavorite);
             
             try {
                 const res = await fetch ("/api/search/favorites");
                 const results = await res.json(); 
                 
                 if (res.ok) {
-                    for (const result of results) {
-                        updateSet.add(result.property_id);
-                    }
-                    setPropFavorite(updateSet);
-                }
-
-                else {
-                    return;
+                    setPropFavorite(new Set(results.map(( result : {property_id : number}) => result.property_id)))
                 }
             }
 
             catch(error) {
+                console.error(error);
             }
         }
+        
         fetchFavorites();
     }, []);
 
@@ -132,6 +127,7 @@ function DetailedPropertyPage () {
         }
 
         catch (error) {
+            console.error(error);
             setErrorMessageFavorites("Failed to add to favorites. Please check your internet and try again.");
             setTimeout(() => {
                 setErrorMessageFavorites("");
@@ -167,6 +163,7 @@ function DetailedPropertyPage () {
         }
 
         catch (error) {
+            console.error(error);
             setErrorMessageFavorites("Failed to remove from favorites. Please check your internet and try again.")
             setTimeout(() => {
                 setErrorMessageFavorites("");

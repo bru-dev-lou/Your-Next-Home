@@ -95,6 +95,10 @@ function DashboardPropertyEdit() {
     
     const autoCompleteOpen = autoCompleteQueries.length > 0 || Boolean(errorMessageAC);
 
+    //  Setting propertyDetails as a variable due to optional chaining triggering lint error 
+
+    const city = propertyDetails?.city ?? "";
+
     useEffect(() => {
         const fetchData = async () => {
             try {
@@ -127,15 +131,16 @@ function DashboardPropertyEdit() {
             }
             
             catch (error) {
+                console.error(error);
                 setErrorMessagePF("Please check your internet and refresh the page."); 
             }
         }   
         fetchData();
-    }, []);
+    }, [propID]);
 
     useEffect (() => {
         const fetchAutoComplete = async () => {
-            if ((propertyDetails?.city?.length ?? 0) > 50) {
+            if (city.length > 50) {
                 setErrorMessageAC("Maximum length exceeded!");
             
                 if (errorTimeoutRef.current) {
@@ -150,7 +155,7 @@ function DashboardPropertyEdit() {
             };
 
             try {
-                const res = await fetch(`/api/cities?city=${propertyDetails!.city}`)
+                const res = await fetch(`/api/cities?city=${city}`)
                 const result = await  res.json(); 
 
                 if (!res.ok) {
@@ -161,12 +166,12 @@ function DashboardPropertyEdit() {
                     }, 2000);
                 }
 
-                else if(propertyDetails?.city?.length === 0) {
+                else if(city.length === 0) {
                     setAutoCompleteQueries([]);
                     setErrorMessageAC("");
                 } 
 
-                else if (result.cities.some( (query : {city: string}) => query.city === propertyDetails?.city)) {
+                else if (result.cities.some( (query : {city: string}) => query.city === city)) {
                     setAutoCompleteQueries([]);
                     setErrorMessageAC("");
                 }
@@ -178,6 +183,7 @@ function DashboardPropertyEdit() {
             }
   
             catch(error) {
+                console.error(error);
                 setErrorMessageAC("Please check your internet!");
                 setTimeout(() => {
                     setErrorMessageAC("");
@@ -195,7 +201,7 @@ function DashboardPropertyEdit() {
 
         return () => clearTimeout(timeout);
         
-    }, [propertyDetails?.city, autoCompleteQueryClicked]);
+    }, [city, autoCompleteQueryClicked]);
 
     async function propertyDetailsUpdate(e: React.MouseEvent<HTMLButtonElement>) {
         e.preventDefault();
@@ -308,6 +314,7 @@ function DashboardPropertyEdit() {
         } 
             
         catch (error) {
+            console.error(error);
             setErrorMessagePE("Please check your internet and refresh the page.");
         }
     }
@@ -399,11 +406,13 @@ function DashboardPropertyEdit() {
 
             else {
                 setErrorMessagePU(result.error);
+                setTimeout(() => {setErrorMessagePU("")}, 5000);
                 setSuccessMessagePU("");
             }
         }
 
         catch (error) {
+            console.error(error);
             setErrorMessagePU("Please check your internet and refresh the page.");
         }
 
@@ -463,6 +472,7 @@ function DashboardPropertyEdit() {
         }
         
         catch (error) { 
+            console.error(error);
             setErrorMessagePU("Please check your internet and refresh the page.")
         }
     }

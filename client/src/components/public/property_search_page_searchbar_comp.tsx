@@ -167,7 +167,7 @@ function PropertySearchPageSearchBar ({sortBy, setLocationErrorMessage} : Search
                     setAutoCompleteQueries([]);
                 }
 
-                else if (autoCompleteQueries.some(query=> query.city.toLowerCase() === propData.city.toLowerCase())) {
+                else if (result.cities.some(( query : {city : string}) => query.city.toLowerCase() === propData.city.toLowerCase())) {
                     setAutoCompleteQueries([]);
                 }
 
@@ -178,6 +178,7 @@ function PropertySearchPageSearchBar ({sortBy, setLocationErrorMessage} : Search
             }
   
             catch(error) {
+                console.error(error);
                 setErrorMessageAC("Autocomplete currently unavailable.");
             }
         }
@@ -192,7 +193,7 @@ function PropertySearchPageSearchBar ({sortBy, setLocationErrorMessage} : Search
         
         return () => clearTimeout(timeout)
         
-    }, [propData.city, autoCompleteQueryClicked]);
+    }, [propData.city, autoCompleteQueryClicked, cityDefault]);
 
     const showDropdown = (setDropdown: React.Dispatch<React.SetStateAction<boolean>>) => {
         setDropdown(prev => !prev); 

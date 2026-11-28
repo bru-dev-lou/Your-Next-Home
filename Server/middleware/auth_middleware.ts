@@ -15,6 +15,7 @@ function authMiddleware(req: Request, res: Response, next: NextFunction) {
     }
 
     catch(error) {
+        console.error(error);
         return res.status(401).json({error: "Your session has expired. Please sign in again."})
     }
 }

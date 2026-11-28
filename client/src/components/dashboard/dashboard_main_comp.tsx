@@ -80,6 +80,7 @@ function DashboardMain() {
             }
             
             catch (error) {
+                console.error(error);            
                 setNoInternetMessage("Please check your internet and refresh the page.")
             }
         }
@@ -132,6 +133,7 @@ function DashboardMain() {
         }
 
         catch(error) {
+            console.error(error);
             setNoInternetMessage("Please check your internet and refresh the page.");
         }
     }

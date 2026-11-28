@@ -102,7 +102,7 @@ router.route("/:propID")
 
     // City validation 
 
-    const validCity = /^[a-zA-Z\ -]+$/.test(city); 
+    const validCity = /^[a-zA-Z -]+$/.test(city); 
 
     if (!validCity) {
         return res.status(400).json({ error: "City must only include letters and hyphens." })
@@ -289,7 +289,9 @@ router.route("/:propID")
         ;
 
         await cloudinary.uploader.destroy(cloudinaryIdRetrieval.cloudinary_id);
-
+        
+        // Look into pros and cons of adding a cloudinaryIdRetrieval check - Is a 500 error possible?
+        
         const SQLDeletePhotos = db.prepare(`
             DELETE FROM property_photos 
             WHERE id = ? AND property_id = ? AND photo_path = ?`)

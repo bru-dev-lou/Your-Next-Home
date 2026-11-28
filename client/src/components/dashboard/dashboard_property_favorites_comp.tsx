@@ -55,6 +55,7 @@ const DashboardFavoriteProperties = () => {
             }
             
             catch (error) {
+                console.error(error);
                 setErrorMessageFP("Failed to fetch user's favorite properties. Please check your internet and refresh the page.")
             }
         }
@@ -102,6 +103,7 @@ const DashboardFavoriteProperties = () => {
         }
         
         catch(error){
+            console.error(error);
             setErrorMessageDP("Please check your internet and refresh the page.");
         }
     }

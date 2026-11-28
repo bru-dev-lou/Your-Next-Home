@@ -30,6 +30,7 @@ export function UserDetailsManager ({ children }: { children: React.ReactNode })
             }
 
             catch (error) {
+                console.error(error);
                 // User will be asked to log in. 
             }
 
@@ -46,7 +47,9 @@ export function UserDetailsManager ({ children }: { children: React.ReactNode })
         </UserDetails.Provider>
     );
 }
+// Hook exported alongside component; splitting files planned for V2.
 
+// eslint-disable-next-line react-refresh/only-export-components
 export function useUser() {
     const context = useContext(UserDetails);
     if (!context) throw new Error("useUser must be used within a UserProvider");
